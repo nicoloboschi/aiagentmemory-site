@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#1e1b4b"/>
+  <g opacity="0.3">
+    <circle cx="200" cy="200" r="4" fill="#818cf8"/>
+    <circle cx="400" cy="150" r="4" fill="#818cf8"/>
+    <circle cx="600" cy="250" r="4" fill="#818cf8"/>
+    <circle cx="800" cy="180" r="4" fill="#818cf8"/>
+    <circle cx="1000" cy="220" r="4" fill="#818cf8"/>
+    <circle cx="300" cy="400" r="4" fill="#818cf8"/>
+    <circle cx="500" cy="350" r="4" fill="#818cf8"/>
+    <circle cx="700" cy="420" r="4" fill="#818cf8"/>
+    <circle cx="900" cy="380" r="4" fill="#818cf8"/>
+  </g>
+  <path d="M200,200 Q400,100 600,250 T1000,220" fill="none" stroke="#818cf8" stroke-width="2" opacity="0.4"/>
+  <path d="M300,400 Q500,300 700,420 T900,380" fill="none" stroke="#818cf8" stroke-width="2" opacity="0.3"/>
+  <line x1="400" y1="150" x2="500" y2="350" stroke="#818cf8" stroke-width="1" opacity="0.2"/>
+  <line x1="800" y1="180" x2="700" y2="420" stroke="#818cf8" stroke-width="1" opacity="0.2"/>
+  <text x="600" y="560" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="24">Agent Memory</text>
+</svg>
