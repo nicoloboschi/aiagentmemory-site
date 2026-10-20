@@ -1,0 +1,443 @@
+{
+ "collected_at": "2026-10-20T18:55:41Z",
+ "sources": {
+  "github": "GET https://api.github.com/repos/{owner}/{repo} via gh api",
+  "pypi": "GET https://pypistats.org/api/packages/{pkg}/recent (last_day, last_week, last_month)",
+  "npm": "GET https://api.npmjs.org/downloads/point/last-month/{pkg}"
+ },
+ "stars_last_30_days": "not collected: stargazer listing returned 404 (REST) and totalCount 0 (GraphQL) with our token",
+ "github": [
+  {
+   "full_name": "mem0ai/mem0",
+   "description": "The Memory Layer for AI Agents - Drop-in memory infrastructure for AI agents and apps. Context that persists. Built for production.",
+   "stargazers_count": 67527,
+   "forks_count": 7967,
+   "open_issues_count": 858,
+   "created_at": "2023-06-20T08:58:36Z",
+   "pushed_at": "2026-10-20T01:47:59Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "vectorize-io/hindsight",
+   "description": "Hindsight: Agent Memory That Learns",
+   "stargazers_count": 51974,
+   "forks_count": 6183,
+   "open_issues_count": 146,
+   "created_at": "2025-10-30T11:49:48Z",
+   "pushed_at": "2026-10-20T15:41:01Z",
+   "archived": false,
+   "license": "MIT"
+  },
+  {
+   "full_name": "MemPalace/mempalace",
+   "description": "The best-benchmarked open-source AI memory system. And it's free.",
+   "stargazers_count": 59661,
+   "forks_count": 7568,
+   "open_issues_count": 827,
+   "created_at": "2026-04-05T01:12:07Z",
+   "pushed_at": "2026-10-20T08:52:54Z",
+   "archived": false,
+   "license": "MIT"
+  },
+  {
+   "full_name": "thedotmack/claude-mem",
+   "description": "Persistent Context Across Sessions for Every Agent \u2013  Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions. Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More",
+   "stargazers_count": 101934,
+   "forks_count": 8974,
+   "open_issues_count": 105,
+   "created_at": "2025-08-31T20:50:03Z",
+   "pushed_at": "2026-10-20T01:28:51Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "letta-ai/letta",
+   "description": "Platform for stateful agents: AI with advanced memory that can learn and self-improve over time.",
+   "stargazers_count": 25206,
+   "forks_count": 2650,
+   "open_issues_count": 0,
+   "created_at": "2023-10-11T07:38:37Z",
+   "pushed_at": "2026-10-18T22:28:04Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "getzep/graphiti",
+   "description": "Build Real-Time Knowledge Graphs for AI Agents",
+   "stargazers_count": 32084,
+   "forks_count": 3296,
+   "open_issues_count": 490,
+   "created_at": "2024-08-08T22:08:30Z",
+   "pushed_at": "2026-10-20T18:21:36Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "getzep/zep",
+   "description": "Zep | Examples, Integrations, & More",
+   "stargazers_count": 4966,
+   "forks_count": 656,
+   "open_issues_count": 35,
+   "created_at": "2023-04-29T14:06:22Z",
+   "pushed_at": "2026-10-20T17:10:53Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "topoteretes/cognee",
+   "description": "Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory with small models for free",
+   "stargazers_count": 32594,
+   "forks_count": 3414,
+   "open_issues_count": 961,
+   "created_at": "2023-08-16T16:16:33Z",
+   "pushed_at": "2026-10-20T18:11:40Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "supermemoryai/supermemory",
+   "description": "Memory and context engine + app that is extremely fast, scalable, and can be run fully locally. The Memory API for the AI era.",
+   "stargazers_count": 31333,
+   "forks_count": 2750,
+   "open_issues_count": 36,
+   "created_at": "2024-02-27T20:10:04Z",
+   "pushed_at": "2026-10-20T17:17:46Z",
+   "archived": false,
+   "license": "MIT"
+  },
+  {
+   "full_name": "rohitg00/agentmemory",
+   "description": "#1 Persistent memory for AI coding agents based on real-world benchmarks",
+   "stargazers_count": 29704,
+   "forks_count": 2623,
+   "open_issues_count": 569,
+   "created_at": "2026-02-25T07:32:52Z",
+   "pushed_at": "2026-10-20T11:59:03Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "MemoriLabs/Memori",
+   "description": "Memori is agent-native memory infrastructure. A LLM-agnostic layer that turns agent execution and conversation into structured, persistent state for production systems. Built for enterprise, Memori works with the data infrastructure you already run, no rip-and-replace, and deploys across managed cloud, single-tenant cloud, VPC, and on-premises.",
+   "stargazers_count": 17150,
+   "forks_count": 3801,
+   "open_issues_count": 41,
+   "created_at": "2025-07-24T07:07:51Z",
+   "pushed_at": "2026-10-03T01:33:14Z",
+   "archived": false,
+   "license": "NOASSERTION"
+  },
+  {
+   "full_name": "NevaMind-AI/memU",
+   "description": "Personal memory across agents",
+   "stargazers_count": 14551,
+   "forks_count": 1088,
+   "open_issues_count": 134,
+   "created_at": "2025-07-29T01:54:40Z",
+   "pushed_at": "2026-10-20T05:12:32Z",
+   "archived": false,
+   "license": "NOASSERTION"
+  },
+  {
+   "full_name": "memvid/memvid",
+   "description": "Memory layer for AI Agents. Replace complex RAG pipelines with a serverless, single-file memory layer. Give your agents instant retrieval and long-term memory.",
+   "stargazers_count": 16603,
+   "forks_count": 1512,
+   "open_issues_count": 34,
+   "created_at": "2025-05-27T16:01:08Z",
+   "pushed_at": "2026-07-14T14:39:07Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "EverMind-AI/EverOS",
+   "description": "One portable memory layer for every AI agent: local-first, Markdown-native, user-owned, and self-evolving across apps, tools, and workflows.",
+   "stargazers_count": 13536,
+   "forks_count": 1020,
+   "open_issues_count": 58,
+   "created_at": "2025-10-28T15:09:32Z",
+   "pushed_at": "2026-10-20T15:49:55Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "MemTensor/MemOS",
+   "description": "Self-evolving memory OS for LLM & AI Agents: ultra-persistent memory, hybrid-retrieval, and cross-task skill reuse, with 35.24% token savings and DeepSeek Harness support.",
+   "stargazers_count": 11975,
+   "forks_count": 1209,
+   "open_issues_count": 150,
+   "created_at": "2025-07-06T09:51:27Z",
+   "pushed_at": "2026-10-20T12:32:29Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "plastic-labs/honcho",
+   "description": " Memory library for building stateful agents",
+   "stargazers_count": 7702,
+   "forks_count": 963,
+   "open_issues_count": 160,
+   "created_at": "2023-09-10T21:29:54Z",
+   "pushed_at": "2026-10-20T18:49:34Z",
+   "archived": false,
+   "license": "AGPL-3.0"
+  },
+  {
+   "full_name": "basicmachines-co/basic-memory",
+   "description": "AI conversations that actually remember. Never re-explain your project to your AI again. Join our Discord: https://discord.gg/tyvKNccgqN",
+   "stargazers_count": 4291,
+   "forks_count": 329,
+   "open_issues_count": 62,
+   "created_at": "2024-12-02T22:40:43Z",
+   "pushed_at": "2026-10-20T18:44:16Z",
+   "archived": false,
+   "license": "AGPL-3.0"
+  },
+  {
+   "full_name": "mnemosyne-oss/mnemosyne",
+   "description": "Zero-cloud AI memory that works everywhere. SQLite-backed. One pure-Python dependency.",
+   "stargazers_count": 3462,
+   "forks_count": 302,
+   "open_issues_count": 152,
+   "created_at": "2026-04-05T14:59:04Z",
+   "pushed_at": "2026-10-20T17:16:10Z",
+   "archived": false,
+   "license": "MIT"
+  },
+  {
+   "full_name": "MemMachine/MemMachine",
+   "description": "Universal memory layer for AI Agents. It provides scalable, extensible, and interoperable memory storage and retrieval to streamline AI agent state management for next-generation autonomous systems.",
+   "stargazers_count": 3075,
+   "forks_count": 222,
+   "open_issues_count": 210,
+   "created_at": "2025-08-15T16:40:53Z",
+   "pushed_at": "2026-10-20T06:07:57Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "kingjulio8238/Memary",
+   "description": "The Open Source Memory Layer For Autonomous Agents",
+   "stargazers_count": 2661,
+   "forks_count": 206,
+   "open_issues_count": 15,
+   "created_at": "2024-04-10T19:51:49Z",
+   "pushed_at": "2024-10-22T00:46:00Z",
+   "archived": false,
+   "license": "MIT"
+  },
+  {
+   "full_name": "langchain-ai/langmem",
+   "description": null,
+   "stargazers_count": 1715,
+   "forks_count": 201,
+   "open_issues_count": 76,
+   "created_at": "2025-01-21T20:06:59Z",
+   "pushed_at": "2026-10-02T19:35:27Z",
+   "archived": false,
+   "license": "MIT"
+  },
+  {
+   "full_name": "BAI-LAB/MemoryOS",
+   "description": "[EMNLP 2025 Oral] MemoryOS is designed to provide a memory operating system for personalized AI agents.",
+   "stargazers_count": 1608,
+   "forks_count": 166,
+   "open_issues_count": 23,
+   "created_at": "2025-05-30T12:55:21Z",
+   "pushed_at": "2026-07-07T12:32:18Z",
+   "archived": false,
+   "license": "Apache-2.0"
+  },
+  {
+   "full_name": "agiresearch/A-mem",
+   "description": "A-MEM: Agentic Memory for LLM Agents",
+   "stargazers_count": 1204,
+   "forks_count": 122,
+   "open_issues_count": 20,
+   "created_at": "2025-02-25T20:13:43Z",
+   "pushed_at": "2025-12-12T21:15:29Z",
+   "archived": false,
+   "license": "MIT"
+  }
+ ],
+ "pypi": {
+  "memoryos": {
+   "last_day": 96,
+   "last_month": 1646,
+   "last_week": 569
+  },
+  "basic-memory": {
+   "last_day": 1288,
+   "last_month": 27770,
+   "last_week": 7981
+  },
+  "cognee": {
+   "last_day": 4002,
+   "last_month": 86048,
+   "last_week": 25446
+  },
+  "evermemos": {
+   "last_day": 3,
+   "last_month": 63,
+   "last_week": 10
+  },
+  "graphiti-core": {
+   "last_day": 32535,
+   "last_month": 619128,
+   "last_week": 201671
+  },
+  "hindsight-all": {
+   "last_day": 304,
+   "last_month": 12413,
+   "last_week": 2055
+  },
+  "hindsight-api": {
+   "last_day": 1298,
+   "last_month": 28563,
+   "last_week": 10956
+  },
+  "hindsight-client": {
+   "last_day": 38436,
+   "last_month": 896092,
+   "last_week": 230727
+  },
+  "honcho-ai": {
+   "last_day": 11449,
+   "last_month": 542206,
+   "last_week": 80726
+  },
+  "langmem": {
+   "last_day": 27580,
+   "last_month": 773504,
+   "last_week": 186623
+  },
+  "letta-client": {
+   "last_day": 3831,
+   "last_month": 161915,
+   "last_week": 34304
+  },
+  "letta": {
+   "last_day": 331,
+   "last_month": 15031,
+   "last_week": 2727
+  },
+  "mem0ai": {
+   "last_day": 93405,
+   "last_month": 2020516,
+   "last_week": 608342
+  },
+  "memmachine-client": {
+   "last_day": 14,
+   "last_month": 572,
+   "last_week": 402
+  },
+  "memmachine-server": {
+   "last_day": 11,
+   "last_month": 263,
+   "last_week": 42
+  },
+  "memmachine": {
+   "last_day": 0,
+   "last_month": 13,
+   "last_week": 0
+  },
+  "memori": {
+   "last_day": 774,
+   "last_month": 16441,
+   "last_week": 3936
+  },
+  "memorisdk": {
+   "last_day": 6,
+   "last_month": 735,
+   "last_week": 102
+  },
+  "mempalace": {
+   "last_day": 1779,
+   "last_month": 53048,
+   "last_week": 13648
+  },
+  "memu-py": {
+   "last_day": 65,
+   "last_month": 1921,
+   "last_week": 506
+  },
+  "memvid-sdk": {
+   "last_day": 25,
+   "last_month": 859,
+   "last_week": 164
+  },
+  "mnemosyne-memory": {
+   "last_day": 1685,
+   "last_month": 33765,
+   "last_week": 11146
+  },
+  "supermemory": {
+   "last_day": 5960,
+   "last_month": 141658,
+   "last_week": 29998
+  },
+  "zep-cloud": {
+   "last_day": 6749,
+   "last_month": 292185,
+   "last_week": 60617
+  }
+ },
+ "npm": {
+  "@agentmemory/agentmemory": {
+   "downloads": 36978,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "@getzep/zep-cloud": {
+   "downloads": 591398,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "@honcho-ai/sdk": {
+   "downloads": 99422,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "@letta-ai/letta-client": {
+   "downloads": 506388,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "@letta-ai/letta-code": {
+   "downloads": 637450,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "@supermemory/tools": {
+   "downloads": 76418,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "@vectorize-io/hindsight-client": {
+   "downloads": 209050,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "@vectorize-io/hindsight-openclaw": {
+   "downloads": 3115,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "claude-mem": {
+   "downloads": 68155,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "mem0ai": {
+   "downloads": 629538,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  },
+  "supermemory": {
+   "downloads": 462355,
+   "start": "2026-09-19",
+   "end": "2026-10-18"
+  }
+ }
+}
