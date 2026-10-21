@@ -2,7 +2,7 @@
 
 > How Hermes Agent memory works: MEMORY.md and USER.md limits, the frozen snapshot, session search, external providers like Honcho and Mem0, and fixes when it fails.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-21 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -88,6 +88,8 @@ Hermes can run **one external provider at a time** next to the built-in files. W
 | **Memori** (Memori Labs) | Structured long-term memory | Memori Cloud | 5 |
 
 Providers are moving out of the Hermes tree into their maintainers' own repositories. Holographic used to ship in-tree; it's now maintained by itpartypattaya ([itpartypattaya/hermes-plugin-holographic](https://github.com/itpartypattaya/hermes-plugin-holographic)) and installs from the plugin catalog with the same name, settings and database. RetainDB and ByteRover leave core on October 15, 2026, and the docs say their standalone repositories are "unmaintained and open for a new maintainer", with no catalog install command listed. Honcho, OpenViking, Mem0, Hindsight, Holographic and Supermemory install with `hermes plugins install <name>`; Memori uses its own `hermes-memori` CLI. Holographic uses holographic reduced representations, explained in [holographic memory for AI agents](/articles/holographic-memory-ai-agent/), and Honcho has its own page on [Honcho LLM memory](/articles/honcho-llm-memory/).
+
+How these provider plugins install, update and hook into each turn, plus the full list of 67 Memory-shelf entries in the catalog, is covered in [Hermes Agent plugins](/articles/hermes-agent-plugins/).
 
 Setup is the same for each:
 
