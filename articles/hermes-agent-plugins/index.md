@@ -41,7 +41,7 @@ The usual path, from the docs:
 3. **Answer the enable prompt.** Hermes asks `Enable 'name' now? [y/N]` (default no). Use `--enable` or `--no-enable` in scripts. For a memory provider it asks `Use 'name' as the memory provider now?` instead.
 4. **Grant capabilities if asked.** Plugins that declare privileged capabilities (for example `tools.override`) get a one-time consent prompt. Grants are saved under `plugins.entries.<id>.granted_capabilities`. Without a terminal, they stay ungranted.
 5. **Restart or start a new session.** Run `/plugins` in a session to see what loaded, or `hermes plugins list` for enabled, disabled and not-enabled states.
-6. **Update on purpose.** `hermes plugins update <name>` moves a catalog install to the catalog's current pin; `hermes plugins check-updates` only reports.
+6. **Update on purpose.** `hermes plugins update <name>` moves a catalog install to the catalog's current pin; with no name (v0.22.3) it lists every plugin with an update and asks "Update all N?" (`--yes` skips the question). `hermes plugins check-updates` only reports.
 7. **Remove it.** `hermes plugins remove <name>` uninstalls it, drops it from `plugins.enabled` and `plugins.disabled`, and resets `memory.provider` if it was the live provider.
 
 The full command set:

@@ -1,6 +1,6 @@
-# How to Give a Local LLM Memory (Ollama, Python)
+# How to Give a Local LLM Memory (Ollama, SQLite, Python)
 
-> Local LLMs don't remember between chats. How to add persistent memory offline: Open WebUI, AnythingLLM and MCP options, plus tested Python with Ollama and Mem0.
+> Local LLMs don't remember between chats. How to add persistent memory offline: chat apps, MCP, and tested Python with Ollama, SQLite, Mem0 and the Agno agent framework.
 
 Source: https://aiagentmemory.org/articles/how-to-give-local-llm-memory/ · Updated 2026-10-12 · aiagentmemory.org
 
@@ -124,6 +124,34 @@ Our run (with `qwen2.5:1.5b-instruct` as the LLM) printed `0.43 User is vegetari
 - `embedding_model_dims` must match the embedder (768 for `nomic-embed-text`).
 - Without `on_disk: True`, local Qdrant keeps vectors in memory only.
 - The base install logs that BM25 keyword search is disabled; `pip install "mem0ai[extras]"` adds it, and `mem0ai[nlp]` adds spaCy.
+
+## Lightweight open-source agents with SQLite memory
+
+If you want an agent framework rather than a memory library, two open-source options keep memory in a local SQLite file and run on Ollama:
+
+- **[Agno](https://docs.agno.com/memory/overview)** (Python): pass `db=SqliteDb(...)` and `update_memory_on_run=True`, and the agent saves sessions plus extracted user memories in one SQLite file.
+- **[Hermes Agent](/articles/hermes-agent-memory/)** (a full agent, not a library): stores every session in `~/.hermes/state.db` (SQLite with full-text search) next to small `MEMORY.md` and `USER.md` files. Its [provider docs](https://hermes-agent.nousresearch.com/docs/integrations/providers) point it at Ollama with `provider: custom` and `base_url: http://localhost:11434/v1`, and say it needs at least 64,000 tokens of context, so raise Ollama's default.
+
+The Agno version of the peanut test, tested with `agno` 3.1.8 and `ollama` 0.6.3:
+
+```python
+# pip install agno ollama openai "sqlalchemy[asyncio]"
+from agno.agent import Agent
+from agno.db.sqlite import SqliteDb
+from agno.models.ollama import Ollama
+
+def make_agent() -> Agent:
+    return Agent(model=Ollama(id="gemma4:e2b"), db=SqliteDb(db_file="agent.db"), update_memory_on_run=True)
+
+make_agent().run("I'm allergic to peanuts and I live in Lisbon.", user_id="ana")
+# A new agent object, same file: the memories come back from SQLite.
+print(make_agent().run("Suggest a snack for my flight home.", user_id="ana").content)
+```
+
+In our run, `gemma4:e2b` stored two facts ("User is allergic to peanuts.", "User lives in Lisbon.") and the second agent answered with nut-free snacks. Two things we hit:
+
+- **Extra packages.** `agno.db.sqlite` fails to import without `sqlalchemy[asyncio]` (it needs `greenlet`), and `agno.models.ollama` imports the `openai` package.
+- **Model size matters.** With `qwen2.5:1.5b-instruct` and `phi4-mini` the run worked but no memory was saved: extraction is a tool call, and those models didn't make it. Check `agent.get_user_memories(user_id=...)` before trusting a small model.
 
 ## Other memory systems that run locally
 

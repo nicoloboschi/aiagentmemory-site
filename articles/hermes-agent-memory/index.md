@@ -21,7 +21,7 @@ The design is small on purpose. Together the two files are about 1,300 tokens, a
 |---|---|---|---|
 | **MEMORY.md** | `~/.hermes/memories/` | 2,200 chars (~800 tokens) | Every session, as a frozen snapshot |
 | **USER.md** | `~/.hermes/memories/` | 1,375 chars (~500 tokens) | Every session, as a frozen snapshot |
-| **Session history** | `~/.hermes/state.db` (SQLite, FTS5) | Unlimited | Only when the agent calls `session_search` |
+| **Session history** | `~/.hermes/state.db` (SQLite, FTS5) | Unlimited unless auto-prune is on | Only when the agent calls `session_search` |
 | **Skills** | Skills directory | Per skill | When a skill is relevant |
 | **External provider** | Depends on provider | Depends | Prefetched before each turn |
 
@@ -48,6 +48,16 @@ Every entry is scanned for prompt injection, credential exfiltration, SSH backdo
 ### Session search
 
 Past CLI and messaging sessions are stored in `~/.hermes/state.db`. The `session_search` tool runs full-text search (SQLite FTS5) over them and returns raw messages, and the agent can scroll through a found session. `hermes sessions list` shows them from the CLI. This is Hermes's answer to "what did we do last month": not stored in memory, but findable.
+
+That history is only findable while it exists. By default Hermes keeps every session, and the [sessions docs](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) warn that `state.db` then "grows without bound", with multi-GB files reported on gateway and cron installs. Auto-prune is off by default (v0.22.3, October 21, 2026, put it back to opt-in):
+
+```yaml
+sessions:
+  auto_prune: true      # delete ended sessions past retention_days, at startup
+  retention_days: 90    # default
+```
+
+Only ended sessions are deleted, aged from their last activity, and pruning runs at most once a day. If `config.yaml` has no `auto_prune` key and the disk holding `state.db` runs low (under 2 GB free, or under 10% free with less than 20 GB left), Hermes asks once; answer with `/autoprune on`, `/autoprune off` or `/autoprune later`. For one-off cleanup there's `hermes sessions prune --older-than 30` (add `--dry-run` to preview), and `hermes sessions optimize` shrinks the file without deleting anything. The catch for memory: a pruned session is gone from `session_search`, so anything worth keeping past `retention_days` has to be in `MEMORY.md`, a skill, or an external provider, which stores its own copy.
 
 ### Background review and write approval
 
@@ -104,7 +114,7 @@ hermes memory off               # disable the external provider
 
 There's no single best one; it depends on what the agent must remember. Pick **Honcho** if modeling the user is the point, **Mem0** or **Supermemory** for a hosted fact store with little setup, **Hindsight** if you want memories consolidated into evidence-backed observations plus a reflect call, and **Holographic** (or Hindsight's embedded Postgres) if nothing may leave the machine. Avoid starting new setups on RetainDB or ByteRover until someone maintains them again. Mnemosyne, a single-file SQLite memory that Hermes's docs list as a catalog provider (`hermes plugins install mnemosyne`), is another local option; see [Mnemosyne vs Hindsight](/articles/mnemosyne-vs-hindsight/). If the built-in files already hold what you need, skip providers entirely; they add LLM calls and a dependency.
 
-Of the nine, Hindsight and Mem0 are the two with published head-to-head numbers. On Mem0's own comparison page they tie on LongMemEval (94.6 vs 94.4) and LoCoMo (92 vs 92.5), and Hindsight leads on the long-history BEAM test: 73.9 vs 64.1 at 1M tokens and 64.1 vs 48.6 at 10M (all vendor-run). That matters for a Hermes agent that runs for months. [Hindsight](https://github.com/vectorize-io/hindsight) is MIT with every feature in the self-hosted server, and it can use local models through Ollama, LM Studio or llama.cpp, so it also works when nothing may leave the machine. The trade-off: it returns more context per turn than Mem0 (24K-44K vs under 7K tokens by Mem0's measurement), which Hermes then prefetches into every turn, so lower its `max_tokens` budget. Details in [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
+Of the nine, Hindsight and Mem0 are the two with published head-to-head numbers. On Mem0's own comparison page they tie on LongMemEval (94.6 vs 94.4) and LoCoMo (92 vs 92.5), and Hindsight leads on the long-history BEAM test: 73.9 vs 64.1 at 1M tokens and 64.1 vs 48.6 at 10M (all vendor-run). That matters for a Hermes agent that runs for months. [Hindsight](https://github.com/vectorize-io/hindsight) is MIT with every feature in the self-hosted server, and it can use local models through Ollama, LM Studio or llama.cpp, so it also works when nothing may leave the machine. The trade-off: Hindsight's server returns more context per retrieval than Mem0 at its own defaults (24K-44K vs under 7K tokens, by Mem0's measurement). The Hermes plugin caps that at 4,096 tokens per turn (`recall_max_tokens`) and recalls only consolidated observations by default, per Hindsight's Hermes integration docs; since Hermes prefetches recall every turn, lower that cap if prompt cost matters. Each retain also calls an LLM, so writes cost more than a local FTS store. Details in [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
 
 ## Hermes memory not working: what to check
 
@@ -115,7 +125,7 @@ Most "Hermes forgot" reports come from a handful of causes:
 3. **Memory is disabled.** Confirm `memory_enabled` and `user_profile_enabled` in `config.yaml`, and that `memory` isn't listed under `agent.disabled_toolsets`.
 4. **Writes are staged.** With `write_approval: true`, nothing lands until you approve it under `/memory pending`.
 5. **Wrong profile.** Each profile has its own memory directory.
-6. **The detail was never memory.** Long task history belongs in session search, so ask the agent to search past sessions.
+6. **The detail was never memory.** Long task history belongs in session search, so ask the agent to search past sessions. If auto-prune is on, sessions older than `retention_days` are gone.
 7. **Provider problems.** Run `hermes memory status`. Only one provider can be active, and cloud providers need their credentials (RetainDB, for example, reads `RETAINDB_API_KEY` from `~/.hermes/.env`).
 
 ## Hermes compared with other agents
