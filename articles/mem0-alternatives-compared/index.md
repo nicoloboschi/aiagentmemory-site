@@ -62,7 +62,7 @@ See our [Zep alternatives guide](/articles/zep-alternatives/) for more on this s
 **Letta** (formerly MemGPT) is not a memory layer you call from your agent. It is the agent runtime. Letta Code agents keep memory as Markdown files in a git-backed store called MemFS, search their own message history, and run background "dreaming" to consolidate lessons. It's Apache 2.0.
 
 - **Pick Letta** if you're building a long-lived agent from scratch and want it to edit its own memory and skills.
-- **Look elsewhere** if you need memory inside an existing LangGraph, CrewAI or custom Python agent. Letta's Agent SDK is TypeScript only, and its Python client is deprecated.
+- **Look elsewhere** if you need memory inside an existing LangGraph, CrewAI (which has its own [built-in memory](/articles/crewai-long-term-memory/)) or custom Python agent. Letta's Agent SDK is TypeScript only, and its Python client is deprecated.
 
 Details, setup and pricing are in our [Letta guide](/articles/letta-ai-guide/).
 

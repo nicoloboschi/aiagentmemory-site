@@ -1,8 +1,8 @@
 # Memory Consolidation in AI Agents: How It Works
 
-> How AI agents consolidate memory: reflection, summaries, fact merging, invalidation and sleep-time jobs, from Generative Agents, Mem0, Graphiti and Letta.
+> How AI agents consolidate memory: reflection, hierarchical summaries, fact merging, invalidation, sleep-time jobs, and how consolidation pairs with forgetting.
 
-Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-10-21 · aiagentmemory.org
 
 
 **Memory consolidation in AI agents** is the step that turns raw records (messages, tool results, observations) into a smaller set of cleaner, longer-lived memories. It merges duplicates, resolves contradictions, and writes higher-level insights. Without it, an agent's memory store only grows, and retrieval gets noisier with every session.
@@ -147,6 +147,20 @@ class MemoryStream:
 ```
 
 Two choices here come straight from the paper and are worth keeping. Reflections are stored as ordinary memories, so retrieval treats them the same way. And each reflection keeps the IDs of its evidence, so you can audit or undo it later. A production version would also retrieve evidence per question instead of using only the last 100 items.
+
+## Consolidation and forgetting together
+
+Consolidation and forgetting are two halves of the same upkeep. Consolidation decides what a group of memories means; forgetting decides what still deserves a place in the prompt. Most systems pair one of each:
+
+| System | Consolidation | Forgetting |
+|---|---|---|
+| MemoryBank | Daily summaries rolled into a global summary | Retention **R = e^(-t/S)**; strength S starts at 1, goes up by 1 on each recall, and t resets to 0 |
+| Generative Agents | Reflection at an importance sum of 150 | No deletion; recency decays in the retrieval score |
+| Graphiti / Zep | LLM compares new and existing edges | Invalidation: the old edge gets `t_invalid`, history stays queryable |
+| Mem0 v3 | Single-pass ADD-only extraction | None at write time; retrieval ranks current facts first |
+| Hindsight | Facts merged into observations with quotes and a proof count | Observations are refined rather than overwritten; raw facts stay searchable |
+
+The MemoryBank row comes from its [paper](https://arxiv.org/abs/2305.10250) (Zhong et al., 2023), which bases the rule on the Ebbinghaus forgetting curve: a memory that keeps coming up gets stronger, one that is never recalled fades. The order matters. Consolidate first, then let the raw records it came from fade or rank lower, so the merged memory carries what they said. Forget first, and the evidence for a later merge is already gone. Decay formulas and a scoring example are in [AI memory decay](/articles/ai-memory-decay/).
 
 ## What goes wrong with consolidation
 

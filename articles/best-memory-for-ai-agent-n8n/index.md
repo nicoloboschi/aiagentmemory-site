@@ -54,7 +54,7 @@ These three nodes store history in a database you run, so it survives restarts a
 
 ### Databricks Lakebase Chat Memory (new)
 
-**n8n added a Databricks Lakebase Chat Memory sub-node on October 19, 2026** ([PR #41055](https://github.com/n8n-io/n8n/pull/41055)). It first shipped in n8n 2.45.0, a beta (pre-release) published October 20; the stable release on October 21 is still 2.44.4, which doesn't have it. It stores history in a Lakebase table through Databricks' Data API and logs in with Databricks OAuth2.
+**n8n added a Databricks Lakebase Chat Memory sub-node on October 19, 2026** ([PR #41055](https://github.com/n8n-io/n8n/pull/41055)). It first shipped in n8n 2.45.0, a beta (pre-release) published October 20; the stable release published October 21 is 2.44.5, which doesn't have it (its memory folder has no Lakebase node), so you need the beta channel until 2.45 goes stable. It stores history in a Lakebase table through Databricks' Data API and logs in with Databricks OAuth2.
 
 It differs from Postgres Chat Memory in three ways, all from the node's source:
 

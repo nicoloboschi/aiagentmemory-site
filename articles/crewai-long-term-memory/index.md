@@ -2,7 +2,7 @@
 
 > How CrewAI long-term memory works since v1.10: one Memory class with scopes, LanceDB storage, composite recall scoring, embedder setup, and how to reset it.
 
-Source: https://aiagentmemory.org/articles/crewai-long-term-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/crewai-long-term-memory/ · Updated 2026-10-21 · aiagentmemory.org
 
 
 **CrewAI long-term memory** is handled by one `Memory` class. You save text with `remember()` and get it back with `recall()`. An LLM tags each item with a scope, categories and an importance score, and CrewAI embeds it into a local LanceDB store. Turn on `memory=True` on a `Crew` and it recalls context before each task and saves facts after it.
@@ -80,7 +80,11 @@ Inside a CrewAI Flow, the same calls are available as `self.remember()`, `self.r
 
 ## How CrewAI recall works
 
-Each saved record goes through an LLM (default `gpt-4o-mini`) that infers its scope, categories and importance. On save, **consolidation** checks for near-duplicates (default similarity threshold 0.85) and merges or drops them. `remember_many()` queues a batch in the background and drops in-batch duplicates at 0.98 similarity.
+Each saved record goes through an LLM (default `gpt-4o-mini`) that infers its scope, categories and importance. On save, **consolidation** compares the new record with stored ones at or above a similarity of 0.85 (`consolidation_threshold`; set it to `1.0` to turn consolidation off), and the LLM picks one action: `keep`, `update`, `delete` or `insert_new`. `remember_many()` queues a batch in the background and drops in-batch duplicates at 0.98 similarity with vector math only, no LLM call.
+
+Background writes have a read barrier: every `recall()` first calls `drain_writes()`, and `Crew.kickoff()` drains pending saves when it finishes. A standalone script that exits right after `remember_many()` should call `drain_writes()` or `close()` so the queued saves finish, as the docs advise.
+
+If the analysis LLM fails, CrewAI still saves: the record goes to scope `/` with no categories and importance 0.5, extraction keeps the whole text as one memory, and recall falls back to plain search. So a missing API key shows up as worse memory, not as an error.
 
 Recall ranks by a **composite score**:
 
@@ -105,7 +109,7 @@ Records can also be private. `remember(..., source="user:alice", private=True)` 
 
 ## Storage, embedders and reset commands
 
-**Storage.** The built-in backend is LanceDB on local disk, with a Qdrant Edge option. You can supply your own backend by implementing the `StorageBackend` protocol (`save`, `search` and friends) and passing it as `storage=`. That's the path for a shared database when several workers run the same crew.
+**Storage.** The built-in backend is LanceDB on local disk, at `./.crewai/memory` by default (`$CREWAI_STORAGE_DIR/memory` if set, or pass `storage="path/to/dir"`), with a Qdrant Edge option. You can supply your own backend by implementing the `StorageBackend` protocol (`save`, `search` and friends) and passing it as `storage=`. That's the path for a shared database when several workers run the same crew. One ready-made backend exists: [`crewai-mongodb-memory`](https://github.com/mongodb-developer/crewai-mongodb-memory) (from the mongodb-developer GitHub org, PyPI 0.1.0, July 2026) provides a `MongoDBStorageBackend` on MongoDB Atlas.
 
 **Embedders.** The default is OpenAI `text-embedding-3-large`. Pass `embedder={"provider": "ollama", "config": {"model_name": "mxbai-embed-large"}}` to run locally. The docs list OpenAI, Azure, Google, Vertex, Cohere, VoyageAI, Bedrock, Hugging Face, Jina, WatsonX and sentence-transformers. Pair it with `Memory(llm="ollama/llama3.2")` for a fully local setup.
 

@@ -183,7 +183,7 @@ Many third-party "LangChain chatbot with memory" repos use `ConversationBufferMe
 
 ## When to add a dedicated memory layer
 
-The store gives you storage and search. It doesn't decide what's worth keeping, merge near-duplicates, or notice when a fact changes. For a chatbot with a few preferences per user, that's fine. For assistants that talk to the same people for months, teams often plug in a memory service such as Mem0, Zep or [Hindsight](https://github.com/vectorize-io/hindsight), which handle extraction and retrieval themselves; Hindsight publishes a `hindsight-langgraph` package with memory nodes and tools.
+The store gives you storage and search. It doesn't decide what's worth keeping, merge near-duplicates, or notice when a fact changes; that job is [memory consolidation](/articles/memory-consolidation-ai-agents/). For a chatbot with a few preferences per user, that's fine. For assistants that talk to the same people for months, teams often plug in a memory service such as Mem0, Zep or [Hindsight](https://github.com/vectorize-io/hindsight), which handle extraction and retrieval themselves; Hindsight publishes a `hindsight-langgraph` package with memory nodes and tools.
 
 | If your chatbot... | Use |
 |---|---|
