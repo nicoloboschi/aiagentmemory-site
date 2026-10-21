@@ -2,7 +2,7 @@
 
 > OpenClaw vs Hermes Agent memory compared: file layout, size limits, search, consolidation, external providers and migration, from each project's docs (Oct 2026).
 
-Source: https://aiagentmemory.org/articles/openclaw-vs-hermes-agent-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-vs-hermes-agent-memory/ · Updated 2026-10-21 · aiagentmemory.org
 
 
 **OpenClaw vs Hermes Agent memory** comes down to two philosophies. **Hermes** keeps memory tiny and fixed: two hard-capped files loaded as a frozen snapshot, plus full-text search over old sessions. **OpenClaw** keeps memory open-ended: Markdown files and daily notes, indexed for hybrid search, with a background job that promotes the best notes into `MEMORY.md`.
@@ -36,7 +36,7 @@ Neither is "better." Hermes's approach keeps prompts small and the prompt cache 
 
 Hermes keeps the always-on part small. The agent adds, replaces or removes short entries through a memory tool, and a write that would overflow returns an error so the agent has to consolidate first. The [Hermes docs](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) explain the frozen snapshot: it "preserves the LLM's prefix cache," so the system prompt doesn't change mid-session and cached tokens stay cheap.
 
-Anything bigger goes to session history. Every CLI and messaging session lands in `~/.hermes/state.db`, and `session_search` finds raw messages with full-text search. No embeddings, no extraction model. Skills carry procedures the agent learned. The full breakdown is on [Hermes Agent memory](/articles/hermes-agent-memory/).
+Anything bigger goes to session history. Every CLI and messaging session lands in `~/.hermes/state.db`, and `session_search` finds raw messages with full-text search. No embeddings, no extraction model. Skills carry procedures the agent learned, as `SKILL.md` files it writes and patches itself; [Hermes Agent skills](/articles/hermes-agent-skills/) covers how they're created, loaded and pruned. The full breakdown is on [Hermes Agent memory](/articles/hermes-agent-memory/).
 
 ## How OpenClaw handles memory
 
