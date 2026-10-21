@@ -2,7 +2,7 @@
 
 > How Hermes Agent plugins work: plugin types, hermes plugins install, the SHA-pinned catalog, how memory provider plugins hook in, and which ones exist (Oct 2026).
 
-Source: https://aiagentmemory.org/articles/hermes-agent-plugins/ · Updated 2026-10-21 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-plugins/ · Updated 2026-10-22 · aiagentmemory.org
 
 
 **Hermes Agent plugins** are folders of Python code with a `plugin.yaml` manifest that add tools, hooks, slash commands, memory backends and other features without changing Hermes's core. You install them with `hermes plugins install <name>` from a human-reviewed, commit-pinned catalog, or from any Git repo. Memory provider plugins are a special kind: only one runs at a time.
@@ -39,7 +39,7 @@ The usual path, from the docs:
 1. **Find it.** `hermes plugins search <term>` searches the catalog by name, description and declared tools. `hermes plugins browse` lists every entry and `hermes plugins info <name>` shows one.
 2. **Install it.** `hermes plugins install <name>` clones the entry's repo at its reviewed commit. The prompt shows the declared tools, hooks and environment variables before anything is cloned.
 3. **Answer the enable prompt.** Hermes asks `Enable 'name' now? [y/N]` (default no). Use `--enable` or `--no-enable` in scripts. For a memory provider it asks `Use 'name' as the memory provider now?` instead.
-4. **Grant capabilities if asked.** Plugins that declare privileged capabilities (for example `tools.override`) get a one-time consent prompt. Grants are saved under `plugins.entries.<id>.granted_capabilities`. Without a terminal, they stay ungranted.
+4. **Grant capabilities if asked.** Plugins that declare privileged capabilities (for example `tools.override`) get a one-time consent prompt. Grants are saved under `plugins.entries.<id>.granted_capabilities`. Without a terminal, they stay ungranted. Python dependencies have their own consent step that `--enable` doesn't skip: a declined or non-interactive dependency install leaves the plugin installed but disabled. Hermes v0.22.4 (released October 21, 2026) skips that step for a plugin that installs no dependencies, per its release notes.
 5. **Restart or start a new session.** Run `/plugins` in a session to see what loaded, or `hermes plugins list` for enabled, disabled and not-enabled states.
 6. **Update on purpose.** `hermes plugins update <name>` moves a catalog install to the catalog's current pin; with no name (v0.22.3) it lists every plugin with an update and asks "Update all N?" (`--yes` skips the question). `hermes plugins check-updates` only reports.
 7. **Remove it.** `hermes plugins remove <name>` uninstalls it, drops it from `plugins.enabled` and `plugins.disabled`, and resets `memory.provider` if it was the live provider.

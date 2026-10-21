@@ -2,7 +2,7 @@
 
 > How AI coding agents remember projects: Claude Code CLAUDE.md and auto memory, Codex AGENTS.md and memories, Cursor rules, Copilot Memory, and external memory tools.
 
-Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-10-18 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-10-22 · aiagentmemory.org
 
 
 **AI coding agent memory** is how tools like Claude Code, Codex, Cursor and GitHub Copilot carry project knowledge from one session to the next. The main mechanism is a plain **instruction file** (CLAUDE.md, AGENTS.md or Cursor rules) loaded into every session. Some agents add **automatic memory** that saves lessons as they work. For more, teams add an external memory server. For Claude Code specifically, see [Claude Code memory](/articles/claude-code-memory/).
@@ -91,6 +91,18 @@ Mostly documentation, plus memory for what nobody writes down. Kevin Liao's post
 The vendors agree on the rules part: OpenAI's Codex docs say required team guidance belongs in AGENTS.md, with memories as a recall layer. Where docs fall short is the long tail: the bug that took three sessions to find, or why an option was dropped, which rarely makes it into a spec.
 
 The critique fits append-only snippet stores best. Hindsight addresses part of it: it merges related facts into **observations** that are refined as new evidence arrives rather than stacked as duplicates, and keeps **mental models**, standing answers updated in the background. What it doesn't give you is a file you review in a pull request. A practical split: docs in the repo for anything that must always hold, a memory store for history and lessons, and promote a lesson into the docs once it becomes a rule.
+
+## Does reusing past coding sessions help?
+
+**Yes, but research says how you store and dose the experience matters more than how well you retrieve it.** The [REM paper](https://arxiv.org/abs/2610.27377) (Chen et al., arXiv, October 19, 2026) tests experience memory on repository-level bug fixing with SWE-ContextBench Lite. REM makes three decisions inside the agent's loop:
+
+- **What to store.** Each finished run is condensed into a document split by work phase, which the authors say is two orders of magnitude smaller than the raw trajectory.
+- **When to recall.** That document is injected at the start of a related task. The more detailed implementation record is held back until a check inside the loop sees the agent struggling.
+- **What to forget.** The implementation record is dropped after the agent has seen it once.
+
+On SWE-ContextBench Lite, REM found the related past run 68.7% of the time at match@1, per the REM paper (October 2026). The best of the state-of-the-art memory systems it was compared with scored 55.6% on that retrieval test, per the same paper. REM fixed 27.6% of the bugs on SWE-ContextBench Lite, against 24.9% for the comparison, in every replicate, per the REM paper (October 2026). REM did this at 17% lower cost than the comparison, per the paper's abstract. The authors report that giving the agent the same experience as a plain summary or as the raw trajectory did not improve resolution, even when the right past run was picked by hand. Removing any one of the three decisions lowered resolution.
+
+The practical lesson for teams: dumping old transcripts into context is not enough. Keep lessons short, load them when a task matches, and hold the full detail back until it is needed. Memory servers that consolidate sessions into compact facts, rather than replaying them, follow the same idea.
 
 ## Sharing one file across agents
 
