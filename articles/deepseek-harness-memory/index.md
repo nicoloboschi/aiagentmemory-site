@@ -1,13 +1,13 @@
 # DeepSeek Harness Memory: Sessions, Compaction, Plugins
 
-> How memory works in DeepSeek Harness (dsh): session logs, auto compaction, MCP memory overlays, and long-term memory plugins from Hindsight, Honcho, Mem0, ReMe.
+> How memory works in DeepSeek Harness (dsh): session logs, auto compaction, MCP memory overlays, and long-term memory plugins: Hindsight, Honcho, Mem0, ReMe, dsh-mnemon.
 
-Source: https://aiagentmemory.org/articles/deepseek-harness-memory/ · Updated 2026-10-13 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/deepseek-harness-memory/ · Updated 2026-10-22 · aiagentmemory.org
 
 
-**DeepSeek Harness memory** has two built-in parts: an append-only **session log** that is the source of everything the model sees, and **automatic compaction** that summarizes old history when the context fills. Neither survives into a new session. For memory across sessions, you add a plugin (Hindsight, Honcho, Mem0, ReMe, Nowledge Mem) or an MCP memory server.
+**DeepSeek Harness memory** has two built-in parts: an append-only **session log** that is the source of everything the model sees, and **automatic compaction** that summarizes old history when the context fills. Neither survives into a new session. For memory across sessions, you add a plugin (Hindsight, Honcho, Mem0, ReMe, Nowledge Mem, dsh-mnemon) or an MCP memory server.
 
-[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) is DeepSeek's open-source agent harness: MIT-licensed, written in TypeScript, built on the Cordis plugin framework ("Everything is a Plugin"), and still a developer preview with breaking changes expected. It launched on GitHub on 13 August 2026 and had about 248,900 stars on 13 October 2026. Facts below come from its README, architecture doc and MCP memory guide, plus each plugin's own docs, checked 13 October 2026. For Claude Code, Codex and Cursor, see [AI coding agent memory](/articles/ai-coding-agent-memory/).
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) is DeepSeek's open-source agent harness: MIT-licensed, written in TypeScript, built on the Cordis plugin framework ("Everything is a Plugin"), and still a developer preview with breaking changes expected. It launched on GitHub on 13 August 2026 and had about 258,000 stars on 22 October 2026. Facts below come from its README, architecture doc and MCP memory guide, plus each plugin's own docs, checked 13 October 2026. For Claude Code, Codex and Cursor, see [AI coding agent memory](/articles/ai-coding-agent-memory/).
 
 ## What is DeepSeek Harness memory?
 
@@ -68,6 +68,31 @@ A few details worth knowing:
 - **Mem0**'s plugin adds `search_memory` and `add_memory` tools. Its docs say the `host` setting is "not a switch to self-hosted Mem0 OSS", so the plugin needs Mem0 Platform.
 - **ReMe** injects memory guidance at session start, but memories enter the conversation "only when the agent calls `reme_search`." Its daily dream job defaults to the `Asia/Shanghai` timezone.
 
+## dsh-mnemon: a full memory system with swappable backends
+
+**[dsh-mnemon](https://github.com/omdsh-dev/dsh-mnemon)** is a community memory plugin for dsh: MIT-licensed, created on 10 August 2026, about 650 GitHub stars and version 0.5.34 on npm (21 October 2026). Instead of one store, it splits memory into three layers and lets you pick the backend for the long-term one. Facts below are from its README and Providers guide, checked 22 October 2026.
+
+| Layer | What it holds | How it reaches the model |
+|---|---|---|
+| Runtime memory | Preferences, working agreements, facts needed next turn | Injected every turn as compact `USER.md` and `MEMORY.md` |
+| Project Documents | Designs, investigations, procedures, handoffs (Markdown) | Searched first, then read when relevant |
+| Memory Spaces | Durable facts, decisions, entities and relationships | Recalled on demand from the enabled Provider |
+
+The default **Layered** strategy keeps runtime memory in context and reads the other two only when a question needs them; a **General** strategy offers every source in one budget and lets the model decide. Install it from the dsh Plugins page (type `dsh-mnemon`) or with `dsh plugin --profile web add dsh-mnemon`. It also shows, under each reply, which memories the turn read and wrote, and an experimental Skills component can review past conversations, draft a better `SKILL.md` and backtest it before you adopt it (off by default).
+
+Memory Spaces can run on nine Providers. **Mnemon Native** (a local `mnemon.db` via the Mnemon CLI) is the default; the others are opt-in: OpenViking, Honcho, Mem0, **Hindsight**, Holographic, RetainDB, ByteRover and Supermemory. They differ in what they support, per dsh-mnemon's own matrix:
+
+| Provider | Graph / related | Write | Forget |
+|---|---|---|---|
+| Mnemon Native | Full typed graph / yes | Exact | Soft delete |
+| Hindsight | Provider graph / yes | Async retain | Invalidate (soft) |
+| Holographic | Entity/semantic graph / yes | Exact fact | Hard delete |
+| Mem0 | No / no | Async extraction | Hard delete |
+| Honcho | No / no | Exact peer conclusion | Hard delete |
+| Supermemory | Projected nodes / no | Async document ingest | Provider forget |
+
+So there are two ways to run Hindsight under dsh: the Hindsight Coding Agents plugin below (one bank per repo, shared with other agents, git ingestion), or as the long-term backend inside dsh-mnemon (you set an `endpoint`, `apiKey`, `bankId` and recall `budget`, and dsh-mnemon reads Hindsight's entities and graph into its Memory System view). Use dsh-mnemon if you want its layers, UI and skills; use the Hindsight plugin if the same memory must follow the repo into Claude Code, Codex or Cursor.
+
 ## Where Hindsight fits
 
 **[Hindsight](https://github.com/vectorize-io/hindsight)** is an MIT-licensed memory server from Vectorize, and DeepSeek Harness is one of the 22 agents its Coding Agents package supports. One command installs it: `npx @vectorize-io/hindsight-coding-agents install dsh` writes a Cordis plugin row to `$DSH_HOME/cordis.patch.yml` (`~/.dsh` by default), which every dsh profile composes. It uses native dsh tools, no MCP server.
@@ -93,6 +118,7 @@ The limits: every retain calls an LLM, so writes cost more than a plain log, and
 | A model of the user and project across Honcho-connected tools | Honcho |
 | You already run Mem0 Platform | Mem0's plugin |
 | Local memory the agent searches only when it chooses to | ReMe |
+| Layered memory with a UI, editable memory and a choice of backend | dsh-mnemon (Mnemon Native, Hindsight or another Provider) |
 
 dsh is a developer preview, and its README warns of compatibility-breaking changes. Pin plugin versions, and check each plugin's docs after you upgrade dsh.
 
@@ -109,5 +135,5 @@ Install a memory plugin into a dsh profile, for example npx @vectorize-io/hindsi
 
 ### What is the best memory plugin for DeepSeek Harness?
 
-It depends on the job. Hindsight (MIT, self-hostable) shares one memory bank per repo across dsh, Claude Code, Codex and 19 other agents, and recalls automatically. Honcho models the user and the project. Mem0's plugin needs Mem0 Platform. ReMe is local and Apache-2.0 but only recalls when the agent calls its search tool.
+It depends on the job. Hindsight (MIT, self-hostable) shares one memory bank per repo across dsh, Claude Code, Codex and 19 other agents, and recalls automatically. Honcho models the user and the project. Mem0's plugin needs Mem0 Platform. ReMe is local and Apache-2.0 but only recalls when the agent calls its search tool. dsh-mnemon adds layered memory with a UI and lets you pick the long-term backend (local Mnemon Native by default, or Hindsight, Mem0, Honcho and others).
 

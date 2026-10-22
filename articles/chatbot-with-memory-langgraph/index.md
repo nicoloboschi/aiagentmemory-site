@@ -156,6 +156,8 @@ with PostgresSaver.from_conn_string(DB_URI) as checkpointer, \
 
 Two production habits matter more than the backend. Keep the thread history bounded, by trimming or summarizing old turns, so it fits the [model's context window](/articles/context-window-of-an-llm/), but keep the old turns searchable instead of deleting them: a recent handoff test found a summary alone loses detail that one search gets back (see [summaries or raw history](/articles/how-to-give-ai-agents-memory/#should-memory-hold-summaries-or-raw-history)). And derive `user_id` on the server from the authenticated user, never from client input, because the namespace is your only isolation between users.
 
+The checkpoint table also grows on its own: every step adds a checkpoint and none are deleted. Since langgraph-checkpoint-postgres 3.2.0 (October 2026), `checkpointer.prune([thread_id])` keeps only each thread's latest checkpoint and drops the rest; [LLM memory in LangChain](/articles/llm-memory-langchain/#keeping-the-checkpoint-table-from-growing) covers what it keeps and its limits.
+
 ## The DeepLearning.AI course: Long-Term Agentic Memory with LangGraph
 
 [Long-Term Agentic Memory with LangGraph](https://www.deeplearning.ai/short-courses/long-term-agentic-memory-with-langgraph/) is a DeepLearning.AI short course taught by **Harrison Chase**, co-founder and CEO of LangChain. It runs 1 hour 24 minutes, with 7 video lessons and 5 code examples. The course page says access is free for a limited time during the platform's beta.

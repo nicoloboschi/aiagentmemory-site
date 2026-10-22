@@ -2,7 +2,7 @@
 
 > How LLM memory works in LangChain 1.x: ConversationBufferMemory is deprecated, so use LangGraph checkpointers for chat history and stores for long-term memory.
 
-Source: https://aiagentmemory.org/articles/llm-memory-langchain/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/llm-memory-langchain/ · Updated 2026-10-22 · aiagentmemory.org
 
 
 **LLM memory in LangChain** now means two LangGraph features: a **checkpointer** that saves each conversation thread's messages, and a **store** that keeps facts across threads. The old memory classes, such as `ConversationBufferMemory`, are deprecated. In LangChain 1.x they survive only in the `langchain-classic` compatibility package.
@@ -88,6 +88,17 @@ with SqliteSaver.from_conn_string("chat.sqlite") as checkpointer:
 ```
 
 Backends listed in the LangGraph docs: `InMemorySaver` (tests only), `PostgresSaver` from `langgraph-checkpoint-postgres`, `RedisSaver` from `langgraph-checkpoint-redis`, `MongoDBSaver` from `langgraph-checkpoint-mongodb`, plus Oracle. `SqliteSaver` comes from `langgraph-checkpoint-sqlite`. Database-backed savers need a one-time `setup()` call to create tables.
+
+### Keeping the checkpoint table from growing
+
+A checkpointer saves a new checkpoint after every step and keeps all of them, so a long-lived thread piles up thousands of rows. Until October 2026, `PostgresSaver` had no supported way to clean that up: it inherited a `prune` method that just raised `NotImplementedError`. [langgraph-checkpoint-postgres 3.2.0](https://github.com/langchain-ai/langgraph/pull/9290) (14 October 2026) implements it for `PostgresSaver` and `AsyncPostgresSaver`:
+
+```python
+checkpointer.prune(["user-42-chat-1"])                     # keep only the latest checkpoint
+checkpointer.prune(["user-42-chat-1"], strategy="delete")  # drop the whole thread
+```
+
+`keep_latest` (the default) keeps the checkpoint the agent loads next, plus its pending writes and blobs, and deletes everything older, including blobs only old checkpoints used, which the PR says is most of a long thread's storage. The conversation still works; you lose time travel and forks to older steps. Per the PR: a 6,000-checkpoint thread pruned in 100-200 ms in the author's local test; it refuses threads that use a `DeltaChannel` (deleting their history would empty them); two prunes of the same thread at once can fail, and retrying is safe; and Postgres reuses the freed space without shrinking the files (that takes `VACUUM FULL` or `pg_repack`). Pruning doesn't make the model see less: that's what summarization or trimming is for.
 
 ### Trimming instead of summarizing
 
