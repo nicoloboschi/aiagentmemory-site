@@ -2,7 +2,7 @@
 
 > How to give AI agents memory that lasts across sessions: the two main patterns, a 7-step build, and tested Python code with Pydantic AI, LangMem and Mem0.
 
-Source: https://aiagentmemory.org/articles/how-to-give-ai-agents-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/how-to-give-ai-agents-memory/ · Updated 2026-10-22 · aiagentmemory.org
 
 
 To **give an AI agent memory**, you save information outside the model and put the relevant parts back into its prompt later. The LLM itself forgets everything between calls. Your code decides what to store, where to store it (a database keyed by user), and when to search it, either automatically before each call or through memory tools the agent calls itself.
@@ -42,6 +42,15 @@ The tool pattern comes from the [MemGPT paper](https://arxiv.org/abs/2310.08560)
 5. **Read before the call.** Search with the user's message and add the top few results to the system prompt. Keep the memory block to a fixed token budget.
 6. **Handle change and deletion.** People move, change jobs and ask to be forgotten. Update or invalidate old facts and support deleting a user's whole scope.
 7. **Test recall.** Write 20-50 questions your agent should answer from memory and check them after every change.
+
+### Should memory hold summaries or raw history?
+
+**Keep both: a short record in the prompt, and the raw history searchable behind it.** Two measurements from October 2026 point the same way.
+
+- **Session handoffs.** The [hermes-jev-skills](https://github.com/kerpopule/hermes-jev-skills) project tested handoff notes between Hermes Agent sessions on seven of its own working sessions, with a 15-question recall exam each. Letting the next session make one search over the old transcript raised recall by 20 to 33 points for every kind of note, and no note at all plus one search (56.7%) beat every note read without search ([scorecard](https://github.com/kerpopule/hermes-jev-skills/blob/main/evals/compaction/results/SCORECARD-2026-09-20.md), the authors' own numbers).
+- **Coding agents.** The [REM paper](https://arxiv.org/abs/2610.27377) (October 2026) found that injecting a past bug-fix run as a plain summary or as the raw trajectory did not help an agent fix a related bug. What helped was a compact record split by work phase, with the detailed record shown only when the agent got stuck. Details in [AI coding agent memory](/articles/ai-coding-agent-memory/#does-reusing-past-coding-sessions-help).
+
+So don't dump everything into the prompt, and don't throw the source away after summarizing it. Store short, searchable facts for the prompt, keep the raw history (or a pointer to it) for when the agent needs the detail, and give the agent a search tool to reach it. This is also why the two wiring patterns above are often combined.
 
 ## Python examples: three ways to add agent memory
 

@@ -154,7 +154,7 @@ with PostgresSaver.from_conn_string(DB_URI) as checkpointer, \
     graph = builder.compile(checkpointer=checkpointer, store=store)
 ```
 
-Two production habits matter more than the backend. Keep the thread history bounded, by trimming or summarizing old turns, so it fits the [model's context window](/articles/context-window-of-an-llm/). And derive `user_id` on the server from the authenticated user, never from client input, because the namespace is your only isolation between users.
+Two production habits matter more than the backend. Keep the thread history bounded, by trimming or summarizing old turns, so it fits the [model's context window](/articles/context-window-of-an-llm/), but keep the old turns searchable instead of deleting them: a recent handoff test found a summary alone loses detail that one search gets back (see [summaries or raw history](/articles/how-to-give-ai-agents-memory/#should-memory-hold-summaries-or-raw-history)). And derive `user_id` on the server from the authenticated user, never from client input, because the namespace is your only isolation between users.
 
 ## The DeepLearning.AI course: Long-Term Agentic Memory with LangGraph
 

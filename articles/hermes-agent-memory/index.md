@@ -2,7 +2,7 @@
 
 > How Hermes Agent memory works: MEMORY.md and USER.md limits, the frozen snapshot, session search, external providers like Honcho and Mem0, and fixes when it fails.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-21 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-22 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -48,6 +48,8 @@ Every entry is scanned for prompt injection, credential exfiltration, SSH backdo
 ### Session search
 
 Past CLI and messaging sessions are stored in `~/.hermes/state.db`. The `session_search` tool runs full-text search (SQLite FTS5) over them and returns raw messages, and the agent can scroll through a found session. `hermes sessions list` shows them from the CLI. This is Hermes's answer to "what did we do last month": not stored in memory, but findable.
+
+**One search beats a better summary.** The third-party [hermes-jev-skills](https://github.com/kerpopule/hermes-jev-skills) project (about 1,100 GitHub stars in October 2026) measured session handoffs on seven of its own Hermes working sessions, with a 15-question recall exam each. In its [scorecard](https://github.com/kerpopule/hermes-jev-skills/blob/main/evals/compaction/results/SCORECARD-2026-09-20.md), letting the next session make one `session_search` call raised recall by 20 to 33 points for every kind of handoff note. A session with no note and one search (56.7%) beat every note read without search. The best note was written from the whole dialogue with a 1,200-word budget: 58.7% recall alone and 75.0% with one search, against 37.5% and 68.3% for the 400-word note it replaced. These are the authors' own numbers on seven sessions, not an independent benchmark. The practical lesson: make sure a handoff names the old session id so the next session can search it, and don't prune sessions you may need to find. Their [handoff notes](https://github.com/kerpopule/hermes-jev-skills/blob/main/docs/hermes-compaction.md) also report that on Hermes 0.21, passing `query` and `session_id` together made `session_search` read the session from the top and ignore the query; search by keywords first, then open the hit with `around_message_id`.
 
 That history is only findable while it exists. By default Hermes keeps every session, and the [sessions docs](https://hermes-agent.nousresearch.com/docs/user-guide/sessions) warn that `state.db` then "grows without bound", with multi-GB files reported on gateway and cron installs. Auto-prune is off by default (v0.22.3, October 21, 2026, put it back to opt-in):
 
