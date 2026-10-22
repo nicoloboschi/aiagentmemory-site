@@ -2,7 +2,7 @@
 
 > What Zep memory is in 2026: the Zep Cloud temporal context graph, open-source Graphiti, how it stores and retrieves memory, pricing, self-hosting, integrations.
 
-Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-10-22 · aiagentmemory.org
 
 
 **Zep memory** is Zep Cloud, a managed service that stores what an agent learns from users and data in a **temporal context graph**, then returns a prompt-ready block of relevant facts. Its open-source core is **Graphiti**, a framework for knowledge graphs that track when facts change. The old self-hosted Zep Community Edition is deprecated.
@@ -126,6 +126,8 @@ Not the current product, unless you're on Enterprise. Your options:
 ## Zep integrations: LangChain, LangGraph, n8n, MCP
 
 **LangGraph.** Zep maintains `zep-langgraph`, which adds helpers to persist messages, inject context before the model call, and give the agent a graph search tool. The getzep/zep repo also has packages for CrewAI, AutoGen, AG2, Google ADK, Pydantic AI, Strands, LiveKit, Microsoft Agent Framework, Mastra and the Vercel AI SDK.
+
+**LiveKit (voice).** `zep-livekit` 1.0.0 went out on PyPI on October 14, 2026. Its `ZepUserAgent` saves each turn and gets context back in a single `thread.add_messages(return_context=True)` call, so a voice agent pays one round trip per turn for memory. `ZepGraphAgent` reads from a shared knowledge graph instead. Zep ingests asynchronously, so something the caller just said may not be searchable on the very next turn. How this compares with other options is in [voice agent memory](/articles/voice-agent-memory/).
 
 **LangChain.** `langchain-community` still ships `ZepCloudChatMessageHistory`, but it calls the session-based `memory` API from Zep's v2 SDK. The v3 API organizes conversations as threads instead, so for new LangChain-family projects, Zep's own LangGraph package is the maintained route.
 

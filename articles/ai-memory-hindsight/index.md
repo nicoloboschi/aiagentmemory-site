@@ -150,7 +150,7 @@ Hindsight is a heavier system than a vector store or a markdown file. Its real c
 - **Small models extract worse.** Fact quality depends on the extraction model. The docs point to a model leaderboard, but a weak local model will produce weaker memories.
 - **No direct entity-to-entity graph.** If your use case is ontology queries ("all suppliers two hops from X"), a property graph fits better.
 - **Cross-bank queries are client-side.** The docs note multi-bank queries need your own orchestration.
-- **Reflect is slow for hot paths.** At 1-10 seconds, it suits background work or answers a user waits for, not every turn of a voice agent.
+- **Reflect is slow for hot paths.** At 1-10 seconds, it suits background work or answers a user waits for, not every turn of a voice agent. For calls, use plain recall with a low budget (see [voice agent memory](/articles/voice-agent-memory/)).
 - **Bigger reads than Mem0.** By Mem0's measurement, a Hindsight recall returns 24K-44K tokens against under 7K for Mem0, about 4x. The budget is yours: set `max_tokens` lower if prompt cost matters.
 - **No document connectors.** There's no Drive, Gmail or Notion sync in the integration list. It's a memory system, not a RAG platform.
 - **Smaller community than Mem0.** About 48,600 GitHub stars against Mem0's 67,000 (12 October 2026), so fewer third-party examples.
