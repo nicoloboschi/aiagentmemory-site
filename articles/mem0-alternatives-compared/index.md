@@ -55,6 +55,8 @@ Zep stopped maintaining its open-source Community Edition in April 2025. Its ope
 - **Pick Graphiti** if you want the same graph model on your own infrastructure and can run a graph database.
 - **Look elsewhere** if you don't want to operate a graph DB, or want a simple user-memory API.
 
+Graphiti's quality depends on the model that builds the graph. In an October 2026 university study (MemoryTax, one LoCoMo conversation), Graphiti scored 43% when GPT-4o-mini built the graph and 87% with Claude Opus 5.5, while Mem0 scored 78% and 95%. Details and limits are in [what Zep memory is](/articles/what-is-zep-memory/#how-zeps-open-source-engine-did-in-an-outside-test).
+
 See our [Zep alternatives guide](/articles/zep-alternatives/) for more on this split.
 
 ## Letta

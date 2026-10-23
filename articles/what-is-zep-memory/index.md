@@ -1,8 +1,8 @@
 # What Is Zep Memory? Zep Cloud, Graphiti and Pricing
 
-> What Zep memory is in 2026: the Zep Cloud temporal context graph, open-source Graphiti, how it stores and retrieves memory, pricing, self-hosting, integrations.
+> What Zep memory is in 2026: the Zep Cloud temporal context graph, open-source Graphiti, how it stores and retrieves memory, outside test results, pricing, self-hosting, integrations.
 
-Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-10-22 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 **Zep memory** is Zep Cloud, a managed service that stores what an agent learns from users and data in a **temporal context graph**, then returns a prompt-ready block of relevant facts. Its open-source core is **Graphiti**, a framework for knowledge graphs that track when facts change. The old self-hosted Zep Community Edition is deprecated.
@@ -101,6 +101,25 @@ Zep's architecture is described in [Zep: A Temporal Knowledge Graph Architecture
 
 These are the authors' own numbers. Benchmark setups differ across vendors, so read memory benchmark claims with care.
 
+### How Zep's open-source engine did in an outside test
+
+[MemoryTax](https://arxiv.org/abs/2610.29823) (Zedong Peng, Shanghai Jiao Tong University, October 2026) is not run by Zep or any memory vendor. It ran **Graphiti OSS 0.30.2** on Kuzu (a backend Graphiti now marks deprecated) with default extraction and hybrid edge search (top 20 edges) on one LoCoMo conversation: 419 turns, 152 questions. The same model built the graph and answered.
+
+| Model | Full context | Mem0 OSS 2.1.0 | Zep (Graphiti) | Zep graph build cost |
+|---|---|---|---|---|
+| GPT-4o-mini | 74% | 78% | 43% | $0.09 |
+| GPT-6 Luna | 92% | 80% | 51% | $0.10 |
+| Claude Opus 5.5 | 95% | 95% | 87% | $6.22 |
+
+Part of the gap is the test setup: 64 questions need a photo caption, which the memory methods were not given. On the other 88 questions, Zep with Claude Opus 5.5 scored 94%, against 99% for full context and Mem0 (paper's Table 4).
+
+Two findings matter for Zep users:
+
+- **The model that builds the graph sets the ceiling.** Answering from the graph GPT-4o-mini built, Claude Opus 5.5 scored only 45%; from the graph Opus built, even GPT-4o-mini scored 66%. A stronger reader doesn't recover facts a weaker extractor left out. With GPT-6 Luna the graph held 128 facts, against 195 with Opus. So pick Graphiti's extraction model with care: the docs' advice to use a model with structured output is a floor, not a guarantee.
+- **The graph is cheap to build with a small model, not with a frontier one.** Zep's build cost far less than Mem0's ($0.09 vs $0.56 with GPT-4o-mini, $6.22 vs $25.88 with Opus), but with GPT-4o-mini it also answered far fewer questions.
+
+Limits, as the author states them: one conversation, one run per setup, a lenient GPT-4o-mini judge, defaults only, and a history that fits in every model's context window. Zep Cloud was not tested, only the open-source engine. Hindsight was not in this study either.
+
 ## Zep pricing and the free tier
 
 Zep Cloud bills in **credits**. Per the pricing page, an episode up to 350 bytes costs 1 credit, plus 1 credit per extra 350 bytes. Retrieval, storage, users and threads don't use credits.
@@ -155,6 +174,10 @@ Zep Cloud, the managed memory service, is not open source. Zep's open-source pro
 ### Is Zep free?
 
 Zep Cloud has a free tier for prototyping with 10,000 credits per month. Paid plans start with Flex at $125 per month for 50,000 credits. Graphiti, the open-source framework, is free to run on your own graph database, but you pay for the LLM and embedding calls it makes.
+
+### How accurate is Zep memory in independent tests?
+
+In the October 2026 MemoryTax study (Shanghai Jiao Tong University, not a vendor), open-source Graphiti 0.30.2 with default settings scored 43% with GPT-4o-mini, 51% with GPT-6 Luna and 87% with Claude Opus 5.5 on one LoCoMo conversation, below full context (74%, 92%, 95%) and Mem0 (78%, 80%, 95%). The model that builds the graph caps accuracy: a stronger reader did not recover facts a weaker model left out. It was one conversation and one run, and Zep Cloud was not tested.
 
 ### Does Zep work with n8n and LangGraph?
 

@@ -196,7 +196,7 @@ The store gives you storage and search. It doesn't decide what's worth keeping, 
 
 Hindsight's case is long histories: it consolidates facts into observations, merges four search strategies at recall, and on the long-history BEAM test scores 73.9 at 1M tokens versus Mem0's 64.1 ([Mem0's comparison](https://mem0.ai/compare/mem0-vs-hindsight), vendor-run). It's MIT-licensed with every feature self-hostable. The costs are an LLM call on every write and more context per recall than Mem0, which you can cap with `max_tokens`.
 
-The [AI agent memory guide](/articles/ai-agent-memory-explained/) explains the design choices behind these systems.
+The [AI agent memory guide](/articles/ai-agent-memory-explained/) explains the design choices behind these systems. If you're weighing an agent that edits its own memory against LangChain's store, see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/).
 
 
 ## FAQ

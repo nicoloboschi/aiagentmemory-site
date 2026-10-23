@@ -2,12 +2,12 @@
 
 > How OpenAI Codex memory works: AGENTS.md load order and 32 KiB limit, Codex memories in ~/.codex/memories, config keys, /memories, and adding Hindsight or agentmemory.
 
-Source: https://aiagentmemory.org/articles/codex-memory/ · Updated 2026-10-13 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/codex-memory/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 **Codex memory** is two built-in layers. **AGENTS.md files** hold instructions you write, and Codex loads them at the start of every run. **Codex memories**, off by default, turn useful context from past chats into local files under `~/.codex/memories/`. For memory that is searchable, shared across agents or kept on a server, add a hook-based plugin such as Hindsight.
 
-[Codex](https://github.com/openai/codex) is OpenAI's coding agent for the terminal, IDE and ChatGPT desktop app. Each session starts with an empty context window, so anything Codex should know must come back in from a file or a tool. Facts below come from OpenAI's [Codex memories docs](https://learn.chatgpt.com/docs/customization/memories) and [AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), checked 13 October 2026. For Claude Code, Cursor and Copilot, see [AI coding agent memory](/articles/ai-coding-agent-memory/).
+[Codex](https://github.com/openai/codex) is OpenAI's coding agent for the terminal, IDE and ChatGPT desktop app. Each session starts with an empty context window, so anything Codex should know must come back in from a file or a tool. Facts below come from OpenAI's [Codex memories docs](https://learn.chatgpt.com/docs/customization/memories) and [AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), checked 13 October 2026, and from the Codex source and release notes up to 0.164.0 (23 October 2026). For Claude Code, Cursor and Copilot, see [AI coding agent memory](/articles/ai-coding-agent-memory/).
 
 ## What is Codex memory?
 
@@ -64,17 +64,43 @@ The `/memories` command (desktop app and CLI) sets, for the current chat only, w
 | `memories.extract_model` | Model for per-chat extraction |
 | `memories.consolidation_model` | Model for the global consolidation pass |
 
+### Default limits (Codex 0.164.0)
+
+The docs don't say when memories update. The source does. These are the defaults in `codex-rs/config/src/types.rs` and the config schema at tag `rust-v0.164.0` (released 23 October 2026):
+
+| Key | Default | What it means |
+|---|---|---|
+| `min_rollout_idle_hours` | 6 | A chat must sit idle 6 hours before it can become a memory (the schema recommends more than 12) |
+| `max_rollouts_per_startup` | 2 | At most 2 past chats are processed per pass (1 to 128) |
+| `max_rollout_age_days` | 10 | Chats older than 10 days are not used |
+| `max_unused_days` | 30 | A memory unused for 30 days drops out of consolidation |
+| `max_raw_memories_for_consolidation` | 256 | Recent raw memories kept for the global pass (1 to 4,096) |
+| `min_rate_limit_remaining_percent` | 25 | Generation is skipped if less than 25% of your rate limit is left |
+| `dedicated_tools` | false | When true, the model gets dedicated memory tools |
+| `version` | v1 | Picks the memory pipeline: `v1` or `v2` |
+
+So with defaults, a busy week of chats can take several passes to show up in memory: two chats per pass, each idle for at least six hours.
+
+### What changed in October 2026
+
+- **A second memory pipeline (v2).** `memories.version` selects `v1` (still the default) or `v2`. With `memories.dual_write = true` and v1 selected, Codex builds both, so v2 memories are ready when you switch; once v2 is selected, only v2 runs ([PR #55262](https://github.com/openai/codex/pull/55262), in 0.164.0). OpenAI hasn't documented what v2 does differently.
+- **Bounded extraction input.** Extraction reads a chat newest-first and keeps up to 8 MiB of cleaned items, skipping malformed records and any record over 1 MiB ([PR #53940](https://github.com/openai/codex/pull/53940)). Very long chats lose their oldest part, not their newest.
+- **14-day retention** for memory extension resources, up from 7 days, before pruning ([PR #54033](https://github.com/openai/codex/pull/54033)).
+- **Parallel memory reads.** Since 0.163.0, memory listing, reading and searching run in parallel with other read-only tools such as skill reads and conversation-history search ([PR #52245](https://github.com/openai/codex/pull/52245)).
+
 The extract-then-consolidate design is the same pattern described in [memory consolidation for AI agents](/articles/memory-consolidation-ai-agents/), run locally on your own rate limit.
 
 ## Limits of Codex's built-in memory
 
 The built-in layers cover rules and a light personal recall. They leave gaps that show up on long projects:
 
-- **No search you control.** Memories are injected by Codex; there's no query tool to ask "what did we decide about the cache last month?"
+- **Search belongs to the model, not to you.** Codex can list, read and search its memories with internal tools, but you get no query of your own to ask "what did we decide about the cache last month?"
 - **One machine, one agent.** The store is local to the machine, and Claude Code or Cursor on the same repo can't read it.
-- **Timing is opaque.** Memories may not update right away, and the docs give no schedule beyond waiting for an idle chat.
+- **Slow and partial by design.** With defaults, a chat waits 6 idle hours, only 2 chats are processed per pass, and chats older than 10 days are skipped (see the table above).
 - **Opt-in exclusions.** With `disable_on_external_context` on, chats that used MCP or web search never become memories.
 - **Instructions are capped.** AGENTS.md past 32 KiB gets cut unless you raise the limit, and every byte costs tokens on every run.
+
+Can Codex just search the raw history instead? A small October 2026 study, [MemoryTax](https://arxiv.org/abs/2610.29823) (Peng, Shanghai Jiao Tong University), gave Codex 0.159.2 one LoCoMo conversation as a file and asked 152 questions. With Claude Opus 5.5 driving it, Codex scored 98% ($25.41 for the run); with GPT-4o-mini it scored 28%: it opened the file for about three questions in four and otherwise answered from the question alone. The author's limits: one conversation, one run per cell, a history that fits in context, and a lenient GPT-4o-mini judge. It tests chat recall, not coding work, so it says little about remembering project decisions across weeks.
 
 ## Adding long-term memory to Codex
 
@@ -127,6 +153,10 @@ Yes, in two layers. AGENTS.md files hold instructions you write, and Codex loads
 ### How do I turn on Codex memories?
 
 In the ChatGPT desktop app, open Settings > Personalization and turn on Enable Codex memories. In the CLI, add memories = true under [features] in ~/.codex/config.toml. The /memories command then controls, per chat, whether the chat uses or feeds memories.
+
+### Why don't my Codex memories update right away?
+
+By default (Codex 0.164.0) a chat must be idle for 6 hours before it can become a memory, each pass processes at most 2 chats, chats older than 10 days are skipped, and generation pauses when less than 25% of your rate limit is left. You can change these with the memories keys in config.toml, such as min_rollout_idle_hours and max_rollouts_per_startup.
 
 ### Can I add long-term memory to Codex beyond its built-in memories?
 
