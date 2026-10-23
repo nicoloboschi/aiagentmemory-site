@@ -2,7 +2,7 @@
 
 > RAG vs agent memory: what retrieval-augmented generation is, how long-term memory differs (writes, updates, time, per-user scope) and how to combine both.
 
-Source: https://aiagentmemory.org/articles/rag-vs-agent-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/rag-vs-agent-memory/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 **RAG vs agent memory** comes down to who writes the data. **Retrieval-augmented generation (RAG)** searches a corpus of documents someone curated, like product docs or policies, and adds the best matches to the prompt. **Agent memory** searches information the agent wrote itself from its interactions, like a user's preferences or what happened last week. RAG is mostly read-only and shared; memory is read-write, per user, and keeps changing.
@@ -68,6 +68,36 @@ The obvious shortcut is "RAG memory": embed every past message and search it lik
 **Granularity.** LongMemEval's authors found that how you split history into stored units matters, and proposed session decomposition, fact-augmented keys and time-aware query expansion to fix it. Those are memory-specific steps a document RAG pipeline doesn't have. Coding agents show the same thing: in the REM paper (October 2026), injecting a past bug-fixing run as a raw trajectory or a plain summary did not help, while a compact, phase-structured version did; see [AI coding agent memory](/articles/ai-coding-agent-memory/#does-reusing-past-coding-sessions-help).
 
 Dedicated memory systems handle these four problems at write time, not query time. Graphiti, for example, marks a replaced fact as superseded. **[Hindsight](https://github.com/vectorize-io/hindsight)** tags each fact with its time and entities as it's stored, runs a time-range search next to semantic, keyword and graph search, and folds related facts into **observations** that get refined as new facts arrive instead of piling up. That design is why it reports 94.6 on LongMemEval, the benchmark built around these failure modes (vendor-reported).
+
+## Does plain RAG lose to memory systems on benchmarks?
+
+**Not always. An October 2026 paper found that plain RAG over raw chat history beat 12 memory systems on LoCoMo and LongMemEval. Its edge was small, and the histories in those tests are short. The case for memory systems rests on histories far longer than these tests, which the paper didn't cover.**
+
+The paper is [Is Complex Agentic Memory Always Needed? Naive RAG Is Stronger Than We Thought](https://arxiv.org/abs/2610.30755) (Bao et al., arXiv, October 22, 2026). Its baseline, Raw-RAG, does no extraction: it embeds the raw conversation, retrieves with dense search, reranks, and hands the evidence to the reader LLM. Overall accuracy (%) from its main table:
+
+| System | LoCoMo, GPT-4o-mini | LoCoMo, GPT-4.1-mini | LongMemEval, GPT-4.1-mini |
+|---|---|---|---|
+| **Raw-RAG** | **89.07** | **93.70** | **87.53** |
+| EverMemOS | 86.76 | 93.05 | 83.00 |
+| MemMachine | 88.12 | 91.69 | 74.33 |
+| Memora | 80.61 | 86.30 | 87.40 |
+| EMem | 78.00 | 84.20 | 83.00 |
+| SimpleMem | 78.25 | 83.87 | 76.87 |
+| Mem0 | 66.88 | 64.20 | 66.40 |
+| Full context | 72.30 | 80.60 | 65.60 |
+
+The paper also tested MemOS, MemU, Nemori, MemoryOS, A-MEM and RecMem; all scored below Raw-RAG. Across seven benchmark and model settings (adding MEME and MemoryAgentBench), Raw-RAG came first in six. Its lead over the best memory system was 0.13 to 5.53 points.
+
+Why it won, per the authors: raw history keeps more of the evidence a question needs, and extraction throws some away. Even given full access to their own stores, the memory systems trailed raw evidence. So **keep the raw messages** next to whatever you extract.
+
+How far this goes:
+
+- **Short histories.** LoCoMo conversations and LongMemEval's S set fit in a large context window. The authors list longer histories as future work, and say their evidence is "limited to offline conversation on public benchmarks."
+- **Storage and privacy.** They name these as costs of keeping raw history, and list privacy and deletion limits as things future work must account for.
+- **Scores don't carry across papers.** Mem0 scores 66.40 on LongMemEval here, but 94.4 on its own comparison page, which uses its current platform and setup. Compare systems inside one paper, not across papers.
+- **Hindsight wasn't tested.** It does extract facts, so the paper's warning applies to it too, but its consolidated observations keep quotes from the original messages, and recall runs semantic, keyword, graph and time search together, not one dense search. Its lead shows on long histories: on BEAM 10M (10 million tokens, far past any context window) it reports 64.1 against Mem0's 48.6, on Mem0's own comparison page. Both are vendor-run numbers.
+
+The takeaway for builders: start with RAG over raw history as your baseline, and measure. Add a memory system when the histories outgrow it, or when you need what plain RAG lacks: facts that update, per-user scope, and time-aware recall.
 
 ## RAG vs long-term memory vs long context
 
@@ -173,4 +203,8 @@ In a narrow sense, yes. The original RAG paper (Lewis et al., 2020) calls the do
 ### Should I use RAG or a memory system for my chatbot?
 
 Use RAG when answers come from a fixed knowledge base like docs or policies. Add memory when the bot must remember users across sessions, such as preferences, past issues or decisions. Most production assistants use both: RAG for what's true in general, memory for what's true about this user.
+
+### Is naive RAG better than agent memory systems?
+
+On today's benchmarks, often. An October 2026 arXiv paper (Bao et al.) found plain RAG over raw chat history ranked first against 12 memory systems, including Mem0, EverMemOS and MemMachine, in six of seven LoCoMo, LongMemEval, MEME and MemoryAgentBench settings, by 0.13 to 5.53 points. The authors limit the claim to offline conversation benchmarks and leave longer histories to future work, so treat it as the baseline to beat.
 

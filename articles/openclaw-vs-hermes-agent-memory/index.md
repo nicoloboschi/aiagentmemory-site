@@ -2,7 +2,7 @@
 
 > OpenClaw vs Hermes Agent memory compared: file layout, size limits, search, consolidation, external providers and migration, from each project's docs (Oct 2026).
 
-Source: https://aiagentmemory.org/articles/openclaw-vs-hermes-agent-memory/ · Updated 2026-10-21 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-vs-hermes-agent-memory/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 **OpenClaw vs Hermes Agent memory** comes down to two philosophies. **Hermes** keeps memory tiny and fixed: two hard-capped files loaded as a frozen snapshot, plus full-text search over old sessions. **OpenClaw** keeps memory open-ended: Markdown files and daily notes, indexed for hybrid search, with a background job that promotes the best notes into `MEMORY.md`.
@@ -73,10 +73,25 @@ The limit that matters here: it costs more tokens than Hermes's fixed ~1,300. Ea
 
 The two projects make switching easy:
 
-1. **OpenClaw to Hermes**: run `hermes claw migrate`. It imports `SOUL.md`, memories, user-created skills, command allowlists, messaging settings, allowlisted API keys and `AGENTS.md`. The setup wizard also detects `~/.openclaw` and offers this, with a dry-run preview.
+1. **OpenClaw to Hermes**: since Hermes v0.22.5 (October 22, 2026) the importer is a plugin, not part of core. Run `hermes plugins install agent-importers`, then `hermes import-agent openclaw` (the old `hermes claw migrate` still works once the plugin is in). On a fresh install, `hermes setup` finds `~/.openclaw`, asks "Import your setup from OpenClaw?" and installs the plugin for you. It always shows a preview first; `--dry-run` stops there.
 2. **Hermes to OpenClaw**: in the OpenClaw Control UI, open **Settings → Import Memory**. It copies Hermes's `MEMORY.md` and `USER.md` into `memory/imports/hermes/`, searchable but not merged into OpenClaw's own `MEMORY.md`.
 
-After a move, review what came across. A 2,200-character Hermes store maps cleanly into OpenClaw, but OpenClaw daily notes won't fit Hermes's caps; they'll need trimming into a few durable entries.
+What the OpenClaw import does with memory, per the [Hermes migration guide](https://hermes-agent.nousresearch.com/docs/guides/migrate-from-openclaw):
+
+| OpenClaw | Goes to in Hermes | How |
+|---|---|---|
+| `workspace/MEMORY.md` | `~/.hermes/memories/MEMORY.md` | Split into entries, merged with what's there, duplicates dropped |
+| `workspace/USER.md` | `~/.hermes/memories/USER.md` | Same merge |
+| `workspace/memory/*.md` daily notes | `~/.hermes/memories/MEMORY.md` | All daily files merged into the main memory |
+| `workspace/SOUL.md` | `~/.hermes/SOUL.md` | Copied as is |
+| Skills (4 places) | `~/.hermes/skills/openclaw-imports/` | Name clashes skipped by default |
+| API keys | `~/.hermes/.env` | Only with `--migrate-secrets` |
+
+Before it writes anything, it saves a zip of `~/.hermes/` under `~/.hermes/backups/` (turn this off with `--no-backup`), so a bad import can be undone with `hermes import`.
+
+After a move, review what came across. A 2,200-character Hermes store maps cleanly into OpenClaw. The other way is the problem: all your daily notes land in one `MEMORY.md`, and Hermes caps that file at 2,200 characters. Trim them into a few lasting entries, or move the long history into an external provider instead (see [where Hindsight fits](#where-hindsight-fits)).
+
+The same plugin also imports from Claude Code, Codex CLI and Cursor. Their instruction files (`CLAUDE.md`, `AGENTS.md`, Cursor rules) and Codex's `memories/*.md` become Hermes memory entries, and `hermes import-agent --sync` pulls in later changes.
 
 ## How to choose
 
@@ -91,7 +106,7 @@ Hermes keeps a tiny, hard-capped memory (2,200 + 1,375 characters) that loads as
 
 ### Can I move my memory from OpenClaw to Hermes or back?
 
-Yes. hermes claw migrate imports OpenClaw's SOUL.md, memories, skills and AGENTS.md, with a dry-run preview. In the other direction, OpenClaw's Settings, Import Memory copies Hermes's MEMORY.md and USER.md into memory/imports/hermes/ as searchable notes.
+Yes. Since Hermes v0.22.5 the import is the agent-importers plugin: hermes plugins install agent-importers, then hermes import-agent openclaw (hermes claw migrate still works with the plugin). It merges MEMORY.md, USER.md and all daily notes into Hermes memory, copies SOUL.md and skills, and shows a preview first. In the other direction, OpenClaw's Settings, Import Memory copies Hermes's MEMORY.md and USER.md into memory/imports/hermes/ as searchable notes.
 
 ### Do OpenClaw and Hermes support Mem0, Honcho or Hindsight?
 

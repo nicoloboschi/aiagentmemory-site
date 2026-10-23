@@ -2,7 +2,7 @@
 
 > How Hermes Agent memory works: MEMORY.md and USER.md limits, the frozen snapshot, session search, external providers like Honcho and Mem0, and fixes when it fails.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-22 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -132,7 +132,7 @@ Most "Hermes forgot" reports come from a handful of causes:
 
 ## Hermes compared with other agents
 
-Hermes's built-in memory is closest to OpenClaw's markdown files and Claude Code's auto memory: plain text, small, loaded at start. It differs in the hard character caps and the frozen snapshot. Hermes can also import from OpenClaw with `hermes claw migrate`, which carries over `SOUL.md`, memories, skills and `AGENTS.md`. For a side-by-side, see [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/).
+Hermes's built-in memory is closest to OpenClaw's markdown files and Claude Code's auto memory: plain text, small, loaded at start. It differs in the hard character caps and the frozen snapshot. Hermes can also import memory from other agents. Since v0.22.5 this is the official `agent-importers` plugin (`hermes plugins install agent-importers`, then `hermes import-agent`), and a fresh `hermes setup` offers it when it finds `~/.openclaw`, `~/.claude`, `~/.codex` or `~/.cursor`. OpenClaw's `MEMORY.md`, `USER.md` and daily notes merge into Hermes memory; Claude Code's `CLAUDE.md`, Codex's `AGENTS.md` and `memories/*.md`, and Cursor's rules become entries in `MEMORY.md`. Every import shows a preview first, and `hermes import-agent --sync` pulls in later changes ([Hermes docs](https://hermes-agent.nousresearch.com/docs/user-guide/import-from-other-agents)). Check `MEMORY.md` after a big import: the memory tool caps it at 2,200 characters, and a long `CLAUDE.md` alone can be bigger than that. For a side-by-side, see [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/).
 
 
 ## FAQ

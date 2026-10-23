@@ -2,7 +2,7 @@
 
 > How Hermes Agent plugins work: plugin types, hermes plugins install, the SHA-pinned catalog, how memory provider plugins hook in, and which ones exist (Oct 2026).
 
-Source: https://aiagentmemory.org/articles/hermes-agent-plugins/ · Updated 2026-10-22 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-plugins/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 **Hermes Agent plugins** are folders of Python code with a `plugin.yaml` manifest that add tools, hooks, slash commands, memory backends and other features without changing Hermes's core. You install them with `hermes plugins install <name>` from a human-reviewed, commit-pinned catalog, or from any Git repo. Memory provider plugins are a special kind: only one runs at a time.
@@ -75,6 +75,8 @@ The rules in the [catalog README](https://github.com/NousResearch/hermes-agent/t
 - **A removed list.** Pulled plugins go in `removed.yaml`, and the installer refuses them by name or repo URL.
 
 Each entry has a tier. `official` means maintained by Nous Research, `verified` means Nous checked it comes from the company whose product it integrates, and `community` is everything else. All 67 Memory-shelf entries were `community` tier on October 21, 2026, including Honcho, Mem0, Supermemory and Hindsight, which their own companies maintain. So the tier doesn't separate memory providers from each other.
+
+Hermes is also moving its own features out of core into `official` plugins. In [v0.22.5](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.5) (October 22, 2026), `hermes import-agent` and the OpenClaw migration became the `agent-importers` plugin, and `hermes mcp serve` left core too. Run an old command without its plugin and Hermes prints the install line (`hermes plugins install agent-importers`). The importer is how memory moves in from OpenClaw, Claude Code, Codex CLI or Cursor; [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/#migrating-between-them) shows what it does with each file.
 
 The docs are blunt about what the catalog is not: "Cataloged ≠ audited." Review checks the pinned commit and the declared capabilities at admission. It isn't a security audit, so read the code of anything you give credentials to. A bare name that isn't in the catalog is an error; `owner/repo` installs skip the catalog and show an unvetted-code warning.
 

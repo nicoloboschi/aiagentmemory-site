@@ -118,7 +118,7 @@ In production, swap `InMemoryStore` for `AsyncPostgresStore` and run the manager
 
 History length is the biggest split. On the BEAM benchmark, Hindsight scores 73.9 at 1M tokens and 64.1 at 10M, against 64.1 and 48.6 for Mem0's Platform (Mem0's own [comparison page](https://mem0.ai/compare/mem0-vs-hindsight); vendor-run). On shorter tests the two are close: 94.6 vs 94.4 on LongMemEval, 92 vs 92.5 on LoCoMo. Hindsight's tradeoff is size: by Mem0's measurement it returns 24K-44K tokens per retrieval against under 7K, so cap `max_tokens` if prompt cost matters. See [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
 
-Picking between them depends on your data and stack; the decision guide is in [how to pick the best AI memory framework](/articles/best-ai-memory-framework/).
+Picking between them depends on your data and stack; the decision guide is in [how to pick the best AI memory framework](/articles/best-ai-memory-framework/). If it's down to Letta or LangMem, [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/) compares the two. And measure a plain baseline first: in an October 2026 paper, RAG over the raw chat history beat 12 memory systems on LoCoMo and LongMemEval ([details and limits](/articles/rag-vs-agent-memory/#does-plain-rag-lose-to-memory-systems-on-benchmarks)).
 
 ## Is there a limit to long-term memory in AI?
 
