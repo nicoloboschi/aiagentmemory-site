@@ -114,6 +114,7 @@ In production, swap `InMemoryStore` for `AsyncPostgresStore` and run the manager
 | Letta | Agent-editable memory files in a git-backed filesystem | A full agent runtime, not a plug-in library |
 | LangMem | Any LangGraph store; hot-path tools or background extraction | Best fit if you already use LangGraph |
 | Cognee | Knowledge graph plus vector and relational stores | Strong on turning documents into a graph |
+| [AWS AgentCore Memory](/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/) | Records extracted from events by semantic, preference, summary or episodic strategies; `IngestData` writes to long-term memory directly | Managed AWS service, priced per stored record |
 | [Hindsight](https://github.com/vectorize-io/hindsight) | Facts and experiences on Postgres, consolidated into observations and mental models; 4-way recall (semantic, BM25, graph, temporal) | MIT, every feature self-hostable; `reflect` reasons over memories; top BEAM 1M/10M scores |
 
 History length is the biggest split. On the BEAM benchmark, Hindsight scores 73.9 at 1M tokens and 64.1 at 10M, against 64.1 and 48.6 for Mem0's Platform (Mem0's own [comparison page](https://mem0.ai/compare/mem0-vs-hindsight); vendor-run). On shorter tests the two are close: 94.6 vs 94.4 on LongMemEval, 92 vs 92.5 on LoCoMo. Hindsight's tradeoff is size: by Mem0's measurement it returns 24K-44K tokens per retrieval against under 7K, so cap `max_tokens` if prompt cost matters. See [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).

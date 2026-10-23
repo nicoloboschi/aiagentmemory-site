@@ -54,7 +54,7 @@ There's no published head-to-head benchmark of the two built-in systems, so any 
 - **Token cost per turn**: Hermes is lower and more predictable, by design.
 - **Seeing a fact you added mid-session**: Hermes shows it in tool responses right away, but not in the system prompt until `/new`.
 
-If you outgrow either, both accept an external provider. Picking one is the same decision as picking any memory layer; [the LLM memory comparison](/articles/llm-memory-comparison/) covers Mem0, Honcho, Hindsight, Supermemory and others.
+If you outgrow either, both accept an external provider. Picking one is the same decision as picking any memory layer; [the LLM memory comparison](/articles/llm-memory-comparison/) covers Mem0, Honcho, Hindsight, Supermemory and others, and [Honcho LLM memory](/articles/honcho-llm-memory/) covers what changed in its 3.4 release.
 
 ## Where Hindsight fits
 

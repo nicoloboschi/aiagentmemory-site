@@ -1,8 +1,8 @@
 # AgentCore Memory: AWS Long-Term Memory Deep Dive
 
-> How Amazon Bedrock AgentCore Memory works: events, short-term vs long-term memory, the four built-in strategies, namespaces, Python code and October 2026 pricing.
+> How Amazon Bedrock AgentCore Memory works: events, short-term vs long-term memory, the four built-in strategies, direct ingestion with IngestData, Python code and October 2026 pricing.
 
-Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 **AgentCore long-term memory** is the part of Amazon Bedrock AgentCore Memory that turns raw conversation events into durable records an agent can search later. You write turns as **events** (short-term memory). Configured **memory strategies** then extract facts, preferences, summaries or episodes from those events and store them as **memory records** in namespaces, where any later session can retrieve them.
@@ -58,6 +58,20 @@ Built-ins are the easiest path but the least flexible. Two other options trade s
 
 - **Built-in with overrides**: you change the extraction or consolidation prompts and choose a Bedrock model, which runs in your account. Storage is cheaper than built-in.
 - **Self-managed**: AgentCore notifies your pipeline (via S3 and SNS) when trigger conditions are met, and you run your own extraction with any model, then write records back. You own the infrastructure.
+
+### Direct ingestion: long-term memory without events
+
+Since 8 September 2026 you don't have to store data as a short-term event to get long-term records from it. The **`IngestData`** API ([AWS announcement](https://aws.amazon.com/about-aws/whats-new/2026/09/agentcore-memory-direct-ingest)) sends content straight to the memory's configured long-term strategies.
+
+| | `CreateEvent` | `IngestData` |
+|---|---|---|
+| Stored as a short-term event | Yes, kept until the event expiry | No |
+| Runs long-term strategies | Yes | Yes, the same extraction pipeline |
+| Payloads | Conversation turns or blobs, per actor and session | Conversation messages (`USER` / `ASSISTANT` roles) or JSON, such as behavior events, activity logs and system events, with optional metadata |
+| Check the result | `ListMemoryRecords`, `RetrieveMemoryRecords` | The same, plus Kinesis notifications and `ListMemoryExtractionJobs` to retry failed extractions |
+| Regions | All AgentCore Memory regions | All AgentCore Memory regions |
+
+Use it to backfill memory from history you already keep elsewhere (old chat logs, CRM activity, app events) without replaying it as sessions, or when you only want the extracted facts and not the raw turns. The announcement doesn't say how direct ingestion is billed, so check the [pricing page](https://aws.amazon.com/bedrock/agentcore/pricing/) before a large backfill. In open source, [Hindsight](https://github.com/vectorize-io/hindsight)'s `retain` call is the equivalent single step: send it content and a model extracts facts, time, entities and relationships into long-term memory, with no separate event store in front.
 
 ## Using AgentCore Memory from Python
 
@@ -147,6 +161,10 @@ Short-term memory is the raw events (conversation turns) you write with CreateEv
 ### How much does AgentCore Memory cost?
 
 As of October 2026, long-term storage is $0.75 per 1,000 records per month with built-in strategies or $0.25 with override or self-managed strategies, and retrieval is $0.50 per 1,000 calls. Short-term memory moved on 6 October 2026 from $0.25 per 1,000 events to $1.00 per GB ingested, $0.10 per GB-month stored and $0.20 per GB retrieved.
+
+### Can I write to AgentCore long-term memory without creating events?
+
+Yes. Since 8 September 2026 the IngestData API sends conversation messages or JSON payloads (activity logs, behavior or system events) straight to the memory's long-term strategies without storing them as short-term events. Check results with ListMemoryRecords or RetrieveMemoryRecords and retry failed extractions with ListMemoryExtractionJobs.
 
 ### What is the best way to give an LLM memory on AWS?
 

@@ -2,18 +2,20 @@
 
 > What Honcho is: Plastic Labs' open-source memory for LLM agents. How peers, sessions and background reasoning work, Python SDK, self-hosting, pricing, evals.
 
-Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 **Honcho** is an open-source memory service for LLM agents, built by Plastic Labs. Instead of only storing extracted facts, it **reasons about the people and agents in your conversations**. You save messages; a background worker derives conclusions about each participant; then you ask Honcho what it knows, in plain language or as prompt-ready context.
 
-This page covers Honcho's data model, how its reasoning pipeline works, the Python SDK, self-hosting, pricing and its benchmark claims. Sources are the [Honcho GitHub README](https://github.com/plastic-labs/honcho), the [Honcho docs](https://honcho.dev/docs/v3) and [honcho.dev](https://honcho.dev/), checked on 8 October 2026.
+In short: Honcho memory is a peer model, not a fact list. It is AGPL-3.0, self-hostable on Postgres with pgvector, priced at $2 per million ingested tokens on the managed service, and built into Hermes Agent as a memory provider. The current server is **3.4.0** (22 October 2026).
+
+This page covers Honcho's data model, how its reasoning pipeline works, the Python SDK, self-hosting, what changed in 3.4, pricing and its benchmark claims. Sources are the [Honcho GitHub README](https://github.com/plastic-labs/honcho), the [Honcho docs](https://honcho.dev/docs/v3), [honcho.dev](https://honcho.dev/) and the [v3.4.0 release notes](https://github.com/plastic-labs/honcho/releases/tag/v3.4.0), checked on 23 October 2026.
 
 ## What is Honcho?
 
 **Honcho is memory infrastructure for stateful agents. It stores messages and events on sessions, reasons over them asynchronously, and maintains a representation of every participant, called a peer. Agents query those representations, search history, or ask natural-language questions such as "what learning style does this user respond to?"**
 
-Its README describes it as memory for agents "that understand changing people, agents, groups, projects, and ideas over time." The server is a FastAPI app, licensed **AGPL-3.0**, at version 3.3.0 in October 2026. The Python SDK is `honcho-ai` (2.5.1) and the TypeScript SDK is `@honcho-ai/sdk`.
+Its README describes it as memory for agents "that understand changing people, agents, groups, projects, and ideas over time." The server is a FastAPI app, licensed **AGPL-3.0**, at version 3.4.0 (22 October 2026), with about 7,700 GitHub stars. The Python SDK is `honcho-ai` (2.7.0) and the TypeScript SDK is `@honcho-ai/sdk`.
 
 The emphasis is **user modeling** rather than retrieval. Most memory layers answer "which stored facts match this query?" Honcho also tries to answer "what kind of person is this, and what do they likely want?"
 
@@ -55,7 +57,7 @@ Because reasoning is asynchronous, new messages take a moment to show up in chat
 
 ## Using Honcho from Python
 
-This follows the README quickstart and matches `honcho-ai` 2.5.1:
+This follows the README quickstart, which is unchanged in `honcho-ai` 2.7.0:
 
 ```python
 import os
@@ -88,7 +90,7 @@ reply = OpenAI().chat.completions.create(
 print(reply.choices[0].message.content)
 ```
 
-`peer.search(...)`, `peer.representation(...)` and `peer.card()` give the other read paths. `student.chat(..., target=tutor)` asks what one peer knows about another. A `to_anthropic()` formatter exists alongside `to_openai()`.
+`peer.search(...)`, `peer.representation(...)` and `peer.card()` give the other read paths, and `honcho.chat(...)` asks a question across the whole workspace instead of one peer. `student.chat(..., target=tutor)` asks what one peer knows about another. A `to_anthropic()` formatter exists alongside `to_openai()`.
 
 ## Self-hosting Honcho
 
@@ -105,6 +107,22 @@ The **AGPL-3.0** license is worth checking with your legal team. It requires you
 ## Integrations for coding agents
 
 Honcho ships first-party memory plugins for **Claude Code, Codex, Cursor, OpenCode, OpenClaw** and the DeepSeek Harness, and it's built into **Hermes Agent** as a memory provider (`hermes memory setup`). All of them read one `~/.honcho/config.json`, so pointing two tools at the same workspace gives them shared memory. A hosted MCP server at mcp.honcho.dev covers other clients. [Hindsight](https://github.com/vectorize-io/hindsight) covers the same ground with native Claude Code, Codex, Cursor and Copilot plugins, an MCP server per memory bank and 60+ integrations in total. See [Hermes Agent memory](/articles/hermes-agent-memory/) and OpenClaw memory for how Honcho compares with other providers there.
+
+## What changed in Honcho 3.4
+
+Honcho 3.4.0 shipped on 22 October 2026. The changes that affect memory, from the [release notes](https://github.com/plastic-labs/honcho/releases/tag/v3.4.0):
+
+| Change | What it does | Default |
+|---|---|---|
+| Named-scope API keys | A key bound to one scope can only recall from and write into that scope's sessions. Useful when one agent or tenant must not see the rest of a workspace. | New keys only; older servers reject them |
+| `uid` on workspaces, peers and sessions | A fixed internal id next to your chosen `id`, so references survive if names become renameable | Additive, no migration |
+| Dreamer working memory | The dreamer sees its remaining tool budget, a brief of how memory is laid out, and keeps capped notes between dreams; deduction and induction get separate iteration limits | Off (`DREAM_BRIEF_ENABLED`, `DREAM_NOTES_MODE` and others) |
+| Stricter deriver | Malformed model output is retried and then fails, instead of being dropped silently as "nothing learned" | On |
+| Database migration | Adds a counter and five partial indexes built `CONCURRENTLY`; one needs the `btree_gin` extension | Runs on upgrade |
+
+For self-hosters, the migration is the part to plan. The index builds wait for open transactions on the queue table and fail after 60 minutes; on a large or busy database, the notes say to build the indexes ahead of time with the statements in the troubleshooting guide. Scoped keys are minted with `scripts/generate_jwt.py` on self-hosted instances. The high-level Python SDK and CLI helpers still try to create the workspace, so a restricted key has to go through REST or the SDKs' HTTP transports for now. [Hindsight](https://github.com/vectorize-io/hindsight) handles the same need differently: you give each user, project or tenant its own memory bank, and banks are isolated from each other.
+
+The silent-drop fix matters for anyone running the deriver on an OpenAI-compatible local model: before 3.4, a batch the model answered in the wrong shape could vanish without an error, so memory had gaps you couldn't see.
 
 ## Honcho pricing
 
@@ -155,4 +173,8 @@ Yes. The Honcho server is licensed AGPL-3.0 on GitHub (plastic-labs/honcho). You
 ### How is Honcho different from Mem0?
 
 Mem0 extracts facts from messages and returns them by search. Honcho stores the messages themselves and runs background reasoning to derive conclusions about each peer, including what one peer knows about another, and answers natural-language questions about them through its chat endpoint. Mem0 is Apache 2.0; Honcho is AGPL-3.0.
+
+### What is new in Honcho 3.4?
+
+Honcho 3.4.0 (22 October 2026) adds API keys bound to one named scope, a fixed uid on workspaces, peers and sessions, opt-in working memory for the dreamer, and a deriver that fails loudly instead of silently dropping malformed batches. It includes a database migration with concurrent index builds that self-hosters should plan for on large databases.
 

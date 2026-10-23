@@ -89,7 +89,7 @@ See what is Zep memory and [Zep alternatives](/articles/zep-alternatives/).
 - **Pick Letta** if you're building the agent itself and want it to own its memory.
 - **Look elsewhere** if you need memory behind an existing app. The Agent SDK is TypeScript only, and the Python client is deprecated.
 
-Details in the Letta guide.
+Details in the Letta guide; if you're choosing between Letta and LangChain's memory, see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/).
 
 ## Cognee
 
