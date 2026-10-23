@@ -23,7 +23,7 @@ That's why memory is a separate product feature. OpenAI describes ChatGPT's memo
 
 The context window has a fixed size. In a long chat, the app eventually has to drop or shorten older messages to make room for new ones. Character.AI's help center says it directly: "There is a limited amount of conversation context that the character can consider, so it will appear to forget things if they were not mentioned recently" ([Character.AI FAQ](https://support.character.ai/hc/en-us/articles/15063870278171-Why-do-Characters-forget-things)).
 
-Everything competes for that space. A long character Definition, custom instructions, uploaded files and retrieved memories all take room from the actual conversation. This is the most common cause of "it forgot what I said an hour ago." How the window works is covered in [the context window of an LLM](/articles/context-window-of-an-llm/).
+Everything competes for that space. A long character Definition, custom instructions, uploaded files and retrieved memories all take room from the actual conversation. This is the most common cause of "it forgot what I said an hour ago." AI Dungeon's free tier, for example, gets up to 4K tokens of context, and even its Memory Bank drops least-used memories when full ([why AI Dungeon forgets](/articles/ai-dungeon-memory-system/#why-ai-dungeon-forgets-things-and-what-to-check)). How the window works is covered in [the context window of an LLM](/articles/context-window-of-an-llm/).
 
 ## Reason 3: Models use long inputs unevenly
 

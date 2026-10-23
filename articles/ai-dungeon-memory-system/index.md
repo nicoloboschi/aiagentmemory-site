@@ -1,13 +1,13 @@
 # AI Dungeon Memory System: Memory Bank and Story Summary
 
-> How AI Dungeon's Memory System works: memories every six actions, Auto Summarization, the Memory Bank's embedding search, slots per tier, and how context is built.
+> How AI Dungeon's Memory System works and why it forgets: memories every six actions, Auto Summarization, Memory Bank embedding search, slots per tier, and how context is built.
 
-Source: https://aiagentmemory.org/articles/ai-dungeon-memory-system/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-dungeon-memory-system/ · Updated 2026-10-23 · aiagentmemory.org
 
 
 The **AI Dungeon memory system** is the feature that keeps long adventures coherent after the story outgrows the AI's context window. It has two parts: **Auto Summarization**, which maintains a running **Story Summary**, and the **Memory Bank**, which stores short AI-written summaries of past actions and pulls the most relevant ones back into context using embeddings.
 
-Both are built by Latitude, AI Dungeon's developer, and adapted from its other game, Voyage. Everything below comes from the [AI Dungeon help center](https://help.aidungeon.com/), checked on 8 October 2026.
+Both are built by Latitude, AI Dungeon's developer, and adapted from its other game, Voyage. Everything below comes from the [AI Dungeon help center](https://help.aidungeon.com/), checked on 23 October 2026.
 
 ## What is the AI Dungeon memory system?
 
@@ -56,6 +56,21 @@ When the bank is full, the **least-used memories are removed** ("Forgotten Memor
 Source: the [Memberships & Benefits page](https://help.aidungeon.com/memberships-benefits). Subscribers can also spend 1 credit per action for extra context on some models. All players get Auto Summarization; the Memory Bank size is what scales with tier.
 
 **To turn it on**, open the game settings sidebar and go to **Gameplay > AI Models > Memory System**, then toggle Memory Bank and Auto Summarization. The setting carries to every adventure until you turn it off. It takes a few turns for the Story Summary to appear and longer for memories to be used.
+
+## Why AI Dungeon forgets things (and what to check)
+
+Most "the AI forgot" cases trace back to one of these documented behaviors:
+
+| What you see | Why, per the help center | What to do |
+|---|---|---|
+| No memories show up in a new adventure | The Memory Bank stays empty until the story is 12 actions deep, and no memories are *used* until the full adventure no longer fits in context | Keep playing; check Explore Memories in the Context Viewer |
+| An old event is gone | The bank was full and the least-used memories were removed ("Forgotten Memories") | Put must-keep facts in Plot Essentials or a Story Card; a higher tier holds more memories (25 free, up to 800) |
+| A relevant memory exists but isn't used | Retrieval matches your **latest action** only, and the Memory Bank gets about 25% of the leftover context, so only the top matches that fit go in | Name the person or place in your action so the search finds it |
+| The summary contradicts an edit you made early on | Story Summary isn't re-written when you change old actions | Edit the Story Summary by hand |
+| Less story text in context than expected | The Story Summary replaces raw text it already covers | Intended; view it in the Context Viewer |
+| Details drop fast on the free tier | Free context is up to 4K tokens, so little raw history fits | Keep Plot Essentials and Author's Note short; spend a credit per action for extra context on supported models (subscribers) |
+
+You can't edit or delete single Memories, per the [Memory System article](https://help.aidungeon.com/faq/the-memory-system); only the Story Summary is editable.
 
 ## What goes into AI Dungeon's context
 
@@ -107,6 +122,10 @@ Every six actions, AI Dungeon summarizes six older actions into a short Memory. 
 ### How many memories can the AI Dungeon Memory Bank store?
 
 Per Latitude's membership page (October 2026): 25 memories on the free Wanderer tier, 100 on Journey, 200 on Legend, 400 on Mythic and 800 on Ultimate. When the bank is full, the least-used memories are removed to make room for new ones.
+
+### Why does AI Dungeon forget things?
+
+Usually for one of four reasons: the story still fits in context so no memories are used yet, the Memory Bank is full and dropped its least-used memories, retrieval only matches your latest action, or the small free-tier context (up to 4K tokens) leaves little room for history. Put facts the AI must always know in Plot Essentials or Story Cards.
 
 ### What context length does AI Dungeon give each tier?
 

@@ -2,10 +2,10 @@
 
 > Local LLMs don't remember between chats. How to add persistent memory offline: chat apps, MCP, and tested Python with Ollama, SQLite, Mem0 and the Agno agent framework.
 
-Source: https://aiagentmemory.org/articles/how-to-give-local-llm-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/how-to-give-local-llm-memory/ · Updated 2026-10-23 · aiagentmemory.org
 
 
-A **local LLM has no memory of its own**. Ollama, LM Studio and llama.cpp process each request and keep nothing. To give a local LLM memory, use a chat app with a memory feature (Open WebUI, AnythingLLM), connect a local MCP memory server, or build it: save facts to SQLite or a local vector store, embed them with a local model, and add the relevant ones to each prompt.
+A **local LLM has no memory of its own**. Ollama, LM Studio and llama.cpp process each request and keep nothing. To give a local LLM memory, use a chat app with a memory feature (Open WebUI, AnythingLLM), connect a local MCP memory server, or build it: save facts to SQLite or a local vector store, embed them with a local model, and add the relevant ones to each prompt. For a lightweight open-source agent in Python with SQLite memory on Ollama, use [Agno](#lightweight-open-source-agents-with-sqlite-memory) (Apache-2.0) or the [short script below](#example-1-local-memory-from-scratch-with-ollama-and-sqlite). Every tool here is free to run locally, with no usage limits beyond your hardware ([licenses](#licenses-and-cost-of-local-memory-tools)).
 
 ## Does a local LLM have memory?
 
@@ -157,9 +157,26 @@ In our run, `gemma4:e2b` stored two facts ("User is allergic to peanuts.", "User
 
 Several agent memory servers accept a local model as their LLM, so you can self-host the whole stack:
 
-- **[Hindsight](https://github.com/vectorize-io/hindsight)** lists `ollama`, `lmstudio` and `llamacpp` as fully local LLM providers. It runs under Docker, pip or embedded in Python, and can use an embedded Postgres (`pg0`), so you don't need a database server. Clients are Python, TypeScript and Go, and its MCP server works with MCP hosts like LM Studio and Jan. It's MIT-licensed with every feature in the open-source release: graph and time-aware search, consolidation of facts into observations, and `reflect`. The local catch: each write and each consolidation pass calls your LLM, so a small model on a laptop does a lot more work than with a plain SQLite store.
+- **[Hindsight](https://github.com/vectorize-io/hindsight)** lists `ollama`, `lmstudio` and `llamacpp` as fully local LLM providers. It runs under Docker, pip or embedded in Python, and can use an embedded Postgres (`pg0`), so you don't need a database server. Clients are Python, TypeScript and Go, and its MCP server works with MCP hosts like LM Studio and Jan. It's MIT-licensed with every feature in the open-source release: graph and time-aware search, consolidation of facts into observations, and `reflect`. The local catch: each write and each consolidation pass calls your LLM, so a small model on a laptop does a lot more work than with a plain SQLite store. It also returns more text per lookup than Mem0 by default (about 4x, by Mem0's own measurements), which matters with Ollama's 4k default window: set `max_tokens` on recall lower.
 - **Mem0's self-hosted server** wraps the library above in a FastAPI service with Postgres and pgvector.
 - **Letta** and **Cognee** can also be self-hosted; check each project's docs for current local-model support before you commit.
+
+## Licenses and cost of local memory tools
+
+Run locally, none of these tools has a free tier or a usage cap: you pay only for your hardware. Licenses as GitHub reports them (October 2026):
+
+| Tool | What it is | License | GitHub stars |
+|---|---|---|---|
+| [Ollama](https://github.com/ollama/ollama) | Runs the model | MIT | ~184K |
+| SQLite | Stores the memory file | [Public domain](https://sqlite.org/copyright.html) | n/a |
+| [Agno](https://github.com/agno-agi/agno) | Python agent framework with SQLite memory | Apache-2.0 | ~43K |
+| [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Full agent, SQLite session store | MIT | ~256K |
+| [Mem0](https://github.com/mem0ai/mem0) | Memory library | Apache-2.0 | ~68K |
+| [Hindsight](https://github.com/vectorize-io/hindsight) | Memory server | MIT, full server in the open-source release | ~53K |
+| [AnythingLLM](https://github.com/Mintplex-Labs/anything-llm) | Chat app with memories | MIT | ~67K |
+| [Open WebUI](https://github.com/open-webui/open-webui) | Chat app with memory | Open WebUI License (BSD-3 style plus a rule: keep the "Open WebUI" branding once a deployment has more than 50 users in 30 days) | ~156K |
+
+Mem0 and Hindsight also sell hosted cloud versions with their own pricing; the self-hosted versions above don't need them.
 
 How they differ is covered in [open-source memory systems compared](/articles/open-source-memory-systems-compared/), and the general build (with hosted models) is in [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/).
 
@@ -183,6 +200,10 @@ No. A local model running in Ollama, LM Studio or llama.cpp keeps nothing betwee
 ### What is the best way to add long-term memory to a local AI?
 
 If you use a chat app, turn on its memory feature: Open WebUI and AnythingLLM both have one. If you build your own app, store memories in SQLite or a local vector store with embeddings from a local model such as nomic-embed-text, or run Mem0 with Ollama as its LLM and embedder. Everything then stays on your machine.
+
+### Is there a lightweight open-source AI agent with SQLite memory that runs on Ollama in Python?
+
+Yes. Agno (Apache-2.0) is a Python agent framework: pass SqliteDb(db_file=...) and update_memory_on_run=True with an Ollama model, and it saves sessions and extracted user memories in one SQLite file. Hermes Agent (MIT) is a full agent that keeps sessions in SQLite and can use Ollama. Both are free to run locally with no usage limits.
 
 ### Does Jan have long-term memory?
 
