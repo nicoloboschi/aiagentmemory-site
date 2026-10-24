@@ -114,6 +114,7 @@ In production, swap `InMemoryStore` for `AsyncPostgresStore` and run the manager
 | Letta | Agent-editable memory files in a git-backed filesystem | A full agent runtime, not a plug-in library |
 | LangMem | Any LangGraph store; hot-path tools or background extraction | Best fit if you already use LangGraph |
 | Cognee | Knowledge graph plus vector and relational stores | Strong on turning documents into a graph |
+| [OpenViking](/articles/openviking-agent-memory/) | Memories, documents and skills as Markdown files in one `viking://` tree, extracted after each session commit | AGPL-3.0 server; needs an embedding model and a VLM |
 | [AWS AgentCore Memory](/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/) | Records extracted from events by semantic, preference, summary or episodic strategies; `IngestData` writes to long-term memory directly | Managed AWS service, priced per stored record |
 | [Hindsight](https://github.com/vectorize-io/hindsight) | Facts and experiences on Postgres, consolidated into observations and mental models; 4-way recall (semantic, BM25, graph, temporal) | MIT, every feature self-hostable; `reflect` reasons over memories; top BEAM 1M/10M scores |
 

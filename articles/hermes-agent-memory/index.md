@@ -1,8 +1,8 @@
 # Hermes Agent Memory: MEMORY.md, USER.md and Providers
 
-> How Hermes Agent memory works: MEMORY.md and USER.md limits, the frozen snapshot, session search, external providers like Honcho and Mem0, and fixes when it fails.
+> How Hermes Agent memory works: MEMORY.md and USER.md limits, the frozen snapshot, session search, the nine memory providers (Hindsight, Honcho, Mem0, OpenViking) and fixes.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-23 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-24 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -90,7 +90,7 @@ Hermes can run **one external provider at a time** next to the built-in files. W
 | Provider | What it does (per Hermes docs) | Hosting | Tools |
 |---|---|---|---|
 | **Honcho** (Plastic Labs) | Cross-session user modeling with dialectic reasoning | Cloud or self-hosted | 5 |
-| **OpenViking** (Volcengine) | Context database with a filesystem-style hierarchy | Self-hosted, AGPL-3.0 | 6 |
+| **OpenViking** (Volcengine) | Context database with a filesystem-style hierarchy | Self-hosted (AGPL-3.0) or Volcengine cloud | 6 |
 | **Mem0** | LLM fact extraction with semantic search and dedup | Cloud, self-hosted or in-process | 4 |
 | **Hindsight** (Vectorize) | Long-term memory with knowledge graph and entity resolution | Cloud, embedded Postgres or local server | 3 |
 | **Holographic** | Local SQLite fact store with FTS5, trust scoring and HRR algebra | Local only | 2 |
@@ -100,6 +100,8 @@ Hermes can run **one external provider at a time** next to the built-in files. W
 | **Memori** (Memori Labs) | Structured long-term memory | Memori Cloud | 5 |
 
 Providers are moving out of the Hermes tree into their maintainers' own repositories. Holographic used to ship in-tree; it's now maintained by itpartypattaya ([itpartypattaya/hermes-plugin-holographic](https://github.com/itpartypattaya/hermes-plugin-holographic)) and installs from the plugin catalog with the same name, settings and database. RetainDB and ByteRover leave core on October 15, 2026, and the docs say their standalone repositories are "unmaintained and open for a new maintainer", with no catalog install command listed. Honcho, OpenViking, Mem0, Hindsight, Holographic and Supermemory install with `hermes plugins install <name>`; Memori uses its own `hermes-memori` CLI. Holographic uses holographic reduced representations, explained in [holographic memory for AI agents](/articles/holographic-memory-ai-agent/), and Honcho has its own page on [Honcho LLM memory](/articles/honcho-llm-memory/).
+
+OpenViking has published a test against Hermes's own built-in memory. In its May 2026 benchmark post, Hermes scored 33.38% on LoCoMo with native memory and 82.86% with OpenViking, using 34.3% fewer input tokens. Those are OpenViking's own numbers, without a stated judge model, and they compare against Hermes's 1,300-token files rather than against other providers. OpenViking's Hermes setup also offers a Quick Local server or Volcengine's hosted service, and memories show up only after background extraction finishes; details in [OpenViking agent memory](/articles/openviking-agent-memory/).
 
 How these provider plugins install, update and hook into each turn, plus the full list of 67 Memory-shelf entries in the catalog, is covered in [Hermes Agent plugins](/articles/hermes-agent-plugins/).
 
