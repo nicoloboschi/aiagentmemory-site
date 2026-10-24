@@ -21,7 +21,7 @@ The CoALA framework ([Sumers et al., 2023](https://arxiv.org/abs/2309.02427)) sp
 
 The model doesn't. A language model's weights hold general knowledge from training, sometimes called parametric memory, but nothing about you or yesterday's chat. Every API call starts from a blank slate.
 
-What users experience as an AI that remembers is a system feature. ChatGPT, Claude and Gemini all ship memory features that store user information outside the model and bring it back in later chats. Agent frameworks do the same with a memory store. How one product does it is covered in [Claude's long-term memory](/articles/claude-ai-long-term-memory/).
+What users experience as an AI that remembers is a system feature. ChatGPT, Claude and Gemini all ship memory features that store user information outside the model and bring it back in later chats. Agent frameworks do the same with a memory store: [Microsoft Agent Framework](/articles/microsoft-agent-framework-memory/) plugs in memory providers such as Mem0, Foundry or Cosmos DB, and [OpenClaw](/articles/openclaw-ai-agent-memory/) keeps Markdown memory files with swappable memory plugins. How one product does it is covered in [Claude's long-term memory](/articles/claude-ai-long-term-memory/).
 
 So "when will AI have long-term memory?" has two answers. As a product feature, it already does. Inside the model itself, as weights that keep learning from each conversation, it's still a research problem: fine-tuning per user is costly, and editing weights risks damaging what the model already knows.
 

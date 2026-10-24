@@ -102,7 +102,7 @@ See Cognee alternatives.
 
 ## Honcho
 
-**[Honcho](https://github.com/plastic-labs/honcho)** from Plastic Labs models users and agents as **peers**. You store messages on sessions; a background worker reasons over them and builds a representation of each peer, which you query in natural language or pull as prompt-ready context. It's AGPL-3.0, runs on Postgres with pgvector, and has a managed service and plugins for Claude Code, Codex, Cursor, OpenClaw and Hermes.
+**[Honcho](https://github.com/plastic-labs/honcho)** from Plastic Labs models users and agents as **peers**. You store messages on sessions; a background worker reasons over them and builds a representation of each peer, which you query in natural language or pull as prompt-ready context. It's AGPL-3.0, runs on Postgres with pgvector, and has a managed service and plugins for Claude Code, Codex, Cursor, [OpenClaw](/articles/openclaw-ai-agent-memory/) and Hermes.
 
 - **Pick Honcho** if you want deep per-user modeling ("what does this user respond to?"), including what one agent knows about another.
 - **Look elsewhere** if AGPL is a problem for your distribution model, or you need document RAG.

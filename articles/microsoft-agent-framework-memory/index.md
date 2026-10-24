@@ -1,8 +1,8 @@
 # Microsoft Agent Framework Memory: Sessions and Providers
 
-> How memory works in Microsoft Agent Framework (Python): AgentSession, history providers, context providers, Redis, Mem0 and Foundry memory, and serialization.
+> How memory works in Microsoft Agent Framework (Python): AgentSession, history and context providers, and Mem0, Foundry, Cosmos DB, Redis, Hindsight compared.
 
-Source: https://aiagentmemory.org/articles/microsoft-agent-framework-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/microsoft-agent-framework-memory/ · Updated 2026-10-24 · aiagentmemory.org
 
 
 **Microsoft Agent Framework memory** is built from two pieces. An **`AgentSession`** holds one conversation's state across `agent.run` calls. **Context providers** run before and after each call: history providers reload and save the transcript, and memory providers extract and recall lasting facts through Mem0, Redis, Cosmos DB, Neo4j or Microsoft Foundry.
@@ -117,7 +117,18 @@ That example only lasts as long as the session. For memory across sessions, use 
 
 - **Mem0** (`pip install agent-framework-mem0`, then `from agent_framework.mem0 import Mem0ContextProvider`). Set storage scopes (`user_id`, `agent_id`, `application_id`) and retrieval scopes (`search_user_id`, and so on) separately. The docs warn that if no `search_*` scope is set, it stores memories but never recalls them.
 - **Microsoft Foundry** (`FoundryMemoryProvider` in `agent_framework.foundry`): managed semantic memory in a Foundry memory store, scoped per user. Our page on [Azure AI Foundry long-term memory](/articles/azure-ai-foundry-long-term-memory/) covers the service side.
-- **Redis**, **Neo4j** and **Azure Cosmos DB** providers, listed on the [context provider integrations page](https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/context-providers/).
+- **Azure Cosmos DB memory** (`pip install agent-framework-azure-cosmos-memory --pre`, then `from agent_framework_azure_cosmos_memory import CosmosMemoryContextProvider`). Built on the [Azure Cosmos DB Agent Memory Toolkit](https://github.com/AzureCosmosDB/AgentMemoryToolkit), it extracts facts, procedural knowledge and episodic memories from each turn, consolidates a cross-thread user profile, and deduplicates and resolves contradictions, per the [package README](https://github.com/microsoft/agent-framework/tree/main/python/packages/azure-cosmos-memory). One Foundry project endpoint powers both the memory extraction and the agent.
+- **Redis** (`RedisContextProvider`, backed by a RedisVL search index) and **Neo4j** providers, listed on the [context provider integrations page](https://learn.microsoft.com/en-us/agent-framework/integrations/by-component/context-providers/).
+
+| Provider | Install | Where memory lives | What it extracts or recalls |
+|---|---|---|---|
+| Mem0 | `agent-framework-mem0` | Mem0 Platform or self-hosted Mem0 | Facts, with separate storage and search scopes |
+| Microsoft Foundry | `agent-framework-foundry` (`FoundryMemoryProvider`) | Managed Foundry memory store (preview) | User profile, chat summaries, procedures |
+| Azure Cosmos DB memory | `agent-framework-azure-cosmos-memory` (pre-release) | Your Cosmos DB database | Facts, procedures, episodes, consolidated user profile |
+| Redis | `agent-framework-redis` | Redis with a RedisVL index | Semantic search over stored context |
+| Hindsight | `hindsight-agent-framework` | Hindsight server (self-hosted, MIT) or Hindsight Cloud | Facts, entities, consolidated observations; `reflect` |
+
+The October 2026 releases mostly hardened these providers rather than adding new ones: Python 1.23.0 (22 October) rejects out-of-range Cosmos memory search parameters and closes the Redis search-index connection when the provider owns it, and .NET 1.26.0 (23 October) preserves caller cancellation in memory providers, per the [Agent Framework release notes](https://github.com/microsoft/agent-framework/releases).
 
 Third-party memory systems also ship providers. [Hindsight](https://github.com/vectorize-io/hindsight) publishes `hindsight-agent-framework`, whose `HindsightProvider` recalls memories in `before_run` and retains the exchange in `after_run`, so the model doesn't have to remember to call a memory tool:
 
@@ -156,7 +167,7 @@ For how Agent Framework's approach compares with LangGraph, CrewAI and the OpenA
 
 ### How does memory work in Microsoft Agent Framework?
 
-Each conversation is an AgentSession that you pass to agent.run. Context providers run before and after every call: history providers reload and save the transcript, and memory providers such as Mem0, Redis or Microsoft Foundry extract and recall durable facts. Sessions serialize with to_dict and from_dict.
+Each conversation is an AgentSession that you pass to agent.run. Context providers run before and after every call: history providers reload and save the transcript, and memory providers such as Mem0, Microsoft Foundry, Azure Cosmos DB or Redis extract and recall durable facts. Sessions serialize with to_dict and from_dict.
 
 ### Where does Microsoft Agent Framework store chat history?
 

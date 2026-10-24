@@ -1,8 +1,8 @@
 # OpenClaw Memory: Files, Search and Embedding Models
 
-> How OpenClaw agent memory works: MEMORY.md and daily notes, hybrid memory_search, embedding model options, dreaming, flush before compaction, and memory plugins.
+> How OpenClaw memory works: MEMORY.md and daily notes, hybrid memory_search, embedding models, dreaming, and 8 memory plugins compared (OpenViking, Hindsight).
 
-Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 2026-10-24 · aiagentmemory.org
 
 
 **OpenClaw memory** is a folder of Markdown files the agent writes and reads. `MEMORY.md` holds durable facts and decisions, `USER.md` holds your preferences, and dated daily notes hold running context. The first two load at session start. Everything is indexed in SQLite, and the agent finds older notes with `memory_search`, a hybrid of vector and keyword search.
@@ -79,14 +79,28 @@ Dreaming is OpenClaw's version of [memory consolidation](/articles/memory-consol
 
 ## Memory engines and plugins
 
-The memory slot is pluggable:
+The memory slot is pluggable, and since some plugins also take over context assembly, there are three places a memory option can sit: the memory slot, the `contextEngine` slot, or beside both.
 
-- **Builtin (default)**: SQLite with keyword, vector and hybrid search, no extra dependencies.
-- **Honcho**: cross-session user modeling and multi-agent awareness.
-- **LanceDB**: OpenAI-compatible or local Ollama embeddings with auto-recall and auto-capture.
-- **Memory Wiki**: compiles durable knowledge into a wiki vault with claims, evidence and freshness tracking. It runs beside the memory plugin, not instead of it.
+| Option | Slot | Where memory lives | What it adds |
+|---|---|---|---|
+| Builtin memory-core (default) | Memory | SQLite in the workspace | Keyword, vector and hybrid search over Markdown notes; no extra dependencies |
+| memory-core on PostgreSQL | Memory | Your PostgreSQL agent database | Same search; needs `unaccent`, `pg_trgm` and, for vectors, `pgvector` |
+| Honcho | Memory (plugin) | Honcho server | Cross-session user modeling, semantic search, multi-agent awareness |
+| LanceDB | Memory (plugin) | LanceDB | OpenAI-compatible or local Ollama embeddings, auto-recall, auto-capture |
+| Memory Wiki (bundled) | Beside memory | Wiki vault | Claims with evidence, contradiction and freshness tracking; doesn't replace the memory plugin |
+| OpenViking | Context engine | OpenViking server (`viking://` tree) | Session archiving and summaries, recall before every reply, owns compaction |
+| Mem0 | Memory (plugin) | Mem0 Platform or self-hosted | Extracted facts instead of file search |
+| Hindsight | Memory (plugin) | Hindsight Cloud, your server, or a local embedded daemon | Extracted facts, consolidated observations, `reflect` |
 
-Third-party memory backends also publish OpenClaw plugins, including Mem0 (`@mem0/openclaw-mem0` on [ClawHub](https://clawhub.ai/mem0/plugins/openclaw-mem0)) and Hindsight (`@vectorize-io/hindsight-openclaw`). These replace file search with an extraction-based store. They add LLM calls per turn, so they're worth it mainly when the agent has months of history that daily notes and `MEMORY.md` no longer cover.
+Sources: the [OpenClaw memory docs](https://docs.openclaw.ai/concepts/memory) for the first five rows (checked 24 October 2026), OpenViking's [OpenClaw integration guide](https://github.com/volcengine/OpenViking/blob/main/docs/en/agent-integrations/03-openclaw.md), and each vendor's plugin listing.
+
+The **PostgreSQL option** is the newest built-in choice. SQLite stays the default, but memory-core can index and search a PostgreSQL agent database instead. Keyword-only search works with `memory.search.provider: "none"` and then doesn't need the `vector` extension.
+
+**OpenViking** works differently from the rest. Its plugin (`openclaw plugins install clawhub:@openviking/openclaw-plugin`, OpenClaw 2026.5.27 or later, Node.js 22+) occupies OpenClaw's `contextEngine` slot. Before each turn it builds the model's context from a server-side session summary, recent messages, the user profile and recalled memories. After each turn it captures the conversation and commits it to the OpenViking server once pending tokens pass half the token budget. It also sets `ownsCompaction: true`, so OpenViking, not OpenClaw, does compaction. A `peer_role` setting decides whether memory is shared per user or split per assistant or per sender. The [OpenViking page](/articles/openviking-agent-memory/) covers the server itself.
+
+OpenViking's own May 2026 benchmark post reports OpenClaw going from 24.20% on LoCoMo with native memory to 82.08% with the plugin, using 91.0% fewer input tokens. Those are the project's own numbers: the judge and answer models aren't stated, and the baseline is OpenClaw's file memory, not another memory system.
+
+Mem0 (`@mem0/openclaw-mem0` on [ClawHub](https://clawhub.ai/mem0/plugins/openclaw-mem0)) and Hindsight (`@vectorize-io/hindsight-openclaw`) replace file search with an extraction-based store. Like OpenViking, they add LLM calls per turn, so they're worth it mainly when the agent has months of history that daily notes and `MEMORY.md` no longer cover.
 
 For that months-of-history case, [Hindsight](https://github.com/vectorize-io/hindsight) has the strongest published numbers: on the long-history BEAM benchmark it leads Mem0 73.9 to 64.1 at 1M tokens and 64.1 to 48.6 at 10M, per [Mem0's own comparison](https://mem0.ai/compare/mem0-vs-hindsight) (vendor-run). It also does what dreaming does, in the background: related facts merge into evidence-backed **observations** that get refined rather than overwritten. Its plugin's setup wizard (`openclaw plugins install @vectorize-io/hindsight-openclaw`) offers Hindsight Cloud, your own server, or an embedded local daemon, which can run on Ollama to keep everything on the machine. The cost is more LLM calls on every write and more context per recall than Mem0. Memory also moves out of Markdown files you can read and edit into a database.
 
@@ -114,4 +128,8 @@ OpenAI is the default embedding provider. You can set memory.search.provider to 
 ### Why is OpenClaw memory_search returning nothing?
 
 Check the index and provider with openclaw memory status, confirm the memory files aren't empty, and rebuild with openclaw memory index --force. If the embedding provider fails, OpenClaw falls back to keyword-only search, so exact words still match.
+
+### Which memory plugins work with OpenClaw?
+
+Besides the default SQLite memory-core (which can also use PostgreSQL), OpenClaw's docs list Honcho, LanceDB and the bundled Memory Wiki. Mem0 and Hindsight publish memory plugins, and OpenViking's plugin takes OpenClaw's contextEngine slot, handling recall, session summaries and compaction.
 
