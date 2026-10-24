@@ -7,7 +7,7 @@ Source: https://aiagentmemory.org/articles/openclaw-vs-hermes-agent-memory/ · U
 
 **OpenClaw vs Hermes Agent memory** comes down to two philosophies. **Hermes** keeps memory tiny and fixed: two hard-capped files loaded as a frozen snapshot, plus full-text search over old sessions. **OpenClaw** keeps memory open-ended: Markdown files and daily notes, indexed for hybrid search, with a background job that promotes the best notes into `MEMORY.md`.
 
-Both are open-source (MIT) agents that run on your machine and chat through messaging apps. [OpenClaw](https://github.com/openclaw/openclaw) comes from Peter Steinberger and the OpenClaw Foundation; [Hermes Agent](https://github.com/NousResearch/hermes-agent) comes from Nous Research. Facts below come from each project's docs, checked October 2026.
+Both are open-source (MIT) agents that run on your machine and chat through messaging apps; Hermes also has an official [desktop app](/articles/hermes-agent-desktop/) that shares the CLI's memory. [OpenClaw](https://github.com/openclaw/openclaw) comes from Peter Steinberger and the OpenClaw Foundation; [Hermes Agent](https://github.com/NousResearch/hermes-agent) comes from Nous Research. Facts below come from each project's docs, checked October 2026.
 
 ## What is the difference between OpenClaw and Hermes memory?
 

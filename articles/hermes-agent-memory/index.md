@@ -7,7 +7,7 @@ Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
 
-[Hermes Agent](https://github.com/NousResearch/hermes-agent) is an open-source (MIT) agent from Nous Research that runs in a terminal or through messaging apps and creates reusable skills from its own experience. This page covers each layer of its memory, the external providers, and what to check when memory seems broken. Details come from the official [Hermes memory docs](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory), checked October 2026.
+[Hermes Agent](https://github.com/NousResearch/hermes-agent) is an open-source (MIT) agent from Nous Research that runs in a terminal, the [Hermes Agent desktop app](/articles/hermes-agent-desktop/) or messaging apps (all sharing the same memory) and creates reusable skills from its own experience. This page covers each layer of its memory, the external providers, and what to check when memory seems broken. Details come from the official [Hermes memory docs](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory), checked October 2026.
 
 ## What is Hermes Agent memory?
 

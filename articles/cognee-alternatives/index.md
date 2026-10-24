@@ -79,7 +79,7 @@ Our [Zep alternatives guide](/articles/zep-alternatives/) covers this in more de
 - **Pick Letta** if you're building a long-lived agent and want it to own and rewrite its memory.
 - **Look elsewhere** if you need a memory backend for an existing agent. Letta's Agent SDK is TypeScript only and its Python client is deprecated.
 
-See the [Letta guide](/articles/letta-ai-guide/) for the full picture.
+See the [Letta guide](/articles/letta-ai-guide/) for the full picture, or [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/) if you're weighing it against LangChain.
 
 ## Hindsight
 

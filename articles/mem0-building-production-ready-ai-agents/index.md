@@ -2,7 +2,7 @@
 
 > The Mem0 paper (arXiv 2504.19413) explained: extraction and update pipeline, the Mem0g graph variant, LoCoMo results, latency and tokens, and the Zep dispute.
 
-Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-10-24 · aiagentmemory.org
 
 
 **"Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory"** is the 2025 paper from the Mem0 team that describes how Mem0 extracts, updates and retrieves memories from conversations. It introduces two systems, Mem0 and a graph-based variant called **Mem0g**, and reports that both beat other memory systems on the LoCoMo benchmark while using far fewer tokens than full-context prompting.
@@ -104,6 +104,24 @@ The production Mem0 of October 2026 differs from the paper in three ways, per th
 
 Mem0 now reports 92.5 on LoCoMo and 94.4 on LongMemEval for the new algorithm, measured on its managed platform. Those figures aren't comparable with the paper's 66.88, since the judge setup, retrieval budget and models differ. On the same comparison pages, Mem0 lists [Hindsight](https://github.com/vectorize-io/hindsight), an MIT-licensed memory server, level on LongMemEval and LoCoMo but ahead on the long-history BEAM test (73.9 vs 64.1 at 1M tokens), while returning several times more tokens per retrieval. Our [what is Mem0 guide](/articles/what-is-mem0-ai/) covers the current system.
 
+## How today's Mem0 did in an outside test
+
+The paper's cost argument got an independent check in October 2026. [MemoryTax](https://arxiv.org/abs/2610.29823) (Zedong Peng, Shanghai Jiao Tong University, not a memory vendor) ran **Mem0 OSS 2.1.0** with default extraction and retrieval (top 200 facts, no reranking) on one LoCoMo conversation: 419 turns, 152 questions. The same model wrote the memories and answered.
+
+| Model | Full context | Mem0 OSS 2.1.0 | Mem0 build cost | Full-context cost, whole run |
+|---|---|---|---|---|
+| GPT-4o-mini | 74% | 78% | $0.56 | $0.43 |
+| GPT-6 Luna | 92% | 80% | $0.45 | $0.29 |
+| Claude Opus 5.5 | 95% | 95% | $25.88 | $17.84 |
+
+Three results bear on the paper's claims:
+
+- **Accuracy is close to full context, as the paper found.** Mem0 beat full context with GPT-4o-mini (78% vs 74%), tied with Claude Opus 5.5 (95%) and trailed with GPT-6 Luna (80% vs 92%), in MemoryTax's Table 2.
+- **Answers are cheaper, but building memory costs more than it saves on a short history.** Each Mem0 answer cost less than a full-context answer ($0.074 vs $0.117 per question with Opus 5.5), but in MemoryTax, building the memory alone cost more than the whole full-context run with every model. The paper's 90% token saving is real at answer time; on one conversation that fits in the window, the write cost eats it.
+- **The writer model sets the ceiling.** Memories GPT-4o-mini wrote capped even Claude Opus 5.5 at 84%; memories Opus wrote let GPT-4o-mini reach 89%. The paper used GPT-4o-mini for every call, so its scores reflect a cheap writer.
+
+Limits, as the author states them: one conversation, one run per setup, a lenient GPT-4o-mini judge, defaults only, and a history short enough to fit every model's context window, which is the case where full context is strongest. The study's own conclusion is blunt: memory is "a costly patch for a weak model". Mem0's managed Platform wasn't tested, and neither was [Hindsight](https://github.com/vectorize-io/hindsight). Zep's open-source engine was, and did worse; see [what Zep memory is](/articles/what-is-zep-memory/#how-zeps-open-source-engine-did-in-an-outside-test).
+
 ## What the paper still teaches
 
 Three ideas from the paper hold up regardless of the benchmark fight:
@@ -128,4 +146,8 @@ On LoCoMo, Mem0 scored 66.88% and Mem0g 68.44% on an LLM-as-a-judge metric, vers
 ### Does Mem0 still work the way the paper describes?
 
 Not exactly. The paper's update phase let an LLM choose ADD, UPDATE, DELETE or NOOP for each fact, and Mem0g used Neo4j. Mem0's April 2026 release switched to single-pass ADD-only extraction and removed graph memory from the open-source SDK; graph memory is now a Mem0 Platform feature.
+
+### Has anyone tested Mem0 independently?
+
+Yes. The October 2026 MemoryTax study (Shanghai Jiao Tong University) ran Mem0 OSS 2.1.0 on one LoCoMo conversation. It scored 78%, 80% and 95% with GPT-4o-mini, GPT-6 Luna and Claude Opus 5.5, against 74%, 92% and 95% for full context, but building the memory cost more than the whole full-context run with every model.
 
