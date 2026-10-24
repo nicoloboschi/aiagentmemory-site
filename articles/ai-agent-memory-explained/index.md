@@ -2,7 +2,7 @@
 
 > What AI agent memory is, the four memory types (working, episodic, semantic, procedural), how agents store and retrieve memories, and the main tools in 2026.
 
-Source: https://aiagentmemory.org/articles/ai-agent-memory-explained/ · Updated 2026-10-17 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-memory-explained/ · Updated 2026-10-24 · aiagentmemory.org
 
 
 **AI agent memory** is the part of an agent that saves information outside the language model and brings the right pieces back into the prompt later. The model itself forgets everything between calls. Memory is what lets an agent remember a user's preferences, recall what happened last week, and stop repeating the same mistakes.
@@ -189,6 +189,17 @@ Persistent memory gives attackers a way to plant instructions that fire in later
 ### Retrieval noise
 
 Too many memories in the prompt can hurt as much as too few. Irrelevant facts distract the model and cost tokens. Keep a token budget for memory, rerank results, and prefer a few precise facts over many loose matches.
+
+### A memory system you didn't need
+
+On short histories, a memory system can lose to simpler options. Two October 2026 papers, neither from a memory vendor, show it:
+
+| Finding | Paper | What it tested |
+|---|---|---|
+| Plain RAG over raw chat history beat 12 memory systems, by 0.13 to 5.53 points, in six of seven settings | [Bao et al.](https://arxiv.org/abs/2610.30755), Oct 22, 2026 | LoCoMo, LongMemEval, MEME, MemoryAgentBench |
+| Mem0 OSS 2.1.0 beat, tied or trailed full context depending on the model (78% vs 74%, 95% vs 95%, 80% vs 92%), but building its memory cost more than the whole full-context run ($25.88 vs $17.84 with Claude Opus 5.5) | [MemoryTax](https://arxiv.org/abs/2610.29823), Oct 21, 2026 | One LoCoMo conversation, 152 questions |
+
+Both tests use histories that fit in a large context window, and both papers say so. The lesson isn't "skip memory". Start with full context or RAG over raw messages as your baseline, keep the raw messages next to anything you extract, and add a memory system when histories outgrow that baseline. Long histories are where memory systems earn their write cost: on BEAM at 10M tokens, Hindsight reports 64.1 against Mem0's 48.6 on Mem0's own comparison page (vendor-run numbers). Details in [RAG vs agent memory](/articles/rag-vs-agent-memory/#does-plain-rag-lose-to-memory-systems-on-benchmarks) and [Mem0 in an outside test](/articles/mem0-building-production-ready-ai-agents/#how-todays-mem0-did-in-an-outside-test).
 
 ## How to add memory to an agent
 

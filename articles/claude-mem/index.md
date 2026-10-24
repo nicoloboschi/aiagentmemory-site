@@ -53,7 +53,7 @@ For other agents, pass `--ide`:
 |---|---|---|
 | OpenCode | `npx claude-mem install --ide opencode` | Needs OpenCode 1.3.4+, including OpenCode 2 |
 | T3 Code (Codex and Claude Code providers) | `npx claude-mem install --ide t3code` | Discovers enabled providers, supports T3-managed Codex |
-| Grok Bot | `npx claude-mem install --ide grok-bot` | No host hooks, so it watches the chat log files |
+| [Grok Bot](/articles/grok-bot-memory/) | `npx claude-mem install --ide grok-bot` | No host hooks, so it watches the chat log files |
 | Antigravity CLI | `npx claude-mem install --ide antigravity` | |
 | OMP (Oh My Pi) | `npx claude-mem install --ide omp` | |
 | Pi | `npx claude-mem install --ide pi` | Worker runtime |
