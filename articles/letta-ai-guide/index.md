@@ -2,7 +2,7 @@
 
 > What Letta is today: the MemGPT successor, how its memory works (MemFS, memory blocks, dreaming, archival memory), how to use it from Python, and its pricing.
 
-Source: https://aiagentmemory.org/articles/letta-ai-guide/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/letta-ai-guide/ · Updated 2026-10-25 · aiagentmemory.org
 
 
 **Letta** is the open-source platform for stateful agents built by the team behind **MemGPT**. A Letta agent keeps its memory, identity and conversation history across sessions, and rewrites its own memory as it learns. In 2026 the main product is **Letta Code**, an agent harness with a CLI, desktop app and TypeScript SDK, backed by optional Letta Cloud hosting.
@@ -36,6 +36,20 @@ In the classic Letta API, **core memory** was a set of **memory blocks**. Each b
 Letta Code keeps the idea but stores it differently. Memory lives in **MemFS**, which the [MemFS docs](https://docs.letta.com/concepts/memfs) call "a git-backed memory filesystem." Each memory is a Markdown file with YAML front matter, and its label maps to a path: a memory labeled `persona` is `persona.md`. Root-level files load into the system prompt on every turn. Subdirectories with their own `MEMORY.md` index stay out of context until the agent needs them.
 
 Every memory edit is a git commit. That gives you version history, and you can sync an agent's memory to your own GitHub repository with `/memory-repository set`.
+
+### What changed in Letta Code memory in October 2026
+
+Letta Code ships several releases a week. These are the memory changes since early October, from the [release notes](https://github.com/letta-ai/letta-code/releases) and the linked pull requests:
+
+| Version (date) | Change | What it means |
+|---|---|---|
+| 0.34.5 (Oct 8) | Local agents always start on the `MEMORY.md` layout | New local agents use **MemFS v2**: root files in the prompt, subfolders behind `MEMORY.md` indexes |
+| 0.34.7 (Oct 8) | Built-in `Memory` tool ([PR 4884](https://github.com/letta-ai/letta-code/pull/4884)) | Opens deferred memory one level at a time: a folder's `MEMORY.md` plus up to 10 children, most recently edited first, each with its description. Before, agents guessed paths with `Read`/`LS`/`Bash` |
+| 0.34.14 (Oct 14) | Local backend honors `memfs: false` | You can run a local agent without MemFS |
+| 0.34.18 (Oct 19) | `maintaining-core-memory` and `maintaining-deferred-memory` skills ([PR 5156](https://github.com/letta-ai/letta-code/pull/5156)) | A written procedure for "remember this": merge corrections into existing principles, keep names, dates and quotes in the git commit message, not the memory file |
+| 0.34.19 (Oct 20) | Subagents get a pointer to the parent's memory folder ([PR 5193](https://github.com/letta-ai/letta-code/pull/5193)) | Claude Code and Codex workers launched by Letta can read the user and project context the parent agent keeps |
+
+The PR for the skills explains why they were needed: before, an agent asked to "remember this" in a normal chat had no procedure and often wrote subject knowledge into a root file, so it landed in the system prompt on every turn. As of 25 October 2026 the `letta-code` repository has about 3,700 GitHub stars and the archived `letta` server repository about 25,300.
 
 ### Archival memory and recall memory
 
@@ -143,6 +157,10 @@ Yes. Letta is the company and project built by the MemGPT researchers, and the G
 ### Does Letta have a Python SDK?
 
 Not for new projects. Letta's FAQ says the Agent SDK is TypeScript only. The generated Python package, letta-client, still talks to the Letta REST API, but its docs page marks it as deprecated and unmaintained. For Python, Letta suggests running the App Server and talking to its WebSocket protocol.
+
+### What is the Memory tool in Letta Code?
+
+A built-in tool added in Letta Code 0.34.7 (October 2026) for MemFS v2 agents. Root memory files are always in the system prompt; everything in subfolders is deferred. Memory('folder') returns that folder's MEMORY.md index plus up to 10 children, most recently edited first, and Memory('folder/file.md') returns one file, so the agent no longer guesses paths with Read or Bash.
 
 ### How much does Letta cost?
 

@@ -2,7 +2,7 @@
 
 > Agent Workflow Memory (AWM, ICML 2025) explained: how agents induce reusable workflows from past runs, online vs offline modes, WebArena and Mind2Web results, limits.
 
-Source: https://aiagentmemory.org/articles/agent-workflow-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agent-workflow-memory/ · Updated 2026-10-25 · aiagentmemory.org
 
 
 **Agent workflow memory** means an LLM agent keeps reusable routines learned from its own past runs and follows them on new tasks. The best-known version is **Agent Workflow Memory (AWM)** by Wang, Mao, Fried and Neubig (CMU and MIT, [ICML 2025](https://proceedings.mlr.press/v267/wang25bx.html)). AWM induces workflows from past trajectories and puts the relevant ones in the agent's prompt.
@@ -118,6 +118,7 @@ AWM is a strong idea with clear limits. Some come from the paper, some from late
 - **Gains shrink with newer models.** In ReasoningBank's re-run on WebArena, AWM beat no memory with Gemini 2.5 Flash (44.1 vs 40.5), tied with Gemini 2.5 Pro (47.6 vs 46.7) and scored below no memory with Claude 3.7 Sonnet (40.8 vs 41.7). On tasks that span several websites, AWM fell to 3.4% from 10.3% (Gemini 2.5 Flash). These are another team's numbers in a different setup.
 - **Workflows as tools are rarely used.** Wrapping workflows as callable actions (AWM-AS) added only 1.3 step-success points, and the agent called them in just 18.5% of tasks. Fixed action sequences also break on dynamic pages, like a flight form whose airport pop-up isn't known in advance.
 - **Narrow testing.** The paper covers web navigation only, mostly GPT-4, with workflows kept per website. Nothing removes or updates a stale workflow; memory only grows.
+- **Always in the prompt.** AWM puts every workflow for the site in the prompt before the agent starts. The [REM paper](https://arxiv.org/abs/2610.27377) (Chen et al., October 2026), on repository bug fixing rather than web tasks, argues the opposite: give a short phase-by-phase summary of a related past run at the start, hold the detailed record back until the agent seems stuck, and drop it after one use. On SWE-ContextBench Lite that fixed 27.6% of bugs against 24.9% for the prior memory system it was compared with, at 17% lower cost. The authors conclude that "the bottleneck in experience reuse is not retrieval fidelity" but how experience is stored and governed. Details are on our [coding agent memory](/articles/ai-coding-agent-memory/) page.
 
 ## How to implement workflow memory today
 
@@ -186,6 +187,7 @@ Workflow memory is one way to store procedural memory. Agents learn from past ru
 | [Voyager](https://arxiv.org/abs/2305.16291) | Working code for each solved sub-task | No (only saves code that works) | Callable skill library |
 | ReasoningBank | Short strategy notes (title, description, content) | Yes | Prompt |
 | Plan caching | Plan templates from finished runs | No | Adapted by a small model |
+| [REM](https://arxiv.org/abs/2610.27377) | A small phase-structured summary per finished coding run, plus a detailed record | Not stated | Summary at task start; detailed record only when the agent struggles, then dropped |
 | Hindsight | Experiences, consolidated observations, mental models | Yes (outcomes are stored like any experience) | Recall or `reflect` before acting |
 
 Workflows answer "what steps worked for this kind of task?" Reasoning notes answer "what should I keep in mind?" Plans answer "what's the order of work for this task?", covered in [planning memory for AI agents](/articles/ai-agent-planning-memory/). Raw run logs are episodic memory; see [episodic memory in AI agents](/articles/episodic-memory-in-ai-agents/).

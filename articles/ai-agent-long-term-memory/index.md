@@ -15,7 +15,7 @@ Building it well comes down to a handful of design choices: what to store, how t
 
 LangGraph's [memory docs](https://docs.langchain.com/oss/python/langgraph/memory) define it by scope: long-term memory "is shared *across* conversational threads" and saved under custom namespaces such as a user ID. That's the line between it and short-term memory, which ends with the thread. The comparison is in [short-term vs long-term memory in agentic AI](/articles/short-term-and-long-term-memory-agentic-ai/).
 
-The CoALA framework ([Sumers et al., 2023](https://arxiv.org/abs/2309.02427)) splits long-term memory into three types: **episodic** (past experiences), **semantic** (facts) and **procedural** (how to act). Most chat products store [semantic facts](/articles/semantic-memory-ai-agents/), and the hard part is keeping them right when they change. Task agents gain the most from episodic and procedural memory.
+The CoALA framework ([Sumers et al., 2023](https://arxiv.org/abs/2309.02427)) splits long-term memory into three types: **episodic** (past experiences), **semantic** (facts) and **procedural** (how to act). Most chat products store [semantic facts](/articles/semantic-memory-ai-agents/), and the hard part is keeping them right when they change. Task agents gain the most from episodic and procedural memory, such as the reusable routines of [Agent Workflow Memory](/articles/agent-workflow-memory/).
 
 ## Does AI have long-term memory?
 
