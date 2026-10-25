@@ -18,7 +18,7 @@ The common reasons to compare it with others:
 1. **Open infrastructure.** The [GitHub repo](https://github.com/supermemoryai/supermemory) is MIT, but the docs say the local server's "source is not in the public repository." It's a free binary under a "lite license." Self-hosting beyond that is on the $399/month Scale plan or Enterprise.
 2. **You only need memory.** If you already have a RAG stack, Supermemory's bundled document search and connectors are extra surface.
 3. **A different memory model.** Temporal fact validity, agent-edited memory, or reflection over memories are things other systems lead on.
-4. **Benchmarks you can compare.** Supermemory's headline LongMemEval number is Recall@15, a retrieval metric, while most vendors report answer accuracy.
+4. **Benchmarks you can compare.** Supermemory's headline LongMemEval number is Recall@15, a retrieval metric, while most vendors report answer accuracy. For answer accuracy on changed facts and preferences by system, see the knowledge-update table in [semantic memory in AI agents](/articles/semantic-memory-ai-agents/#how-memory-systems-score-on-facts-that-change).
 
 ## Supermemory alternatives at a glance
 

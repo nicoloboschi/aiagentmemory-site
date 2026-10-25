@@ -1,8 +1,8 @@
 # Semantic Memory in AI Agents: Facts, Profiles, Graphs
 
-> What semantic memory is in AI agents: profile vs collection storage, triples and knowledge graphs, extracting facts with LangMem, and keeping facts current.
+> What semantic memory is in AI agents: profiles vs collections, triples and graphs, extracting facts with LangMem, keeping facts current, and LongMemEval knowledge-update scores by system.
 
-Source: https://aiagentmemory.org/articles/semantic-memory-ai-agents/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/semantic-memory-ai-agents/ · Updated 2026-10-25 · aiagentmemory.org
 
 
 **Semantic memory in AI agents** stores facts: who the user is, what they prefer, what's true about the domain, and how entities relate. Unlike episodic memory, a semantic fact isn't tied to the moment it was learned. The agent saves these facts outside the model and pulls the relevant ones into the prompt to ground and personalize its answers.
@@ -105,6 +105,30 @@ Facts change. "I live in NYC" in January becomes "I just moved to SF" in June. I
 
 Test this case with real data before you pick a system. LongMemEval ([Wu et al., 2024](https://arxiv.org/abs/2410.10813)) has a dedicated "knowledge update" category for it, because it's where many setups fail quietly.
 
+## How memory systems score on facts that change
+
+Two LongMemEval question types test semantic memory directly. **Knowledge-update** (78 questions) asks for a fact the user later changed. **Single-session-preference** (30 questions) asks the assistant to use a preference the user stated once. Table 3 of the Hindsight paper ([Latimer et al., arXiv 2512.12818](https://arxiv.org/abs/2512.12818), Dec 2025) breaks results down by type, on the S setting (about 115,000 tokens over roughly 50 sessions):
+
+| System (answer model) | Knowledge-update | Preference | Overall |
+|---|---|---|---|
+| Full context (GPT-4o) | 78.2 | 20.0 | 60.2 |
+| Full context (OSS-20B) | 60.3 | 20.0 | 39.0 |
+| Zep (GPT-4o) | 83.3 | 56.7 | 71.2 |
+| Supermemory (GPT-4o) | 88.5 | 70.0 | 81.6 |
+| Supermemory (GPT-5) | 87.2 | 76.7 | 84.6 |
+| Supermemory (Gemini-3) | 89.7 | 70.0 | 85.2 |
+| Hindsight (OSS-20B) | 84.6 | 66.7 | 83.6 |
+| Hindsight (OSS-120B) | 92.3 | 86.7 | 89.0 |
+| Hindsight (Gemini-3) | **94.9** | 80.0 | **91.4** |
+
+What the table shows:
+
+- **Putting the whole history in the prompt is worst at preferences.** Full context got 20% on both models: the stated preference is in there, but the model doesn't apply it. Every memory system did at least 2.8x better, which is the case for storing preferences as separate facts.
+- **Updates are where systems differ most at the top.** Hindsight with Gemini-3 answered 94.9% of knowledge-update questions and Supermemory with Gemini-3 89.7%. On preferences, Hindsight's best was 86.7% with the open OSS-120B model.
+- **The answer model matters as much as the memory.** Hindsight goes from 84.6 to 94.9 on updates just by changing the model that reads the memories.
+
+Read it with three limits. The paper is by Hindsight's authors at Vectorize, so this is a vendor-run comparison, not an independent one. The question counts are small: on preferences one question is 3.3 points. And LongMemEval's judge counts an answer as correct if it gives the new value, even when it also repeats the old one, so the test doesn't punish a system for keeping stale facts around. Hindsight's [benchmarks site](https://benchmarks.hindsight.vectorize.io/) now reports 94.6 overall on LongMemEval S, newer than this table. The [LLM memory comparison](/articles/llm-memory-comparison/) collects other published results.
+
 ## Retrieving semantic memory
 
 How facts reach the prompt matters as much as how they're stored:
@@ -131,4 +155,8 @@ No. Semantic memory is a psychology term for stored facts and knowledge. Semanti
 ### Should agent semantic memory be a profile or a collection?
 
 Use a profile (one structured document per user) when you need fast access to the current state of a known set of fields. Use a collection (many small fact records) when facts are open-ended and you want to recall them contextually. LangGraph's docs note collections tend to give higher recall but are harder to update.
+
+### Which memory system handles changed facts best?
+
+On LongMemEval's knowledge-update questions (78 questions, S setting), the Hindsight paper reports Hindsight at 94.9% with Gemini-3 and 92.3% with the open OSS-120B model, Supermemory at 87.2-89.7% and Zep at 83.3% with GPT-4o, and full context at 78.2% with GPT-4o. The paper is by Hindsight's authors, so treat it as vendor-run, and test on your own data.
 
