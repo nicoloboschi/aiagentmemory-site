@@ -2,7 +2,7 @@
 
 > How vector databases store long-term memory for LLM agents, what memory needs beyond RAG, and how pgvector, Qdrant, Chroma, Milvus, Pinecone and Redis compare.
 
-Source: https://aiagentmemory.org/articles/vector-database-for-llm-memory/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/vector-database-for-llm-memory/ · Updated 2026-10-25 · aiagentmemory.org
 
 
 **A vector database for LLM memory** stores past messages, facts and documents as embeddings, then finds the ones closest in meaning to the current query so they can be added to the prompt. It's the storage layer under most long-term memory systems. For most teams the best choice is the database they already run (pgvector in Postgres, or Redis), with a dedicated vector database like Qdrant, Milvus or Pinecone once scale or multi-tenancy demands it.
@@ -75,10 +75,27 @@ Facts from each project's docs and GitHub, checked 8 October 2026.
 
 A few notes:
 
-- **pgvector** supports HNSW and IVFFlat, and up to 2,000 dimensions per indexed `vector` column (4,000 with `halfvec`). Distance operators include `<=>` for cosine and `<#>` for negative inner product. It needs Postgres 13 or later.
+- **pgvector** supports HNSW and IVFFlat, and up to 2,000 dimensions per indexed `vector` column (4,000 with `halfvec`). Distance operators include `<=>` for cosine and `<#>` for negative inner product. It needs Postgres 13 or later today; the unreleased 0.9.0 drops Postgres 13 and 14, per its [changelog](https://github.com/pgvector/pgvector/blob/master/CHANGELOG.md).
 - **Redis** supports `FLAT`, `HNSW` and, since Redis 8.2, `SVS-VAMANA` indexes, with metadata filters on text, tag, numeric and geo fields.
 - **Amazon MemoryDB** adds vector search to a durable Valkey/Redis-compatible service. AWS's [docs](https://docs.aws.amazon.com/memorydb/latest/devguide/vector-search.html) list retrieval-augmented generation among its use cases and claim, as of June 2024, the "fastest vector search performance at the highest recall rates among popular vector databases on AWS" (a vendor benchmark).
 - **Microsoft Kernel Memory**, once a common .NET option, is now archived. Its README says it "is an archived research project" and the code "serves as a learning resource, not production software."
+
+### What changed for memory workloads (July to October 2026)
+
+Latest releases and stars from GitHub on 25 October 2026, with the changes that matter for agent memory from each project's release notes.
+
+| Database | Latest release | GitHub stars | Change that matters for memory |
+|---|---|---|---|
+| pgvector | 0.8.7 (1 Oct 2026) | ~23,500 | Bug fixes only: 0.8.7 fixes a buffer overflow in IVFFlat index builds, so upgrade if you use IVFFlat. 0.9.0 (unreleased) adds async I/O for HNSW. |
+| Qdrant | [1.20.0](https://github.com/qdrant/qdrant/releases/tag/v1.20.0) (22 Oct 2026) | ~35,200 | **BM25 scoring directly on the full-text payload index**, so keyword matching on names and IDs no longer needs a separate sparse vector. Also a substring filter and a `code` tokenizer. |
+| Milvus | 3.0.3 (14 Oct 2026); [3.0.0](https://github.com/milvus-io/milvus/releases/tag/v3.0.0) on 29 Jul | ~46,500 | **Add, backfill and drop columns while serving**, so switching embedding models doesn't need a full rebuild with downtime. BM25 output fields can be computed over existing data. |
+| Weaviate | 1.40.2 (22 Oct 2026) | ~16,900 | Security patch only (certificate fix); no new features. |
+| LanceDB | 0.40.0 (7 Oct 2026) | ~11,800 | Built on Lance 13.0.0; mostly OAuth, secrets and materialized-view APIs. Has breaking changes, so read the notes before upgrading. |
+| Chroma | 1.5.9 (5 May 2026) | ~29,600 | No new GitHub release since May. |
+
+The Qdrant change is the one most memory apps will feel. Its [full-text search docs](https://qdrant.tech/documentation/search/text-search/full-text-search/) say "Qdrant computes BM25 scores from a full-text index on a payload field": create the text index with `"scoring": true` and query it with `models.TextQuery`. Two limits apply: each shard keeps its own term statistics, and after deletes or updates scores can shift slightly until the optimizer rebuilds segments. Memory stores have lots of small deletes, so expect a little drift.
+
+The Milvus change answers a problem every long-lived memory store hits: the embedding model you started with gets replaced, and old memories need new vectors. With online backfill you add the new vector column, fill it offline, and Milvus indexes it while the old one keeps serving.
 
 If your memory must live in RAM inside the app process, with no server, see [in-memory vector databases](/articles/best-in-memory-vector-database/). At the other end, for very large memory banks kept on object storage, [Hindsight Memlake vs Postgres, turbopuffer and LanceDB](/articles/hindsight-memlake/) compares the object-storage engines.
 
@@ -181,4 +198,8 @@ For most teams it's the database they already run: pgvector if you use Postgres,
 ### Is a vector database enough for agent memory?
 
 Usually not on its own. It finds similar text, but it doesn't decide what to remember, merge duplicates, or know that a newer fact replaced an older one. Memory frameworks add extraction, conflict handling and time-aware ranking on top of the vector store.
+
+### Which vector databases can do keyword search for agent memory?
+
+Most of the main ones. Qdrant 1.20 (October 2026) scores BM25 directly on a full-text payload index, with no sparse vectors needed. Milvus and Weaviate have built-in BM25 or hybrid search, Redis has full-text fields, and pgvector pairs with Postgres full-text search. Keyword matching matters for memory because users mention names, order IDs and codes that embeddings match poorly.
 

@@ -30,7 +30,7 @@ Neither is "better." Hermes's approach keeps prompts small and the prompt cache 
 | **Consolidation** | Agent must consolidate when full; background review | Dreaming job promotes notes into `MEMORY.md`; flush before compaction | Background consolidation into observations and mental models |
 | **Write approval** | `memory.write_approval: true` stages writes | Dreaming output goes to `DREAMS.md` for review | Not listed |
 | **Safety scan** | Entries scanned for injection, exfiltration, invisible Unicode | Untrusted candidates excluded from promotion | Not listed |
-| **External providers** | One at a time: Honcho, [OpenViking](/articles/openviking-agent-memory/), Mem0, Hindsight, Holographic, RetainDB, ByteRover, Supermemory, Memori | Builtin, Honcho, LanceDB engines; Memory Wiki; third-party plugins (Mem0, Hindsight) | It is the provider: `hermes plugins install hindsight` or `@vectorize-io/hindsight-openclaw` |
+| **External providers** | One at a time: Honcho, [OpenViking](/articles/openviking-agent-memory/), Mem0, Hindsight, Holographic, RetainDB, ByteRover, Supermemory, [Memori](/articles/ai-agents-memory-storage-memori-gibsonai/) | Builtin, Honcho, LanceDB engines; Memory Wiki; third-party plugins (Mem0, Hindsight) | It is the provider: `hermes plugins install hindsight` or `@vectorize-io/hindsight-openclaw` |
 
 ## How Hermes handles memory
 

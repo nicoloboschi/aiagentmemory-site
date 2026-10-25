@@ -85,7 +85,7 @@ See the [Letta guide](/articles/letta-ai-guide/) for the full picture, or [Letta
 
 **[Hindsight](https://github.com/vectorize-io/hindsight)** is an MIT-licensed memory server. `retain` uses an LLM to extract facts, entities, relationships and time data. `recall` runs semantic, BM25, graph and time-range searches in parallel, then merges them with rank fusion and a cross-encoder reranker. `reflect` reasons over memories to answer open questions.
 
-In the background it consolidates facts into **observations**, beliefs that keep their supporting quotes and get refined when new evidence arrives. Mental models are standing answers ("What are this user's preferences?") that Hindsight keeps up to date. It runs on PostgreSQL with pgvector, so entity links live there rather than in a separate graph database.
+In the background it consolidates facts into **observations**, beliefs that keep their supporting quotes and get refined when new evidence arrives. Mental models are standing answers ("What are this user's preferences?") that Hindsight keeps up to date. It runs on PostgreSQL with [pgvector](/articles/vector-database-for-llm-memory/), so entity links live there rather than in a separate graph database.
 
 Two points matter for Cognee users. First, what Cognee licenses or reserves for Enterprise, a production Postgres graph and temporal memory, is in Hindsight's open-source server, along with consolidation, `reflect` and mental models. Second, it has published long-history results: on BEAM it scores 73.9 at 1M tokens and 64.1 at 10M, versus Mem0's 64.1 and 48.6, per [Mem0's own comparison](https://mem0.ai/compare/mem0-vs-hindsight) (vendor-run). It also ships native plugins for Claude Code, Codex, Cursor and Copilot, plus an MCP server per bank.
 
