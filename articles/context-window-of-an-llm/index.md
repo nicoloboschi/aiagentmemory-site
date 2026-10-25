@@ -109,7 +109,7 @@ The transformer's self-attention layer lets each token look at every earlier tok
 
 ### The KV cache grows with every token
 
-To avoid recomputing attention for old tokens, inference servers store a **key-value (KV) cache**: a key and a value vector per token, per layer. That memory grows linearly with context length. For an 8B-parameter model like Qwen3-8B (36 layers, 8 KV heads, head size 128, 16-bit values), the cache needs about 144 KiB per token, or about 18 GiB at 131,072 tokens. That's more than the model's own weights. The [open-source long-context guide](/articles/largest-context-window-llm-open-source/) shows the math and how to shrink it.
+To avoid recomputing attention for old tokens, inference servers store a **key-value (KV) cache**: a key and a value vector per token, per layer. That memory grows linearly with context length. For an 8B-parameter model like Qwen3-8B (36 layers, 8 KV heads, head size 128, 16-bit values), the cache needs about 144 KiB per token, or about 18 GiB at 131,072 tokens. That's more than the model's own weights. The [open-source long-context guide](/articles/largest-context-window-llm-open-source/) shows the math and how to shrink it, and [how LLM memory works](/articles/how-llm-memory-works/#kv-cache-per-token-for-popular-open-models) compares the per-token cache of Llama, Mistral, Qwen3, DeepSeek-V3 and gpt-oss.
 
 ### Position handling must be trained
 

@@ -2,7 +2,7 @@
 
 > How LLM memory works inside the model: knowledge in weights, the context window, the KV cache, why each API call is stateless, and where external memory fits.
 
-Source: https://aiagentmemory.org/articles/how-llm-memory-works/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/how-llm-memory-works/ · Updated 2026-10-25 · aiagentmemory.org
 
 
 **An LLM has three kinds of memory, and none of them remembers you.** Knowledge from training sits in its **weights**. During one request it sees the tokens in its **context window**, which it reads through a **KV cache** in GPU memory. After the reply, the cache is dropped. Anything that lasts between calls is stored outside the model by the app.
@@ -76,6 +76,23 @@ print(full_window / 2**30)            # 16.0 GiB
 
 A full 128K-token window needs about **16 GiB of cache for a single request**, roughly the same as the model's weights in 16-bit. That's why long contexts are expensive and why providers cap them. Without grouped-query attention (32 KV heads instead of 8), the cache would be four times larger.
 
+### KV cache per token for popular open models
+
+The same formula, run on each model's published `config.json` on Hugging Face (16-bit numbers, one request, no cache compression):
+
+| Model | Layers × KV heads × head size | KV cache per token | At 32K tokens | At 128K tokens |
+|---|---|---|---|---|
+| Llama 3.1 8B | 32 × 8 × 128 | 128 KiB | 4 GiB | 16 GiB |
+| Mistral 7B v0.3 | 32 × 8 × 128 | 128 KiB | 4 GiB | 16 GiB |
+| Qwen3-8B | 36 × 8 × 128 | 144 KiB | 4.5 GiB | 18 GiB* |
+| Qwen3-32B | 64 × 8 × 128 | 256 KiB | 8 GiB | 32 GiB* |
+| DeepSeek-V3 (latent attention) | 61 layers × (512 + 64) values | 68.6 KiB | 2.1 GiB | 8.6 GiB |
+| gpt-oss-120b (half the layers windowed) | 18 full layers × 8 × 64 | 36 KiB | 1.1 GiB | 4.5 GiB |
+
+\*Qwen3's config lists a 40,960-token native window; longer needs RoPE scaling (YaRN).
+
+Two design tricks explain the small numbers at the bottom. **DeepSeek-V3** caches one compressed latent vector (512 values) plus a 64-value position key per layer instead of full keys and values per head; the DeepSeek-V2 paper says this latent attention "reduces the KV cache by 93.3%" against DeepSeek 67B ([arXiv 2405.04434](https://arxiv.org/abs/2405.04434)). **gpt-oss-120b** alternates full-attention layers with sliding-window layers that only look back 128 tokens, so half its layers hold a fixed, tiny cache (about 4.5 MiB total) however long the chat gets. Either way, the cache still grows with every token and still vanishes when the request ends: smaller working memory, not lasting memory.
+
 Managing this memory is its own engineering problem. The vLLM paper, [Efficient Memory Management for LLM Serving with PagedAttention](https://arxiv.org/abs/2309.06180) (Kwon et al., SOSP 2023), showed that naive allocation wastes cache space through "fragmentation and redundant duplication," and that paging it like an operating system's virtual memory improved throughput 2-4x at similar latency.
 
 ### The KV cache is not long-term memory
@@ -117,6 +134,10 @@ Only in a limited sense. It has knowledge stored in its weights from training, a
 ### What is the KV cache in an LLM?
 
 The KV cache stores the key and value vectors the model computed for every earlier token, per layer, so it doesn't recompute them for each new token. It lives in GPU memory during one request and grows linearly with context length. For Llama 3.1 8B it takes 128 KiB per token in 16-bit precision.
+
+### How much KV cache memory do popular models need?
+
+In 16-bit, per token: Llama 3.1 8B and Mistral 7B 128 KiB, Qwen3-8B 144 KiB, Qwen3-32B 256 KiB, DeepSeek-V3 about 68.6 KiB thanks to latent attention, and gpt-oss-120b 36 KiB because half its layers use a 128-token sliding window. A 128K-token request on Llama 3.1 8B needs about 16 GiB of cache. Figures are computed from each model's config.json.
 
 ### Is prompt caching a form of memory?
 

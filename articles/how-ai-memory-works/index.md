@@ -1,8 +1,8 @@
 # How AI Memory Works: Write, Store, Retrieve, Inject
 
-> How AI memory works in ChatGPT, Claude, Gemini and custom agents: the model forgets, so the app saves notes, searches them and adds them to the prompt.
+> How does memory work in AI? The model forgets, so the app saves notes, searches them and adds them to the prompt. ChatGPT, Claude, Gemini, Mem0, Letta and Hindsight compared step by step.
 
-Source: https://aiagentmemory.org/articles/how-ai-memory-works/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/how-ai-memory-works/ · Updated 2026-10-25 · aiagentmemory.org
 
 
 **AI memory works by saving information outside the model and adding it back into the prompt later.** The language model forgets everything after each reply. So the app around it writes notes or keeps past chats, searches them when you send a new message, and pastes the relevant pieces into the model's input. ChatGPT, Claude, Gemini and custom agents all follow this loop.
@@ -104,6 +104,20 @@ Facts change. "Lives in Berlin" should replace "lives in Paris," not sit next to
 
 Developers who build their own agent pick a tool for these parts or write them. Open-source memory servers bundle all four. **[Hindsight](https://github.com/vectorize-io/hindsight)** (MIT), for example, uses an LLM to extract facts, entities and dates on write, stores them in PostgreSQL with pgvector, and searches by meaning, keywords, entity links and time in parallel. For update logic, it merges related facts into **observations** that are refined as new evidence arrives, not overwritten. The tradeoff: every write calls an LLM, so writes cost more than a plain vector store. See [how Hindsight works](/articles/ai-memory-hindsight/).
 
+### How popular memory tools run the four steps
+
+The same loop, as four widely used tools build it, per their own docs:
+
+| Step | [Mem0](/articles/what-is-mem0-ai/) | [Zep / Graphiti](/articles/what-is-zep-memory/) | [Letta](/articles/letta-ai-guide/) | [Hindsight](/articles/ai-memory-hindsight/) |
+|---|---|---|---|---|
+| Write | `add`: an LLM extracts facts and entities, skips duplicates | Episodes become graph nodes and edges, added incrementally | The agent edits its own memory with built-in tools | `retain`: an LLM extracts facts, time, entities and links |
+| Store | SQL (facts), vector store, entity store | Knowledge graph with a valid time on each fact | Memory blocks/files, message history, vector archive | PostgreSQL + pgvector |
+| Retrieve | `search`: meaning, keyword, entity and time signals | Hybrid search over graph edges | Pinned blocks always loaded; history and archive searched by the agent | Meaning, keyword, graph and time search in parallel, then rerank |
+| Inject | Your app picks which results go in the prompt | Your app (or Zep's context block) | Letta builds the prompt itself | Your app, or Hindsight's plugins and LLM wrapper |
+| Update | Context lookup before each write | Old fact gets an "invalid at" time, not deleted | The agent rewrites the block | Related facts merge into observations that get refined |
+
+Sources: Mem0's [How Mem0 Works](https://docs.mem0.ai/core-concepts/how-it-works) ("Your app decides which returned memories to include in the prompt"), the [Graphiti README](https://github.com/getzep/graphiti), Letta's [memory docs](https://docs.letta.com/), Hindsight's [README](https://github.com/vectorize-io/hindsight). The big split is **who decides what to save**: an extractor model (Mem0, Graphiti, Hindsight) or the agent itself (Letta).
+
 ## Memory inside the model vs memory around it
 
 There are really two kinds of memory in an AI system, and only one of them is about you.
@@ -113,6 +127,19 @@ There are really two kinds of memory in an AI system, and only one of them is ab
 **Around the model**, there's the memory feature described above: a database the app writes to and reads from. This is the only part that remembers you between chats.
 
 The model-level side (weights, context window, the KV cache) is explained in [how LLM memory works](/articles/how-llm-memory-works/).
+
+## Does a memory system beat just searching old chats?
+
+**On short histories, often not.** An October 2026 paper, [Is Complex Agentic Memory Always Needed? Naive RAG Is Stronger Than We Thought](https://arxiv.org/abs/2610.30755) (Bao et al.), skipped the write step's extraction: it stored the raw chat, searched it by meaning and reranked. That simple setup beat 12 memory systems in six of seven tests, by 0.13 to 5.53 points.
+
+| System | LoCoMo, GPT-4.1-mini | LongMemEval, GPT-4.1-mini |
+|---|---|---|
+| Plain search over raw chat | **93.70** | **87.53** |
+| EverMemOS (best memory system on LoCoMo) | 93.05 | 83.00 |
+| Mem0 | 64.20 | 66.40 |
+| Whole history in the prompt | 80.60 | 65.60 |
+
+Accuracy %, from the paper's main table. The reason, per the authors: extraction throws away some of the evidence a question needs. Two limits: these test histories are short enough to fit in a large context window, and scores don't carry across papers (Mem0 reports 94.4 on LongMemEval with its current platform). Where extraction and smarter retrieval pay off is long histories: on BEAM 10M (10 million tokens), Mem0's own comparison page shows Hindsight at 64.1 and Mem0 at 48.6, both vendor-run numbers. The practical rule: keep the raw messages next to whatever you extract. More in [RAG vs agent memory](/articles/rag-vs-agent-memory/).
 
 ## Why AI memory still fails
 
@@ -139,4 +166,8 @@ It goes by several names. Apps call it memory, saved memories, personal context 
 ### Does ChatGPT remember everything I say?
 
 No. ChatGPT keeps saved memories you or it chose to store, and it can draw on past chats, but OpenAI says reference chat history does not keep every detail. If something must always be applied, put it in saved memories or custom instructions.
+
+### Is a memory system better than searching old chats?
+
+Not always. In an October 2026 paper (Bao et al.), plain search over the raw chat history beat 12 memory systems on LoCoMo and LongMemEval, by 0.13 to 5.53 points, because extracting facts drops some evidence. Those histories are short; memory systems make their case on much longer ones. Keep the raw messages next to whatever you extract.
 
