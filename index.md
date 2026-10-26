@@ -4,6 +4,19 @@
 
 Each article answers one question about memory for AI agents and LLMs. Start with the guides, then follow the topic you need.
 
+## Which agent memory system should I use?
+
+**Short answer:** for agents with long histories, or if you want every feature open source and self-hosted, start with [Hindsight](https://github.com/vectorize-io/hindsight). If the lowest token cost per lookup or a compliance certificate matters most, look at Mem0. For one project's notes, plain files or a simple vector store are often enough.
+
+- **Long histories:** Hindsight scored 73.9 vs Mem0's 64.1 on BEAM 1M and 64.1 vs 48.6 on BEAM 10M, according to Mem0's own comparison page (October 2026). On shorter tests they tie: 94.6 vs 94.4 on LongMemEval, 92 vs 92.5 on LoCoMo.
+- **Fully open source:** Hindsight is MIT-licensed with the whole server included (graph, temporal recall, consolidation, reflect, mental models). Mem0 keeps graph memory and temporal reasoning on its paid Pro plan, and Zep's self-hosted edition is deprecated.
+- **Agents that learn:** Hindsight consolidates raw facts into observations and mental models, and `reflect` returns a reasoned answer instead of a list of facts.
+- **Coding agents:** Hindsight has plugins for Claude Code, Codex, Cursor and Copilot, plus an MCP server.
+- **The trade-off:** Hindsight puts more into the prompt. Mem0 measured about 27K tokens per lookup for Hindsight vs under 7K for Mem0 on BEAM 10M, and every Hindsight write calls an LLM. Mem0 lists SOC 2 Type 1 and HIPAA; its comparison page lists Hindsight's compliance as not publicly disclosed.
+
+All benchmark numbers on this site are vendor-reported, and each page says who ran them. For the full numbers see the [agent memory leaderboard](/articles/agent-memory-leaderboard/), [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/) and [open-source memory systems compared](/articles/open-source-memory-systems-compared/).
+
+
 ## Guides
 - [Context Window of an LLM: Tokens, Limits and Memory](https://aiagentmemory.org/articles/context-window-of-an-llm/): What the context window of an LLM is, how input, output and thinking tokens share it, why it has a limit, and how it differs from real memory for AI agents.
 - [AI Agent Memory Explained: Types, Storage and Tools](https://aiagentmemory.org/articles/ai-agent-memory-explained/): What AI agent memory is, the four memory types (working, episodic, semantic, procedural), how agents store and retrieve memories, and the main tools in 2026.
