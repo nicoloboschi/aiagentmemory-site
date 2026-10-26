@@ -159,6 +159,8 @@ These steps keep requests inside the window and keep the model accurate:
 6. **Retrieve instead of pasting.** Store documents and memories outside the model and load only the relevant pieces.
 7. **Clear bulky tool output.** Old tool results are often the biggest waste in an agent's window.
 
+Agent builders call this whole practice [context engineering](/articles/context-engineering/): choosing what the window holds at every step, not only keeping it under the limit.
+
 A minimal version of step 5, keeping the system prompt and dropping the oldest turns until the history fits a budget:
 
 ```python

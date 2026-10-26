@@ -2,12 +2,12 @@
 
 > agentmemory (rohitg00) explained: persistent memory for Claude Code, Cursor and Codex, npx setup, its self-reported benchmarks, vs Hindsight and Mem0.
 
-Source: https://aiagentmemory.org/articles/agentmemory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agentmemory/ · Updated 2026-10-26 · aiagentmemory.org
 
 
 **agentmemory** is an open-source memory server that gives AI coding agents persistent memory across sessions. Hooks in Claude Code, Codex CLI, Cursor, Hermes, OpenClaw and other agents record what the agent does, and the server injects the most relevant past context when the next session starts. You install it with `npx -y @agentmemory/agentmemory@latest`.
 
-The project lives at [github.com/rohitg00/agentmemory](https://github.com/rohitg00/agentmemory), is written in TypeScript under the Apache 2.0 license, and had about 29,300 GitHub stars on 12 October 2026. This page covers what it does, how it works, how to set it up, what its benchmark numbers mean, and how it compares with [Hindsight](https://github.com/vectorize-io/hindsight) and Mem0 for coding-agent memory. Facts come from the agentmemory README and benchmark files, checked on 12 October 2026. (This site, aiagentmemory.org, has no connection to the agentmemory project.)
+The project lives at [github.com/rohitg00/agentmemory](https://github.com/rohitg00/agentmemory), is written in TypeScript under the Apache 2.0 license, and had about 29,900 GitHub stars on 26 October 2026 (29,300 on 12 October). This page covers what it does, how it works, how to set it up, what its benchmark numbers mean, and how it compares with [Hindsight](https://github.com/vectorize-io/hindsight) and Mem0 for coding-agent memory. Facts come from the agentmemory README and benchmark files, checked on 12 October 2026. (This site, aiagentmemory.org, has no connection to the agentmemory project.)
 
 ## What is agentmemory?
 
@@ -23,7 +23,7 @@ Several unrelated projects use the same name. Check which one a guide means:
 
 | Name | What it is | Status (12 Oct 2026) |
 |---|---|---|
-| `rohitg00/agentmemory`, npm `@agentmemory/agentmemory` | Memory server for coding agents (this page) | Active, v0.9.30 on npm |
+| `rohitg00/agentmemory`, npm `@agentmemory/agentmemory` | Memory server for coding agents (this page) | Active, v0.9.30 on npm; 0.9.31 in the changelog (26 Oct) |
 | PyPI `agentmemory` (`pip install agentmemory`) | Python library for agent memory and document search on ChromaDB, or Postgres with pgvector | Last release 0.4.8, October 2023; its listed GitHub repo returns 404 |
 | `mturac/agentmemory` | A GitHub fork of `rohitg00/agentmemory` | Fork, no separate releases |
 
@@ -57,7 +57,7 @@ agentmemory needs Node.js 20 or newer. On macOS and Linux the first run download
 5. For other agents (Cursor, Gemini CLI, OpenCode, Hermes, OpenClaw and others), run `agentmemory connect <agent>`. Pure MCP clients need `AGENTMEMORY_URL=http://localhost:3111`, or they see only 7 fallback tools.
 6. Optional: add `EMBEDDING_PROVIDER=local` to `~/.agentmemory/.env` and restart for semantic search. Open `http://localhost:3113` to watch memories arrive.
 
-The server uses four local ports (3111, 3112, 3113, 49134). Data lives outside your repo, in `~/Library/Application Support/agentmemory` on macOS or `~/.local/share/agentmemory` on Linux. One warning from the README: Claude Code deletes JSONL transcripts older than 30 days by default, so importing old history only recovers the last month. Hooks capture live sessions and avoid that problem.
+The server uses four local ports in 0.9.30 (3111, 3112, 3113, 49134); 0.9.31 stops using 3112. Data lives outside your repo, in `~/Library/Application Support/agentmemory` on macOS or `~/.local/share/agentmemory` on Linux. One warning from the README: Claude Code deletes JSONL transcripts older than 30 days by default, so importing old history only recovers the last month. Hooks capture live sessions and avoid that problem.
 
 From Python you can call the same functions through the iii SDK (`pip install iii-sdk`), as in the README:
 
@@ -72,6 +72,26 @@ iii.trigger({
     "payload": {"project": "demo", "query": "how do tokens refresh"},
 })
 ```
+
+## What changes in agentmemory 0.9.31 (October 2026)
+
+**agentmemory 0.9.31 fixes a bug in 0.9.30 that cut session summaries short, and moves the runtime to iii 0.25.0.** The project's CHANGELOG dates 0.9.31 to 25 October 2026, but on 26 October npm and GitHub releases still listed 0.9.30 as the latest version, so `@latest` installs 0.9.30 until the release ships.
+
+If you run 0.9.30, the summary bug matters most. The changelog says 0.9.30 "completed a session on the first per-turn Stop and ignored every later end, so summaries and graph extraction stopped at turn 1." In 0.9.31 a session stays open while new observations arrive and an idle finalizer closes it after `AGENTMEMORY_FINALIZE_IDLE_MS` (2 minutes by default).
+
+| Change in 0.9.31 | What it means for you |
+|---|---|
+| Session summaries cover the whole session again (#745) | 0.9.30 summaries and graph extraction stopped at turn 1 of each session |
+| Incremental summaries with a `coveredThrough` watermark | Only new observations get summarized; a session end with nothing new costs no LLM call |
+| iii 0.25.0 and Worker Compose | Stop the old instance with its old CLI before upgrading; `AGENTMEMORY_USE_DOCKER` and custom `iii-config.yaml` files are no longer used |
+| Viewer updates over authenticated SSE on the REST port | Port 3112 is no longer used; the viewer stays on 3113 |
+| Narrative recall over MCP returns structured JSON | Read the `text` field; budget metadata lists results that were cut or shortened |
+| Hooks capture the assistant's final reply (#1510) | Memories now include what the agent answered, not only prompts and tool calls |
+| Imports validate rows before a replace import deletes the store (#1576) | A malformed import file can no longer wipe existing memories |
+| New or fixed agent connectors: Pi package, Oh My Pi (OMP), DSH capture, Cursor workspace mapping, Devin capture | Re-run `agentmemory connect pi --with-mcp` or `connect omp --with-mcp` after upgrading |
+| Vector recovery after restarts | Full historical backfill needs `AGENTMEMORY_VECTOR_BACKFILL=all`; keyword search keeps working meanwhile |
+
+Source: the [0.9.31 CHANGELOG entry](https://github.com/rohitg00/agentmemory/blob/main/CHANGELOG.md), read 26 October 2026.
 
 ## agentmemory benchmark claims (self-reported)
 
@@ -146,6 +166,10 @@ agentmemory (github.com/rohitg00/agentmemory) is an Apache 2.0, TypeScript memor
 ### Is the agentmemory 95.2% LongMemEval score an accuracy score?
 
 No. The project's own benchmark notes say 95.2% is retrieval recall at 5 (does any correct session appear in the top 5 results), with no LLM answering questions. It is self-reported and is not the official LongMemEval answer-accuracy metric, so it can't be compared directly with accuracy scores from Mem0 or Hindsight.
+
+### Why do agentmemory 0.9.30 session summaries only cover the first turn?
+
+It's a bug in 0.9.30: the server closed a session on the first per-turn Stop hook and ignored later ones, so summaries and graph extraction stopped at turn 1. The 0.9.31 changelog (dated 25 October 2026) fixes it by keeping the session open and closing it after 2 idle minutes.
 
 ### Is the PyPI agentmemory package the same project?
 

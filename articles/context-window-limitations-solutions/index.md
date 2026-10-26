@@ -97,7 +97,7 @@ Every fix follows the same idea: send the model less, but better. In rough order
 
 ### Summarization and compaction
 
-Anthropic's [context engineering guide](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) treats context as "a finite resource with diminishing marginal returns" and recommends compaction: when a conversation nears the limit, condense it and continue in a fresh window, keeping decisions and open issues while dropping redundant tool output. The same guide recommends structured note-taking and sub-agents. Our page on [LLM memory compression](/articles/llm-memory-compression/) covers summarization methods in more depth.
+Anthropic's [context engineering guide](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) treats context as "a finite resource with diminishing marginal returns" and recommends compaction: when a conversation nears the limit, condense it and continue in a fresh window, keeping decisions and open issues while dropping redundant tool output. The same guide recommends structured note-taking and sub-agents; [what context engineering is](/articles/context-engineering/) compares these techniques across Anthropic, LangChain and Manus. Our page on [LLM memory compression](/articles/llm-memory-compression/) covers summarization methods in more depth.
 
 ### Memory systems
 
