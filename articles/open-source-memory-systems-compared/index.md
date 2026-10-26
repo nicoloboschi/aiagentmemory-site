@@ -2,12 +2,12 @@
 
 > Open-source AI memory systems compared: GitHub repos, licenses, stars (Oct 2026), languages and what each is good at. Mem0, Hindsight, MemPalace, Graphiti, Cognee.
 
-Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-10-26 · aiagentmemory.org
 
 
 The leading **open-source AI agent memory systems** on GitHub are Mem0, MemPalace, Hindsight, Graphiti, Cognee, Letta, LangMem, MemOS, Memori, Honcho, Basic Memory and Memobase. Most are Apache-2.0 or MIT, written in Python, and self-hostable with Docker. They differ in storage (vectors, graphs, files), in how much is truly open versus paid, and in what they're built for.
 
-If you want the most complete fully open option, it's **Hindsight**: its MIT server includes graph and temporal recall, consolidation and `reflect`, which Mem0 keeps on its paid Platform, and it leads Mem0 on the long-history BEAM benchmark by 9.8 points at 1M tokens and 15.5 at 10M (vendor-run). This page covers only open-source projects: repos, licenses, stars, languages and strengths. Star counts, licenses and last-push dates come from the GitHub API on **18 October 2026**. For hosted options and benchmarks, see the [LLM memory comparison](/articles/llm-memory-comparison/). For background, see [AI agent memory explained](/articles/ai-agent-memory-explained/).
+If you want the most complete fully open option, it's **Hindsight**: its MIT server includes graph and temporal recall, consolidation and `reflect`, which Mem0 keeps on its paid Platform, and it leads Mem0 on the long-history BEAM benchmark by 9.8 points at 1M tokens and 15.5 at 10M (vendor-run). This page covers only open-source projects: repos, licenses, stars, languages and strengths. Star counts, licenses and last-push dates come from the GitHub API on **26 October 2026**, with the change since our 18 October sweep. For hosted options and benchmarks, see the [LLM memory comparison](/articles/llm-memory-comparison/). For background, see [AI agent memory explained](/articles/ai-agent-memory-explained/).
 
 ## What is an open-source AI memory system?
 
@@ -15,33 +15,35 @@ If you want the most complete fully open option, it's **Hindsight**: its MIT ser
 
 ## Open-source memory systems on GitHub: the table
 
-| Project | Repo | License | Stars (18 Oct 2026) | Main language | Good at |
-|---|---|---|---|---|---|
-| Mem0 | [mem0ai/mem0](https://github.com/mem0ai/mem0) | Apache-2.0 | 67,371 | Python | Drop-in user, session and agent memory for chat apps; lowest tokens per retrieval |
-| MemPalace | [MemPalace/mempalace](https://github.com/MemPalace/mempalace) | MIT | 59,622 | Python | Verbatim local archive of coding-agent sessions and files; no LLM needed |
-| Hindsight | [vectorize-io/hindsight](https://github.com/vectorize-io/hindsight) | MIT | 50,989 | Python | Agents that learn over time; long histories; every feature open source, `reflect` |
-| Cognee | [topoteretes/cognee](https://github.com/topoteretes/cognee) | Apache-2.0 | 32,461 | Python | Knowledge graphs from docs, code and conversations; runs without an LLM key |
-| Graphiti | [getzep/graphiti](https://github.com/getzep/graphiti) | Apache-2.0 | 31,942 | Python | Temporal knowledge graphs where facts have validity windows |
-| Supermemory | [supermemoryai/supermemory](https://github.com/supermemoryai/supermemory) | MIT (see note) | 31,271 | TypeScript | Memory + RAG + connectors behind one API; coding-agent plugins |
-| Letta | [letta-ai/letta](https://github.com/letta-ai/letta) / [letta-code](https://github.com/letta-ai/letta-code) | Apache-2.0 | 25,175 / 3,647 | TypeScript (letta-code) | Stateful agents that edit their own memory, skills and prompts |
-| Memori | [MemoriLabs/Memori](https://github.com/MemoriLabs/Memori) | Apache-2.0 | 17,151 | Python | Memory on your existing SQL database through a wrapped LLM client |
-| MemOS | [MemTensor/MemOS](https://github.com/MemTensor/MemOS) | Apache-2.0 | 11,917 | TypeScript (per GitHub) | Memory "operating system" with memory cubes, skill reuse, OpenClaw/Hermes plugins |
-| Honcho | [plastic-labs/honcho](https://github.com/plastic-labs/honcho) | AGPL-3.0 | 7,665 | Python | Modeling users, agents and groups ("peers") over time |
-| Basic Memory | [basicmachines-co/basic-memory](https://github.com/basicmachines-co/basic-memory) | AGPL-3.0 | 4,263 | Python | Local markdown knowledge base shared by you and your AI over MCP |
-| agent-memory | [tigerless-labs/agent-memory](https://github.com/tigerless-labs/agent-memory) | MIT | 4,191 | Python | Markdown files as the source of truth with a deletable local index on top; no API key |
-| Mnemosyne | [mnemosyne-oss/mnemosyne](https://github.com/mnemosyne-oss/mnemosyne) | MIT | 3,455\* | Python | One SQLite file and one pip install, no server; end-to-end encrypted sync between your own machines |
-| Memobase | [memodb-io/memobase](https://github.com/memodb-io/memobase) | Apache-2.0 | 2,932 | Python | User profiles and event timelines for chatbots, low-latency reads |
-| Microsoft Kernel Memory | [microsoft/kernel-memory](https://github.com/microsoft/kernel-memory) | MIT | 2,232 | C# | .NET memory and RAG; labeled a research project |
-| LangMem | [langchain-ai/langmem](https://github.com/langchain-ai/langmem) | MIT | 1,708 | Python | Memory tools and background manager for LangGraph agents |
-| MemoryOS | [BAI-LAB/MemoryOS](https://github.com/BAI-LAB/MemoryOS) | Apache-2.0 | 1,605 | Python | Research system (EMNLP 2025 Oral) for personalized agent memory |
-| Leviathan | [elstongun/leviathan](https://github.com/elstongun/leviathan) | Apache-2.0 | 832 | Rust | Searching big record sets (logs, exports, tables) from an agent, in one binary |
-| OKF Agent Memory | [okf-memory/okf-agent-memory](https://github.com/okf-memory/okf-agent-memory) | MIT | 819 | Go | Git-versioned project memory for coding agents, as files in the repo |
+| Project | Repo | License | Stars (26 Oct 2026) | Change since 18 Oct | Main language | Good at |
+|---|---|---|---|---|---|---|
+| Mem0 | [mem0ai/mem0](https://github.com/mem0ai/mem0) | Apache-2.0 | 67,839 | +468 | Python | Drop-in user, session and agent memory for chat apps; lowest tokens per retrieval |
+| MemPalace | [MemPalace/mempalace](https://github.com/MemPalace/mempalace) | MIT | 59,744 | +122 | Python | Verbatim local archive of coding-agent sessions and files; no LLM needed |
+| Hindsight | [vectorize-io/hindsight](https://github.com/vectorize-io/hindsight) | MIT | 53,967 | +2,978 | Python | Agents that learn over time; long histories; every feature open source, `reflect` |
+| Cognee | [topoteretes/cognee](https://github.com/topoteretes/cognee) | Apache-2.0 | 32,768 | +307 | Python | Knowledge graphs from docs, code and conversations; runs without an LLM key |
+| Graphiti | [getzep/graphiti](https://github.com/getzep/graphiti) | Apache-2.0 | 32,230 | +288 | Python | Temporal knowledge graphs where facts have validity windows |
+| Supermemory | [supermemoryai/supermemory](https://github.com/supermemoryai/supermemory) | MIT (see note) | 31,401 | +130 | TypeScript | Memory + RAG + connectors behind one API; coding-agent plugins |
+| Letta | [letta-ai/letta](https://github.com/letta-ai/letta) / [letta-code](https://github.com/letta-ai/letta-code) | Apache-2.0 | 25,260 / 3,709 | +85 / +62 | TypeScript (letta-code) | Stateful agents that edit their own memory, skills and prompts |
+| Memori | [MemoriLabs/Memori](https://github.com/MemoriLabs/Memori) | Apache-2.0 | 17,141 | -10 | Python | Memory on your existing SQL database through a wrapped LLM client |
+| MemOS | [MemTensor/MemOS](https://github.com/MemTensor/MemOS) | Apache-2.0 | 12,104 | +187 | TypeScript (per GitHub) | Memory "operating system" with memory cubes, skill reuse, OpenClaw/Hermes plugins |
+| Honcho | [plastic-labs/honcho](https://github.com/plastic-labs/honcho) | AGPL-3.0 | 7,777 | +112 | Python | Modeling users, agents and groups ("peers") over time |
+| Basic Memory | [basicmachines-co/basic-memory](https://github.com/basicmachines-co/basic-memory) | AGPL-3.0 | 4,358 | +95 | Python | Local markdown knowledge base shared by you and your AI over MCP |
+| agent-memory | [tigerless-labs/agent-memory](https://github.com/tigerless-labs/agent-memory) | MIT | 4,732 | +541 | Python | Markdown files as the source of truth with a deletable local index on top; no API key |
+| Mnemosyne | [mnemosyne-oss/mnemosyne](https://github.com/mnemosyne-oss/mnemosyne) | MIT | 3,521 | +66 | Python | One SQLite file and one pip install, no server; end-to-end encrypted sync between your own machines |
+| Memobase | [memodb-io/memobase](https://github.com/memodb-io/memobase) | Apache-2.0 | 2,937 | +5 | Python | User profiles and event timelines for chatbots, low-latency reads |
+| Microsoft Kernel Memory | [microsoft/kernel-memory](https://github.com/microsoft/kernel-memory) | MIT | 2,233 | +1 | C# | .NET memory and RAG; labeled a research project |
+| LangMem | [langchain-ai/langmem](https://github.com/langchain-ai/langmem) | MIT | 1,722 | +14 | Python | Memory tools and background manager for LangGraph agents |
+| MemoryOS | [BAI-LAB/MemoryOS](https://github.com/BAI-LAB/MemoryOS) | Apache-2.0 | 1,613 | +8 | Python | Research system (EMNLP 2025 Oral) for personalized agent memory |
+| Leviathan | [elstongun/leviathan](https://github.com/elstongun/leviathan) | Apache-2.0 | 861 | +29 | Rust | Searching big record sets (logs, exports, tables) from an agent, in one binary |
+| OKF Agent Memory | [okf-memory/okf-agent-memory](https://github.com/okf-memory/okf-agent-memory) | MIT | 839 | +20 | Go | Git-versioned project memory for coding agents, as files in the repo |
 
-\* Mnemosyne's star count was read from the GitHub API on **19 October 2026**; every other row is from the 18 October sweep.
+Mnemosyne's change is measured from 19 October, when it was added; every other row from the 18 October sweep.
+
+**Growth in the last eight days:** Hindsight added 2,978 stars, more than Mem0, Cognee, Graphiti, MemPalace and Supermemory together (1,315). The fastest-growing small project is tigerless-labs' agent-memory (+541, 13%). MemPalace, second by total, added only 122, and Memori is flat.
 
 Stars measure attention, not quality. LangMem has few stars because it ships as part of the LangChain ecosystem; Letta's older `letta` repo holds most of its stars while new work happens in `letta-code`.
 
-**Check the last commit, not only the star count.** Three of the repos above are quiet: [Memobase](https://github.com/memodb-io/memobase) has had no push since 11 January 2026, Microsoft's Kernel Memory none since 8 June 2026, and [MemoryOS](https://github.com/BAI-LAB/MemoryOS) none since 7 July 2026. The old `letta-ai/letta` repo last moved on 10 September 2026, but that is deliberate: work happens in `letta-code`. Everything else in the table was pushed to within the last two weeks. One project with a familiar name, [Memary](https://github.com/kingjulio8238/Memary), hasn't had a commit since October 2024.
+**Check the last commit, not only the star count.** Three of the repos above are quiet: [Memobase](https://github.com/memodb-io/memobase) has had no push since 11 January 2026, Microsoft's Kernel Memory none since 8 June 2026, and [MemoryOS](https://github.com/BAI-LAB/MemoryOS) none since 7 July 2026. The old `letta-ai/letta` repo moves rarely (last push 18 October 2026), but that is deliberate: work happens in `letta-code`. [Memori](https://github.com/MemoriLabs/Memori) has had no push since 3 October 2026. Everything else in the table was pushed to within the last week. One project with a familiar name, [Memary](https://github.com/kingjulio8238/Memary), hasn't had a commit since October 2024.
 
 ## How open is "open source"? Read the fine print
 
@@ -54,7 +56,7 @@ Several projects are **open core**: the repo is open, but some features or the b
 - **Letta:** the Letta V1 API server is retired to an `archive` branch. Current development is the Letta Code harness, which defaults to Letta Cloud but has a local backend.
 - **Hindsight:** MIT, with no open-core split: graph, temporal recall, consolidation, `reflect` and mental models are all in the open-source server. Its pricing page lists self-hosting as free with no usage limits. The paid part is the managed cloud.
 - **AGPL projects (Honcho, Basic Memory):** free to self-host, but if you modify them and offer them as a network service, AGPL-3.0 requires you to publish your changes. Many companies' legal teams treat AGPL differently from MIT or Apache.
-- **Source-available, not open source:** [aoci-code](https://github.com/aoci-spec/aoci-code) (1,602 stars) keeps a Git-versioned map of a codebase and database schema for coding agents to read, and is often listed with the projects above. Its licence is the Functional Source License 1.1 with an MIT future grant, so you may read and use the code but not compete with it until the grant converts two years after each release. That is a different thing from the MIT and Apache repos in the table, and it is worth knowing before you build a product on it.
+- **Source-available, not open source:** [aoci-code](https://github.com/aoci-spec/aoci-code) (1,750 stars) keeps a Git-versioned map of a codebase and database schema for coding agents to read, and is often listed with the projects above. Its licence is the Functional Source License 1.1 with an MIT future grant, so you may read and use the code but not compete with it until the grant converts two years after each release. That is a different thing from the MIT and Apache repos in the table, and it is worth knowing before you build a product on it.
 
 ## What each open-source memory system is built for
 
@@ -155,7 +157,11 @@ For a decision guide by use case, see [the best AI memory framework for your age
 
 ### What is the most popular open-source AI memory system on GitHub?
 
-As of 18 October 2026, Mem0 (mem0ai/mem0) has the most GitHub stars of the dedicated memory projects at about 67,400, followed by MemPalace (about 59,600), Hindsight (about 51,000), Cognee (about 32,500), Graphiti (about 31,900) and Supermemory (about 31,300). Stars measure attention, not quality or fit.
+As of 26 October 2026, Mem0 (mem0ai/mem0) has the most GitHub stars of the dedicated memory projects at about 67,800, followed by MemPalace (about 59,700), Hindsight (about 54,000), Cognee (about 32,800), Graphiti (about 32,200) and Supermemory (about 31,400). Hindsight is growing fastest: about 3,000 new stars between 18 and 26 October, more than the next five projects combined. Stars measure attention, not quality or fit.
+
+### Which open-source memory system is growing fastest on GitHub?
+
+Between 18 and 26 October 2026 (GitHub API), Hindsight gained about 2,980 stars, tigerless-labs/agent-memory about 540, Mem0 about 470, Cognee about 310 and Graphiti about 290. MemPalace gained about 120, and Memori lost 10.
 
 ### Which open-source memory systems are fully open, with no paid-only core?
 
