@@ -145,7 +145,7 @@ It fits less well when you want a memory layer to bolt onto an agent you already
 
 Hindsight is the closest match to Letta's "learns over time" idea for teams that want to keep their own agent loop. Like dreaming, it consolidates in the background: related facts merge into **observations** that keep their evidence, and **mental models** hold standing answers that stay up to date. It has a maintained Python client (plus TypeScript and Go), is MIT-licensed with every feature in the open-source server, and ships plugins for Claude Code, Codex, Cursor and Copilot, so existing coding agents get memory without switching harness. On the long-history BEAM benchmark it reports 73.9 at 1M tokens and 64.1 at 10M (vendor-reported). What it doesn't do: run the agent, its tools or its schedule, which Letta does. Each write and consolidation pass also calls an LLM.
 
-Those tradeoffs are covered in our guides to [Letta alternatives](/articles/letta-alternatives/), [Mem0 alternatives](/articles/mem0-alternatives-compared/), [Zep alternatives](/articles/zep-alternatives/) and [Cognee alternatives](/articles/cognee-alternatives/). For the idea Letta started from, see [hierarchical memory for LLMs](/articles/llm-hierarchical-memory/).
+Those tradeoffs are covered in our guides to [Letta alternatives](/articles/letta-alternatives/), [Mem0 alternatives](/articles/mem0-alternatives-compared/), [Zep alternatives](/articles/zep-alternatives/) and [Cognee alternatives](/articles/cognee-alternatives/). If you're choosing between Letta and an agent framework's built-in memory, see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/). For the idea Letta started from, see [hierarchical memory for LLMs](/articles/llm-hierarchical-memory/).
 
 
 ## FAQ
