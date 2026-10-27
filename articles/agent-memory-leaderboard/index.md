@@ -2,7 +2,7 @@
 
 > Agent memory leaderboard guide: where to find LongMemEval, LoCoMo and BEAM results, who runs each leaderboard, a score table with sources, and why scores differ.
 
-Source: https://aiagentmemory.org/articles/agent-memory-leaderboard/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agent-memory-leaderboard/ · Updated 2026-10-27 · aiagentmemory.org
 
 
 There is no official **agent memory leaderboard**. The benchmark authors (LongMemEval, LoCoMo, BEAM) publish datasets, not rankings. The leaderboards you can find are run by memory vendors: **agentmemorybenchmark.ai** by Vectorize, the company that makes Hindsight; **OmniMemEval** by MemTensor, the company that makes MemOS; and score pages from Mem0, Zep, Honcho and past.dev.
@@ -63,6 +63,22 @@ These are the scores each vendor publishes for itself, with the source and the m
 Every row is vendor-run. Hindsight's README adds that research collaborators at Virginia Tech and The Washington Post reproduced its results; that is a reproduction by collaborators, not an independent audit. Hindsight's site also reports PersonaMem 32K at 86.6 and LifeBench EN at 71.5. BEAM scores above are nugget scores shown out of 100.
 
 Two things stand out. On LongMemEval and LoCoMo, the top four systems are within about five points of each other, which is less than the effect of changing the answer model. On BEAM 10M, the gap is larger: Hindsight reports 64.1 against 48.6 for Mem0 and 40.9 for Honcho, and Mem0's [comparison page](https://mem0.ai/compare/mem0-vs-hindsight) shows the same Hindsight and Mem0 figures. past.dev reports far higher BEAM scores than anyone else, from a run where one model both answers and judges; no other source has reproduced them.
+
+### LongMemEval by question type
+
+A single LongMemEval number hides where systems differ. The Hindsight paper ([arXiv 2512.12818](https://arxiv.org/abs/2512.12818), Table 3, December 2025) is the one source we found that breaks LongMemEval S down by question type for several memory systems side by side.
+
+| Question type | Full context, GPT-4o | Zep, GPT-4o | Supermemory, GPT-5 | Supermemory, Gemini 3 | Hindsight, OSS-20B | Hindsight, Gemini 3 |
+|---|---|---|---|---|---|---|
+| Single-session, user said it | 81.4 | 92.9 | 97.1 | **98.6** | 95.7 | 97.1 |
+| Single-session, assistant said it | 94.6 | 80.4 | **100.0** | 98.2 | 94.6 | 96.4 |
+| Preference (single-session) | 20.0 | 56.7 | 76.7 | 70.0 | 66.7 | **80.0** |
+| Knowledge update | 78.2 | 83.3 | 87.2 | 89.7 | 84.6 | **94.9** |
+| Temporal reasoning | 45.1 | 62.4 | 81.2 | 82.0 | 79.7 | **91.0** |
+| Multi-session | 44.3 | 57.9 | 75.2 | 76.7 | 79.7 | **87.2** |
+| Overall | 60.2 | 71.2 | 84.6 | 85.2 | 83.6 | **91.4** |
+
+Read it with care. It's vendor-run (Vectorize wrote the paper), and the Zep, Supermemory and full-context scores are copied from Supermemory's report, judged by GPT-4o, while Hindsight's rows are judged by GPT-OSS-120B. Different judges, so it's not a strict like-for-like. With the same answer model (Gemini 3), the gap is largest on **temporal reasoning (+9.0)** and **multi-session questions (+10.5)**, the two types that need facts tied together across sessions and time. On single-session questions every memory system is near the ceiling and Supermemory is slightly ahead. Those single-session-assistant questions are also where Hindsight scored lowest in the OmniMemEval run below. The paper's numbers are older than the 94.6 on Hindsight's benchmarks site.
 
 ## Same-harness results: OmniMemEval
 
@@ -158,6 +174,10 @@ No. The LongMemEval, LoCoMo and BEAM authors don't run official leaderboards. Th
 ### Which memory system tops the agent memory leaderboards?
 
 It depends on who ran the test. On self-reported scores, Hindsight, Mem0, Zep and others all sit near 90-95% on LongMemEval and LoCoMo. On the longer BEAM test the spread is wider: Hindsight reports 73.9 at 1M tokens and 64.1 at 10M, against 64.1 and 48.6 for Mem0, and Mem0's own comparison page lists the same figures.
+
+### Which memory system is best at temporal reasoning and multi-session questions on LongMemEval?
+
+The only per-type comparison we found is Table 3 of the Hindsight paper (arXiv 2512.12818, vendor-run). With Gemini 3 answering, Hindsight scored 91.0 on temporal reasoning and 87.2 on multi-session questions, against 82.0 and 76.7 for Supermemory and 62.4 and 57.9 for Zep with GPT-4o. The competitor scores come from Supermemory's report with a GPT-4o judge, while Hindsight's used a GPT-OSS-120B judge, so it is not a strict like-for-like.
 
 ### Why do memory benchmark scores differ so much between sources?
 

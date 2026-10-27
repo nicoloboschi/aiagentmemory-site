@@ -15,15 +15,15 @@ The project lives at [github.com/rohitg00/agentmemory](https://github.com/rohitg
 
 The problem it targets is simple. Each new coding session starts from zero, so you explain your stack, your past bugs and your choices again. Built-in memory files like `CLAUDE.md` or Cursor rules help, but they are loaded whole into every session. The README's example: in session 1 you add JWT auth; in session 2 you ask for rate limiting, and the agent already knows the auth middleware lives in `src/middleware/auth.ts` and that you picked `jose` over `jsonwebtoken`.
 
-agentmemory runs on the [iii engine](https://github.com/iii-hq/iii) (a pinned v0.22.1) and stores state in local files by default, with Redis as an option. It needs no external database. The README is translated into more than 30 languages, including Simplified and Traditional Chinese.
+agentmemory runs on the [iii engine](https://github.com/iii-hq/iii) (pinned to v0.25.0 with Worker Compose since agentmemory 0.9.31; 0.9.30 pinned v0.22.1) and stores state in local files by default, with Redis as an option. It needs no external database. The README is translated into more than 30 languages, including Simplified and Traditional Chinese.
 
 ### Other projects named agentmemory
 
 Several unrelated projects use the same name. Check which one a guide means:
 
-| Name | What it is | Status (12 Oct 2026) |
+| Name | What it is | Status (26 Oct 2026) |
 |---|---|---|
-| `rohitg00/agentmemory`, npm `@agentmemory/agentmemory` | Memory server for coding agents (this page) | Active, v0.9.30 on npm; 0.9.31 in the changelog (26 Oct) |
+| `rohitg00/agentmemory`, npm `@agentmemory/agentmemory` | Memory server for coding agents (this page) | Active, v0.9.31 on npm (released 26 Oct 2026) |
 | PyPI `agentmemory` (`pip install agentmemory`) | Python library for agent memory and document search on ChromaDB, or Postgres with pgvector | Last release 0.4.8, October 2023; its listed GitHub repo returns 404 |
 | `mturac/agentmemory` | A GitHub fork of `rohitg00/agentmemory` | Fork, no separate releases |
 
@@ -57,7 +57,7 @@ agentmemory needs Node.js 20 or newer. On macOS and Linux the first run download
 5. For other agents (Cursor, Gemini CLI, OpenCode, Hermes, OpenClaw and others), run `agentmemory connect <agent>`. Pure MCP clients need `AGENTMEMORY_URL=http://localhost:3111`, or they see only 7 fallback tools.
 6. Optional: add `EMBEDDING_PROVIDER=local` to `~/.agentmemory/.env` and restart for semantic search. Open `http://localhost:3113` to watch memories arrive.
 
-The server uses four local ports in 0.9.30 (3111, 3112, 3113, 49134); 0.9.31 stops using 3112. Data lives outside your repo, in `~/Library/Application Support/agentmemory` on macOS or `~/.local/share/agentmemory` on Linux. One warning from the README: Claude Code deletes JSONL transcripts older than 30 days by default, so importing old history only recovers the last month. Hooks capture live sessions and avoid that problem.
+The server uses three local ports in 0.9.31 (3111, 3113, 49134); 0.9.30 also used 3112. Data lives outside your repo, in `~/Library/Application Support/agentmemory` on macOS or `~/.local/share/agentmemory` on Linux. One warning from the README: Claude Code deletes JSONL transcripts older than 30 days by default, so importing old history only recovers the last month. Hooks capture live sessions and avoid that problem.
 
 From Python you can call the same functions through the iii SDK (`pip install iii-sdk`), as in the README:
 
@@ -75,13 +75,16 @@ iii.trigger({
 
 ## What changes in agentmemory 0.9.31 (October 2026)
 
-**agentmemory 0.9.31 fixes a bug in 0.9.30 that cut session summaries short, and moves the runtime to iii 0.25.0.** The project's CHANGELOG dates 0.9.31 to 25 October 2026, but on 26 October npm and GitHub releases still listed 0.9.30 as the latest version, so `@latest` installs 0.9.30 until the release ships.
+**agentmemory 0.9.31 fixes a bug in 0.9.30 that cut session summaries short, fixes a keyword-ranking bug, and moves the runtime to iii 0.25.0.** It was published to npm and as a GitHub release on 26 October 2026 (the CHANGELOG dates it 25 October), so `npx -y @agentmemory/agentmemory@latest` now installs 0.9.31. Stop the old server with its own CLI first, then start 0.9.31 with the same instance, port and data directory, as the release notes say.
 
 If you run 0.9.30, the summary bug matters most. The changelog says 0.9.30 "completed a session on the first per-turn Stop and ignored every later end, so summaries and graph extraction stopped at turn 1." In 0.9.31 a session stays open while new observations arrive and an idle finalizer closes it after `AGENTMEMORY_FINALIZE_IDLE_MS` (2 minutes by default).
 
 | Change in 0.9.31 | What it means for you |
 |---|---|
 | Session summaries cover the whole session again (#745) | 0.9.30 summaries and graph extraction stopped at turn 1 of each session |
+| BM25 prefix-score bug fixed (#1514) | Keyword recall gets much better; see the benchmark section below |
+| Graph enrichment gets a 500 ms budget (#1541, #1559) | If graph storage stalls, keyword and vector results still return; this is not an overall latency promise |
+| Saved memories keep their project and agent scope (#819, #1232) | Recall can target memories, observations or both |
 | Incremental summaries with a `coveredThrough` watermark | Only new observations get summarized; a session end with nothing new costs no LLM call |
 | iii 0.25.0 and Worker Compose | Stop the old instance with its old CLI before upgrading; `AGENTMEMORY_USE_DOCKER` and custom `iii-config.yaml` files are no longer used |
 | Viewer updates over authenticated SSE on the REST port | Port 3112 is no longer used; the viewer stays on 3113 |
@@ -91,7 +94,7 @@ If you run 0.9.30, the summary bug matters most. The changelog says 0.9.30 "comp
 | New or fixed agent connectors: Pi package, Oh My Pi (OMP), DSH capture, Cursor workspace mapping, Devin capture | Re-run `agentmemory connect pi --with-mcp` or `connect omp --with-mcp` after upgrading |
 | Vector recovery after restarts | Full historical backfill needs `AGENTMEMORY_VECTOR_BACKFILL=all`; keyword search keeps working meanwhile |
 
-Source: the [0.9.31 CHANGELOG entry](https://github.com/rohitg00/agentmemory/blob/main/CHANGELOG.md), read 26 October 2026.
+Sources: the [v0.9.31 release notes](https://github.com/rohitg00/agentmemory/releases/tag/v0.9.31) and the [0.9.31 CHANGELOG entry](https://github.com/rohitg00/agentmemory/blob/main/CHANGELOG.md), read 26 October 2026.
 
 ## agentmemory benchmark claims (self-reported)
 
@@ -102,11 +105,13 @@ All numbers below come from agentmemory's own README and benchmark files. No out
 | LongMemEval-S, 500 questions | Recall@5 (retrieval only) | 95.2% (BM25 + vector) | 86.2% (BM25 only) |
 | LongMemEval-S | Recall@10 / MRR | 98.6% / 88.2% | 94.6% / 71.5% |
 | coding-agent-life-v1 (in-house, 15 sessions) | Recall@5 / top-5 hit rate | 1.000 / 15 of 15 | grep: 0.967 / 15 of 15 |
+| LongMemEval-S cleaned, 470 answerable questions (0.9.31 dev eval) | All needed evidence in top 5 (strict recall-all@5) | 84.68% BM25 after the fix (65.74% before) | grep: 72.13% |
 | Context injected vs a full `CLAUDE.md` | Tokens at 240 observations | ~1,900 | 22,000+ ("92% fewer tokens") |
 
 How to read these:
 
 - **95.2% is not a LongMemEval accuracy score.** The project's [LongMemEval notes](https://github.com/rohitg00/agentmemory/blob/main/benchmark/LONGMEMEVAL.md) say it plainly: these are "retrieval recall scores, not end-to-end QA accuracy," with no LLM answering and no judge, and "We do NOT claim these as 'LongMemEval scores'." Recall@5 asks whether any correct session shows up in the top 5 results.
+- **The 0.9.31 BM25 gain is a development result.** The project's [evaluation notes](https://github.com/rohitg00/agentmemory/blob/v0.9.31/docs/benchmarks/2026-10-09-evaluation-baseline.md) say the public data was inspected while fixing the bug, so it is not held-out validation, no LLM reader or judge ran, and it "does not establish superiority over Mem0, Supermemory, gbrain, or another memory product." They also show that BM25 before the fix (65.74%) found complete evidence less often than plain grep (72.13%).
 - **The coding benchmark is small.** The README calls it "small and gold-sparse," and plain grep also finds 15 of 15.
 - **The token saving compares against loading a whole memory file**, not against other memory servers.
 
@@ -169,7 +174,7 @@ No. The project's own benchmark notes say 95.2% is retrieval recall at 5 (does a
 
 ### Why do agentmemory 0.9.30 session summaries only cover the first turn?
 
-It's a bug in 0.9.30: the server closed a session on the first per-turn Stop hook and ignored later ones, so summaries and graph extraction stopped at turn 1. The 0.9.31 changelog (dated 25 October 2026) fixes it by keeping the session open and closing it after 2 idle minutes.
+It's a bug in 0.9.30: the server closed a session on the first per-turn Stop hook and ignored later ones, so summaries and graph extraction stopped at turn 1. Version 0.9.31, released on npm on 26 October 2026, fixes it by keeping the session open and closing it after 2 idle minutes. Upgrade with npx -y @agentmemory/agentmemory@latest after stopping the old server.
 
 ### Is the PyPI agentmemory package the same project?
 
