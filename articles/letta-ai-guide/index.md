@@ -139,7 +139,7 @@ One thing to know if you're migrating: the open-source Docker image "is no longe
 
 ## When Letta fits, and when something else does
 
-Letta fits when the agent itself is the product: a long-lived assistant or coding agent that edits its own memory, learns skills and runs on a schedule. Its memory is readable Markdown under git, which makes it easy to inspect and diff.
+Letta fits when the agent itself is the product: a long-lived assistant or coding agent that edits its own memory, learns skills and runs on a schedule. Its memory is readable Markdown under git, which makes it easy to inspect and diff. If you already use Claude Code, Codex or Cursor and only want them to remember the project, start with their built-in layers; see [AI coding agent memory](/articles/ai-coding-agent-memory/).
 
 It fits less well when you want a memory layer to bolt onto an agent you already built in another framework, or a Python-first SDK. Tools like Mem0, Zep, Cognee and [Hindsight](https://github.com/vectorize-io/hindsight) are built as memory services that sit beside your agent rather than as the agent runtime.
 

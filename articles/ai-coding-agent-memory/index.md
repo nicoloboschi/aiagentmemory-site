@@ -2,7 +2,7 @@
 
 > How AI coding agents remember projects: Claude Code CLAUDE.md and auto memory, Codex AGENTS.md and memories, Cursor rules, Copilot Memory, and external memory tools.
 
-Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-10-22 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-10-27 · aiagentmemory.org
 
 
 **AI coding agent memory** is how tools like Claude Code, Codex, Cursor and GitHub Copilot carry project knowledge from one session to the next. The main mechanism is a plain **instruction file** (CLAUDE.md, AGENTS.md or Cursor rules) loaded into every session. Some agents add **automatic memory** that saves lessons as they work. For more, teams add an external memory server. For Claude Code specifically, see [Claude Code memory](/articles/claude-code-memory/).
@@ -117,6 +117,19 @@ Claude Code reads `AGENTS.md` directly when there's no `CLAUDE.md` (v2.1.277+). 
 - Use the Read tool before editing large files.
 ```
 
+### Moving learned memory between agents
+
+AGENTS.md covers rules you write. What an agent learned on its own is harder to move, because each tool keeps it in its own format:
+
+| From → to | How | Kind | Source |
+|---|---|---|---|
+| Claude Code → Codex | Codex's import from Claude Code copies `~/.claude/projects/<project>/memory/*.md` into Codex memories and consolidates them, `MEMORY.md` first | One-time copy (Codex 0.165.0+) | [openai/codex PR #56414](https://github.com/openai/codex/pull/56414) |
+| Cursor → Codex | Not supported: Codex's Cursor import skips memory | None | Codex source, `external-agent-migration` |
+| Cursor Memories → Rules | Export memories from the Command Palette, then paste into `.cursor/rules` | Manual, one-time | Cursor forum (see FAQ) |
+| Any agent ↔ any agent | One memory server bank that several agents read and write, such as Hindsight's per-repo bank | Live, both ways | [Hindsight coding agents](https://github.com/vectorize-io/hindsight) |
+
+A one-time import is fine when you switch tools for good. If a team keeps using two agents on the same repo, copies drift apart as soon as either agent learns something new, and only a shared store keeps them in step.
+
 ## External memory for coding agents
 
 Built-in memory is per machine and per tool. Teams that want lessons shared across developers, agents and months of history add an external store, usually over MCP:
@@ -149,6 +162,10 @@ Mostly through instruction files that load at the start of every session: CLAUDE
 ### Should I use AGENTS.md or CLAUDE.md?
 
 AGENTS.md is an open format read by Codex, Cursor, Copilot's coding agent, Gemini CLI and over 20 other tools. Claude Code reads AGENTS.md when no CLAUDE.md exists, or you can import it from CLAUDE.md with @AGENTS.md. Keeping one shared AGENTS.md avoids duplicate instructions.
+
+### Can I move learned memory from Claude Code to Codex?
+
+Yes, once. Since Codex 0.165.0 (27 October 2026), Codex's import from Claude Code copies the Markdown files in ~/.claude/projects/<project>/memory/ into Codex memories and consolidates them, starting from MEMORY.md. It is a one-time copy: afterwards each agent keeps its own memory. Codex does not import Cursor memory. For memory both agents keep writing to, use a shared memory server.
 
 ### Does Cursor still have Memories?
 
