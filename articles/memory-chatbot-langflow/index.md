@@ -1,13 +1,13 @@
 # Langflow Memory Chatbot: Message History and Sessions
 
-> Build a memory chatbot in Langflow: Agent built-in memory, the Message History component, session IDs, external chat memory, and memory bases for long-term recall.
+> Build a memory chatbot in Langflow: Agent built-in memory, Message History, session IDs, external chat memory, and memory bases (SQLite by default since 1.13) for long-term recall.
 
-Source: https://aiagentmemory.org/articles/memory-chatbot-langflow/ · Updated 2026-10-19 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/memory-chatbot-langflow/ · Updated 2026-10-27 · aiagentmemory.org
 
 
 A **memory chatbot in Langflow** keeps earlier messages of a session and feeds them back to the model. The **Agent** component does this by default, loading up to 100 past messages for the same `session_id`. For plain model flows, the **Message History** component retrieves and stores chat history. **Memory bases** (added in Langflow 1.10) add semantic recall across sessions.
 
-The details below follow the [Langflow memory docs](https://docs.langflow.org/memory) for the 1.12 release line (1.12.6, 13 October 2026) and the Langflow source code.
+The details below follow the [Langflow memory docs](https://docs.langflow.org/memory) for the 1.13 release line (1.13.0, 22 October 2026), its release notes and the Langflow source code. If you're upgrading, the [1.13 changes](#what-changed-for-memory-in-langflow-113) matter most for memory bases.
 
 ## What is a Langflow memory chatbot?
 
@@ -130,11 +130,25 @@ How it works:
 3. Optionally turn on **LLM preprocessing**: a model distills each batch into a summary before embedding. If its reply contains the kill phrase (default `NO_INGEST`), the batch is skipped.
 4. Add the **Memory Base** component to a flow in Tool Mode and connect its Toolset to an Agent's Tools input.
 
-**Filter by Session** is on by default, so the agent searches only the current session's memories. Turn it off to search across all ingested sessions, which is what you want for "remember this user next week," provided your session IDs map to users. Local Chroma is the default store; Chroma Cloud, OpenSearch and Postgres pgvector are also supported. A memory base attaches to one flow.
+**Filter by Session** is on by default, so the agent searches only the current session's memories. Turn it off to search across all ingested sessions, which is what you want for "remember this user next week," provided your session IDs map to users. Since 1.13 the default store is local SQLite with sqlite-vec (vectors under `~/.langflow/knowledge_bases` unless you set `LANGFLOW_KNOWLEDGE_BASES_DIR`); OpenSearch and Postgres pgvector are the other options. The docs say to keep SQLite storage on local disk on one host, so use pgvector or OpenSearch for multi-instance setups. A memory base attaches to one flow.
 
 This is retrieval over past messages or summaries. It doesn't resolve contradictions or track when a fact stopped being true. For a deeper look at those problems, see the [AI agent memory guide](/articles/ai-agent-memory-explained/).
 
 If you need that, connect a dedicated memory server as a tool. Langflow's [MCP Tools component](https://docs.langflow.org/mcp-client) can point an Agent at [Hindsight](https://github.com/vectorize-io/hindsight)'s MCP endpoint (one per memory bank, such as one per user), which exposes retain, recall and reflect. Hindsight extracts facts with dates, merges them into observations over time, and leads Mem0 on the long-history BEAM benchmark (64.1 vs 48.6 at 10M tokens, vendor-run). There's no native Langflow component, and its README says it may be overkill for simple flows, so stay with memory bases unless users return over weeks or months. If your low-code stack is n8n rather than Langflow, the [n8n agent memory guide](/articles/best-memory-for-ai-agent-n8n/) covers the same choices there.
+
+## What changed for memory in Langflow 1.13
+
+**Langflow 1.13.0 (22 October 2026) moved memory bases and knowledge bases from Chroma to SQLite, and fixed several memory base bugs.** Chat history in the message table is unchanged. From the [1.13.0 release notes](https://github.com/langflow-ai/langflow/releases/tag/v1.13.0) and the linked pull requests:
+
+| Change in 1.13.0 | What it means for a memory chatbot |
+|---|---|
+| Local Chroma replaced by SQLite with sqlite-vec ([PR #15509](https://github.com/langflow-ai/langflow/pull/15509)) | New memory bases use SQLite. Langflow no longer installs Chroma. On a supported single-host install, existing local Chroma bases migrate in the background on first startup, keeping their vectors with no new embedding calls; interrupted migrations resume on restart. pgvector and OpenSearch are unchanged. |
+| Memory Base component fixes ([PR #15864](https://github.com/langflow-ai/langflow/pull/15864)) | Clicking **Update** on a reopened Memory Base component no longer fails with "flow_id is not available"; ingestion no longer aborts at random with "Memory source messages changed during preprocessing"; LLM preprocessing works with OpenAI reasoning models that reject `temperature`. |
+| Erasing one end user's memory works on SQLite memory bases ([PR #15674](https://github.com/langflow-ai/langflow/pull/15674)) | The erase deletes that person's chunks from the store and updates the stored counts. The bug was caught on the 1.13 branch, before release. |
+| Memory bases cleaned up when a flow is deleted ([PR #14915](https://github.com/langflow-ai/langflow/pull/14915)) | Deleting a flow now deletes its memory bases and their remote vector collections too. Before, a flow whose memory base held messages could fail to delete, or leave an orphaned memory base. |
+| The editor no longer freezes on flows with thousands of chat sessions ([PR #15579](https://github.com/langflow-ai/langflow/pull/15579)) | Flows called through the API with a session ID per user or request pile up sessions; one production flow in the PR reached about 10,000. |
+
+If you ran memory bases on local Chroma, check after upgrading that each one shows **Ready** before you rely on recall: during migration the base isn't available to the agent, while chat history and other flows keep working.
 
 
 ## FAQ
@@ -150,4 +164,8 @@ In Langflow's own database, in the message table. The default is SQLite (langflo
 ### Why do all my Langflow users share the same chat history?
 
 Because the default session ID is the flow ID, so every chat on a flow lands in one session unless you set one. Pass a per-user session_id in the /api/v1/run request; it overrides component settings and keeps each user's memory separate. Since 1.12, the v2 workflow API can also scope memory to a user ID that a trusted gateway puts in a header (LANGFLOW_SERVING_END_USER_HEADER).
+
+### Does Langflow 1.13 still store memory bases in Chroma?
+
+No. Langflow 1.13.0 (22 October 2026) replaced local Chroma with SQLite and sqlite-vec for both knowledge bases and memory bases, and no longer installs Chroma. On a single-host install, existing local Chroma bases migrate in the background on first startup without new embedding calls. Postgres pgvector and OpenSearch are still supported.
 
