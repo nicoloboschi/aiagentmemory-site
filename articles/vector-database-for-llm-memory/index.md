@@ -181,7 +181,7 @@ That's the gap memory frameworks fill on top of the database, and why many add a
 2. **Count tenants.** Thousands of users need filter-friendly tenant partitioning, not a collection per user.
 3. **Estimate size.** Under a few million vectors, almost any option works. At hundreds of millions, look at Milvus, Qdrant, Weaviate or Pinecone.
 4. **Check hybrid search.** If users mention IDs, names or codes, you'll want keyword matching too.
-5. **Test deletes.** Make sure you can remove one user's data completely and quickly.
+5. **Test deletes.** Make sure you can remove one user's data completely and quickly. Age-based expiry is not the same: [AgentCore Memory's record TTL](/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/), for example, can take a few days to remove an expired record, and it stays searchable until then.
 6. **Pick the framework first if you use one.** Check which backends it supports before choosing a database.
 
 

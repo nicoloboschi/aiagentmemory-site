@@ -1,8 +1,8 @@
-# Hermes Agent Memory: How It Works and the Best Provider
+# Hermes Agent Memory: Limits, Best Provider and Fixes
 
-> How Hermes Agent memory works: MEMORY.md and USER.md limits, the frozen snapshot, session search, which memory provider to pick (Hindsight, Honcho, Mem0, OpenViking), what providers see, and fixes.
+> Hermes Agent remembers with MEMORY.md (2,200 chars) and USER.md (1,375 chars), loaded once per session, plus SQLite session search. Which of its 9 memory providers to pick, by need, and why Hermes forgets.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-27 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-28 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -120,7 +120,19 @@ hermes memory off               # disable the external provider
 
 ### Best memory provider for Hermes Agent
 
-There's no single best one; it depends on what the agent must remember. Pick **Honcho** if modeling the user is the point, **Mem0** or **Supermemory** for a hosted fact store with little setup, **Hindsight** if you want memories consolidated into evidence-backed observations plus a reflect call, and **Holographic** (or Hindsight's embedded Postgres) if nothing may leave the machine. Avoid starting new setups on RetainDB or ByteRover until someone maintains them again. Mnemosyne, a single-file SQLite memory that Hermes's docs list as a catalog provider (`hermes plugins install mnemosyne`), is another local option; see [Mnemosyne vs Hindsight](/articles/mnemosyne-vs-hindsight/). If the built-in files already hold what you need, skip providers entirely; they add LLM calls and a dependency.
+There's no single best one; it depends on what the agent must remember. Hermes's [provider docs](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory-providers) don't recommend one either, but they do say what sets each apart (checked October 28, 2026):
+
+| If you need | Pick | What Hermes's docs say sets it apart | Runs where |
+|---|---|---|---|
+| Months of history, with memories merged into conclusions | **Hindsight** | `hindsight_reflect` "provides cross-memory synthesis that no other provider offers" | Cloud, embedded Postgres or local server |
+| A model of the user across sessions | **Honcho** | "cross-session user modeling with dialectic reasoning" | Cloud or self-hosted |
+| Memory you don't manage by hand | **Mem0** | Best for "hands-off memory management": Mem0 does extraction itself | Cloud, self-hosted server or in-process |
+| Nothing leaves the machine, no extra services | **Holographic** | Best for "local-only memory ... no external dependencies" | Local SQLite |
+| Recalled memories kept out of what gets stored | **Supermemory** | "Automatic context fencing" strips recalled memories from captured turns | Cloud or self-hosted |
+| A filesystem-style context store | **OpenViking** | Context database with a filesystem hierarchy | Self-hosted or Volcengine cloud |
+| Nothing beyond the two files | **No provider** | Built-in memory is always on | Local files |
+
+Pick **Honcho** if modeling the user is the point, **Mem0** or **Supermemory** for a hosted fact store with little setup, **Hindsight** if you want memories consolidated into evidence-backed observations plus a reflect call, and **Holographic** (or Hindsight's embedded Postgres) if nothing may leave the machine. Avoid starting new setups on RetainDB or ByteRover until someone maintains them again. Mnemosyne, a single-file SQLite memory that Hermes's docs list as a catalog provider (`hermes plugins install mnemosyne`), is another local option; see [Mnemosyne vs Hindsight](/articles/mnemosyne-vs-hindsight/). If the built-in files already hold what you need, skip providers entirely; they add LLM calls and a dependency.
 
 Of the nine, Hindsight and Mem0 are the two with published head-to-head numbers. On Mem0's own comparison page they tie on LongMemEval (94.6 vs 94.4) and LoCoMo (92 vs 92.5), and Hindsight leads on the long-history BEAM test: 73.9 vs 64.1 at 1M tokens and 64.1 vs 48.6 at 10M (all vendor-run). That matters for a Hermes agent that runs for months. Hermes's own provider docs also say Hindsight's `hindsight_reflect` tool "provides cross-memory synthesis that no other provider offers". [Hindsight](https://github.com/vectorize-io/hindsight) is MIT with every feature in the self-hosted server, and it can use local models through Ollama, LM Studio or llama.cpp, so it also works when nothing may leave the machine. The trade-off: Hindsight's server returns more context per retrieval than Mem0 at its own defaults (24K-44K vs under 7K tokens, by Mem0's measurement). The Hermes plugin caps that at 4,096 tokens per turn (`recall_max_tokens`) and recalls only consolidated observations by default, per Hindsight's Hermes integration docs; since Hermes prefetches recall every turn, lower that cap if prompt cost matters. Each retain also calls an LLM, so writes cost more than a local FTS store. Details in [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
 
@@ -154,4 +166,8 @@ Memory writes save to disk right away but only appear in the system prompt in th
 ### Which external memory providers does Hermes Agent support?
 
 As of October 2026 the docs list Honcho, OpenViking, Mem0, Hindsight, Holographic, RetainDB, ByteRover, Supermemory and Memori. RetainDB and ByteRover left core on October 15, 2026 and are unmaintained; Holographic is now a community plugin. Only one external provider can be active at a time, and it runs alongside the built-in MEMORY.md and USER.md.
+
+### What is the best memory provider for Hermes Agent?
+
+It depends on the need; Hermes's docs don't name one. Hindsight for months of history, since its hindsight_reflect tool gives cross-memory synthesis that, per the docs, no other provider offers. Honcho for modeling the user, Mem0 for hands-off hosted extraction, Holographic for local-only memory with no extra services. Skip providers if the two built-in files are enough.
 

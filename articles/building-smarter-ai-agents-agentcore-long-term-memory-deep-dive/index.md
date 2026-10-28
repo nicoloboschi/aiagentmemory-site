@@ -1,8 +1,8 @@
 # AgentCore Memory: AWS Long-Term Memory Deep Dive
 
-> How Amazon Bedrock AgentCore Memory works: events, short-term vs long-term memory, the four built-in strategies, direct ingestion with IngestData, Python code and October 2026 pricing.
+> How Amazon Bedrock AgentCore Memory works: events, short-term vs long-term memory, the four built-in strategies, direct ingestion, long-term record TTL, Python code and October 2026 pricing.
 
-Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-10-23 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-10-28 · aiagentmemory.org
 
 
 **AgentCore long-term memory** is the part of Amazon Bedrock AgentCore Memory that turns raw conversation events into durable records an agent can search later. You write turns as **events** (short-term memory). Configured **memory strategies** then extract facts, preferences, summaries or episodes from those events and store them as **memory records** in namespaces, where any later session can retrieve them.
@@ -72,6 +72,37 @@ Since 8 September 2026 you don't have to store data as a short-term event to get
 | Regions | All AgentCore Memory regions | All AgentCore Memory regions |
 
 Use it to backfill memory from history you already keep elsewhere (old chat logs, CRM activity, app events) without replaying it as sessions, or when you only want the extracted facts and not the raw turns. The announcement doesn't say how direct ingestion is billed, so check the [pricing page](https://aws.amazon.com/bedrock/agentcore/pricing/) before a large backfill. In open source, [Hindsight](https://github.com/vectorize-io/hindsight)'s `retain` call is the equivalent single step: send it content and a model extracts facts, time, entities and relationships into long-term memory, with no separate event store in front.
+
+### Expiring long-term records (TTL)
+
+Events always expired (3 to 365 days), but until October 2026 long-term records stayed forever. Since 13 October 2026 you can give them a **time-to-live** ([AWS announcement](https://aws.amazon.com/about-aws/whats-new/2026/10/agentcore-memory-long-term-memory-ttl/), [developer guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/long-term-record-ttl.html)). The default is still no expiry.
+
+| | Strategy-level TTL | Request-level TTL |
+|---|---|---|
+| Set on | `CreateMemory` / `UpdateMemory`, per strategy | `BatchCreateMemoryRecords` / `BatchUpdateMemoryRecords`, per call |
+| Applies to | Records that strategy extracts (built-in or with overrides) | Every record in that batch; the strategy's TTL is never used here |
+| Value | `recordExpiryDurationDays`, minimum 31 | Same |
+| Must match | Semantic and user preference share one value; summary and episodic share one value | n/a |
+| Self-managed strategy | Not allowed | The only way to set retention |
+| Remove it | `"action": "REMOVE"` | Same |
+
+Three details matter in practice:
+
+- **Changes are not retroactive.** A TTL is stamped on each record when it's made. Changing or removing it affects only records created afterwards, and expired records can't be recovered.
+- **Expiry is not immediate.** Background deletion "can typically take a few days", and until then `RetrieveMemoryRecords`, `GetMemoryRecord` and `ListMemoryRecords` can still return the record. For a privacy deletion, call `DeleteMemoryRecord` or `BatchDeleteMemoryRecords` instead.
+- **It needs its own permission.** Any request carrying a TTL also needs `bedrock-agentcore:UpdateMemoryRecordExpirySpecification`, or it fails with `AccessDeniedException`. AWS's reason: a short TTL is a delayed delete, so without this permission anyone who can update a memory could delete records they aren't allowed to delete directly.
+
+```bash
+aws bedrock-agentcore-control create-memory \
+  --name "SupportAgentFactMemory" \
+  --event-expiry-duration 90 \
+  --memory-strategies '[{"semanticMemoryStrategy": {
+      "name": "FactExtractor",
+      "namespaceTemplates": ["/support_cases/{sessionId}/facts/"],
+      "recordExpirySpecification": {"recordExpiryDurationDays": 60}}}]'
+```
+
+A TTL deletes records by age, not by whether they're still true or used. For memory that should fade by relevance instead, see [AI memory decay](/articles/ai-memory-decay/).
 
 ## Using AgentCore Memory from Python
 
@@ -165,6 +196,10 @@ As of October 2026, long-term storage is $0.75 per 1,000 records per month with 
 ### Can I write to AgentCore long-term memory without creating events?
 
 Yes. Since 8 September 2026 the IngestData API sends conversation messages or JSON payloads (activity logs, behavior or system events) straight to the memory's long-term strategies without storing them as short-term events. Check results with ListMemoryRecords or RetrieveMemoryRecords and retry failed extractions with ListMemoryExtractionJobs.
+
+### Do AgentCore long-term memory records expire?
+
+Not by default. Since 13 October 2026 you can set a time-to-live of at least 31 days per strategy (CreateMemory or UpdateMemory) or per batch write (BatchCreateMemoryRecords or BatchUpdateMemoryRecords). It applies only to records created after the change, deletion can take a few days, and setting it needs the bedrock-agentcore:UpdateMemoryRecordExpirySpecification permission.
 
 ### What is the best way to give an LLM memory on AWS?
 
