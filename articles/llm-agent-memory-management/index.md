@@ -74,7 +74,7 @@ Forgetting is a feature. Three mechanisms cover most needs.
 
 **Decay-weighted ranking** keeps memories but lowers their score as they age. Generative Agents uses exponential recency decay (factor 0.995 per game hour since last access). [MemoryBank](https://arxiv.org/abs/2305.10250) (Zhong et al., 2023) bases its updates on the Ebbinghaus forgetting curve, weakening or reinforcing memories by elapsed time and importance. See [AI memory decay](/articles/ai-memory-decay/).
 
-**Hard deletion** is required for user requests and data protection rules. It only works if every memory is stored under a clear user or tenant namespace, so you can find all of it.
+**Hard deletion** is required for user requests and data protection rules. It only works if every memory is stored under a clear user or tenant namespace, so you can find all of it. Test the scope filter too, not just the write path: until CrewAI 1.15.29, a record saved with `private=True` but no source was returned to every caller (details in [CrewAI long-term memory](/articles/crewai-long-term-memory/)).
 
 ## Example: budget, TTL and deletion in Python
 
@@ -124,7 +124,7 @@ with SqliteStore.from_conn_string("memory.db") as store:
 
 ## Self-managed memory: let the agent decide
 
-The alternative to fixed policies is to hand the LLM memory tools and let it manage itself. In MemGPT, the model calls functions to write to its working context, search archival storage and search past conversation; Letta, its successor, keeps memory in blocks that agents edit through tools. LangMem offers `create_manage_memory_tool` and `create_search_memory_tool` for LangGraph agents.
+The alternative to fixed policies is to hand the LLM memory tools and let it manage itself. In MemGPT, the model calls functions to write to its working context, search archival storage and search past conversation; Letta, its successor, keeps memory in blocks that agents edit through tools. LangMem offers `create_manage_memory_tool` and `create_search_memory_tool` for LangGraph agents. How the two compare in practice is in [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/).
 
 | Approach | Who decides | Pros | Cons |
 |---|---|---|---|

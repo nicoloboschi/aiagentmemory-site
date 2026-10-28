@@ -2,12 +2,12 @@
 
 > How CrewAI long-term memory works since v1.10: one Memory class with scopes, LanceDB storage, composite recall scoring, embedder setup, and how to reset it.
 
-Source: https://aiagentmemory.org/articles/crewai-long-term-memory/ · Updated 2026-10-21 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/crewai-long-term-memory/ · Updated 2026-10-28 · aiagentmemory.org
 
 
 **CrewAI long-term memory** is handled by one `Memory` class. You save text with `remember()` and get it back with `recall()`. An LLM tags each item with a scope, categories and an importance score, and CrewAI embeds it into a local LanceDB store. Turn on `memory=True` on a `Crew` and it recalls context before each task and saves facts after it.
 
-That's the design since **CrewAI 1.10** (released February 27, 2026). Before it, CrewAI had separate short-term, long-term, entity and external memory, with SQLite for task results. Most tutorials online still show that older API, which no longer exists in current releases (1.15 as of October 2026). Facts here come from the [CrewAI memory docs](https://docs.crewai.com/en/concepts/memory) and the installed package.
+That's the design since **CrewAI 1.10** (released February 27, 2026). Before it, CrewAI had separate short-term, long-term, entity and external memory, with SQLite for task results. Most tutorials online still show that older API, which no longer exists in current releases (1.15.32 as of 28 October 2026). Facts here come from the [CrewAI memory docs](https://docs.crewai.com/en/concepts/memory) and the installed package.
 
 ## What is CrewAI long-term memory?
 
@@ -107,6 +107,17 @@ Records live in a **tree of scopes**, like `/company/knowledge` or `/agent/write
 
 Records can also be private. `remember(..., source="user:alice", private=True)` hides a record from recall unless the caller passes the same `source`. For multi-user apps, put the user ID in the scope or source on every call. CrewAI won't infer it.
 
+**Upgrade before you trust `private=True`.** Until **CrewAI 1.15.29** (23 October 2026), a record saved with `private=True` but no `source` leaked to every caller: the recall filter checked `not r.private or r.source == source`, and for a default call both sides are `None`, so the test passed. Both the fast recall path and the deep RecallFlow path had the bug. [PR #8400](https://github.com/crewAIInc/crewAI/pull/8400) fixed it; the same release also escapes scope and id values in LanceDB filters and fixes the order of records LanceDB returns ([release notes](https://github.com/crewAIInc/crewAI/releases/tag/1.15.29)).
+
+| Call | Before 1.15.29 | 1.15.29 and later |
+|---|---|---|
+| `remember(x, private=True)` (no source), then `recall()` | Returned to everyone | Hidden |
+| `remember(x, source="user:alice", private=True)`, then `recall(..., source="user:alice")` | Visible to Alice | Visible to Alice |
+| Same record, `recall()` with no source | Hidden | Hidden |
+| Any private record, `include_private=True` | Visible | Visible |
+
+If you stored private records without a source on an older version, nothing in the data changes on upgrade; only the filter does. After it, those records come back only through `include_private=True`, so save new private records with a `source`.
+
 ## Storage, embedders and reset commands
 
 **Storage.** The built-in backend is LanceDB on local disk, at `./.crewai/memory` by default (`$CREWAI_STORAGE_DIR/memory` if set, or pass `storage="path/to/dir"`), with a Qdrant Edge option. You can supply your own backend by implementing the `StorageBackend` protocol (`save`, `search` and friends) and passing it as `storage=`. That's the path for a shared database when several workers run the same crew. One ready-made backend exists: [`crewai-mongodb-memory`](https://github.com/mongodb-developer/crewai-mongodb-memory) (from the mongodb-developer GitHub org, PyPI 0.1.0, July 2026) provides a `MongoDBStorageBackend` on MongoDB Atlas.
@@ -154,4 +165,8 @@ By default in ./.crewai/memory, as a LanceDB vector store. You can override the 
 ### Does CrewAI still have short-term, long-term and entity memory?
 
 No. In current releases those separate classes, along with ExternalMemory, are gone. The docs describe a single Memory class that replaces short-term, long-term, entity and external memory. Older tutorials and some third-party integrations still target the pre-1.10 API.
+
+### Are private memories in CrewAI really private?
+
+Only on CrewAI 1.15.29 (23 October 2026) or later, or when every private record has a source. Before that fix, a record saved with private=True but no source was returned to every default recall() call, because the filter compared None with None. Upgrade, and always pass source= with private=True.
 

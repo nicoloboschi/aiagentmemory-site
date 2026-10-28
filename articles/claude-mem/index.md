@@ -2,12 +2,12 @@
 
 > What claude-mem is, how its hooks and local worker store and search your coding sessions, how to install it on Claude Code and other agents, what it costs, and when to pick something else.
 
-Source: https://aiagentmemory.org/articles/claude-mem/ · Updated 2026-10-17 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-mem/ · Updated 2026-10-28 · aiagentmemory.org
 
 
 **claude-mem** is an Apache 2.0 plugin that gives a coding agent memory of its own past sessions. Lifecycle hooks capture what the agent does, an LLM compresses that into observations and summaries, a local worker stores them in SQLite, and the next session starts with the relevant parts already in context.
 
-It is one of the most starred agent memory projects on GitHub: **101,326 stars** on 17 October 2026, from a repo created on 31 August 2025 by Alex Newman ([@thedotmack](https://github.com/thedotmack)). Every fact below comes from the [claude-mem README](https://github.com/thedotmack/claude-mem) and [docs.claude-mem.ai](https://docs.claude-mem.ai/), checked on 17 October 2026. For Claude Code's own built-in memory, which is a separate thing, see [Claude Code memory](/articles/claude-code-memory/).
+It is one of the most starred agent memory projects on GitHub: **103,771 stars** on 28 October 2026, from a repo created on 31 August 2025 by Alex Newman ([@thedotmack](https://github.com/thedotmack)). Every fact below comes from the [claude-mem README](https://github.com/thedotmack/claude-mem) and [docs.claude-mem.ai](https://docs.claude-mem.ai/), checked on 17 October 2026; the release changes through v15.4.0 come from the [release notes](https://github.com/thedotmack/claude-mem/releases), checked on 28 October 2026. For Claude Code's own built-in memory, which is a separate thing, see [Claude Code memory](/articles/claude-code-memory/).
 
 ## What is claude-mem?
 
@@ -72,7 +72,7 @@ claude-mem exposes its memory to the agent through MCP tools in a deliberate thr
 2. **`timeline`** shows what was happening chronologically around an interesting result.
 3. **`get_observations`** fetches full detail, roughly 500 to 1,000 tokens per result, only for the IDs you picked.
 
-The README puts the saving at about **10x** versus fetching details first. In practice the agent searches an index, decides what is relevant, then pulls two or three full records. The [search tools guide](https://docs.claude-mem.ai/usage/search-tools) has worked examples.
+The README puts the saving at about **10x** versus fetching details first. Since v15.0.0 this "Smart" three-step flow is the default, and the agent is told to reason about relevance between steps. The old guided one-call `mem_search` and `flash_search` were removed; the fast replacement is `dumb_search`, which only matches titles and is described in its own tool text as "Fast, but shallow." In practice the agent searches an index, decides what is relevant, then pulls two or three full records. The [search tools guide](https://docs.claude-mem.ai/usage/search-tools) has worked examples.
 
 ## What claude-mem costs
 
@@ -86,6 +86,21 @@ Storage is local by default. Optional [cloud sync](https://docs.claude-mem.ai/cl
 
 One oddity worth knowing: the README ends by noting that **CMEM**, a token created by a third party, is "officially embraced" by the author. The plugin does not require it, but it explains some of the project's promotion.
 
+## What changed in claude-mem 14 and 15 (17 to 28 October 2026)
+
+claude-mem ships several releases a week. The memory-relevant changes since this page was first written, from the [release notes](https://github.com/thedotmack/claude-mem/releases):
+
+| Version (date) | Change | What it means for memory |
+|---|---|---|
+| 14.0.0 (17 Oct) | **My Work** becomes the start page: one card per request you gave your agents, with status and summaries. **TeamBrain** goes self-serve at $50 per seat per month | The memory is now also a task tracker. TeamBrain is the paid way to share it |
+| 15.0.0 (20 Oct) | **Smart search is the default** (`search` → `timeline` → `get_observations`); `dumb_search` replaces the old one-call lookups | Recall costs a few steps but is meant to be more accurate. Refresh MCP connections after upgrading |
+| 15.1.0 (25 Oct) | New React My Work viewer at `localhost:37777`; old viewer kept at `/viewer`. Per-prompt semantic injection in server mode | Server installs inject relevant memory on each prompt, not only at session start |
+| 15.2.0 (25 Oct) | Browser setup flow on fresh installs: scans 30 days of local agent history and **uploads the filtered prompts to CMEM Cloud** for goal and rule extraction | A real privacy step. Excluded projects, agent-written prompts and private-tagged text are removed and redaction runs first |
+| 15.3.0 (26 Oct) | Copies of files the agent made go to `~/.claude-mem/deliverables/`; opt-in local DB backups (`npx claude-mem backup`, `restore`); opt-in Notion export; Codex subagents get the memory timeline | First built-in backup of the SQLite store (off by default: `CLAUDE_MEM_BACKUP_ENABLED=true`) |
+| 15.4.0 (28 Oct) | Focus areas in My Work; with CMEM Pro or your own OpenRouter key, the Jev model files new conversations under open requests (joins at a score of 0.8+, asks between 0.5 and 0.8) | Grouping of past work, not recall. Without Jev it works as before |
+
+The direction is clear: claude-mem is growing from a session log into a work tracker with a cloud tier. The local core, hooks plus SQLite plus search, still works without an account.
+
 ## claude-mem vs built-in memory vs Hindsight
 
 | | CLAUDE.md + auto memory | claude-mem | [Hindsight](https://github.com/vectorize-io/hindsight) |
@@ -96,7 +111,7 @@ One oddity worth knowing: the README ends by noting that **CMEM**, a token creat
 | Storage | Markdown files | Local SQLite + Chroma; optional cmem.ai sync | PostgreSQL with pgvector (embedded option), or Hindsight Cloud |
 | Retrieval | Files load at session start | Context injection, then `search` / `timeline` / `get_observations` | Semantic, BM25 keyword, graph and temporal search in parallel, then rerank |
 | Reasoning over memory | No | No | Yes, `reflect` returns a reasoned answer |
-| Shared across machines | Only what you commit to git | Not by default; optional cloud backup | Yes, one server or Cloud serves many agents |
+| Shared across machines | Only what you commit to git | Not by default; optional cloud sync, TeamBrain ($50/seat/month) | Yes, one server or Cloud serves many agents |
 | Other agents | Claude Code only | Many, via `--ide` | 60+ integrations, native Claude Code, Codex, Cursor, Copilot plugins |
 | Cost beyond the tool | None | Model calls for compression | LLM calls per write, more tokens per recall |
 
@@ -118,7 +133,7 @@ Look further if any of these apply:
 
 - **Several people or machines share the work.** Local SQLite is the default; sharing means cloud sync or TeamBrain, and the memory is still a per-person log.
 - **You want the agent to reason over history, not search it.** Nothing in claude-mem consolidates conflicting records or answers "why" questions.
-- **You cannot send code summaries to a model you don't control.** Check which provider the installer selected, and prefer your own key.
+- **You cannot send code summaries to a model you don't control.** Check which provider the installer selected, and prefer your own key. Since 15.2.0 the fresh-install setup also uploads 30 days of filtered prompts to CMEM Cloud.
 - **You want no vendor account at all.** Possible, but you have to opt out explicitly.
 
 Other options are compared in [open-source memory systems compared](/articles/open-source-memory-systems-compared/) and [the best AI memory framework](/articles/best-ai-memory-framework/). For how Cursor, Copilot and Codex handle this, see [AI coding agent memory](/articles/ai-coding-agent-memory/) and [Codex memory](/articles/codex-memory/).
@@ -133,6 +148,14 @@ It records what your coding agent did in each session through lifecycle hooks, c
 ### Is claude-mem free?
 
 The code is Apache 2.0 and free to self-host, but the compression step costs model calls. The installer offers a hosted "claude-mem observer" with a 30-day free trial, after which it falls back to your Anthropic plan unless you subscribe. You can instead point it at your own OpenRouter or Gemini key, or skip sign-in entirely with the --provider flag.
+
+### What changed in claude-mem 15?
+
+Version 15.0.0 (20 October 2026) made Smart search the default: the agent runs search, then timeline, then get_observations and judges relevance between steps; the old one-call lookup is now dumb_search. Later 15.x releases added a browser setup flow that scans 30 days of local agent history and uploads filtered prompts to CMEM Cloud for goal extraction (15.2.0), copies of files agents make plus opt-in local database backups (15.3.0), and focus areas in the My Work view (15.4.0).
+
+### Does claude-mem upload my prompts?
+
+Capture and storage stay local by default, but since 15.2.0 the fresh-install setup flow uploads your filtered prompts from the last 30 days (gzip) to CMEM Cloud for hosted intent extraction. Excluded projects, agent-written prompts and private-tagged content are removed first and redaction runs. A turn whose prompt is entirely inside private tags also leaves no copy of the files it made.
 
 ### Does claude-mem only work with Claude Code?
 
