@@ -2,7 +2,7 @@
 
 > How to give AI agents memory that lasts across sessions: the two main patterns, a 7-step build, and tested Python code with Pydantic AI, LangMem and Mem0.
 
-Source: https://aiagentmemory.org/articles/how-to-give-ai-agents-memory/ · Updated 2026-10-22 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/how-to-give-ai-agents-memory/ · Updated 2026-10-28 · aiagentmemory.org
 
 
 To **give an AI agent memory**, you save information outside the model and put the relevant parts back into its prompt later. The LLM itself forgets everything between calls. Your code decides what to store, where to store it (a database keyed by user), and when to search it, either automatically before each call or through memory tools the agent calls itself.
@@ -181,6 +181,20 @@ Most memory bugs show up only after weeks of use. Plan for these from the start:
 - **Noisy recall.** Ten loosely related memories distract the model more than two precise ones. Cap the count and the token budget.
 - **No deletion path.** Build "forget me" before launch, not after the first request.
 
+### A missing user key must fail, not match
+
+**The most common leak isn't a missing filter. It's a filter that passes when the key is empty.** CrewAI's memory had this bug until version 1.15.29 (23 October 2026). A record saved with `private=True` but no `source` was returned to every caller. The filter compared the record's source with the caller's, and when neither had one, `None == None` was true. Both of CrewAI's recall paths had the bug. [PR #8400](https://github.com/crewAIInc/crewAI/pull/8400) fixed it. The details and a before/after table are on [CrewAI long-term memory](/articles/crewai-long-term-memory/).
+
+The same thing can happen in a from-scratch store like Example 1. A `WHERE user_id = ?` with an empty string matches every row saved with an empty string. Three rules prevent it:
+
+| Rule | In Example 1 |
+|---|---|
+| Refuse writes and reads with no scope key | Raise an error in `save_memory` and `search_memory` if `ctx.deps.user_id` is empty |
+| Never use "no key" as a shared bucket | Give shared memory its own explicit key, like `"shared:team-a"` |
+| Test across users | Save a fact as user A, search as user B and as an empty key, and check both get nothing |
+
+Run the cross-user test in CI. It's the cheapest check on this page and catches the bug that does the most harm.
+
 For chat-specific history handling (buffers, trimming, summaries), see [how to add memory to a chatbot](/articles/how-to-add-memory-to-chatbot/). For a fully offline setup, see [how to give a local LLM memory](/articles/how-to-give-local-llm-memory/).
 
 
@@ -197,4 +211,8 @@ Yes. A bigger context window lets the model see more text in one call, but it st
 ### Does Pydantic AI have built-in long-term memory?
 
 Pydantic AI keeps message history you can pass back into a run, but it has no built-in store that persists facts across sessions. The usual approach is to add tools backed by your own database, as in the example on this page, or plug in a memory service such as Mem0, Zep or Hindsight.
+
+### How do you stop one user's agent memory from leaking to another?
+
+Put the user or tenant key on every read and write, and make a call with no key fail instead of matching. CrewAI had exactly this bug until 1.15.29 (October 2026): private records saved without a source were returned to every caller because None equalled None in the filter. Test it: save a fact as user A, then search as user B and with an empty key, and check both return nothing.
 

@@ -2,7 +2,7 @@
 
 > How Gemini's long-term memory works in 2026: memory from past chats, asking Gemini to remember, importing memory from ChatGPT or Claude, how to delete it, and context windows.
 
-Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-10-28 · aiagentmemory.org
 
 
 **Gemini AI long-term memory** is the setting in the Gemini app that lets it use details from your **past chats** to personalize answers, plus the option to ask it to **remember specific facts**. It needs you to be 18 or older, signed in with a personal Google Account, with **Keep Activity** on. You switch it in Gemini's personalization settings and erase it by deleting chats.
@@ -50,6 +50,22 @@ There are two separate imports, described on Google's [import page](https://gemi
 - **Chat history.** Request a data export from your old provider, then upload the ZIP under **Chat history import** in Gemini's settings. Google's limit is 5 GB per ZIP. Only the text of chats comes across; images and files generated in the old app, and project files, are not included. Imported chats show up in the chat list with an import icon, and you can delete one chat or a whole ZIP's worth at once.
 
 Who gets it: personal accounts of users 18 and over, with personalization on. Google's post says business, Enterprise and under-18 accounts aren't supported, and it wasn't yet available in the EEA, the UK or Switzerland at launch.
+
+## Gemini memory vs skills vs instructions
+
+**Memory decides what Gemini knows about you. Skills decide how it does a repeated task. Instructions apply to every chat.** Since 30 September 2026, Gemini has **skills**: saved sets of instructions for a task, per [Gemini's release notes](https://gemini.google/release-notes/). Gemini "can now help you build custom skills from your chats" and runs a skill on its own when your prompt matches it. You can also stack skills, for example a writing-style skill plus a brand-guidelines skill.
+
+Skills will replace **Gems**. Google says it "will automatically migrate your Gems into skills when Gems go away." This matters for memory because Google's help page says memory of past chats is "not available in certain features, like Gems or Live chats." Google hasn't said yet whether memory will work inside skills. On 13 October 2026 Google added a **Customize** item to the left menu, where you manage skills and 40+ connected apps.
+
+| | Memory | Skills | Instructions |
+|---|---|---|---|
+| What it holds | Details from past chats and facts you asked it to remember | Steps for one kind of task | Rules for every reply |
+| How it's created | Automatically from chats, or "Remember that..." | You write it, or Gemini drafts it from your chats | You write it |
+| When it's used | When Gemini judges a past detail relevant | When your prompt matches the skill | Always |
+| Who gets it (Oct 2026) | 18+, personal account, Keep Activity on | 18+, rolling out globally | All users |
+| How to remove it | Delete the chats in Gemini Apps Activity | Delete the skill | Edit or delete the instruction |
+
+A skill is closer to procedural memory (how to do something) and the memory feature is closer to [episodic memory](/articles/episodic-memory-in-ai-agents/) (what happened). Agent memory systems keep both kinds too.
 
 ## How to turn Gemini memory on, off or delete it
 
@@ -111,4 +127,8 @@ Yes, since March 2026. For memories, paste Gemini's suggested prompt into your o
 ### What is Gemini's context window in the app?
 
 Per Google's Gemini Apps help page (October 2026), it's 32K tokens without an AI plan, 128K tokens with Google AI Plus, and 1 million tokens with Google AI Pro or Ultra.
+
+### What's the difference between Gemini memory and Gemini skills?
+
+Memory holds details about you from past chats and facts you asked Gemini to remember. Skills (launched 30 September 2026) are saved instructions for one kind of task, which Gemini can draft from your chats and runs when a prompt matches. Skills will replace Gems, and Google will migrate existing Gems automatically. Memory of past chats isn't available in Gems.
 

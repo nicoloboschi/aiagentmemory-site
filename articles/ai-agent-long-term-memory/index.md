@@ -58,7 +58,7 @@ The practical read: if your agent has the right memories in context and still an
 
 A minimal build follows these steps:
 
-1. **Choose the scope.** Per user, per agent, per team? This becomes your namespace or ID, and it's your main privacy boundary.
+1. **Choose the scope.** Per user, per agent, per team? This becomes your namespace or ID, and it's your main privacy boundary. Make a call with no ID fail rather than match; [an empty key that matches is how memory leaks between users](/articles/how-to-give-ai-agents-memory/#a-missing-user-key-must-fail-not-match).
 2. **Decide what to keep.** Durable preferences and facts, important events, lessons from failures. Not every message.
 3. **Pick write timing.** During the turn (hot path, adds latency) or after it (background, adds lag).
 4. **Index for several kinds of search.** Embeddings for fuzzy matches, keywords for names and IDs, timestamps for time questions.
