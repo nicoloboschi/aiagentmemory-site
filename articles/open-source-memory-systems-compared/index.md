@@ -2,7 +2,7 @@
 
 > Open-source AI memory systems compared: GitHub repos, licenses, stars (Oct 2026), languages and what each is good at. Mem0, Hindsight, MemPalace, Graphiti, Cognee.
 
-Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-10-26 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-10-29 · aiagentmemory.org
 
 
 The leading **open-source AI agent memory systems** on GitHub are Mem0, MemPalace, Hindsight, Graphiti, Cognee, Letta, LangMem, MemOS, Memori, Honcho, Basic Memory and Memobase. Most are Apache-2.0 or MIT, written in Python, and self-hostable with Docker. They differ in storage (vectors, graphs, files), in how much is truly open versus paid, and in what they're built for.
@@ -23,6 +23,7 @@ If you want the most complete fully open option, it's **Hindsight**: its MIT ser
 | Cognee | [topoteretes/cognee](https://github.com/topoteretes/cognee) | Apache-2.0 | 32,768 | +307 | Python | Knowledge graphs from docs, code and conversations; runs without an LLM key |
 | Graphiti | [getzep/graphiti](https://github.com/getzep/graphiti) | Apache-2.0 | 32,230 | +288 | Python | Temporal knowledge graphs where facts have validity windows |
 | Supermemory | [supermemoryai/supermemory](https://github.com/supermemoryai/supermemory) | MIT (see note) | 31,401 | +130 | TypeScript | Memory + RAG + connectors behind one API; coding-agent plugins |
+| TencentDB Agent Memory | [TencentCloud/TencentDB-Agent-Memory](https://github.com/TencentCloud/TencentDB-Agent-Memory) | MIT (Tencent notice) | 30,080 (29 Oct) | added 29 Oct | TypeScript | Shared team memory for coding agents through an LLM proxy: chat memory, skills, wiki, code graph |
 | Letta | [letta-ai/letta](https://github.com/letta-ai/letta) / [letta-code](https://github.com/letta-ai/letta-code) | Apache-2.0 | 25,260 / 3,709 | +85 / +62 | TypeScript (letta-code) | Stateful agents that edit their own memory, skills and prompts |
 | Memori | [MemoriLabs/Memori](https://github.com/MemoriLabs/Memori) | Apache-2.0 | 17,141 | -10 | Python | Memory on your existing SQL database through a wrapped LLM client |
 | MemOS | [MemTensor/MemOS](https://github.com/MemTensor/MemOS) | Apache-2.0 | 12,104 | +187 | TypeScript (per GitHub) | Memory "operating system" with memory cubes, skill reuse, OpenClaw/Hermes plugins |
@@ -37,7 +38,7 @@ If you want the most complete fully open option, it's **Hindsight**: its MIT ser
 | Leviathan | [elstongun/leviathan](https://github.com/elstongun/leviathan) | Apache-2.0 | 861 | +29 | Rust | Searching big record sets (logs, exports, tables) from an agent, in one binary |
 | OKF Agent Memory | [okf-memory/okf-agent-memory](https://github.com/okf-memory/okf-agent-memory) | MIT | 839 | +20 | Go | Git-versioned project memory for coding agents, as files in the repo |
 
-Mnemosyne's change is measured from 19 October, when it was added; every other row from the 18 October sweep.
+Mnemosyne's change is measured from 19 October, when it was added; TencentDB Agent Memory was added on 29 October (it had about 29,600 stars on 19 October); every other row from the 18 October sweep.
 
 **Growth in the last eight days:** Hindsight added 2,978 stars, more than Mem0, Cognee, Graphiti, MemPalace and Supermemory together (1,315). The fastest-growing small project is tigerless-labs' agent-memory (+541, 13%). MemPalace, second by total, added only 122, and Memori is flat.
 
@@ -98,6 +99,7 @@ Memory tools an agent calls during a conversation, plus a background manager tha
 
 - **Honcho**: peer-centric memory with background reasoning, on Postgres + pgvector. See [Honcho LLM memory](/articles/honcho-llm-memory/).
 - **MemOS**: memory cubes, async ingestion, local SQLite plugins for OpenClaw and Hermes Agent.
+- **TencentDB Agent Memory**: a proxy between coding agents (Claude Code, Codex, OpenClaw) and their LLM that turns sessions, documents and code into shared chat memory, skills, a wiki and a code graph, with a Memory Hub panel for team access. Version 2.0.3 (26 October 2026) added default session bindings and Word/Excel/PowerPoint/PDF wiki imports, and fixed a proxy that could not recover from a Redis outage. See [TencentDB Agent Memory](/articles/tencentdb-agent-memory/).
 - **Memori**: stores agent state in your own database ("BYODB"); its older home was GibsonAI. See [Memori by GibsonAI](/articles/ai-agents-memory-storage-memori-gibsonai/).
 - **Basic Memory**: plain markdown files plus a local SQLite index, exposed over MCP.
 - **Mnemosyne**: everything lives in one SQLite file, searched with sqlite-vec for vectors and FTS5 for keywords, in three tiers: working memory that is injected before the LLM call and expires, episodic memory for the long term, and a temporal triple store with version chains. Ships an MCP server, a native OpenClaw provider and a Hermes Agent plugin that is on by default. Its sync between your own machines encrypts content client-side, so the remote server sees only event IDs, timestamps and device IDs. It is also unusually careful with its own numbers: it withdrew a 98.9% LongMemEval figure in September 2026 because no methodology or run log for it existed, and labels its BEAM scores as measured on v3.0.0 (May 2026) and not re-run since. A side-by-side with the system its README ranks above it is in [Mnemosyne vs Hindsight](/articles/mnemosyne-vs-hindsight/).

@@ -1,13 +1,13 @@
-# TencentDB Agent Memory: Layers, Team Memory, Setup
+# TencentDB Agent Memory (v2.0.3): Layers, Team Memory, Setup
 
-> TencentDB Agent Memory explained (Oct 2026): L0-L3 memory layers, Team Memory and Memory Hub, proxy setup for Claude Code and OpenClaw, and how it compares to Hindsight and Mem0.
+> TencentDB Agent Memory explained (v2.0.3, Oct 2026): what 2.0.3 changes, L0-L3 memory layers, Team Memory and Memory Hub, proxy setup for Claude Code and OpenClaw, and how it compares to Hindsight and Mem0.
 
-Source: https://aiagentmemory.org/articles/tencentdb-agent-memory/ · Updated 2026-10-19 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/tencentdb-agent-memory/ · Updated 2026-10-29 · aiagentmemory.org
 
 
 **TencentDB Agent Memory** (repo `TencentDB-Agent-Memory`) is an open-source memory hub for AI agents from Tencent Cloud Database. It sits as a proxy between a coding agent and its LLM, saves each conversation, distills it into four layers (L0 to L3), and injects the right memory, skills, docs and code knowledge into every request. Its Team Memory release lets several agents and people share those assets with access control.
 
-It is MIT-licensed, written mostly in TypeScript, and had about 29,600 GitHub stars on 19 October 2026, up from 27,900 a week earlier. This page covers how its memory layers work, how to install it, what Team Memory adds, which agents it supports, and how it compares with **[Hindsight](https://github.com/vectorize-io/hindsight)** and Mem0. Facts come from the project's [README](https://github.com/TencentCloud/TencentDB-Agent-Memory), INSTALL.md, CHANGELOG.md, the GitHub releases list and the SDK README, rechecked on 19 October 2026.
+It is MIT-licensed, written mostly in TypeScript, and had about 30,080 GitHub stars on 29 October 2026, up from 29,600 on 19 October. This page covers how its memory layers work, how to install it, what Team Memory adds, which agents it supports, and how it compares with **[Hindsight](https://github.com/vectorize-io/hindsight)** and Mem0. Facts come from the project's [README](https://github.com/TencentCloud/TencentDB-Agent-Memory), INSTALL.md, CHANGELOG.md, the GitHub releases list and the SDK README, rechecked on 19 October 2026; the 2.0.3 section comes from the [v2.0.3 release notes](https://github.com/TencentCloud/TencentDB-Agent-Memory/releases/tag/v2.0.3), read on 29 October 2026.
 
 ## What is TencentDB Agent Memory?
 
@@ -20,11 +20,29 @@ The README frames the goal as cutting repeated work: "Any information that helps
 - **Wiki:** documents turned into structured pages with a link graph, based on Andrej Karpathy's "LLM Wiki" idea.
 - **CodeGraph:** an index of symbols, files, call relationships and impact paths for a repository, built on the open-source `colbymchenry/codegraph` project.
 
-**Timeline.** The project started as an OpenClaw memory plugin: the npm package `@tencentdb-agent-memory/memory-tencentdb` was first published on 31 March 2026, and Tencent's press release says the project was open-sourced in May 2026. The [releases list](https://github.com/TencentCloud/TencentDB-Agent-Memory/releases) shows `2.0.0-beta.1` (22 July 2026) as the first public release of the team version and `2.0.0` stable on 3 August 2026. Tencent Cloud announced **Team Memory** in a PR Newswire release on 13 August 2026. The latest stable version is `2.0.2` (9 October 2026), with `2.0.3-beta.1` out on 13 October 2026.
+**Timeline.** The project started as an OpenClaw memory plugin: the npm package `@tencentdb-agent-memory/memory-tencentdb` was first published on 31 March 2026, and Tencent's press release says the project was open-sourced in May 2026. The [releases list](https://github.com/TencentCloud/TencentDB-Agent-Memory/releases) shows `2.0.0-beta.1` (22 July 2026) as the first public release of the team version and `2.0.0` stable on 3 August 2026. Tencent Cloud announced **Team Memory** in a PR Newswire release on 13 August 2026. The latest stable version is **`2.0.3` (26 October 2026)**; see [what 2.0.3 changes](#whats-new-in-203-26-october-2026) below.
 
 Two version lines run in parallel, which is easy to misread: the `0.x` numbers belong to the original OpenClaw plugin (latest `0.3.6`, May 2026), while `1.x` and `2.x` are the self-hosted server stack in this repo. If you are deploying the containers, you want the 2.x line.
 
-**What `2.0.3-beta.1` adds**, all off by default so existing deployments don't change:
+### What's new in 2.0.3 (26 October 2026)
+
+`2.0.3` is the first stable release with the `2.0.3-beta.1` features listed further down. On top of the beta it adds default session bindings and rich documents in the Wiki, raises the default upstream timeout, and fixes a proxy that could not recover from a Redis outage. The release notes are in Chinese; this is a plain-English summary.
+
+| Area | Before 2.0.3 | In 2.0.3 |
+|---|---|---|
+| Starting a session | You pick a Team, Agent and Task every time | You can save a default Team/Agent/Task combination; new sessions use it, and you can lock it so later sessions can't change it. If the saved default stops being valid, it falls back to the picker and says why |
+| Wiki imports | Markdown, plain text, HTML | Adds Word, Excel, PowerPoint and PDF: import, preview and text extraction. Also fixes Markdown paste imports that sometimes failed |
+| Upstream wait (no `forwardTimeoutMs` set) | 10 minutes | 1 hour. Configs that set `forwardTimeoutMs` keep their value |
+| Stream with no new output for 60 s | Could end the reply | Only logs a warning; the reply keeps going |
+| Redis goes down | Proxy could not recover on its own; you had to restart it | Short outages queue briefly; longer ones degrade at once instead of holding requests; recovers without a restart |
+| DeepSeek Harness helper endpoints | Token counting and embeddings returned 404 | Fixed |
+| Old memories with bad timestamps | Some could not be turned into L1 memories | Fixed |
+
+Smaller fixes: the one-line macOS install script no longer exits on Chinese punctuation, the Knowledge service starts again (an OpenTelemetry dependency had drifted), and a few panel fixes (keyboard-closable tabs, a message when copying a User Key fails).
+
+**Should you upgrade?** Yes if you run the proxy against Redis in production or see long agent replies cut off around the 10-minute mark: those are the two fixes that change behaviour for existing setups. If you rely on the old 10-minute cut-off as a safety limit, set `forwardTimeoutMs` explicitly before upgrading.
+
+**What `2.0.3-beta.1` added** (13 October 2026, now part of `2.0.3`), all off by default so existing deployments don't change:
 
 - **On-demand skill selection.** The proxy picks the skills that fit each turn and loads them through one client tool call, instead of injecting the whole skill catalogue into the system prompt. That is the fix for the obvious cost of a growing skill library.
 - **A pluggable decision service** behind skill selection and the L3 memory-update judgement. JEV is built in and named by the `provider` setting, and other decision APIs can be plugged in. A failed decision call does not block the conversation or the memory write.
@@ -177,4 +195,8 @@ Run ./start-all.sh in deploy/global-images to start Memory Core, Memory Hub and 
 ### Is TencentDB Agent Memory better than Mem0 or Hindsight?
 
 It solves a different problem. TencentDB Agent Memory is strongest for teams that want shared skills, document wikis, code graphs and access control for several coding agents. Mem0 is a lean per-user memory API. Hindsight publishes the strongest long-history benchmark results of the three and adds reasoning over memory with reflect.
+
+### What changed in TencentDB Agent Memory 2.0.3?
+
+Version 2.0.3 (26 October 2026) lets you save a default Team, Agent and Task for new sessions, adds Word, Excel, PowerPoint and PDF imports to the Wiki, raises the default upstream timeout from 10 minutes to 1 hour (unless forwardTimeoutMs is set), and fixes a proxy that could not recover from a Redis outage without a restart. It also ships the on-demand skill selection and session logging from 2.0.3-beta.1.
 
