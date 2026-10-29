@@ -1,13 +1,13 @@
 # Codex Memory: AGENTS.md, Memories and Add-ons
 
-> How OpenAI Codex memory works: AGENTS.md load order and 32 KiB limit, Codex memories (v2 by default for new users since 0.165.0), config keys, importing Claude Code memory, and adding Hindsight.
+> How OpenAI Codex memory works (0.166.0): AGENTS.md load order and 32 KiB limit, Codex memories (v2 by default for new users), default limits, config keys, importing Claude Code memory, and adding Hindsight.
 
-Source: https://aiagentmemory.org/articles/codex-memory/ · Updated 2026-10-27 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/codex-memory/ · Updated 2026-10-29 · aiagentmemory.org
 
 
 **Codex memory** is two built-in layers. **AGENTS.md files** hold instructions you write, and Codex loads them at the start of every run. **Codex memories**, off by default, turn useful context from past chats into local files under `~/.codex/memories/`. For memory that is searchable, shared across agents or kept on a server, add a hook-based plugin such as Hindsight.
 
-[Codex](https://github.com/openai/codex) is OpenAI's coding agent for the terminal, IDE and ChatGPT desktop app. Each session starts with an empty context window, so anything Codex should know must come back in from a file or a tool. Facts below come from OpenAI's [Codex memories docs](https://learn.chatgpt.com/docs/customization/memories) and [AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), checked 13 October 2026, and from the Codex source and release notes up to 0.165.0 (27 October 2026). For Claude Code, Cursor and Copilot, see [AI coding agent memory](/articles/ai-coding-agent-memory/).
+[Codex](https://github.com/openai/codex) is OpenAI's coding agent for the terminal, IDE and ChatGPT desktop app. Each session starts with an empty context window, so anything Codex should know must come back in from a file or a tool. Facts below come from OpenAI's [Codex memories docs](https://learn.chatgpt.com/docs/customization/memories) and [AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), checked 13 October 2026, and from the Codex source and release notes up to 0.166.0 (29 October 2026). For Claude Code, Cursor and Copilot, see [AI coding agent memory](/articles/ai-coding-agent-memory/).
 
 ## What is Codex memory?
 
@@ -63,10 +63,11 @@ The `/memories` command (desktop app and CLI) sets, for the current chat only, w
 | `memories.min_rate_limit_remaining_percent` | Minimum rate limit left before generation starts |
 | `memories.extract_model` | Model for per-chat extraction |
 | `memories.consolidation_model` | Model for the global consolidation pass |
+| `memories.consolidation_service_tier` | Service tier for the consolidation pass, `"default"` (Standard) unless set; since 0.166.0 |
 
-### Default limits (Codex 0.165.0)
+### Default limits (Codex 0.166.0)
 
-The docs don't say when memories update. The source does. These are the defaults in `codex-rs/config/src/types.rs` and the config schema at tag `rust-v0.165.0` (released 27 October 2026; the limits are unchanged from 0.164.0):
+The docs don't say when memories update. The source does. These are the defaults in `codex-rs/config/src/types.rs` and the config schema at tag `rust-v0.166.0` (released 29 October 2026; the limits are the same as in 0.164.0 and 0.165.0, and 0.166.0 only adds `consolidation_service_tier`):
 
 | Key | Default | What it means |
 |---|---|---|
@@ -85,12 +86,18 @@ So with defaults, a busy week of chats can take several passes to show up in mem
 
 | Version (date) | Memory change | Source |
 |---|---|---|
+| 0.166.0 (29 Oct) | Consolidation gets its own service tier (Standard by default) instead of inheriting the session's | [PR #57568](https://github.com/openai/codex/pull/57568) |
+| 0.166.0 (29 Oct) | Memory baseline snapshots capped at 10 MiB per file and rebuilt when broken, without losing memory files | [PR #57240](https://github.com/openai/codex/pull/57240) |
+| 0.166.0 (29 Oct) | Resumed and forked chats no longer count reasoning tokens twice, so they don't compact too early | [PR #57839](https://github.com/openai/codex/pull/57839) |
 | 0.165.0 (27 Oct) | v2 is the default pipeline for profiles with no v1 memory folder | [PR #56211](https://github.com/openai/codex/pull/56211) |
 | 0.165.0 (27 Oct) | Claude Code memory files can be imported into v2 | [PR #56414](https://github.com/openai/codex/pull/56414) |
 | 0.165.0 (27 Oct) | Imports and consolidation lock the memory folder, so they can't half-overwrite each other | [PR #56462](https://github.com/openai/codex/pull/56462) |
 | 0.164.0 (23 Oct) | v2 pipeline added behind `memories.version`, with `dual_write` | [PR #55262](https://github.com/openai/codex/pull/55262) |
 | 0.163.0 (15 Oct) | Memory reads run in parallel with other read-only tools | [PR #52245](https://github.com/openai/codex/pull/52245) |
 
+- **Consolidation stops using your fast tier (0.166.0).** Before, the background consolidation pass ran on the same service tier as the chat that started it, so a session on a priority ("fast") tier also ran consolidation on it. Now `memories.consolidation_service_tier` sets it apart, and it defaults to `"default"`, the Standard tier. Set it to `"flex"` or `"priority"` to change that; `"fast"` is read as `"priority"` ([PR #57568](https://github.com/openai/codex/pull/57568)).
+- **Safer memory snapshots (0.166.0).** Codex keeps a baseline snapshot of the memory folder to see what changed since the last consolidation. Baseline files are now capped at 10 MiB, oversized files are skipped, and a missing, outdated or broken baseline is replaced by an empty one, so existing memory files count as new input to consolidation instead of being treated as already processed. A cross-process lock stops two Codex processes from updating the baseline at once ([PR #57240](https://github.com/openai/codex/pull/57240)).
+- **Less early compaction after resume (0.166.0).** Resuming or forking a chat used to lose a flag that said the token count already included reasoning. Codex then counted reasoning twice and could compact the context too early. The flag is now saved with the chat ([PR #57839](https://github.com/openai/codex/pull/57839)). This is about the context window, not memories, but it means a resumed chat keeps more of its history.
 - **v2 is now the default for new users (0.165.0).** If memories are on and `~/.codex/memories/` does not exist, Codex picks v2 and runs only the v2 pipeline. Anyone who already has a v1 memory folder stays on v1, and an explicit `memories.version` or `memories.dual_write = false` still wins ([PR #56211](https://github.com/openai/codex/pull/56211)). The v2 store lives in `~/.codex/memories_v2/`.
 - **Import from Claude Code (0.165.0).** Codex's import from Claude Code now covers memory: it copies every Markdown file in `~/.claude/projects/<project>/memory/` into Codex memories, then queues a consolidation pass that reads each project's `MEMORY.md` first and keeps the other files as detail to read when needed ([PR #56414](https://github.com/openai/codex/pull/56414), source in `codex-rs/external-agent-migration`). Only Claude Code is a memory source; the Cursor import skips memory. It is a one-time copy, so the two tools still keep separate memories afterwards.
 - **No more half-finished imports (0.165.0).** Imports and consolidation share a lock on the memory folder. An import that hits a running consolidation returns a "busy, retry" error instead of writing part of its files ([PR #56462](https://github.com/openai/codex/pull/56462)).
@@ -167,11 +174,15 @@ In the ChatGPT desktop app, open Settings > Personalization and turn on Enable C
 
 ### Why don't my Codex memories update right away?
 
-By default (Codex 0.165.0) a chat must be idle for 6 hours before it can become a memory, each pass processes at most 2 chats, chats older than 10 days are skipped, and generation pauses when less than 25% of your rate limit is left. You can change these with the memories keys in config.toml, such as min_rollout_idle_hours and max_rollouts_per_startup.
+By default (Codex 0.165.0 and 0.166.0) a chat must be idle for 6 hours before it can become a memory, each pass processes at most 2 chats, chats older than 10 days are skipped, and generation pauses when less than 25% of your rate limit is left. You can change these with the memories keys in config.toml, such as min_rollout_idle_hours and max_rollouts_per_startup.
 
 ### Can Codex import Claude Code's memory?
 
 Yes, since Codex 0.165.0 (27 October 2026). Codex's import from Claude Code copies the Markdown files in each ~/.claude/projects/<project>/memory/ folder into Codex memories and queues a consolidation pass that turns MEMORY.md into Codex memory entries. Cursor is not a supported memory source. It is a one-time copy, not a live sync.
+
+### Does Codex memory consolidation run on my fast (priority) tier?
+
+Not since Codex 0.166.0 (29 October 2026). Consolidation used to inherit the chat's service tier. Now memories.consolidation_service_tier sets it and defaults to the Standard tier ("default"). Set it to "priority" (or "fast") or "flex" in config.toml to change it.
 
 ### Can I add long-term memory to Codex beyond its built-in memories?
 
