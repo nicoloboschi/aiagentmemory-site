@@ -1,21 +1,21 @@
-# Mem0 vs Honcho: Fact Memory vs User Modeling
+# Mem0 vs Honcho: User Modeling, Self-Hosting and Benchmarks
 
-> Mem0 vs Honcho compared (Oct 2026): fact extraction vs peer reasoning, multi-agent support, license, self-hosting, benchmarks, pricing, and which to choose.
+> Mem0 vs Honcho (Oct 2026): facts vs peer reasoning, a self-hosting table (containers, LLM keys, auth defaults, telemetry), AGPL vs Apache 2.0, benchmarks, pricing.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-honcho/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-honcho/ · Updated 2026-10-29 · aiagentmemory.org
 
 
 **Mem0 vs Honcho** is a choice between remembering facts and understanding people. Mem0 pulls short facts out of conversations and returns the ones that match a query. Honcho keeps the full messages, runs background reasoning over them, and builds a model of each participant that your agent can ask questions about in plain language.
 
-Both are open source and both have a managed service. They differ in license (Apache 2.0 vs AGPL-3.0), in how much LLM work happens after each write, and in how they treat multi-agent conversations. Many teams weighing the two also look at **[Hindsight](https://github.com/vectorize-io/hindsight)**, an MIT-licensed memory server that, like Honcho, reasons over memories in the background, and posts the highest vendor-reported scores of the three on LongMemEval and BEAM. Sources are each project's README, docs, pricing page and published evals, checked on 12 October 2026.
+Both are open source and both have a managed service. They differ in license (Apache 2.0 vs AGPL-3.0), in how much LLM work happens after each write, and in how they treat multi-agent conversations. Many teams weighing the two also look at **[Hindsight](https://github.com/vectorize-io/hindsight)**, an MIT-licensed memory server that, like Honcho, reasons over memories in the background, and posts the highest vendor-reported scores of the three on LongMemEval and BEAM. Sources are each project's README, docs, pricing page and published evals, checked on 12 October 2026; the self-hosting facts were rechecked on 29 October 2026.
 
 ## What are Mem0 and Honcho?
 
 **Mem0 is an Apache 2.0 memory layer that uses an LLM to extract durable facts from conversations, stores them per user, agent or run, and returns the relevant ones by hybrid search. Honcho is an AGPL-3.0 memory service from Plastic Labs that stores messages on sessions, reasons over them asynchronously, and keeps a queryable representation of every participant.**
 
-**[Mem0](https://github.com/mem0ai/mem0)** runs as a Python or TypeScript library, a self-hosted Docker server, or the hosted Mem0 Platform. It has about 67,000 GitHub stars, the most of any agent memory project. See [what Mem0 is](/articles/what-is-mem0-ai/).
+**[Mem0](https://github.com/mem0ai/mem0)** runs as a Python or TypeScript library, a self-hosted Docker server, or the hosted Mem0 Platform. It has about 68,000 GitHub stars, the most of any agent memory project. See [what Mem0 is](/articles/what-is-mem0-ai/).
 
-**[Honcho](https://github.com/plastic-labs/honcho)** is a FastAPI server (version 3.3.0) with Python (`honcho-ai`) and TypeScript SDKs, about 7,500 stars, and a managed service at api.honcho.dev. Our [Honcho guide](/articles/honcho-llm-memory/) covers its data model and setup in depth.
+**[Honcho](https://github.com/plastic-labs/honcho)** is a FastAPI server (version 3.4.1) with Python (`honcho-ai`) and TypeScript SDKs, about 7,800 stars, and a managed service at api.honcho.dev. Our [Honcho guide](/articles/honcho-llm-memory/) covers its data model and setup in depth.
 
 ## Mem0 vs Honcho at a glance
 
@@ -27,7 +27,7 @@ Both are open source and both have a managed service. They differ in license (Ap
 | Write path | One LLM extraction pass, add-only | Message stored at once; background "deriver" reasons later | LLM extraction of facts, time, entities, relations; background consolidation |
 | Read paths | `search` (semantic + BM25 + entity) | Context bundle, representation, peer card, search, natural-language chat | `recall` (semantic + BM25 + graph + temporal, reranked), `reflect`, mental models |
 | Multi-agent views | Facts tagged by agent | Per-observer views: what peer X knows about peer Y | Separate banks per user or agent |
-| Self-host needs | Library: your LLM, embedder, vector store. Server: Postgres + pgvector | Postgres + pgvector, Redis, and LLM keys (Gemini, Anthropic, OpenAI by default) | PostgreSQL + pgvector (or embedded), any of 25+ LLM providers, local ones included |
+| Self-host needs | Library: your LLM, embedder, vector store. Server: Postgres + pgvector | Postgres + pgvector, one LLM key (any OpenAI-compatible endpoint); Redis optional | PostgreSQL + pgvector (or embedded), any of 25+ LLM providers, local ones included |
 | Coding agent support | Agent skills for Claude Code, Codex, Cursor and others; MCP | Plugins for Claude Code, Codex, Cursor, OpenCode, OpenClaw; built into Hermes; MCP | Native plugins for Claude Code, Codex, Cursor, Copilot; MCP server per bank |
 | Hosted pricing | Free; Starter $19/mo; Pro $249/mo | $2 per 1M tokens ingested; chat queries $0.001 to $0.50 each | Hindsight Cloud: pay as you go, retain $10 and recall $0.75 per 1M tokens, free credits |
 
@@ -106,7 +106,24 @@ Both sets are vendor-run, with different answer models and LLM judges, so a 3 to
 
 **Honcho managed** bills $2.00 per million tokens ingested (storage plus reasoning). Natural-language chat queries cost $0.001 at the `minimal` reasoning level up to $0.50 at `max`; `context()` retrieval and dreaming have no separate charge. Each organization gets a dedicated instance. Startups under $5M raised get $1,000 in credits.
 
-**Self-hosting Honcho** means running Postgres with pgvector, Redis, the API and the deriver, and paying for the deriver's LLM calls on your own keys. The `honcho start --setup` CLI sets up all of it in Docker. Mem0's library has no server at all, which makes it the lighter of the two to run yourself.
+## Self-hosting Mem0 vs Honcho
+
+Both run on your own machines for free. Mem0's library has no server at all, which makes it the lightest option. If you need a shared server, here is what each one runs:
+
+| | Mem0 self-hosted server | Honcho | Hindsight |
+|---|---|---|---|
+| Start command | `make bootstrap` in `server/` (prints admin login and first API key) | `honcho start --setup` (CLI), or `docker compose up` from source | One `docker run` |
+| Containers | API, Postgres (`pgvector/pgvector:pg17`), dashboard | API, deriver (background reasoning), MCP server, Postgres (`pgvector/pgvector:pg15`), Redis | One container with a built-in Postgres on a volume |
+| Redis | Not used | In the Docker stack; optional in a manual setup (cache off by default) | Not used |
+| LLM providers | Bundled: OpenAI, Anthropic, Gemini (embedders: OpenAI, Gemini); defaults `gpt-5-mini` + `text-embedding-3-small` | One key for any OpenAI-compatible endpoint (OpenRouter, Together, vLLM, Ollama, LiteLLM); defaults `gpt-5.4-mini` + `text-embedding-3-small`; models need tool calling | 25+ providers, local ones included |
+| Auth by default | On: dashboard login (JWT) and `X-API-Key` | Off (`AUTH_USE_AUTH=false`); turn it on with a JWT secret before exposing it | Through an auth [extension point](https://hindsight.vectorize.io/developer/extensions) |
+| Telemetry | One anonymous onboarding event per install, on by default (`MEM0_TELEMETRY=false` to opt out) | Config has a `[telemetry]` section; the README doesn't give the default | Not mentioned in the README |
+| Ongoing LLM cost | One extraction call per `add` | The deriver reasons over every message in the background, on your keys | Extraction on retain, background consolidation |
+| License | Apache 2.0 | AGPL-3.0: share your changes if you serve a modified Honcho over a network | MIT |
+
+Sources: Mem0's [server README](https://github.com/mem0ai/mem0/tree/main/server), `docker-compose.yaml`, `.env.example` and `main.py`; Honcho's [README](https://github.com/plastic-labs/honcho) and `docker-compose.yml.example`; checked 29 October 2026.
+
+Two things to watch. Honcho ships with auth off, so a stack reachable from a network is open until you set `AUTH_USE_AUTH` and `AUTH_JWT_SECRET` (its compose file binds ports to localhost by default). And Honcho's deriver makes LLM calls for every message you store, so a self-hosted Honcho is free to run but not free in tokens; point it at a cheap or local model if volume is high. The [Honcho guide](/articles/honcho-llm-memory/) covers the 3.4.1 changes.
 
 ## Where Hindsight fits
 
@@ -137,6 +154,10 @@ Zep and Graphiti track how facts change over time, and Letta lets the agent edit
 
 
 ## FAQ
+
+### Is Mem0 or Honcho easier to self-host?
+
+Mem0's library needs no server at all. Mem0's self-hosted server is three containers (API, Postgres with pgvector, dashboard) with login and API keys on by default. Honcho's Docker stack runs an API, a background deriver, an MCP server, Postgres with pgvector and Redis; Redis is optional when you run it by hand, and auth is off by default, so turn it on before exposing it. Honcho takes any OpenAI-compatible endpoint, including Ollama and vLLM; Mem0's server bundles OpenAI, Anthropic and Gemini.
 
 ### What is the difference between Mem0 and Honcho?
 

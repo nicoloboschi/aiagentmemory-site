@@ -97,7 +97,7 @@ Memory tools an agent calls during a conversation, plus a background manager tha
 
 ### Smaller and specialized projects
 
-- **Honcho**: peer-centric memory with background reasoning, on Postgres + pgvector. See [Honcho LLM memory](/articles/honcho-llm-memory/).
+- **Honcho**: peer-centric memory with background reasoning, on Postgres + pgvector. See [Honcho LLM memory](/articles/honcho-llm-memory/), and [Mem0 vs Honcho](/articles/mem0-vs-honcho/) for what each one runs when self-hosted (Honcho ships with auth off).
 - **MemOS**: memory cubes, async ingestion, local SQLite plugins for OpenClaw and Hermes Agent.
 - **TencentDB Agent Memory**: a proxy between coding agents (Claude Code, Codex, OpenClaw) and their LLM that turns sessions, documents and code into shared chat memory, skills, a wiki and a code graph, with a Memory Hub panel for team access. Version 2.0.3 (26 October 2026) added default session bindings and Word/Excel/PowerPoint/PDF wiki imports, and fixed a proxy that could not recover from a Redis outage. See [TencentDB Agent Memory](/articles/tencentdb-agent-memory/).
 - **Memori**: stores agent state in your own database ("BYODB"); its older home was GibsonAI. See [Memori by GibsonAI](/articles/ai-agents-memory-storage-memori-gibsonai/).
