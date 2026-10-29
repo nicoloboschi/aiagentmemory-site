@@ -45,7 +45,7 @@ A minimal setup, following the gist:
 1. **Create a vault** and add folders: `raw/` for sources, `wiki/` for pages.
 2. **Write a schema file** (`CLAUDE.md` or `AGENTS.md`) at the root: page types, naming, link style (`[[wikilinks]]`), what goes in `index.md` and `log.md`, and the ingest, query and lint steps. Tell the agent never to edit `raw/`.
 3. **Clip sources** with the Obsidian Web Clipper extension, which saves web articles as Markdown. Karpathy also binds a hotkey to download attachments so images are stored locally.
-4. **Run a coding agent in the vault folder.** Claude Code, Codex or any agent that reads and writes files will work, because the schema file is the same kind of instruction file they already load; see [AI coding agent memory](/articles/ai-coding-agent-memory/).
+4. **Run a coding agent in the vault folder.** Claude Code, Codex or any agent that reads and writes files will work, because the schema file is the same kind of instruction file they already load; see [AI coding agent memory](/articles/ai-coding-agent-memory/). For Codex, name the schema file `AGENTS.md` so it loads on every run ([how Codex loads AGENTS.md](/articles/codex-memory/)).
 5. **Browse in Obsidian.** Graph view shows hubs and orphan pages. Dataview can build tables from page frontmatter, and Marp turns pages into slides.
 6. **Commit to git.** The wiki is a repo of Markdown, so you get history and can review what the agent changed.
 
