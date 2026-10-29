@@ -105,7 +105,7 @@ You often don't pick the vector database directly; the memory framework does, or
 
 - **Mem0**'s Python library supports 22 vector stores, from Qdrant, Chroma and pgvector to Pinecone, Redis, Elasticsearch, Turbopuffer and Amazon S3 Vectors. Its [docs](https://docs.mem0.ai/components/vectordbs/overview) say that with no configuration, "`Qdrant` will be used as the vector database."
 - **Hindsight** stores memories in PostgreSQL with pgvector (or Oracle AI Database 23ai), with an embedded Postgres (`pg0`) for local use, so teams on Postgres don't add a new database.
-- **Honcho** runs on Postgres with pgvector.
+- **Honcho** runs on Postgres with pgvector. Its 3.4.1 patch changed how wildcards inside filters match stored conclusions; see [Honcho memory](/articles/honcho-llm-memory/).
 - **Letta** keeps archival passages in its own storage behind its API.
 - **Graphiti** and other graph-based systems store embeddings inside the graph database (Neo4j, FalkorDB or Neptune) instead of a separate vector store. See [knowledge graphs for AI memory](/articles/ai-memory-knowledge-graph/).
 

@@ -1,21 +1,21 @@
-# Honcho LLM Memory: Peers, Reasoning and Setup
+# Honcho Memory (v3.4.1): How It Works, Self-Hosting, Pricing
 
-> What Honcho is: Plastic Labs' open-source memory for LLM agents. How peers, sessions and background reasoning work, Python SDK, self-hosting, pricing, evals.
+> Honcho by Plastic Labs: AGPL memory that models each user as a peer. $2 per 1M tokens, 90.4% LongMemEval (self-reported), self-hosting, and the 3.4.1 filter fix.
 
-Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-10-23 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-10-29 · aiagentmemory.org
 
 
 **Honcho** is an open-source memory service for LLM agents, built by Plastic Labs. Instead of only storing extracted facts, it **reasons about the people and agents in your conversations**. You save messages; a background worker derives conclusions about each participant; then you ask Honcho what it knows, in plain language or as prompt-ready context.
 
-In short: Honcho memory is a peer model, not a fact list. It is AGPL-3.0, self-hostable on Postgres with pgvector, priced at $2 per million ingested tokens on the managed service, and built into Hermes Agent as a memory provider. The current server is **3.4.0** (22 October 2026).
+In short: Honcho memory is a peer model, not a fact list. It is AGPL-3.0, self-hostable on Postgres with pgvector, priced at $2 per million ingested tokens on the managed service, and built into Hermes Agent as a memory provider. The current server is **3.4.1** (27 October 2026).
 
-This page covers Honcho's data model, how its reasoning pipeline works, the Python SDK, self-hosting, what changed in 3.4, pricing and its benchmark claims. Sources are the [Honcho GitHub README](https://github.com/plastic-labs/honcho), the [Honcho docs](https://honcho.dev/docs/v3), [honcho.dev](https://honcho.dev/) and the [v3.4.0 release notes](https://github.com/plastic-labs/honcho/releases/tag/v3.4.0), checked on 23 October 2026.
+This page covers Honcho's data model, how its reasoning pipeline works, the Python SDK, self-hosting, what changed in 3.4 and 3.4.1, pricing and its benchmark claims. Sources are the [Honcho GitHub README](https://github.com/plastic-labs/honcho), the [Honcho docs](https://honcho.dev/docs/v3), [honcho.dev](https://honcho.dev/) and the [v3.4.0](https://github.com/plastic-labs/honcho/releases/tag/v3.4.0) and [v3.4.1](https://github.com/plastic-labs/honcho/releases/tag/v3.4.1) release notes, checked on 29 October 2026.
 
 ## What is Honcho?
 
 **Honcho is memory infrastructure for stateful agents. It stores messages and events on sessions, reasons over them asynchronously, and maintains a representation of every participant, called a peer. Agents query those representations, search history, or ask natural-language questions such as "what learning style does this user respond to?"**
 
-Its README describes it as memory for agents "that understand changing people, agents, groups, projects, and ideas over time." The server is a FastAPI app, licensed **AGPL-3.0**, at version 3.4.0 (22 October 2026), with about 7,700 GitHub stars. The Python SDK is `honcho-ai` (2.7.0) and the TypeScript SDK is `@honcho-ai/sdk`.
+Its README describes it as memory for agents "that understand changing people, agents, groups, projects, and ideas over time." The server is a FastAPI app, licensed **AGPL-3.0**, at version 3.4.1 (27 October 2026), with about 7,800 GitHub stars. The Python SDK is `honcho-ai` (2.7.0) and the TypeScript SDK is `@honcho-ai/sdk`.
 
 The emphasis is **user modeling** rather than retrieval. Most memory layers answer "which stored facts match this query?" Honcho also tries to answer "what kind of person is this, and what do they likely want?"
 
@@ -124,6 +124,24 @@ For self-hosters, the migration is the part to plan. The index builds wait for o
 
 The silent-drop fix matters for anyone running the deriver on an OpenAI-compatible local model: before 3.4, a batch the model answered in the wrong shape could vanish without an error, so memory had gaps you couldn't see.
 
+## Honcho 3.4.1: filters now match what they say
+
+Honcho 3.4.1 shipped on 27 October 2026. It is a patch, but one fix changes **which memories a query returns**, so check your filters before you upgrade. Per the [release notes](https://github.com/plastic-labs/honcho/releases/tag/v3.4.1), a `"*"` wildcard or an empty `{}` now counts as TRUE inside `AND`, `OR` and `NOT`. Before, it was dropped:
+
+| Filter | Before 3.4.1 | 3.4.1 |
+|---|---|---|
+| `{"OR": [{"id": "*"}, {"id": "bob"}]}` | Only bob | Every row |
+| `{"NOT": [{"id": "*"}]}` or `{"NOT": [{}]}` | Every row | No rows |
+| `source_ids: ["a", "*"]` | Every conclusion | Conclusions linked to `a` |
+| `"*"` or `{}` at the top level | Every row | Every row (unchanged) |
+
+The `source_ids` case touches memory quality most: a filter like that used to read every conclusion, not just the ones linked to source `a`. The notes say queries never widen past their workspace. If your code merges optional filter clauses, a leftover `"*"` inside `OR` used to do nothing and now matches everything.
+
+The other changes:
+
+- **No retries on hard rejections.** With no fallback model set, a 4xx from the LLM provider (other than 408, 409, 425 and 429), such as a 400 for a prompt over the context window or a 401, now fails on the first try. Before, it was sent three times with about 8 seconds of backoff. This covers the deriver, summarizer, dialectic chat and dreamer. With a fallback set, nothing changes.
+- **Self-hosting.** The Docker image ships a newer certifi CA bundle and builds with uv 0.13.5. If you install from `uv.lock`, you need uv 0.13.5 or newer; older uv ignores a lockfile override and installs an older CA bundle.
+
 ## Honcho pricing
 
 From [honcho.dev](https://honcho.dev/) in October 2026:
@@ -176,5 +194,9 @@ Mem0 extracts facts from messages and returns them by search. Honcho stores the 
 
 ### What is new in Honcho 3.4?
 
-Honcho 3.4.0 (22 October 2026) adds API keys bound to one named scope, a fixed uid on workspaces, peers and sessions, opt-in working memory for the dreamer, and a deriver that fails loudly instead of silently dropping malformed batches. It includes a database migration with concurrent index builds that self-hosters should plan for on large databases.
+Honcho 3.4.0 (22 October 2026) adds API keys bound to one named scope, a fixed uid on workspaces, peers and sessions, opt-in working memory for the dreamer, and a deriver that fails loudly instead of silently dropping malformed batches. It includes a database migration with concurrent index builds that self-hosters should plan for on large databases. 3.4.1 (27 October 2026) fixes how a '*' wildcard or an empty {} behaves inside AND, OR and NOT filters, and stops retrying LLM requests the provider rejected outright.
+
+### Did Honcho 3.4.1 change what my filters return?
+
+Yes, if a filter puts a '*' wildcard or an empty {} inside AND, OR or NOT. Before 3.4.1 that clause was dropped; now it counts as TRUE. An OR of id '*' and id 'bob' used to return only bob and now returns every row. A NOT of id '*' used to return every row and now returns none. source_ids ['a', '*'] now returns conclusions linked to a instead of every conclusion. Top-level wildcards and the workspace boundary are unchanged.
 
