@@ -2,12 +2,14 @@
 
 > How long-term memory works in Azure AI Foundry Agent Service (Microsoft Foundry): memory stores, memory types, scope, TTL, quotas, regions, pricing and Python code.
 
-Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Azure AI Foundry long-term memory** is a managed feature of Foundry Agent Service that lets an agent remember users across sessions. You create a **memory store**, attach the **memory search tool** to an agent, and the service extracts facts, preferences and summaries from conversations, merges duplicates, and retrieves the relevant ones in later chats. As of October 2026 it is in **public preview**.
 
-Microsoft has since renamed the product family to **Microsoft Foundry**, so current docs say "Memory in Foundry Agent Service." Older posts call it Azure AI Foundry memory or Azure AI Agent Service memory. They mean the same feature. Everything below comes from the [Microsoft Learn memory overview](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/what-is-memory) and the [how-to guide](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/memory-usage), checked on 8 October 2026.
+Microsoft has since renamed the product family to **Microsoft Foundry**, so current docs say "Memory in Foundry Agent Service." Older posts call it Azure AI Foundry memory or Azure AI Agent Service memory. They mean the same feature. Everything below comes from the [Microsoft Learn memory overview](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/what-is-memory) and the [how-to guide](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/memory-usage) (updated 21 October 2026), checked on 30 October 2026.
+
+**Quick answers:** memory works from Python, C#, JavaScript, Java and REST; it's still a preview with no separate price; one store holds 100 scopes (usually one per user) of up to 10,000 memories each; new memories show up after about five minutes of silence unless you force an update.
 
 ## What is long-term memory in Azure AI Foundry?
 
@@ -117,6 +119,35 @@ To write memories without an agent, call `begin_update_memories(name=..., scope=
 
 When a user says "remember that my seat is aisle" or "forget my seat," the memory search tool applies it at once and returns a `memory_command_call` item in the response. These direct commands still respect the store's TTL.
 
+## SDK support by language
+
+The 21 October 2026 how-to adds a table of which operations it shows for each SDK. A dash means the guide has no example for that language yet; Microsoft says it "doesn't indicate whether the SDK supports the operation."
+
+| Operation | Python | C# | JavaScript | Java | REST |
+|---|---|---|---|---|---|
+| Create, update, list, delete memory stores | Yes | Yes | Yes | Yes | Yes |
+| Attach memory to a prompt agent | Yes | Yes | Yes | Yes | Yes |
+| Update and search memories | Yes | Yes | Yes | Yes | Yes |
+| Direct remember-or-forget commands | Yes | No example | Yes | Yes | Yes |
+| Create, read, update, list, delete single memory items | Yes | No example | Yes | Yes | Yes |
+
+Package versions in the guide: `azure-ai-projects>=2.3.0` for Python and `Azure.AI.Projects` / `Azure.AI.Projects.Agents` 2.1.0-beta.4 for .NET. The example deployments are `gpt-5.2` for chat and `text-embedding-3-small` for embeddings.
+
+**Roles were renamed.** For role-based access, give the project's managed identity the **Foundry User** role on the resource. Microsoft notes that Foundry User, Foundry Owner, Foundry Account Owner and Foundry Project Manager used to be called Azure AI User, Azure AI Owner, Azure AI Account Owner and Azure AI Project Manager. The role IDs and permissions didn't change, so older guides still work.
+
+## Common problems and fixes
+
+From the how-to's troubleshooting table:
+
+| Problem | Why | Fix |
+|---|---|---|
+| Memories don't appear after a chat | Updates wait for `update_delay` or are still processing | Wait longer, or call the update API with `update_delay=0` |
+| Search returns nothing | The `scope` differs from the one used when storing | Use one stable scope per user for both update and search |
+| The agent ignores stored memory | The agent has no `memory_search_preview` tool, or the store name is wrong | Check the agent definition |
+| Procedural memory or TTL didn't change after an update | In the current preview, default options are set only at creation | Recreate the store, or check if your API version allows updates |
+| "Remember/forget" returns no command item | Tool misconfigured, or the phrasing wasn't recognized | Check the tool setup; use direct "remember that..." phrasing |
+| Auth errors | Missing roles on you or the project identity | Check the roles above; for REST, get a fresh token |
+
 ## Limits, regions and pricing
 
 **Quotas (Learn, October 2026):**
@@ -167,4 +198,8 @@ Microsoft's docs say that during the preview you're billed for the chat and embe
 ### What are the limits of Foundry memory stores?
 
 Per Microsoft Learn, a memory store holds up to 100 scopes, each scope up to 10,000 memories, and search and update calls are each limited to 1,000 requests per minute. Memory needs Azure OpenAI chat and embedding deployments, and virtual network integration isn't supported for memory stores.
+
+### Which languages can use Foundry Agent Service memory?
+
+Microsoft's how-to (updated 21 October 2026) shows memory with the Python, C#, JavaScript and Java SDKs and the REST API. All five can create stores, attach memory to a prompt agent, and update and search memories; the guide has no C# example yet for remember-or-forget commands or single-item operations.
 
