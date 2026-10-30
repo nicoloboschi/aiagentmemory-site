@@ -2,7 +2,7 @@
 
 > Mem0 alternatives compared: Zep, Graphiti, Letta, Cognee, Hindsight, Supermemory and LangMem: licenses, self-hosting, memory models and pricing (Oct 2026).
 
-Source: https://aiagentmemory.org/articles/mem0-alternatives-compared/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-alternatives-compared/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Mem0 alternatives** are other memory layers that give AI agents long-term memory: Zep, Graphiti, Letta, Cognee, Hindsight, Supermemory and LangMem. Teams usually look for one when they need self-hosted graph memory (removed from open-source Mem0 in v3), temporal facts, an agent that edits its own memory, or different pricing.
@@ -21,7 +21,7 @@ In April 2026 Mem0 shipped a new algorithm, described in its [README](https://gi
 - **Multi-signal retrieval.** Semantic, BM25 keyword and entity matching, scored in parallel and fused.
 - **Entity linking** across memories to boost retrieval.
 
-The same release changed the open-source SDK in ways that push some users to look elsewhere. The [v2-to-v3 migration guide](https://docs.mem0.ai/migration/oss-v2-to-v3) states "Graph memory is removed from the open-source SDK," the `enable_graph` and `graph_store` options are gone, and "OSS has no graph memory replacement." Graph memory now lives on the Platform, where the [pricing page](https://mem0.ai/pricing) lists it on Pro ($249/month) and Enterprise.
+The same release changed the open-source SDK in ways that push some users to look elsewhere. The [v2-to-v3 migration guide](https://docs.mem0.ai/migration/oss-v2-to-v3) states "Graph memory is removed from the open-source SDK," the `enable_graph` and `graph_store` options are gone, and "OSS has no graph memory replacement." Graph memory now lives on the Platform, where the [pricing page](https://mem0.ai/pricing) lists it only on the Custom plan (since 26 October 2026).
 
 Mem0 is still a solid default for user-preference memory in chat apps. The common reasons to switch are:
 
@@ -29,7 +29,7 @@ Mem0 is still a solid default for user-preference memory in chat apps. The commo
 2. You want facts that are **invalidated over time**, not only appended.
 3. You want the **agent itself** to manage memory, not a side service.
 4. You need **document and code ingestion** into a knowledge graph, not only chat facts.
-5. The hosted **request limits** (Starter: 50,000 adds and 5,000 retrievals per month) don't match your traffic.
+5. The hosted **limits and billing** don't fit: since 26 October 2026 the free plan needs your own LLM key after 30 days (50,000 adds and 10,000 retrievals a month), and anything more, including graph memory, is a sales-negotiated Custom plan.
 
 ## Mem0 alternatives at a glance
 
@@ -148,9 +148,9 @@ It depends on what you need. For self-hosted graph or temporal memory, Graphiti 
 
 ### Does open-source Mem0 still have graph memory?
 
-No. Mem0's v2-to-v3 migration guide says 'Graph memory is removed from the open-source SDK' and that OSS has no replacement. Graph memory (entity linking) is now a Mem0 Platform feature, listed on the Pro ($249/month) and Enterprise plans.
+No. Mem0's v2-to-v3 migration guide says 'Graph memory is removed from the open-source SDK' and that OSS has no replacement. Graph memory (entity linking) is now a Mem0 Platform feature, listed only on Custom plans since Mem0's 26 October 2026 pricing change.
 
 ### Is Mem0 free?
 
-The Mem0 library and self-hosted server are Apache 2.0 and free to run. The hosted Mem0 Platform has a free Hobby tier with 10,000 add requests and 1,000 retrieval requests per month, then Starter at $19/month and Pro at $249/month (pricing as of October 2026).
+The Mem0 library and self-hosted server are Apache 2.0 and free to run. The hosted Mem0 Platform has a Free plan: 10,000 adds and 1,000 retrievals a month for 30 days, then 50,000 and 10,000 once you connect your own LLM key, which pays for extraction. Higher limits and graph memory are on sales-led Custom plans; Starter and Pro are no longer sold (pricing changed 26 October 2026).
 

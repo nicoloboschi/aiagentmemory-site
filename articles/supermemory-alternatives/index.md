@@ -2,7 +2,7 @@
 
 > Supermemory alternatives compared (Oct 2026): Hindsight, Mem0, Zep, Graphiti, Letta, Cognee, Honcho. Licenses, self-hosting, memory models, benchmarks, pricing.
 
-Source: https://aiagentmemory.org/articles/supermemory-alternatives/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/supermemory-alternatives/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Supermemory alternatives** are other memory layers for AI agents: Hindsight, Mem0, Zep, Graphiti, Letta, Cognee and Honcho. People usually look for one when they need **fully open-source, self-run infrastructure** (Supermemory's local server is a closed-source binary), want memory without bundled RAG and connectors, or need a different memory model such as a temporal graph or an agent that manages its own memory.
@@ -26,7 +26,7 @@ The common reasons to compare it with others:
 |---|---|---|---|---|---|
 | **Supermemory** | Memory + RAG + profiles API | Repo MIT; server closed | Free local binary; Scale plan | Extracted facts, profiles, documents | Free $5 credits; Pro $19/mo |
 | **Hindsight** | Memory server with retain/recall/reflect | MIT | Yes, Docker, pip, Helm or embedded | Facts, experiences, observations, mental models | Pay as you go (retain $10 per 1M tokens) |
-| **Mem0** | Memory layer for user, session and agent facts | Apache 2.0 | Yes, library or Docker server | Extracted facts, entity linking, hybrid search | Free; Starter $19/mo; Pro $249/mo |
+| **Mem0** | Memory layer for user, session and agent facts | Apache 2.0 | Yes, library or Docker server | Extracted facts, entity linking, hybrid search | Free (own LLM key after 30 days); Custom plans |
 | **Zep** | Managed temporal context graph | Commercial | Enterprise BYOC only | Facts with validity windows per user or account | Free 10,000 credits/mo; Flex $125/mo |
 | **Graphiti** | Open-source temporal graph framework | Apache 2.0 | Yes, with Neo4j, FalkorDB or Neptune | Bi-temporal knowledge graph with episodes | None (library) |
 | **Letta** | Stateful agent harness | Apache 2.0 | Yes, local or App Server | Agent-edited memory files, message search, dreaming | Free; Pro $20/mo |
@@ -48,7 +48,7 @@ Sources: [Mem0 vs Supermemory](https://mem0.ai/compare/mem0-vs-supermemory) and 
 
 ## Hindsight
 
-**[Hindsight](https://github.com/vectorize-io/hindsight)** is the strongest pick here if you're leaving Supermemory for open infrastructure or better long-history recall. It's an MIT-licensed memory server with the full server in the open-source release: graph, temporal recall, consolidation, `reflect` and mental models are all free to self-host. Supermemory's server source isn't public, and Mem0 keeps graph memory and temporal reasoning on its paid Pro plan.
+**[Hindsight](https://github.com/vectorize-io/hindsight)** is the strongest pick here if you're leaving Supermemory for open infrastructure or better long-history recall. It's an MIT-licensed memory server with the full server in the open-source release: graph, temporal recall, consolidation, `reflect` and mental models are all free to self-host. Supermemory's server source isn't public, and Mem0 keeps graph memory and temporal reasoning on its hosted Platform (graph memory only on custom paid plans).
 
 It's built around three operations. `retain` extracts facts, entities, time data and relationships with an LLM. `recall` runs semantic, BM25, graph and time-range searches in parallel, merges them with rank fusion and a cross-encoder reranker, and trims the result to a `max_tokens` budget. `reflect` reasons over stored memories to answer questions that need thinking, not lookup. In the background it consolidates facts into **observations** that keep quotes from their evidence, and keeps **mental models** (standing answers) up to date.
 
@@ -63,7 +63,7 @@ More in [Hindsight explained](/articles/ai-memory-hindsight/) and [Mem0 vs Hinds
 
 **Mem0** is the closest functional match for user memory. An LLM extracts facts from each `add` call in a single pass, and `search` fuses semantic, BM25 and entity signals. Memories are scoped by `user_id`, `agent_id` and `run_id`. It runs as a library, a self-hosted Docker server with dashboard and API keys, or the hosted Mem0 Platform.
 
-Two caveats from Mem0's own docs: graph memory was removed from the open-source SDK in April 2026 and is now on the Platform's Pro plan, and its benchmark scores reflect the managed platform, not the open-source SDK.
+Two caveats from Mem0's own docs: graph memory was removed from the open-source SDK in April 2026 and is now on the Platform, on Custom plans only, and its benchmark scores reflect the managed platform, not the open-source SDK.
 
 - **Pick Mem0** if you want Supermemory-style user memory that you can run entirely yourself.
 - **Look elsewhere** if you want document RAG and connectors in the same API.

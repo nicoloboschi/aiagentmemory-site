@@ -2,7 +2,7 @@
 
 > Mem0 vs Cognee compared (Oct 2026): fact extraction vs knowledge graphs, open-source graph memory, local models, APIs, pricing and when to use each.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-cognee/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-cognee/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Mem0 vs Cognee** is a choice between two memory shapes. **Mem0** extracts short facts from conversations and stores them per user for personalization. **Cognee** turns documents, code and conversations into a knowledge graph plus vector index that agents search. Both are Apache 2.0 and self-hostable, but only Cognee keeps graph memory in its open-source version.
@@ -31,7 +31,7 @@ Cognee answers "what does this body of knowledge say?" Its sweet spot is a "comp
 | Graph in open source | Removed in April 2026 | Yes | Yes (entity, temporal and causal links) |
 | Retrieval | Semantic + BM25 + entity, fused | Graph, vector, summary or hybrid, auto-routed | Semantic + BM25 + graph + time range, fused, cross-encoder rerank |
 | Runs without an LLM key | No; extraction needs an LLM | Yes for text, since v1.6 | Needs an LLM, but local models (Ollama, LM Studio, llama.cpp) work |
-| Hosted pricing (Oct 2026) | Free; Starter $19/mo; Pro $249/mo | Free 1M tokens; then $1 per 1M tokens | Hindsight Cloud: pay as you go, retain $10 and recall $0.75 per 1M tokens, free credits |
+| Hosted pricing (Oct 2026) | Free (own LLM key after 30 days); Custom plans | Free 1M tokens; then $1 per 1M tokens | Hindsight Cloud: pay as you go, retain $10 and recall $0.75 per 1M tokens, free credits |
 
 ## How Mem0 writes and reads memory
 
@@ -39,7 +39,7 @@ Each `add` makes **one LLM call** that extracts facts from the messages. Since t
 
 `search` scores memories on semantic similarity, BM25 keywords and entity overlap. In the open-source library, keyword and entity search need the `[nlp]` extra and a spaCy model.
 
-The graph change matters for this comparison. Mem0's [v2-to-v3 migration guide](https://docs.mem0.ai/migration/oss-v2-to-v3) says "Graph memory is removed from the open-source SDK," and the Neo4j, Memgraph and Kuzu integrations are gone. On the Platform, a built-in graph links memories through shared entities and boosts ranking. The [pricing page](https://mem0.ai/pricing) lists it on Pro ($249/month) and Enterprise.
+The graph change matters for this comparison. Mem0's [v2-to-v3 migration guide](https://docs.mem0.ai/migration/oss-v2-to-v3) says "Graph memory is removed from the open-source SDK," and the Neo4j, Memgraph and Kuzu integrations are gone. On the Platform, a built-in graph links memories through shared entities and boosts ranking. The [pricing page](https://mem0.ai/pricing) lists it only on the Custom plan (since 26 October 2026).
 
 More on the current design in [what is Mem0](/articles/what-is-mem0-ai/).
 
@@ -105,7 +105,7 @@ Without an LLM key this returns matching source text; with `LLM_API_KEY` set, Co
 
 **Write cost.** Mem0 makes one LLM call per `add`. Cognee's graph extraction is LLM-based by default but can use the local GLiNER model. At high message volume, extraction is usually the biggest bill for either.
 
-**Hosted pricing.** Mem0 Platform's free tier gives 10,000 adds and 1,000 retrievals a month; Starter is $19 for 50,000 adds and 5,000 retrievals. Cognee Cloud gives 1M free tokens, then charges $1 per 1M tokens processed.
+**Hosted pricing.** Mem0 Platform's Free plan gives 10,000 adds and 1,000 retrievals a month for 30 days, then 50,000 adds and 10,000 retrievals once you connect your own LLM key (your provider bills the extraction calls); the $19 Starter plan is no longer sold since 26 October 2026. Cognee Cloud gives 1M free tokens, then charges $1 per 1M tokens processed.
 
 **Benchmarks.** Both publish their own numbers on different tests. Mem0 reports 92.5 on LoCoMo and 94.4 on LongMemEval, measured on its managed platform. Cognee reports 0.79 on BEAM 100K and 0.67 on BEAM 10M, and calls the 10M result "exploratory." Hindsight reports 94.6 on LongMemEval, 92 on LoCoMo, 75 on BEAM 100K and 64.1 on BEAM 10M; on Mem0's own [comparison page](https://mem0.ai/compare/mem0-vs-hindsight) it trails Mem0 slightly on LoCoMo and leads it on BEAM 1M (73.9 vs 64.1) and 10M (64.1 vs 48.6). Cognee's self-reported BEAM figures are higher than Hindsight's, from a different setup. None of these are independent, and they don't measure the same thing. Our [LLM memory comparison](/articles/llm-memory-comparison/) lists the claims with sources.
 
@@ -146,7 +146,7 @@ Mem0 extracts short facts from conversations and stores them per user, agent or 
 
 ### Which has graph memory in open source, Mem0 or Cognee?
 
-Cognee. Its Apache 2.0 engine builds and searches a knowledge graph locally. Mem0 removed graph memory from its open-source SDK in the April 2026 release; graph memory is now a feature of the hosted Mem0 Platform on the Pro and Enterprise plans.
+Cognee. Its Apache 2.0 engine builds and searches a knowledge graph locally. Mem0 removed graph memory from its open-source SDK in the April 2026 release; graph memory is now a feature of the hosted Mem0 Platform on Custom plans only since 26 October 2026.
 
 ### Can Cognee run without an LLM API key?
 

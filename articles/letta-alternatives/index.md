@@ -2,7 +2,7 @@
 
 > What Letta (formerly MemGPT) does now, why teams look for Letta alternatives, and how Mem0, Zep, Graphiti, Cognee, LangMem, Hindsight and Supermemory compare.
 
-Source: https://aiagentmemory.org/articles/letta-alternatives/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/letta-alternatives/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Letta alternatives** are memory systems you can use instead of Letta (formerly MemGPT) to give agents long-term memory. The main ones are Mem0, Zep, Graphiti, Cognee, LangMem, Hindsight and Supermemory. Most teams switch because they want a memory layer for their own agent, while Letta is now a full agent runtime that owns the loop.
@@ -69,7 +69,7 @@ Only two of these publish scores on the long-history benchmarks, both from [Mem0
 Why it ranks first here:
 
 - **Long histories.** On BEAM it scores 73.9 at 1M tokens and 64.1 at 10M, against 64.1 and 48.6 for Mem0, per [Mem0's own comparison page](https://mem0.ai/compare/mem0-vs-hindsight). On LongMemEval it's 94.6 to Mem0's 94.4. All vendor-run.
-- **Everything is open source.** Graph and temporal recall, consolidation, reflect and mental models are in the MIT server. Mem0 keeps graph memory and temporal reasoning on its paid Pro plan.
+- **Everything is open source.** Graph and temporal recall, consolidation, reflect and mental models are in the MIT server. Mem0 keeps graph memory and temporal reasoning on its hosted Platform (graph memory only on custom paid plans).
 - **Python-first teams.** Python, TypeScript and Go clients, a REST API and an MCP endpoint per bank, a direct answer to reason 2 above.
 - **Coding agents and frameworks.** Plugins for Claude Code, Codex, Cursor and Copilot, plus LangGraph, CrewAI, Pydantic AI, the OpenAI Agents SDK and n8n among 60+ integrations.
 

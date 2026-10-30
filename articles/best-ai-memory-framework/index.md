@@ -2,7 +2,7 @@
 
 > Which AI memory framework should you pick? A decision guide by use case: Mem0, Zep, Letta, Cognee, LangMem, Supermemory, Hindsight and Honcho, with prices.
 
-Source: https://aiagentmemory.org/articles/best-ai-memory-framework/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/best-ai-memory-framework/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 The **best AI memory framework** depends on what your agent needs to remember and where you need it to run. For chat personalization, Mem0 or Supermemory are the quickest to add. For facts that change over time, Zep or Graphiti. For LangGraph apps, LangMem. For long histories, coding agents and agents that learn from experience, Hindsight. Test two on your own data before you commit.
@@ -95,13 +95,13 @@ Prices from each vendor's pricing page on 8 October 2026. They change often.
 
 | Service | Free tier | Paid entry | Billing basis |
 |---|---|---|---|
-| [Mem0 Platform](https://mem0.ai/pricing) | Hobby: 10,000 adds, 1,000 retrievals/month | Starter $19/mo; Pro $249/mo (graph memory from Pro) | Requests per month |
+| [Mem0 Platform](https://mem0.ai/pricing) | 10,000 adds, 1,000 retrievals/month for 30 days; then 50,000 / 10,000 with your own LLM key | Custom plans only (graph memory on Custom); usage-based billing past free limits | Requests per month |
 | [Zep Cloud](https://www.getzep.com/pricing) | 10,000 credits/month | Flex $125/mo (50,000 credits) | Credits (1 credit per 350-byte episode) |
 | [Supermemory](https://supermemory.ai/pricing) | $5 monthly credits | Pro $19/mo ($20 credits) | Credit balance |
 | [Letta](https://docs.letta.com/letta-code/pricing) | Up to 3 stateful agents, bring your own keys | Pro $20/mo; API plan $20/mo + $0.10 per active agent | Plan + usage |
 | [Hindsight Cloud](https://vectorize.io/pricing) | Free starting credits | Pay as you go: retain $10 and recall $0.75 per 1M tokens, reflect $0.05 per call | Token usage |
 
-All of these except Zep's platform also have a free self-hosted route (Graphiti covers Zep's open-source side; Supermemory's local binary is free but not open source). Hindsight's self-hosted version includes every memory feature its cloud has, while Mem0 keeps graph memory, temporal reasoning and Dream consolidation on its paid plans.
+All of these except Zep's platform also have a free self-hosted route (Graphiti covers Zep's open-source side; Supermemory's local binary is free but not open source). Hindsight's self-hosted version includes every memory feature its cloud has, while Mem0 keeps graph memory, temporal reasoning and Dream consolidation on its hosted Platform. Since 26 October 2026 Mem0's free plan also needs your own LLM key after 30 days, and graph memory and Dream are only on custom plans; [what is Mem0](/articles/what-is-mem0-ai/) has the new limits and what a key costs per 1,000 adds.
 
 ## How to test a memory framework before you commit
 

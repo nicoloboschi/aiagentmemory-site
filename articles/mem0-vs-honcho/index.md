@@ -2,7 +2,7 @@
 
 > Mem0 vs Honcho (Oct 2026): facts vs peer reasoning, a self-hosting table (containers, LLM keys, auth defaults, telemetry), AGPL vs Apache 2.0, benchmarks, pricing.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-honcho/ · Updated 2026-10-29 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-honcho/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Mem0 vs Honcho** is a choice between remembering facts and understanding people. Mem0 pulls short facts out of conversations and returns the ones that match a query. Honcho keeps the full messages, runs background reasoning over them, and builds a model of each participant that your agent can ask questions about in plain language.
@@ -29,7 +29,7 @@ Both are open source and both have a managed service. They differ in license (Ap
 | Multi-agent views | Facts tagged by agent | Per-observer views: what peer X knows about peer Y | Separate banks per user or agent |
 | Self-host needs | Library: your LLM, embedder, vector store. Server: Postgres + pgvector | Postgres + pgvector, one LLM key (any OpenAI-compatible endpoint); Redis optional | PostgreSQL + pgvector (or embedded), any of 25+ LLM providers, local ones included |
 | Coding agent support | Agent skills for Claude Code, Codex, Cursor and others; MCP | Plugins for Claude Code, Codex, Cursor, OpenCode, OpenClaw; built into Hermes; MCP | Native plugins for Claude Code, Codex, Cursor, Copilot; MCP server per bank |
-| Hosted pricing | Free; Starter $19/mo; Pro $249/mo | $2 per 1M tokens ingested; chat queries $0.001 to $0.50 each | Hindsight Cloud: pay as you go, retain $10 and recall $0.75 per 1M tokens, free credits |
+| Hosted pricing | Free (own LLM key after 30 days); Custom plans | $2 per 1M tokens ingested; chat queries $0.001 to $0.50 each | Hindsight Cloud: pay as you go, retain $10 and recall $0.75 per 1M tokens, free credits |
 
 Sources: the [Mem0 README](https://github.com/mem0ai/mem0), the [Honcho README](https://github.com/plastic-labs/honcho), the [Hindsight README](https://github.com/vectorize-io/hindsight), [Mem0 pricing](https://mem0.ai/pricing) and [honcho.dev](https://honcho.dev/).
 
@@ -102,7 +102,7 @@ Both sets are vendor-run, with different answer models and LLM judges, so a 3 to
 
 ## Cost and self-hosting
 
-**Mem0 open source** costs only your LLM, embedder and vector store. The hosted Platform has a free tier (10,000 adds and 1,000 retrievals a month), Starter at $19/month and Pro at $249/month with graph memory. Mem0 lists SOC 2 and HIPAA for the Platform.
+**Mem0 open source** costs only your LLM, embedder and vector store. The hosted Platform has a Free plan (10,000 adds and 1,000 retrievals a month for 30 days, then 50,000 and 10,000 with your own LLM key paying for extraction) and sales-led Custom plans, the only ones with graph memory, since 26 October 2026. Mem0 lists SOC 2 and HIPAA for the Platform.
 
 **Honcho managed** bills $2.00 per million tokens ingested (storage plus reasoning). Natural-language chat queries cost $0.001 at the `minimal` reasoning level up to $0.50 at `max`; `context()` retrieval and dreaming have no separate charge. Each organization gets a dedicated instance. Startups under $5M raised get $1,000 in credits.
 

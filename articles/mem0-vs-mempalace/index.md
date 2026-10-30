@@ -2,7 +2,7 @@
 
 > Mem0 vs MemPalace compared (Oct 2026): extracted facts vs verbatim local storage, LLM and API needs, coding agent hooks, benchmarks, and which one to choose.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-mempalace/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-mempalace/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Mem0 vs MemPalace** is a choice between keeping facts and keeping everything. **Mem0** sends each conversation to an LLM, pulls out short facts like "prefers Go," and returns the matching ones on search. **MemPalace** saves conversations and files word for word on your machine and finds them later with local search, with no LLM and no API key.
@@ -29,7 +29,7 @@ Both are open source and among the most-starred memory projects on GitHub. They 
 | Scoping | `user_id`, `agent_id`, `run_id` | Wing (project or person), room (topic) | Memory bank (`bank_id`) |
 | Changed facts | New fact added next to old one; you call `update` or `delete` | Both versions kept; optional temporal knowledge graph with validity dates | Observations refined as new evidence arrives; temporal recall |
 | Coding agent support | Agent skills for Claude Code, Codex, Cursor and others; hosted MCP server | Auto-save hooks for Claude Code, Codex CLI, Cursor; 45 MCP tools | Native plugins for Claude Code, Codex, Cursor, Copilot; MCP server per bank |
-| Hosted service | Mem0 Platform: free, $19/mo, $249/mo, Enterprise | None; self-hosted team server via Docker Compose | Hindsight Cloud: usage-based, free credits |
+| Hosted service | Mem0 Platform: Free (own LLM key after 30 days) and Custom | None; self-hosted team server via Docker Compose | Hindsight Cloud: usage-based, free credits |
 | Typical user | An app serving many end users | One developer, or a small team | Apps with many users, or one developer's coding agents |
 
 ## How each one stores memory
@@ -94,7 +94,7 @@ Mem0's numbers come from its [README](https://github.com/mem0ai/mem0) and measur
 
 ## Cost and hosting
 
-**Mem0 open source** costs your LLM, embedder and vector store. The hosted Platform has a free Hobby tier (10,000 adds and 1,000 retrievals a month), Starter at $19/month (50,000 adds, 5,000 retrievals), Pro at $249/month with graph memory, and Enterprise ([Mem0 pricing](https://mem0.ai/pricing)).
+**Mem0 open source** costs your LLM, embedder and vector store. Since 26 October 2026 the hosted Platform has a Free plan (10,000 adds and 1,000 retrievals a month for 30 days, then 50,000 and 10,000 with your own LLM key paying for extraction) and sales-led Custom plans, the only ones with graph memory ([Mem0 pricing](https://mem0.ai/pricing)).
 
 **MemPalace** has no paid service. It costs disk space (about 300 MB for the embedding model) and the machine it runs on. For shared use, the repo includes a Docker Compose team server and opt-in Qdrant, pgvector or Milvus backends, but multi-tenant hosting with per-user isolation and API keys is not its focus.
 

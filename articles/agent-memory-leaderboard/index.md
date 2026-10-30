@@ -2,7 +2,7 @@
 
 > Agent memory leaderboard guide: where to find LongMemEval, LoCoMo and BEAM results, who runs each leaderboard, a score table with sources, and why scores differ.
 
-Source: https://aiagentmemory.org/articles/agent-memory-leaderboard/ · Updated 2026-10-27 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agent-memory-leaderboard/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 There is no official **agent memory leaderboard**. The benchmark authors (LongMemEval, LoCoMo, BEAM) publish datasets, not rankings. The leaderboards you can find are run by memory vendors: **agentmemorybenchmark.ai** by Vectorize, the company that makes Hindsight; **OmniMemEval** by MemTensor, the company that makes MemOS; and score pages from Mem0, Zep, Honcho and past.dev.
@@ -149,7 +149,7 @@ Both are covered in [LLM memory evaluation](/articles/llm-memory-evaluation/).
 **[Hindsight](https://github.com/vectorize-io/hindsight)** is an MIT-licensed agent memory server from Vectorize. On the published data it's a strong choice when:
 
 - **Histories are long.** It reports 73.9 on BEAM 1M and 64.1 on BEAM 10M, 9.8 and 15.5 points over Mem0 by Mem0's own page, and it has the top BEAM 10M score in MemTensor's OmniMemEval run, where a competitor set up every system.
-- **You want every feature open source.** Graph and temporal recall, consolidation into observations, mental models and `reflect` are all in the MIT release. Mem0 keeps graph memory and temporal reasoning on its paid Pro plan.
+- **You want every feature open source.** Graph and temporal recall, consolidation into observations, mental models and `reflect` are all in the MIT release. Mem0 keeps graph memory and temporal reasoning on its hosted Platform (graph memory only on custom paid plans).
 - **The agent should reason over memory.** `reflect` answers questions that need thinking across many memories, not only lookup.
 
 Its limits on the same data: it returns more tokens per retrieval than Mem0 or Zep, writes cost more because retain and consolidation both call an LLM, and its README says it "may be overkill" for simple workflows. It also has no published compliance certifications, where Mem0 lists SOC 2 Type 1 and HIPAA. On LongMemEval and LoCoMo its self-reported lead over Mem0 and Zep is within a point or two, or behind. More in [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/) and the [Hindsight explainer](/articles/ai-memory-hindsight/); for every system's license and storage model, see the [LLM memory comparison](/articles/llm-memory-comparison/).

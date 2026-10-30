@@ -2,7 +2,7 @@
 
 > Hindsight is an MIT-licensed agent memory server with retain, recall and reflect. How it works, its BEAM benchmark lead, its limits, and when to pick another tool.
 
-Source: https://aiagentmemory.org/articles/ai-memory-hindsight/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-memory-hindsight/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Hindsight** is an open-source agent memory server from Vectorize, released under the MIT license with the full server included. It gives an AI agent three operations: **retain** (store and extract facts), **recall** (search memories) and **reflect** (reason over them to answer a question). It runs on PostgreSQL with pgvector, self-hosted or as the managed Hindsight Cloud.
@@ -24,7 +24,7 @@ For where this fits among memory types in general, see [AI agent memory explaine
 Four wins hold up against competitors' own numbers and docs:
 
 - **Long histories.** It has the widest lead on the BEAM long-history tests: 73.9 vs 64.1 for Mem0 at 1M tokens, 64.1 vs 48.6 at 10M (from [Mem0's comparison page](https://mem0.ai/compare/mem0-vs-hindsight)). On shorter tests the two are close.
-- **Everything open source.** Graph, temporal recall, consolidation, mental models and reflect are all in the MIT server. Mem0 keeps graph memory, temporal reasoning, decay and Dream on its paid Pro plan; Supermemory's server source isn't public; Zep's self-hosted edition is deprecated.
+- **Everything open source.** Graph, temporal recall, consolidation, mental models and reflect are all in the MIT server. Mem0 keeps graph memory, temporal reasoning, decay and Dream on its hosted Platform (graph memory only on custom paid plans); Supermemory's server source isn't public; Zep's self-hosted edition is deprecated.
 - **Agents that learn.** Observations turn many facts into evidence-backed beliefs that get refined over time, mental models keep standing answers current, and reflect returns a reasoned answer instead of a list of hits.
 - **Coding agents and integrations.** Native plugins for Claude Code, Codex, Cursor and Copilot, an MCP server, and 60+ framework and tool integrations. It runs on 25+ LLM providers, fully local if you want.
 

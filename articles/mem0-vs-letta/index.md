@@ -2,7 +2,7 @@
 
 > Mem0 vs Letta (MemGPT) compared in 2026: memory model, who decides what to store, Python support, self-hosting, pricing, and which one fits your agent.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-letta/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-letta/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Mem0 vs Letta** comes down to one question: do you want a memory service for an agent you already have, or a runtime where the agent manages its own memory? Mem0 is a memory layer your code calls with `add` and `search`. Letta (formerly MemGPT) is a stateful agent harness whose agents read, edit and consolidate their own memory files.
@@ -29,7 +29,7 @@ The two are often listed side by side, but they sit at different levels of the s
 | Updates | ADD-only since April 2026; explicit `update`/`delete` | Agent rewrites files; every edit is a git commit | Observations refined as new evidence arrives, not overwritten |
 | SDKs | Python, TypeScript, REST, CLI | TypeScript Agent SDK; Python client deprecated | Python, TypeScript, Go, REST, CLI |
 | Self-host | Library, or Docker server with Postgres + pgvector | Local backend or `letta server` | Docker, pip, Helm or embedded Postgres; every feature included |
-| Hosted pricing | Free; Starter $19/mo; Pro $249/mo | Free; Pro $20/mo; API plan $20/mo + usage | Usage-based, free credits, no seat fee |
+| Hosted pricing | Free (own LLM key after 30 days); Custom plans | Free; Pro $20/mo; API plan $20/mo + usage | Usage-based, free credits, no seat fee |
 | Fits | Adding memory to an existing agent or app | Building a long-lived agent from scratch | Adding memory that learns to an existing agent |
 
 Prices are list prices from [mem0.ai/pricing](https://mem0.ai/pricing) and [Letta's pricing page](https://docs.letta.com/letta-code/pricing). Hindsight details are from its [README](https://github.com/vectorize-io/hindsight).
@@ -84,7 +84,7 @@ This is often the deciding factor.
 
 ## Self-hosting and cost
 
-**Mem0 open source** costs nothing beyond your LLM, embedder and vector store. Every `add` makes one extraction LLM call, so cost scales with message volume. The self-hosted server bundles Postgres with pgvector, a dashboard and per-user API keys. The hosted Platform's free Hobby tier allows 10,000 adds and 1,000 retrievals a month.
+**Mem0 open source** costs nothing beyond your LLM, embedder and vector store. Every `add` makes one extraction LLM call, so cost scales with message volume. The self-hosted server bundles Postgres with pgvector, a dashboard and per-user API keys. Since 26 October 2026 the hosted Platform's Free plan allows 10,000 adds and 1,000 retrievals a month for 30 days, then 50,000 and 10,000 once you connect your own LLM key, which pays for extraction; higher limits are on sales-led Custom plans.
 
 **Letta Code** is free to run locally with your own model keys; your agent state and MemFS stay on disk, and you're responsible for backups. Hosted plans start at Free, then Pro at $20/month. The API plan is $20/month plus $0.10 per active agent per month and $0.00015 per second of tool execution.
 

@@ -2,7 +2,7 @@
 
 > Cognee alternatives compared: Mem0, Graphiti, Zep, Letta, Hindsight, MemPalace and Supermemory. What each does, licenses, self-hosting and pricing, checked October 2026.
 
-Source: https://aiagentmemory.org/articles/cognee-alternatives/ · Updated 2026-10-18 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/cognee-alternatives/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Cognee alternatives** are other memory systems for AI agents: Mem0, Graphiti, Zep, Letta, Hindsight, MemPalace and Supermemory. People look for one when Cognee's knowledge-graph pipeline is more than they need for simple per-user memory, when they want temporal fact tracking in open source, or when they want the agent itself to manage memory. For that second reason, Graphiti and Hindsight both fit; Graphiti needs a graph database, while Hindsight runs its graph and temporal recall on Postgres, all in the MIT release.
@@ -33,7 +33,7 @@ For background on graph-based memory in general, see [knowledge graphs for AI me
 
 | Tool | What it is | License | Self-host | Best at | Hosted pricing (Oct 2026) |
 |---|---|---|---|---|---|
-| **Mem0** | Memory layer for user, session and agent facts | Apache 2.0 | Yes, library or Docker server | Personalization in chat apps | Free tier; Starter $19/mo; Pro $249/mo |
+| **Mem0** | Memory layer for user, session and agent facts | Apache 2.0 | Yes, library or Docker server | Personalization in chat apps | Free (own LLM key after 30 days); Custom plans |
 | **Graphiti** | Temporal knowledge graph framework | Apache 2.0 | Yes, with Neo4j, FalkorDB or Neptune | Facts that change over time, with provenance | None (library) |
 | **Zep** | Managed context graph service built on Graphiti | Proprietary service | Enterprise BYOC only | Managed temporal memory at scale | Free 10,000 credits/mo; Flex $125/mo |
 | **Letta** | Stateful agent harness | Apache 2.0 | Yes, local or App Server | Agents that edit their own memory | Free; Pro $20/mo |
@@ -47,7 +47,7 @@ Prices are published list prices and change often.
 
 **Mem0** is a memory layer focused on personalization. It extracts facts from conversations with one LLM call per add, stores them for user, session and agent scopes, and retrieves them with semantic, BM25 and entity matching fused together. It runs as a library, a self-hosted server, or the managed Platform.
 
-Note the graph difference. Mem0's [v3 migration guide](https://docs.mem0.ai/migration/oss-v2-to-v3) says graph memory "is removed from the open-source SDK" and now lives on the hosted Platform's Pro plan.
+Note the graph difference. Mem0's [v3 migration guide](https://docs.mem0.ai/migration/oss-v2-to-v3) says graph memory "is removed from the open-source SDK" and now lives on the hosted Platform, on Custom plans only.
 
 - **Pick Mem0** for simple user memory with a small API and many framework integrations.
 - **Look elsewhere** if you need an open-source knowledge graph over documents. That's Cognee's ground.

@@ -2,7 +2,7 @@
 
 > Zep vs Mem0 compared (Oct 2026): temporal context graph vs extracted facts, open source, self-hosting, APIs, pricing, the benchmark dispute, how to pick.
 
-Source: https://aiagentmemory.org/articles/zep-memory-vs-mem0/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/zep-memory-vs-mem0/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Zep vs Mem0** is a choice between two ways of storing what an agent learns. **Zep** keeps a temporal knowledge graph where every fact has a validity window, so old facts are invalidated rather than lost. **Mem0** extracts short facts into a vector store with entity linking, and ranks them by semantic, keyword and entity match. Mem0 is open source; Zep is a managed service with Graphiti as its open-source core.
@@ -30,7 +30,7 @@ Mem0's design is described in [arXiv 2504.19413](https://arxiv.org/abs/2504.1941
 | Graph in open source | Yes, via Graphiti (bring Neo4j, FalkorDB or Neptune) | No; removed in April 2026, now Platform-only | Yes, on PostgreSQL + pgvector; no graph DB to run |
 | SDKs | Python, TypeScript, Go | Python, TypeScript, REST, CLI | Python, TypeScript, Go, REST, CLI |
 | Self-host the full product | Enterprise BYOC only | Yes, Docker server | Yes: Docker, pip, Helm or embedded |
-| Hosted pricing | Free 10,000 credits/mo; Flex $125/mo | Free; Starter $19/mo; Pro $249/mo | Usage-based, free credits, no seat fee |
+| Hosted pricing | Free 10,000 credits/mo; Flex $125/mo | Free (own LLM key after 30 days); Custom plans | Usage-based, free credits, no seat fee |
 
 Sources: the [Graphiti README](https://github.com/getzep/graphiti), the [Mem0 README](https://github.com/mem0ai/mem0), the [Hindsight README](https://github.com/vectorize-io/hindsight) and each vendor's pricing page.
 
@@ -94,8 +94,8 @@ This is where the two diverge most.
 | | Zep Cloud | Mem0 Platform | Hindsight |
 |---|---|---|---|
 | Free | 10,000 credits/month | 10,000 adds and 1,000 retrievals/month | Open source free to self-host; Cloud starts with free credits |
-| Entry paid | Flex: $125/month, 50,000 credits | Starter: $19/month, 50,000 adds and 5,000 retrievals | Cloud: usage-based, no seat fee |
-| Next tier | Flex Plus: $375/month, 200,000 credits | Pro: $249/month, 500,000 adds, graph memory | No feature tiers; graph and temporal recall are in the MIT release |
+| Entry paid | Flex: $125/month, 50,000 credits | Free with your own LLM key: 50,000 adds and 10,000 retrievals; usage-based past that | Cloud: usage-based, no seat fee |
+| Next tier | Flex Plus: $375/month, 200,000 credits | Custom plans (sales-led), graph memory and Dream | No feature tiers; graph and temporal recall are in the MIT release |
 | Billing unit | 1 credit per 350 bytes ingested; retrieval unmetered | Requests: adds and retrievals counted separately | Usage-based (Cloud); self-hosted costs your LLM calls |
 | Enterprise | Custom; BYOC, BYOK, SLA | Custom; on-prem, SSO, SLA | Self-host anywhere (Docker, Helm) |
 

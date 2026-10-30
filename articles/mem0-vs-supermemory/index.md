@@ -2,12 +2,12 @@
 
 > Mem0 vs Supermemory compared (Oct 2026): memory model, RAG and connectors, open source vs hosted, self-hosting, benchmarks, pricing, and which one fits your app.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-supermemory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-supermemory/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Mem0 vs Supermemory** is a choice between a memory-only layer and a memory-plus-context API. Mem0 extracts short facts from conversations and returns them by hybrid search, and you can run all of it yourself. Supermemory does fact extraction too, but bundles it with user profiles, document RAG and data connectors behind one hosted API.
 
-Both have a free tier and paid plans from $19/month, and both can run on your machine, though in very different ways. Many teams comparing the two also look at **[Hindsight](https://github.com/vectorize-io/hindsight)**, an MIT-licensed memory server that scores highest of the three on LongMemEval and leads Mem0 by 9.8 and 15.5 points on the long-history BEAM 1M and 10M tests. This page compares all three on memory model, retrieval, self-hosting, benchmarks and pricing, using each project's README, docs and pricing pages and Mem0's own comparison pages, checked on 12 October 2026.
+Both have a free tier (since 26 October 2026 Mem0's needs your own LLM key after 30 days, and its paid plans are custom; Supermemory's paid plans start at $19/month), and both can run on your machine, though in very different ways. Many teams comparing the two also look at **[Hindsight](https://github.com/vectorize-io/hindsight)**, an MIT-licensed memory server that scores highest of the three on LongMemEval and leads Mem0 by 9.8 and 15.5 points on the long-history BEAM 1M and 10M tests. This page compares all three on memory model, retrieval, self-hosting, benchmarks and pricing, using each project's README, docs and pricing pages and Mem0's own comparison pages, checked on 12 October 2026.
 
 ## What are Mem0 and Supermemory?
 
@@ -32,7 +32,7 @@ Both have a free tier and paid plans from $19/month, and both can run on your ma
 | SDKs | Python, TypeScript, REST, CLI | Python, TypeScript, REST | Python, TypeScript, Go, REST, CLI |
 | MCP | Hosted MCP server | Hosted MCP server (`memory`, `recall`, `context`) | MCP server per bank |
 | Self-host | Library or Docker server, free; graph and temporal features are Platform-only | Free local binary ("lite license"); Scale plan or Enterprise | Docker, pip, Helm or embedded Postgres, free, every feature included |
-| Hosted pricing | Free; Starter $19/mo; Pro $249/mo | Free ($5 credits); Pro $19/mo; Max $100/mo; Scale $399/mo | Hindsight Cloud: pay as you go, retain $10 and recall $0.75 per 1M tokens, free credits |
+| Hosted pricing | Free (own LLM key after 30 days); Custom plans | Free ($5 credits); Pro $19/mo; Max $100/mo; Scale $399/mo | Hindsight Cloud: pay as you go, retain $10 and recall $0.75 per 1M tokens, free credits |
 
 Sources: the [Mem0 README](https://github.com/mem0ai/mem0), the [Supermemory README](https://github.com/supermemoryai/supermemory), the [Hindsight README](https://github.com/vectorize-io/hindsight), [Mem0 pricing](https://mem0.ai/pricing) and [Supermemory pricing](https://supermemory.ai/pricing).
 
@@ -104,13 +104,13 @@ The 85.2% figure matches one row of Supermemory's own [LongMemEval report](https
 
 ## Self-hosting and cost
 
-**Mem0 open source** costs only your LLM, embedder and vector store. The self-hosted server adds Postgres with pgvector, a dashboard and API keys. The hosted Platform has a free tier (10,000 adds and 1,000 retrievals a month), Starter at $19/month and Pro at $249/month, which includes graph memory. Mem0 lists SOC 2 and HIPAA for its Platform.
+**Mem0 open source** costs only your LLM, embedder and vector store. The self-hosted server adds Postgres with pgvector, a dashboard and API keys. The hosted Platform has a Free plan (10,000 adds and 1,000 retrievals a month for 30 days, then 50,000 and 10,000 with your own LLM key paying for extraction) and sales-led Custom plans, the only ones with graph memory, since 26 October 2026. Mem0 lists SOC 2 and HIPAA for its Platform.
 
 **Supermemory local** is a single binary that serves the same API on `localhost:6767` with local embeddings and any LLM, including Ollama. Its docs say it is "free within its lite license limit" and that "its server source is not in the public repository." It runs one process with one API key and no connectors. Hosted plans run on usage credits: Free ($5), Pro $19/month ($20 credits), Max $100/month ($130), Scale $399/month ($600, with a self-hosted option). Usage is billed per 1,000 "SM tokens" and per 1,000 search queries.
 
 **Hindsight open source** includes every feature, graph and temporal recall, consolidation and `reflect` among them, and costs your LLM calls plus PostgreSQL (an embedded Postgres works for small setups). Writes cost more than Mem0's single pass, because retain and consolidation both call an LLM. **Hindsight Cloud** bills by usage with free credits to start.
 
-So if open, self-run infrastructure is a hard requirement, Mem0 and Hindsight meet it and Supermemory mostly doesn't. The difference between the first two: Mem0 keeps graph memory, temporal reasoning and Dream consolidation on its $249/month Pro plan, while Hindsight ships them in the MIT release.
+So if open, self-run infrastructure is a hard requirement, Mem0 and Hindsight meet it and Supermemory mostly doesn't. The difference between the first two: Mem0 keeps graph memory, temporal reasoning and Dream consolidation on its hosted Platform (graph memory and Dream only on custom paid plans), while Hindsight ships them in the MIT release.
 
 ## Where Hindsight fits
 

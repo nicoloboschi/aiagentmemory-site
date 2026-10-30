@@ -2,7 +2,7 @@
 
 > Mem0 vs Hindsight compared (Oct 2026): how each stores and retrieves memory, open-source vs hosted features, benchmarks and token cost, pricing, and which fits.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-hindsight/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-hindsight/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Mem0 vs Hindsight** is a choice between two memory layers that sit beside your agent, not inside it. Hindsight does more work per memory: it links entities and time, merges facts into observations in the background, and can reason over them with `reflect`. Mem0 keeps memory lean: one LLM pass extracts facts, and search returns a small set of them cheaply.
@@ -34,7 +34,7 @@ Neither runs your agent. Your code (or a framework integration) calls them befor
 | SDKs | Python, TypeScript, REST, CLI | Python, TypeScript, Go, REST, CLI |
 | MCP | Hosted MCP server (Platform key) | MCP endpoint per bank, self-hosted or cloud |
 | Storage | Vector store of your choice; server uses Postgres + pgvector | PostgreSQL + pgvector, Oracle 23ai, or embedded pg0 |
-| Hosted pricing | Free; Starter $19/mo; Pro $249/mo | Usage-based, free credits to start |
+| Hosted pricing | Free (own LLM key after 30 days); Custom plans | Usage-based, free credits to start |
 | Compliance (hosted) | SOC 2 Type 1, HIPAA | None listed |
 
 Sources: the two READMEs, Mem0's [Mem0 vs Hindsight page](https://mem0.ai/compare/mem0-vs-hindsight) (compliance row), [Platform vs Open Source](https://docs.mem0.ai/platform/platform-vs-oss) page and [pricing page](https://mem0.ai/pricing).
@@ -111,7 +111,7 @@ Older comparisons quote much lower Mem0 numbers, from before its April 2026 algo
 
 ## Self-hosting, hosting and cost
 
-**Mem0 open source** costs only your LLM, embedder and vector store. Every `add` makes one extraction call. The self-hosted server adds Postgres with pgvector, a dashboard and API keys. The Platform's free Hobby tier allows 10,000 adds and 1,000 retrievals a month; Starter is $19/month and Pro, which includes graph memory and Dream, is $249/month. Mem0 lists SOC 2 and HIPAA for its Platform.
+**Mem0 open source** costs only your LLM, embedder and vector store. Every `add` makes one extraction call. The self-hosted server adds Postgres with pgvector, a dashboard and API keys. Since 26 October 2026 the Platform has a Free plan (10,000 adds and 1,000 retrievals a month for 30 days, then 50,000 and 10,000 once you connect your own LLM key, which pays for extraction) and sales-led Custom plans, the only ones with graph memory and Dream ([pricing FAQ](https://docs.mem0.ai/platform/pricing)). Mem0 lists SOC 2 and HIPAA for its Platform.
 
 **Hindsight open source** costs your LLM calls plus a PostgreSQL database. Retain and consolidation both use an LLM, so writes cost more than Mem0's single pass; async retain and provider batch APIs reduce that. The FAQ asks for 4 GB of RAM minimum (8 GB recommended) to self-host. **Hindsight Cloud** is pay as you go with free credits to start: retain $10 and recall $0.75 per 1M tokens, reflect $0.05 per call ([pricing](https://vectorize.io/pricing)).
 
@@ -120,7 +120,7 @@ Older comparisons quote much lower Mem0 numbers, from before its April 2026 algo
 **Hindsight is the stronger pick when:**
 
 - **Histories are long.** Its lead on BEAM grows with size: 73.9 vs 64.1 at 1M tokens, 64.1 vs 48.6 at 10M, on Mem0's own page.
-- **You want every feature self-hosted for free.** Graph links, temporal recall, observations, mental models and `reflect` are all in the MIT release. Mem0 keeps graph memory, temporal reasoning, decay and Dream on its Pro plan ($249/month).
+- **You want every feature self-hosted for free.** Graph links, temporal recall, observations, mental models and `reflect` are all in the MIT release. Mem0 keeps graph memory, temporal reasoning, decay and Dream on its hosted Platform (graph memory and Dream only on custom paid plans).
 - **The agent should learn, not just look things up.** Observations merge facts into evidence-backed beliefs that get refined over time, and `reflect` answers questions that need reasoning across many memories.
 - **You run coding agents or a framework.** It has native plugins for Claude Code, Codex, Cursor and Copilot, an MCP server, and integrations for LangGraph, CrewAI, the OpenAI Agents SDK and others.
 

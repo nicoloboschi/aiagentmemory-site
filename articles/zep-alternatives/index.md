@@ -2,7 +2,7 @@
 
 > Zep alternatives compared, including open-source options after Zep Community Edition: Graphiti, Mem0, Letta, Cognee, Hindsight and Supermemory (Oct 2026).
 
-Source: https://aiagentmemory.org/articles/zep-alternatives/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/zep-alternatives/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Zep alternatives** are other ways to give AI agents long-term memory: Graphiti (Zep's own open-source core), Hindsight, Mem0, Letta, Cognee and Supermemory. Most people searching for one want a **self-hosted, open-source** option, because Zep stopped maintaining its Community Edition in 2025 and is now a managed, credit-priced service. Graphiti is the closest match to Zep's model; Hindsight is the most complete open-source memory server, with graph and time-range recall, consolidation and `reflect` all in its MIT release.
@@ -29,7 +29,7 @@ If you're happy with a managed service and those numbers, Zep is a strong tempor
 |---|---|---|---|---|---|
 | **Graphiti** | Open-source temporal graph framework (Zep's core) | Apache 2.0 | Yes, bring Neo4j, FalkorDB or Neptune | Yes, bi-temporal with validity windows | None (library) |
 | **Hindsight** | Memory server with retain/recall/reflect | MIT, every feature included | Yes, Docker, pip, Helm or embedded | Yes, time data extracted; time-range recall | Hindsight Cloud: pay as you go, retain $10 and recall $0.75 per 1M tokens, free credits |
-| **Mem0** | Memory layer for user, session and agent facts | Apache 2.0 | Yes, library or Docker server | Time-aware ranking; facts appended, not invalidated | Free tier; Starter $19/mo; Pro $249/mo |
+| **Mem0** | Memory layer for user, session and agent facts | Apache 2.0 | Yes, library or Docker server | Time-aware ranking; facts appended, not invalidated | Free (own LLM key after 30 days); Custom plans |
 | **Letta** | Stateful agent harness | Apache 2.0 | Yes, local or App Server | No explicit fact timeline | Free; Pro $20/mo |
 | **Cognee** | Knowledge graph memory engine | Apache 2.0 | Yes, pip or Docker | Bi-temporal memory listed for Enterprise | Free 1M tokens; $1 per 1M tokens |
 | **Supermemory** | Memory, RAG and user-profile API | MIT (repo) | Local server; self-hosting listed on Scale plan | Handles temporal changes and expiry | Free $5 credits; Pro $19/mo |
@@ -64,7 +64,7 @@ On Mem0's own comparison page it scores 94.6 on LongMemEval and leads Mem0 by 9.
 
 **Mem0** extracts facts from conversations with an LLM and stores them for user, session and agent scopes. It runs as a library, a self-hosted Docker server with dashboard and API keys, or the managed Mem0 Platform.
 
-Its April 2026 algorithm is ADD-only: new facts are stored next to old ones instead of overwriting them, and time-aware retrieval ranks the current one higher. Graph memory was removed from the open-source SDK in that release and is now a Platform feature on the Pro plan.
+Its April 2026 algorithm is ADD-only: new facts are stored next to old ones instead of overwriting them, and time-aware retrieval ranks the current one higher. Graph memory was removed from the open-source SDK in that release and is now a Platform feature on Custom plans only.
 
 - **Pick Mem0** for a simple, widely integrated user-memory API you can self-host.
 - **Look elsewhere** if you need explicit fact validity windows or graph memory in open source.

@@ -1,13 +1,13 @@
 # What Is Mem0? How the Mem0 Memory Layer Works
 
-> What Mem0 is in 2026: how it extracts and stores memories, the open-source library vs Mem0 Platform, graph memory, LLM and embedding setup, delete, pricing.
+> What Mem0 is in 2026: how it extracts and stores memories, open source vs Platform, graph memory, setup, delete, and the new Free + bring-your-own-key pricing (Oct 26).
 
-Source: https://aiagentmemory.org/articles/what-is-mem0-ai/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/what-is-mem0-ai/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **Mem0** ("mem-zero") is an open-source memory layer for AI agents. It uses an LLM to pull durable facts out of conversations, stores them with embeddings per user, agent or session, and returns the relevant ones when you search. It ships as a Python and Node library, a self-hosted Docker server, and the managed Mem0 Platform.
 
-This page explains how Mem0 works today, what changed in the April 2026 release, and how to configure, query and delete memories. Facts come from the [Mem0 GitHub README](https://github.com/mem0ai/mem0), the [Mem0 docs](https://docs.mem0.ai) and the pricing page, checked on 8 October 2026.
+This page explains how Mem0 works today, what changed in the April 2026 release, and how to configure, query and delete memories. Facts come from the [Mem0 GitHub README](https://github.com/mem0ai/mem0), the [Mem0 docs](https://docs.mem0.ai) and the pricing page, checked on 8 October 2026; pricing rechecked on 30 October 2026 after Mem0's 26 October change.
 
 ## What is Mem0?
 
@@ -15,7 +15,7 @@ This page explains how Mem0 works today, what changed in the April 2026 release,
 
 The company behind it was founded by **Taranjeet Singh** and **Deshraj Yadav** and went through Y Combinator's S24 batch. Singh previously built Embedchain, an open-source RAG framework. In October 2025 Mem0 announced $24 million in combined seed and Series A funding led by Basis Set Ventures, according to [Inc42](https://inc42.com/buzz/mem0-raises-24-mn-to-scale-its-ai-memory-infrastructure).
 
-The GitHub repository had about 66,800 stars in October 2026, the most of any agent memory project. The current Python package is `mem0ai` 2.2.1.
+The GitHub repository had about 68,000 stars at the end of October 2026, the most of any agent memory project. The current Python package is `mem0ai` 2.2.1.
 
 ## How Mem0 stores and retrieves memory
 
@@ -58,9 +58,9 @@ Both versions share the same core calls: `add`, `search`, `get`, `get_all`, `upd
 | License | Apache 2.0 | Commercial service |
 | Setup | `pip install mem0ai`, or `docker compose up` in `server/` | API key from app.mem0.ai |
 | You provide | LLM, embedder, vector store | Nothing; managed |
-| Graph memory | Removed in v3 | Built in, always on |
+| Graph memory | Removed in v3 | Built in, always on (Custom plans only since 26 Oct 2026) |
 | Temporal reasoning, memory decay | Not supported | Supported |
-| Dream (background consolidation) | Not available | Available (synthesis on Pro and above) |
+| Dream (background consolidation) | Not available | Custom plans only |
 | Webhooks, export, batch delete | Not available | Available |
 
 The source for this table is Mem0's own [Platform vs Open Source](https://docs.mem0.ai/platform/platform-vs-oss) page. The self-hosted server adds a REST API on port 8888, a dashboard on port 3000, per-user API keys and an audit log, backed by Postgres with pgvector.
@@ -138,14 +138,33 @@ Mem0's docs list integrations for LangChain, LangGraph, LlamaIndex, CrewAI, Auto
 
 For **Hermes Agent**, Mem0 maintains a standalone memory plugin with three modes: Platform, a self-hosted Mem0 server, or in-process open source. It recalls memories for the current question with a 3-second wait, extracts facts in the background after each turn, and gives the model `mem0_search`, `mem0_add`, `mem0_update` and `mem0_delete` tools. Our Hermes Agent memory guide compares it with other providers.
 
-Platform pricing, from [mem0.ai/pricing](https://mem0.ai/pricing) in October 2026:
+### Mem0 pricing since 26 October 2026
 
-| Plan | Price | Adds per month | Retrievals per month | Notes |
+Mem0 changed its Platform pricing on 26 October 2026. The [pricing page](https://mem0.ai/pricing) now has two plans, Free and Custom, and the [pricing FAQ](https://docs.mem0.ai/platform/pricing) says the old Starter, Growth and Pro plans "are no longer sold to new accounts." Existing subscribers keep their price and limits, but plan changes now go through Mem0's sales team.
+
+| | Free, first 30 days | Free, with your own LLM key | Custom |
+|---|---|---|---|
+| Price | $0 | $0 to Mem0; your LLM provider bills the extraction calls | Set by contract |
+| Adds per month | 10,000 | 50,000 | Set to your volume |
+| Retrievals per month | 1,000 | 10,000 | Set to your volume |
+| Who pays for model calls | Mem0 | You (OpenAI, Anthropic, Azure OpenAI or OpenRouter key) | Set in the agreement |
+| Past the limit | Calls return an error | Optional usage-based billing with a monthly cap you set | Set in the agreement |
+| Graph memory, Dream, SSO, on-prem | No | No | Yes |
+
+After 30 days without a key, stored memories stay and search keeps working up to 1,000 calls a month, but new adds return an error. Users who signed up before 26 October have until 25 November 2026. If your key fails, Mem0 doesn't fall back to its own: the add fails, and you resend it after fixing the key.
+
+**What your own key costs.** Mem0's [BYOK guide](https://docs.mem0.ai/platform/features/byok) tested extraction models on LoCoMo (Mem0's own runs) and gives these picks. Embeddings, search and reranking still run on Mem0's side.
+
+| Mem0's pick | Model | LoCoMo accuracy | Cost per 1,000 adds | Add latency p95 |
 |---|---|---|---|---|
-| Hobby | Free | 10,000 | 1,000 | 1 project |
-| Starter | $19/month | 50,000 | 5,000 | 1 project |
-| Pro | $249/month | 500,000 | 50,000 | Graph memory, Dream |
-| Enterprise | Custom | Unlimited | Unlimited | On-prem, SSO, SLA |
+| Best value | DeepSeek V4.1 Flash (OpenRouter) | 92.9% | $5.34 | 18.5 s |
+| Best under $1 | Amazon Nova Micro (OpenRouter) | 88.0% | $0.86 | 10.2 s |
+| Best quality | Claude Opus 5.5 | 93.5% | $158.55 | 18.1 s |
+| Mem0's default model (free tier) | Not named | 92.5% | Paid by Mem0 for 30 days | Not given |
+
+The FAQ puts its recommended models (GPT-6 Luna, Claude Haiku 5.5, DeepSeek V4.1 Flash) at about $3.55 to $5.34 per 1,000 adds. Adds run in the background: the call returns an event ID, and memories show up in search once extraction finishes. Search itself takes about 270 ms at p50 and 640 ms at p95, per the same guide.
+
+This changes the cost comparison with other hosted memory. On Mem0 Platform you now pay your LLM provider for every write past the first 30 days, much like you would self-hosting Mem0 or [Hindsight](https://github.com/vectorize-io/hindsight), and graph memory needs a sales-negotiated plan.
 
 ## Mem0 benchmarks: what the numbers mean
 
@@ -178,7 +197,11 @@ Mem0 gives AI assistants and agents long-term memory. You send it conversation t
 
 ### Is Mem0 open source?
 
-Yes. The mem0ai library and the self-hosted server are Apache 2.0 on GitHub (mem0ai/mem0). The hosted Mem0 Platform is a paid service with a free tier. Some features, including graph memory, temporal reasoning and the Dream consolidation process, are Platform-only since the April 2026 release.
+Yes. The mem0ai library and the self-hosted server are Apache 2.0 on GitHub (mem0ai/mem0). The hosted Mem0 Platform is a paid service with a free tier. Some features, including graph memory, temporal reasoning and the Dream consolidation process, are Platform-only since the April 2026 release, and graph memory and Dream are on Custom plans only.
+
+### How much does Mem0 cost?
+
+Since 26 October 2026 the Mem0 Platform has two plans. Free gives 10,000 adds and 1,000 retrievals a month for the first 30 days with model calls paid by Mem0; after that you connect your own OpenAI, Anthropic, Azure OpenAI or OpenRouter key and get 50,000 adds and 10,000 retrievals a month, with optional usage-based billing past that. Custom plans are sales-led and include graph memory and Dream. The old Starter ($19) and Pro ($249) plans are no longer sold. The open-source library is free; you pay only for your own LLM, embedder and vector store.
 
 ### Which LLM and embedding model does Mem0 use by default?
 
