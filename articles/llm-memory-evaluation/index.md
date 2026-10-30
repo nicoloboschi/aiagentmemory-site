@@ -1,13 +1,13 @@
 # LLM Memory Evaluation: Benchmarks for Agent Memory
 
-> How to evaluate LLM and agent memory: LoCoMo, LongMemEval, MemoryAgentBench, BEAM, FEB-30, Bemula, MSC and DMR compared by size, tasks and metrics, plus how to run one.
+> How to evaluate LLM and agent memory: LoCoMo, LongMemEval, MemoryAgentBench, BEAM, FEB-30, Bemula, SciValidityBench, BehaviorMemBench, MSC and DMR compared by size, tasks and metrics, plus how to run one.
 
-Source: https://aiagentmemory.org/articles/llm-memory-evaluation/ · Updated 2026-10-18 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/llm-memory-evaluation/ · Updated 2026-10-30 · aiagentmemory.org
 
 
 **LLM memory evaluation** means testing whether a model or agent can recall, update and reason over information from earlier sessions. The standard benchmarks are **LoCoMo** and **LongMemEval**, with **MemoryAgentBench** and **BEAM** as harder, newer tests. Each feeds a long chat history to the system, then asks questions only that history can answer.
 
-The tests differ in what they stress: plain recall, time, changed facts, forgetting, or scale. Picking the wrong one tells you little about your use case. Two 2026 benchmarks, **FEB-30** and **Bemula**, go further and score the memory store itself rather than the answer. This page covers what each benchmark measures, how it's scored, and how to run one yourself.
+The tests differ in what they stress: plain recall, time, changed facts, forgetting, or scale. Picking the wrong one tells you little about your use case. Two 2026 benchmarks, **FEB-30** and **Bemula**, go further and score the memory store itself rather than the answer, and three late-October papers split recall from the decision made with it. This page covers what each benchmark measures, how it's scored, and how to run one yourself.
 
 ## What is LLM memory evaluation?
 
@@ -29,6 +29,8 @@ For background on what's being tested, see our guide to [AI agent memory](/artic
 | **BEAM** | 2025, ICLR 2026 | 100 conversations, 2,000 questions, up to 10M tokens | Ten abilities, incl. contradiction resolution, event ordering, preference following | LLM-judged nugget scores; Kendall tau-b for event ordering |
 | **FEB-30** | 2026, arXiv | 30 generated fact-evolution trajectories, 6 diagnostic categories, 3 difficulty levels | The memory store itself: whether it holds the right facts and updates them when they change | Fact accuracy, update detection recall, false update rate |
 | **Bemula** | 2026, arXiv | 50 multi-session dialogues, 135 forget requests, 1,742 questions | Deleting a memory on request, and whether unrelated memories survive | Pass rate across five test suites |
+| **SciValidityBench** | 2026, arXiv | 64 task specs across 6 scientific domains | Whether a remembered result is valid to use in a decision | Valid-decision rate |
+| **BehaviorMemBench** | 2026, arXiv | Real e-commerce logs, 1,194 users over 3+ years | Remembering user behavior vs inferring preferences, scored apart | Remember and infer scores against future-behavior labels |
 
 The sections below describe each one from its paper. FEB-30 and Bemula are the newest, and they test
 two things the older benchmarks never scored: the contents of the store, and deletion.
@@ -135,6 +137,32 @@ No system tested passed more than **1.5%** of forget requests end to end, and mo
 the fact extractable; others deleted far more than asked. Details, including which systems were tested, are
 on our [AI memory decay](/articles/ai-memory-decay/) page.
 
+## New domain benchmarks: decisions, shopping logs, returning to a chat
+
+Three arXiv papers from the last week of October 2026 make the same point from different sides: finding
+the right memory is only the first step. Each one splits memory into abilities that older benchmarks
+scored as one number.
+
+| Benchmark | Paper | Data | What it splits apart | Main finding |
+|---|---|---|---|---|
+| **SciValidityBench** | [Pan and Chen, 26 Oct 2026](https://arxiv.org/abs/2610.34767) | 64 task specs, 5 validity modules, 6 scientific domains | Recalling a result vs knowing whether it's valid to act on | Giving the model compiled "state" raised valid decisions by 9.2-18.8 points over a generic event graph; retrieval alone didn't |
+| **BehaviorMemBench** | [Wang et al., 26 Oct 2026](https://arxiv.org/abs/2610.34790) | Real e-commerce logs: 1,194 users, 17,462 behavior batches, 3+ years | Remembering what a user did vs inferring what they want | Method rankings differ between the two abilities; simple statistical baselines are competitive |
+| **Social re-entry** | [Wan et al., 29 Oct 2026](https://arxiv.org/abs/2610.39781) | Shared-snapshot tests across six LLM setups | Finding an old chat, choosing to return to it, rebuilding its context | Persistent memory raised replies to the right chat, but neither memory nor resurfacing reliably improved rebuilding the context |
+
+**SciValidityBench** asks whether a remembered fact should be used at all. Its example: the same test
+result supports a firm conclusion if the stopping rule was fixed in advance, but only exploration if it was
+the best of twenty results someone looked at. The memory has to keep that context, not just the number.
+
+**BehaviorMemBench** builds memory from clicks and purchases instead of chat. It scores *remember* and
+*infer* separately, and the authors found a system can rank well on one and poorly on the other.
+
+**Social re-entry** tests agents that sit in long-running group chats. Remembering a past conversation
+doesn't mean the agent knows when to go back to it, or can pick up where it left off.
+
+None of these papers tested Mem0, Zep or Hindsight, so they give no product ranking. What they suggest for
+your own tests: score retrieval, the decision made from it, and the answer as separate numbers, so you can
+see which step failed.
+
 ## MSC and DMR: the older dialogue tests
 
 **[Multi-Session Chat (MSC)](https://arxiv.org/abs/2107.07567)** (Xu, Szlam and Weston, Meta, 2021) is a human-human dataset where crowdworkers chat across sessions held "hours or days later." Training episodes have 3 or 4 sessions; validation and test extend to 5. It was built to train and test dialogue models on long-term chat, scored mainly with perplexity.
@@ -218,6 +246,10 @@ Each answer is judged correct or incorrect by GPT-4o using the evaluate_qa.py sc
 ### What is intrinsic vs extrinsic memory evaluation?
 
 Extrinsic evaluation asks the agent a question and scores the answer, which is what LoCoMo, LongMemEval and BEAM do. Intrinsic evaluation inspects the memory store itself: are the right facts in there, were they updated when they changed. The FEB-30 paper (October 2026) found the two scores diverge by an average of 16 percentage points on the same system, so a good QA score can hide a broken store.
+
+### What are the newest agent memory benchmarks?
+
+In late October 2026, three arXiv papers added domain tests: SciValidityBench (whether a remembered scientific result is valid to act on), BehaviorMemBench (memory built from 3+ years of real e-commerce logs, scoring remembering and inferring apart) and a social re-entry test (finding, returning to and rebuilding an old conversation). Earlier in October, FEB-30 scored the memory store itself and Bemula tested deletion.
 
 ### Can I trust memory benchmark scores published by vendors?
 
