@@ -1,8 +1,8 @@
-# Context Window Limitations in LLMs and How to Fix Them
+# Context Window Limitations in LLMs: Research and Fixes (2026)
 
-> Why LLMs get worse as the context window fills: lost-in-the-middle, effective vs advertised context, cost and latency, plus fixes like retrieval and memory.
+> Why LLMs get worse as the context window fills (lost in the middle, RULER, NoLiMa, context rot), what long prompts cost, and when retrieval or memory beats full context, with October 2026 results.
 
-Source: https://aiagentmemory.org/articles/context-window-limitations-solutions/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/context-window-limitations-solutions/ · Updated 2026-10-31 · aiagentmemory.org
 
 
 **Context window limitations** are the ways an LLM falls short as its prompt grows: it misses facts buried in the middle, its accuracy drops long before the advertised limit, and every extra token adds cost and latency. The fixes all do the same thing: keep the window small and relevant through retrieval, summarization and external memory.
@@ -116,6 +116,23 @@ For histories far bigger than any window, the data favors Hindsight. On the BEAM
 
 Which fits depends on your data and stack; our [comparison of open-source memory systems](/articles/open-source-memory-systems-compared/) goes through the differences.
 
+### Long context or memory? Two October 2026 studies
+
+Two papers from October 2026 tested whether a memory system still beats simply giving the model the raw history. Neither is run by a memory vendor, and neither tested Hindsight.
+
+| Study | Setup | Result (self-reported) |
+|---|---|---|
+| [MemoryTax](https://arxiv.org/abs/2610.29823) (Peng, Shanghai Jiao Tong University) | One LoCoMo conversation (419 turns, 152 questions): full context, BM25, Mem0, Zep and three coding agents, each with GPT-4o-mini, GPT-6 Luna and Claude Opus 5.5; one run per cell | Mem0 beat full context only with GPT-4o-mini (78% vs 74%); with GPT-6 Luna full context led (92% vs 80%); with Opus 5.5 both scored 95%. Mem0's build alone cost more than a whole full-context run. A coding agent searching the raw history scored 99% with Opus 5.5 for under half the cost of full context (part of that lead came from photo captions only the agents could read) |
+| [Is Complex Agentic Memory Always Needed?](https://arxiv.org/abs/2610.30755) (Bao et al.) | Raw-RAG: dense retrieval plus reranking over the raw history, tested on LoCoMo, LongMemEval, MEME and MemoryAgentBench | Raw-RAG ranked first in six of seven benchmark-model settings, 0.13 to 5.53 points above the strongest agentic memory system compared |
+
+What this means for the context window problem:
+
+- **With a strong model and a history that fits, full context is a fair baseline.** MemoryTax found memory helped most when the model was weak. But it used one conversation that fits in the window; it says nothing about histories of millions of tokens, where full context isn't possible.
+- **Keep the raw text.** Bao et al. found that even full access to transformed memory stores left an accuracy gap against raw evidence. MemoryTax found that a memory written by a weak model caps what a stronger model can answer later.
+- **Measure against a simple baseline.** Before adding a memory system, compare it with full context (if it fits) and with plain retrieval over the raw history, on your own questions. The test in the next section works for both.
+
+More on these benchmarks is in [how to evaluate LLM memory](/articles/llm-memory-evaluation/) and [RAG vs agent memory](/articles/rag-vs-agent-memory/).
+
 ## How to measure your effective context window
 
 Published benchmarks won't match your task. A quick in-house test:
@@ -143,4 +160,8 @@ It's the length at which a model still performs well on your task, as opposed to
 ### How do you get around the context window limit?
 
 Keep the window small and relevant instead of full. Retrieve only the passages a question needs, summarize or compact old conversation turns, clear old tool output, and store long-lived facts in an external memory system that loads them back on demand.
+
+### Is a memory system better than just using the full context window?
+
+Not always. In the October 2026 MemoryTax study (one LoCoMo conversation), Mem0 beat full context only with the weak GPT-4o-mini model; with GPT-6 Luna full context scored 92% against 80%, and with Claude Opus 5.5 both scored 95%. Another October 2026 paper found plain retrieval over the raw history ranked first in six of seven benchmark settings. Memory still matters when the history is too big for the window or cost per call matters, so test both on your own data.
 
