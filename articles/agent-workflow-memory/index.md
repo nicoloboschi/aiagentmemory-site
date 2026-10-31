@@ -1,13 +1,30 @@
-# Agent Workflow Memory (AWM): How It Works and Results
+# Agent Workflow Memory (AWM): Paper, Results and Code
 
-> Agent Workflow Memory (AWM, ICML 2025) explained: how agents induce reusable workflows from past runs, online vs offline modes, WebArena and Mind2Web results, limits.
+> Agent Workflow Memory (AWM) lets LLM agents reuse routines from past runs: 35.5% vs 23.5% on WebArena with GPT-4. How it works, limits, and code to build it.
 
-Source: https://aiagentmemory.org/articles/agent-workflow-memory/ · Updated 2026-10-25 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agent-workflow-memory/ · Updated 2026-10-31 · aiagentmemory.org
 
 
 **Agent workflow memory** means an LLM agent keeps reusable routines learned from its own past runs and follows them on new tasks. The best-known version is **Agent Workflow Memory (AWM)** by Wang, Mao, Fried and Neubig (CMU and MIT, [ICML 2025](https://proceedings.mlr.press/v267/wang25bx.html)). AWM induces workflows from past trajectories and puts the relevant ones in the agent's prompt.
 
-On web navigation with GPT-4, the paper reports a 51.1% relative gain on WebArena and 24.6% on Mind2Web. This page explains how AWM builds workflows, the difference between its online and offline modes, the full results, the limits found by the authors and by later work, and how to build workflow memory into an agent today. Sources: the [arXiv paper](https://arxiv.org/abs/2409.07429), the ICML 2025 proceedings version, and the [official repo](https://github.com/zorazrw/agent-workflow-memory), checked on 12 October 2026.
+On web navigation with GPT-4, the paper reports WebArena task success of 35.5% against 23.5% for the BrowserGym agent, and Mind2Web step success of 45.1% against 36.2% for MindAct. Later work found the gain shrinks or disappears with newer models. This page explains how AWM builds workflows, the difference between its online and offline modes, the full results, the limits found by the authors and by later work, and how to build workflow memory into an agent today. Sources: the [arXiv paper](https://arxiv.org/abs/2409.07429), the ICML 2025 proceedings version, and the [official repo](https://github.com/zorazrw/agent-workflow-memory), checked on 12 October 2026.
+
+## Agent Workflow Memory at a glance
+
+| | Agent Workflow Memory (AWM) |
+|---|---|
+| Authors | Zora Zhiruo Wang, Jiayuan Mao, Daniel Fried, Graham Neubig (CMU, MIT) |
+| Published | arXiv 2409.07429 (September 2024); ICML 2025 |
+| What it stores | Reusable sub-task routines ("workflows") with variables, as text in the prompt |
+| Modes | Offline (from training examples) and online (from the agent's own successful test runs) |
+| WebArena, GPT-4 | 35.5% task success vs 23.5% BrowserGym, 5.9 steps per task |
+| Mind2Web, GPT-4 | 45.1% step success vs 36.2% MindAct; task success 4.8% vs 2.0% |
+| Extra compute | 10.8% on top of action generation (ICML version) |
+| With newer models | ReasoningBank's re-run: +3.6 points on Gemini 2.5 Flash, -0.9 on Claude 3.7 Sonnet |
+| Learns from failures | No, failed runs are discarded |
+| Code | [zorazrw/agent-workflow-memory](https://github.com/zorazrw/agent-workflow-memory), Apache-2.0, 480 GitHub stars (31 October 2026), research scripts, last pushed December 2025 |
+
+All results are the authors' own unless marked; the newer-model row is another team's re-run in a different setup. Details and sources are in the sections below.
 
 ## What is agent workflow memory?
 
@@ -122,7 +139,7 @@ AWM is a strong idea with clear limits. Some come from the paper, some from late
 
 ## How to implement workflow memory today
 
-The [official repo](https://github.com/zorazrw/agent-workflow-memory) (Apache 2.0, about 480 stars) is research code: `pipeline.py` scripts for WebArena and Mind2Web, not a library. For your own agent, the pattern is small enough to build yourself:
+The [official repo](https://github.com/zorazrw/agent-workflow-memory) (Apache 2.0, 480 stars on 31 October 2026, last pushed December 2025) is research code: `pipeline.py` scripts for WebArena and Mind2Web, not a library. For your own agent, the pattern is small enough to build yourself:
 
 1. **Log every run** as instruction plus steps (state, reasoning, action).
 2. **Judge the outcome.** Use real signals first (tests passed, API returned 200, user confirmed). Fall back to an LLM judge only when you have nothing better.

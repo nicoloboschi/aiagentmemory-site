@@ -105,6 +105,8 @@ print(result["compressed_prompt"])
 
 `rate=0.33` keeps about a third of the tokens. `force_tokens` lists tokens that must never be dropped. Prompt compression works best on retrieved documents and long reference text. It's a poor fit for exact content like code, IDs or legal wording.
 
+For coding agents, the same idea now ships as a local proxy. [Headroom](/articles/headroom-context-compression/) (78K GitHub stars, October 2026) compresses tool outputs, logs and JSON per content type, leaves source code and search results alone by default, and keeps each original so the model can fetch it back. Its README reports 21-57% fewer tokens on four synthetic scenarios.
+
 ## KV cache compression: memory inside the model
 
 During generation, a transformer stores key and value vectors for every token it has seen, the **KV cache**. It grows with context length and is often what limits batch size on a GPU. Compressing it is a different problem from the ones above: it saves hardware memory, not prompt tokens.

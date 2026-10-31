@@ -86,7 +86,7 @@ So the two layers don't compete. The graph answers "what is the code"; session m
 | License | MIT | Apache-2.0 | MIT | MIT |
 | GitHub stars (31 Oct 2026) | 76,051 | 139,766 | 4,368 | 56,814 |
 
-The practical difference between CodeGraph and Graphify: CodeGraph is code-only and built for one fast MCP call with live sync, while Graphify also pulls docs, PDFs and media into the graph and gives you an HTML map and report. Details on Graphify, including its own memory benchmarks, are in [Graphify memory](/articles/graphify-memory/). [CodeGraphContext](https://github.com/CodeGraphContext/CodeGraphContext) is an older, smaller MCP server and CLI with the same aim.
+The practical difference between CodeGraph and Graphify: CodeGraph is code-only and built for one fast MCP call with live sync, while Graphify also pulls docs, PDFs and media into the graph and gives you an HTML map and report. Details on Graphify, including its own memory benchmarks, are in [Graphify memory](/articles/graphify-memory/). [CodeGraphContext](https://github.com/CodeGraphContext/CodeGraphContext) is an older, smaller MCP server and CLI with the same aim. A different way to save tokens is [Headroom](/articles/headroom-context-compression/), which doesn't change what the agent reads but compresses tool outputs on the way to the model.
 
 ## Where Hindsight fits
 

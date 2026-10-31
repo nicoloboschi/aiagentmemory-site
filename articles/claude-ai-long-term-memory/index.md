@@ -107,7 +107,7 @@ runner = client.beta.messages.tool_runner(
 print(runner.until_done().content)
 ```
 
-If you write your own handler, Anthropic's docs require rejecting any path outside `/memories` to block directory traversal. The tool also pairs with compaction for long-running agents: compaction shrinks the conversation, memory keeps what must survive it.
+If you write your own handler, Anthropic's docs require rejecting any path outside `/memories` to block directory traversal. The tool also pairs with compaction for long-running agents: compaction shrinks the conversation, memory keeps what must survive it. In Claude Code, a local proxy such as [Headroom](/articles/headroom-context-compression/) can also shrink tool outputs before they reach the model, which delays the point where compaction is needed.
 
 ### Claude Code memory
 
