@@ -1,8 +1,8 @@
-# Memory Consolidation in AI Agents: How It Works
+# Memory Consolidation in AI Agents: Methods and Results
 
-> How AI agents consolidate memory: reflection, hierarchical summaries, fact merging, invalidation, sleep-time jobs, and how consolidation pairs with forgetting.
+> How LLM agents consolidate and forget memory: reflection, hierarchical summaries, fact merging, invalidation, sleep-time jobs, and October 2026 results (PreCoMem, REM).
 
-Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-10-21 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-10-31 · aiagentmemory.org
 
 
 **Memory consolidation in AI agents** is the step that turns raw records (messages, tool results, observations) into a smaller set of cleaner, longer-lived memories. It merges duplicates, resolves contradictions, and writes higher-level insights. Without it, an agent's memory store only grows, and retrieval gets noisier with every session.
@@ -83,6 +83,19 @@ Running consolidation inside a user's turn adds latency. Most current systems mo
 - **LangMem** ships a "background memory manager that automatically extracts, consolidates, and updates agent knowledge." The default prompt of its `create_memory_store_manager` tells the model to "Consolidate and compress redundant memories." Deletes are off by default (`enable_deletes=False`).
 - **Hindsight** ([GitHub](https://github.com/vectorize-io/hindsight), [paper](https://arxiv.org/abs/2512.12818)) runs background consolidation as facts are retained, turning related facts into **observations**, which its README calls "deduplicated beliefs the bank has built up over time." Each observation keeps its supporting quotes and a proof count, and is "refined rather than overwritten" when new evidence arrives. On top of that, **mental models** are standing answers you define, kept up to date in the background, so reading one is a database read with no retrieval or LLM call. Raw facts stay, and recall searches them alongside observations. All of it ships in the MIT open-source server. The cost is on the write side: both retain and consolidation call an LLM.
 - **MemoryOS** promotes mid-term memory segments into long-term persona memory when a "heat" score passes 5. The MemoryOS paper covers the details.
+
+## New consolidation research (October 2026)
+
+Four arXiv papers from October 2026 test consolidation directly. The numbers below are the authors' own, from their abstracts. None were reproduced here, and they use different setups, so don't compare them with each other or with product scores.
+
+| Paper | What it consolidates | How | Reported result |
+|---|---|---|---|
+| [PreCoMem](https://arxiv.org/abs/2610.29467) (Zhong et al., 2026-10-21) | User beliefs in long dialogues | A "surprisal" score sends each turn to one of three updates: MAINTAIN (reinforce), PROFILE (hold as a low-confidence guess), CORRECT (softly decay a contradicted fact) | "Consistent state-of-the-art accuracy" on LoCoMo, LongMemEval-S and PersonaMem-v2; adapts to real change without over-reacting to noise |
+| [Curation and Consolidation](https://arxiv.org/abs/2610.39790) (Gupta et al., 2026-10-29) | Episodic plus structured relational memories | Hybrid store with a consolidation step built to stay efficient | 90.2% on LoCoMo, 85.5% on LongMemEval-S; the two memory types help each other |
+| [REM](https://arxiv.org/abs/2610.27377) (Chen et al., 2026-10-19) | Coding-agent runs | Each finished trajectory becomes a phase-structured document about 100x smaller; the detailed record is shown once, then evicted | 27.6% vs 24.9% resolved on SWE-ContextBench Lite at 17% lower cost; the same experience as a plain summary or raw trajectory did not help |
+| [Driving-agent memory audit](https://arxiv.org/abs/2610.27714) (Jia and Li, 2026-10-20) | Past driving episodes into a "consolidated rulebook" | Compared with retrieval memories and token-matched filler text | The rulebook's lead vanished on fresh warmup pools and once caution was priced in; one 15-token caution instruction matched the best merge |
+
+Two lessons line up with the rest of this page. First, PreCoMem's PROFILE stage is a waiting room: a single odd message shouldn't overwrite a stable fact, which is the same worry behind invalidating instead of deleting. Second, REM and the driving audit show that the *form* of a consolidated memory matters more than how well you retrieve it, and that a gain only counts if it survives a fair baseline. Test your consolidation step against "no memory" and against a short fixed instruction before you trust it.
 
 ## When to run consolidation
 
@@ -200,4 +213,12 @@ Summarization shortens one piece of text, such as a conversation. Consolidation 
 ### When should an agent consolidate its memory?
 
 Most systems do it in the background so users don't wait. Common triggers are a threshold of new important events (Generative Agents used a sum of importance scores above 150), context pressure (MemGPT warned at about 70% of the window), a set number of agent steps, or a schedule.
+
+### How do consolidation and forgetting work together in LLM agents?
+
+Consolidation merges many records into fewer, better memories; forgetting lowers the weight of what no longer matters. Consolidate first, then let the raw records fade, so the merged memory keeps what they said. Newer designs soften both steps: PreCoMem (arXiv 2610.29467, October 2026) holds ambiguous cues as low-confidence guesses and only softly decays contradicted facts, and Graphiti marks old facts invalid instead of deleting them.
+
+### Does memory consolidation actually improve agents?
+
+Often, but test it. REM (arXiv 2610.27377) reports 27.6% vs 24.9% resolved coding tasks at 17% lower cost when runs are consolidated into small structured documents. A controlled study of driving agents (arXiv 2610.27714) found a consolidated rulebook's lead disappeared on fresh data and was matched by a 15-token caution instruction. Compare against no memory and a short fixed prompt.
 

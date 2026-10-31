@@ -130,7 +130,7 @@ Storage isn't the limit. A database holds millions of items. The real limits are
 - **Changing facts.** When a user's situation changes, systems that can't tell old from new facts return either one.
 - **Extraction errors.** An LLM decides what to save. It can drop details or record things that were never said, and every bad memory gets reused.
 - **Token budget.** Only a few hundred to a few thousand tokens of memory fit usefully in each prompt. More memories mean more ranking, not more context.
-- **Noise and drift.** Stores that only grow get worse over time without consolidation and expiry.
+- **Noise and drift.** Stores that only grow get worse over time without [consolidation](/articles/memory-consolidation-ai-agents/) and expiry.
 
 Vendor accuracy numbers on these benchmarks are almost all self-reported and use different models and judges, so they aren't directly comparable. The published scores, with who ran each test, are collected in the [agent memory leaderboard](/articles/agent-memory-leaderboard/). Methods for testing your own setup are in [LLM memory evaluation](/articles/llm-memory-evaluation/).
 
