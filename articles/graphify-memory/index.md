@@ -91,7 +91,7 @@ The Show HN thread for [Graphicle](https://github.com/graphicle-ai/graphicle), a
 | License | Apache-2.0 | Apache-2.0 | MIT |
 | Maturity (15 Oct 2026) | ~126,500 stars | Created 14 Oct 2026, ~130 stars | ~48,600 stars (12 Oct) |
 
-Graphicle's distinct idea is **memory tied to code symbols**: a reviewed memory about a function goes stale when that function changes. It's one day old, so treat it as an experiment. Other options for knowledge-graph memory are in [AI memory knowledge graphs](/articles/ai-memory-knowledge-graph/).
+Graphicle's distinct idea is **memory tied to code symbols**: a reviewed memory about a function goes stale when that function changes. It's one day old, so treat it as an experiment. For a code-only graph served as one MCP tool with live file-watcher sync, see [CodeGraph](/articles/codegraph-memory/). Other options for knowledge-graph memory are in [AI memory knowledge graphs](/articles/ai-memory-knowledge-graph/).
 
 ## Where Hindsight fits
 
