@@ -2,7 +2,7 @@
 
 > How to choose an embedding model for RAG and agent memory: MTEB scores, dimensions, context length and cost for OpenAI, Gemini, Voyage, Cohere, Qwen3, BGE-M3.
 
-Source: https://aiagentmemory.org/articles/embedding-models-for-rag/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/embedding-models-for-rag/ · Updated 2026-11-01 · aiagentmemory.org
 
 
 **The best embedding model for RAG and agent memory** is the one that ranks the right passages highest on your own data, at a cost and latency you can live with. Public benchmarks like **MTEB** narrow the field. As of October 2026, strong API choices are Voyage 4, Gemini Embedding 2, Cohere Embed and OpenAI text-embedding-3. Strong open-weight choices are Qwen3-Embedding, BGE-M3 and, for on-device use, EmbeddingGemma 2 (released 6 October 2026, Apache-2.0).
@@ -43,6 +43,7 @@ Specs from each provider's docs or model card, checked 8 October 2026. Prices ch
 | embed-v4.0 | Cohere | No | 128k tokens | 256-1,536 | Text and images |
 | Qwen3-Embedding (0.6B / 4B / 8B) | Alibaba Qwen | Yes, Apache-2.0 | 32K tokens | Up to 1,024 / 2,560 / 4,096; 32 and up | 100+ languages; 8B scored 70.58 on MTEB multilingual (June 2025) |
 | BGE-M3 | BAAI | Yes, MIT | 8,192 tokens | 1,024 | Dense, sparse and multi-vector output from one model |
+| bge-small-en-v1.5 | BAAI | Yes, MIT | 512 tokens | 384 | 33M parameters, English only; a common local default for memory stores |
 | EmbeddingGemma | Google | Yes, Gemma license | 2,048 tokens | 768; 512, 256, 128 | 300M parameters, built for on-device use |
 | EmbeddingGemma 2 | Google | Yes, Apache-2.0 | 8,192 tokens | 768; 512, 256, 128 | Released 6 Oct 2026; 740M parameters (270M text-only); text, code, images, video, audio |
 
@@ -86,6 +87,18 @@ Memory differs from document RAG in ways that affect the model choice:
 - **Queries and memories look different.** The query is a new user message; the memory is a terse fact. Asymmetric query/document prompts help here.
 - **Everything is re-embedded on a switch.** A memory store grows for years. Changing models later means re-embedding all of it, and Google's docs state that `gemini-embedding-001` and `gemini-embedding-2` spaces are "incompatible."
 - **Embeddings don't know time.** "I moved to SF" and "I live in NYC" are both close to "where do I live?" Handling changed facts is the job of the memory system, not the embedding model. [Hindsight](https://github.com/vectorize-io/hindsight), for example, treats the embedding as one of four recall strategies: it runs semantic, BM25 keyword, entity-graph and time-range search in parallel, fuses them and reranks with a cross-encoder, so a weak embedding match on an ID or a date can still be found. The cost is an LLM call on every write to extract entities and timestamps. See [vector databases for LLM memory](/articles/vector-database-for-llm-memory/) for what a vector store does and doesn't cover.
+
+### Check your memory system's default model
+
+Self-hosted memory systems ship with a default embedding model, and the default can be small and English-only. Hindsight is an example. Its [configuration docs](https://github.com/vectorize-io/hindsight/blob/main/skills/hindsight-docs/references/developer/configuration.md) set the embedding provider to `local` and the model to `BAAI/bge-small-en-v1.5` by default. Its [multilingual guide](https://github.com/vectorize-io/hindsight/blob/main/hindsight-docs/docs/developer/multilingual.mdx) says that model and the default reranker (`cross-encoder/ms-marco-MiniLM-L-6-v2`) are English-only, and recommends `BAAI/bge-m3` and `BAAI/bge-reranker-v2-m3` for other languages:
+
+| Setting | Hindsight default | For non-English memories |
+|---|---|---|
+| `HINDSIGHT_API_EMBEDDINGS_PROVIDER` | `local` (also `openai`, `cohere`, `google`, `tei`, `litellm` and others) | any provider with a multilingual model |
+| `HINDSIGHT_API_EMBEDDINGS_LOCAL_MODEL` | `BAAI/bge-small-en-v1.5` (384 dimensions, 512 tokens) | `BAAI/bge-m3` |
+| `HINDSIGHT_API_RERANKER_LOCAL_MODEL` | `cross-encoder/ms-marco-MiniLM-L-6-v2` | `BAAI/bge-reranker-v2-m3` |
+
+The small local default means embeddings need no API key. If your users write in other languages, change it before you store anything, because a later switch means re-embedding the whole bank. Hindsight applies the query and document prompts of models that ship them, such as Qwen3-Embedding, on its own. Whatever system you use, find this setting first: the leaderboard choice above only helps if the memory layer actually uses it.
 
 ## Code: local and API embeddings
 

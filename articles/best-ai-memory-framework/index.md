@@ -109,7 +109,7 @@ Benchmark tables in READMEs are mostly self-reported and run with different mode
 
 1. **Collect 20-50 real conversations** or tasks from your app (or write realistic ones).
 2. **Write questions with known answers**, including some where facts changed and some where the right answer is "I don't know."
-3. **Ingest the same data into two candidates** with the same LLM and embedding model where possible.
+3. **Ingest the same data into two candidates** with the same LLM and embedding model where possible. A self-hosted default can be a small English-only embedder, so check what each one ships with; [embedding models for RAG and agent memory](/articles/embedding-models-for-rag/) lists the options and Hindsight's defaults.
 4. **Run the questions** and score answers by hand or with an LLM judge.
 5. **Measure tokens and latency** for both writes and reads, not just accuracy.
 6. **Test deletion**: remove a user's data and confirm it's gone from results.
