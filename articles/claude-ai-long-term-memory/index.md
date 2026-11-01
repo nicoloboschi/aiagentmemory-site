@@ -2,12 +2,12 @@
 
 > Does Claude have long-term memory? How Claude's memory and chat search work, plans, how to turn memory on, import from ChatGPT, context window sizes, and the API.
 
-Source: https://aiagentmemory.org/articles/claude-ai-long-term-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-ai-long-term-memory/ · Updated 2026-11-01 · aiagentmemory.org
 
 
-**Claude AI long-term memory** is a feature of the Claude apps that saves what you tell it as **individual memory topics** and uses them in later chats. Paid plans can also **search past chats** on demand. You control both in **Settings > Memory**, where you can view and edit each topic, pause memory or reset it. Memory is on by default for Free, Pro and Max.
+**Claude AI long-term memory** is a feature of the Claude apps that saves what you tell it as **individual memory topics** and uses them in later chats. Paid plans can also **search past chats** on demand. You control both in **Settings > Your Claude** (Settings > Memory in the older layout), where you can view and edit each topic, pause memory or reset it. Memory is on by default for Free, Pro, Max and Ultra, on web, desktop and mobile.
 
-That covers the chat apps. Developers building on the Claude API get a different tool, and Claude Code has its own memory files. All three are below. Facts come from Anthropic's help center and docs, checked on 8 October 2026.
+That covers the chat apps. Developers building on the Claude API get a different tool, and Claude Code has its own memory files. All three are below. Facts come from Anthropic's help center and docs, checked on 8 October 2026; memory settings and project rules re-checked on 1 November 2026.
 
 ## Does Claude have long-term memory?
 
@@ -16,8 +16,23 @@ That covers the chat apps. Developers building on the Claude API get a different
 The details, per Anthropic's [chat search and memory article](https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context):
 
 - **Memory** "saves memory as a set of individual topics as you chat, rather than summarizing conversations after they end." You can also ask Claude directly to remember something.
-- **Chat search** works across non-project chats, and within a project for that project's chats. It uses RAG and shows up as a tool call in the conversation. It's on Pro, Max, Team and Enterprise, not Free.
-- **Projects** get their own memory space and summary, separate from other projects and from regular chats.
+- **Chat search** works across non-project chats, and within a project for that project's chats. It uses RAG and shows up as a tool call in the conversation. It's on Pro, Max, Ultra, Team and Enterprise, not Free.
+- **Projects** each have their own memory, but it is no longer fully walled off. Inside a project, Claude uses that project's memory *plus* your memory from regular chats (never another project's). New memory is saved to the project, and Claude can reference it outside projects too. To keep a project fully separate, turn off **Use account memory** under Memory on the project's page.
+- **Cowork** shares the same memory as chat, but only when a Cowork task runs in the cloud. Cowork sessions that run locally on your computer don't use memory.
+
+### What changed since early October 2026
+
+Anthropic's help article shows "Updated this week" as of 1 November 2026. The changes that matter if you followed older guides:
+
+| Before | Now (help center, checked 1 November 2026) |
+|---|---|
+| Settings > Memory > "Generate memory from chats" | **Settings > Your Claude > "Memory from chats"** (the old path still exists in the older Settings layout) |
+| Memory on by default for Free, Pro, Max | Same, plus the new **Ultra** plan, on web, Desktop and mobile (mobile needs the latest app) |
+| Project memory separate from regular chats | Projects read account memory too; switch off **Use account memory** to isolate one |
+| Not in our 8 October check | The chat search toggle toggle also controls whether **Claude Duet** (a research preview on Pro, Max and Ultra) can search past chats |
+| Not in our 8 October check | With a custom retention period, it applies to memory (except project memory) when the new unified Claude experience is on |
+
+The new memory experience isn't available to organizations with HIPAA or public-sector agreements.
 
 ### When memory came to each plan
 
@@ -33,7 +48,7 @@ On Team and Enterprise, owners decide whether memory is available, and it starts
 
 Claude's memory leans toward work. Anthropic's import guide says Claude "may not retain imported personal details unrelated to work."
 
-**Sensitive topics are off by default.** Claude doesn't store personal or sensitive subjects unless you turn on "Include sensitive topics in memory" in Settings > Memory. Then it shows a notice each time it saves one. Some data is never saved even if you ask: government ID numbers, criminal history, financial account numbers and immigration status.
+**Sensitive topics are off by default.** Claude doesn't store personal or sensitive subjects unless you turn on "Include sensitive topics in memory" in Settings > Your Claude. Then it shows a notice each time it saves one. Some data is never saved even if you ask: government ID numbers, criminal history, financial account numbers and immigration status.
 
 **Deleted chats don't delete memories.** When a conversation expires or you delete it, memory entries generated from it stay. Delete those entries yourself in the memory panel. This is a change from the older "legacy" memory, which removed deleted conversations from its synthesis and updated every 24 hours.
 
@@ -41,8 +56,8 @@ Claude's memory leans toward work. Anthropic's import guide says Claude "may not
 
 Steps for the current memory experience on web and desktop:
 
-1. Open **Settings > Memory**.
-2. Toggle **Generate memory from chats** to turn memory on or off.
+1. Open **Settings > Your Claude** (or **Settings > Memory** in the older Settings layout).
+2. Toggle **Memory from chats** (older layout: **Generate memory from chats**) to turn memory on or off.
 3. Toggle **Search and reference chats** to control chat search (paid plans).
 4. Use the memory panel to read topics, edit them, or tell Claude what to change or remove.
 5. To stop memory without deleting it, **pause** it. Existing memory stays, but nothing new is added and nothing is used.
@@ -72,7 +87,7 @@ If you're coming from ChatGPT, the guide on [how to find ChatGPT memory](/articl
 
 Memory and the context window are different things. The **context window** is how much text Claude can read in one conversation; memory is what carries across conversations. The [context window guide](/articles/context-window-of-an-llm/) explains the difference.
 
-Anthropic's [context window article](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) for paid plans (Pro, Max, Team, Enterprise) lists sizes by model in chat:
+Anthropic's [context window article](https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans) for paid plans (Pro, Max, Ultra, Team, Enterprise; updated 30 October 2026, chat sizes unchanged) lists sizes by model in chat:
 
 | Context window | Models (Claude chat, October 2026) |
 |---|---|
@@ -115,7 +130,7 @@ If you write your own handler, Anthropic's docs require rejecting any path outsi
 
 ## How Claude's memory compares
 
-Against other chatbots, Claude's strengths are editable topics, project-level separation and clear per-chat controls. ChatGPT pulls from more sources, and Gemini's saved-facts feature is narrower; see [best chatbot for memory](/articles/best-chatbot-for-memory/) for the side-by-side and [Gemini AI long-term memory](/articles/gemini-ai-long-term-memory/) for Google's version.
+Against other chatbots, Claude's strengths are editable topics, per-project memory you can isolate, and clear per-chat controls. ChatGPT pulls from more sources, and Gemini's saved-facts feature is narrower; see [best chatbot for memory](/articles/best-chatbot-for-memory/) for the side-by-side and [Gemini AI long-term memory](/articles/gemini-ai-long-term-memory/) for Google's version.
 
 If you're building your own assistant on Claude and need memory per end user, the memory tool gives you files, not search or fact extraction. Teams often add a memory layer such as Mem0, Zep, Letta or Hindsight for that. Hindsight's `wrap_anthropic()` wraps the Anthropic SDK client so memories are recalled before each call and retained after, though each write makes an extra LLM call; the [AI agent memory guide](/articles/ai-agent-memory-explained/) explains the options.
 
@@ -124,11 +139,15 @@ If you're building your own assistant on Claude and need memory per end user, th
 
 ### Does Claude AI have long-term memory?
 
-Yes. Claude can save memory as individual topics while you chat and use them in later conversations, and paid plans can also search past chats. Memory is on by default for Free, Pro and Max. On Team and Enterprise, the owner enables it and each member turns it on. You can view, edit, pause or reset it in Settings > Memory.
+Yes. Claude can save memory as individual topics while you chat and use them in later conversations, and paid plans can also search past chats. Memory is on by default for Free, Pro, Max and Ultra. On Team and Enterprise, the owner enables it and each member turns it on. You can view, edit, pause or reset it in Settings > Your Claude (Settings > Memory in the older layout).
 
 ### How do I import my ChatGPT memory into Claude?
 
 Ask your old assistant to list everything it remembers about you (Anthropic provides a prompt), then in Claude go to Settings > Memory, select Start import, paste the text and click Add to memory. It works on Free, Pro, Max and Team plans on web and desktop. Only memory transfers, not chat history, and Anthropic calls the feature experimental.
+
+### Is Claude's project memory separate from my other chats?
+
+Not fully, by default. Per Anthropic's help center (November 2026), each project has its own memory, but inside a project Claude also uses your memory from regular chats, and it can reference project memory outside projects. It never uses another project's memory. To isolate a project, turn off Use account memory under Memory on the project's page.
 
 ### How large is Claude's context window?
 

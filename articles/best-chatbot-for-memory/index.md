@@ -46,7 +46,7 @@ Free users have had saved memories plus references to recent chats since June 20
 
 ## Claude: the clearest controls
 
-Claude saves memory as **individual topics** while you chat, rather than summarizing a chat after it ends. You can open Settings > Memory, read each topic, edit it, or delete it. Each project gets its own memory space and summary, so work and personal context stay apart.
+Claude saves memory as **individual topics** while you chat, rather than summarizing a chat after it ends. You can open Settings > Your Claude (Settings > Memory in the older layout), read each topic, edit it, or delete it. Each project has its own memory, but Anthropic's help center (checked 1 November 2026) says Claude also uses your regular-chat memory inside projects and can reference project memory outside them. To keep work and personal context fully apart, turn off **Use account memory** on the project's page; the [Claude memory guide](/articles/claude-ai-long-term-memory/#what-changed-since-early-october-2026) lists what else changed.
 
 Two details stand out in [Anthropic's help article](https://support.claude.com/en/articles/11817273-using-claude-s-chat-search-and-memory-to-build-on-previous-context):
 
@@ -73,7 +73,7 @@ Anything not pinned, saved or recent can drop out of what the character "sees." 
 2. **Check your plan and country.** Gemini's fact memory is US and paid only; ChatGPT's newest memory reached Plus and Pro first.
 3. **Look for a visible memory list.** Claude's topics and ChatGPT's summary let you audit what's stored. Gemini and Copilot mostly rely on asking the bot.
 4. **Check the per-chat off switch.** Temporary or incognito chats matter if you sometimes ask things you don't want stored.
-5. **Use projects for long work.** ChatGPT and Claude both scope memory per project, which cuts mix-ups between topics.
+5. **Use projects for long work.** ChatGPT's project-only memory keeps a project sealed off; in Claude, switch off Use account memory on the project to get the same.
 6. **Put critical facts in instructions.** Custom instructions are always applied; memory is applied when the app thinks it's relevant.
 7. **Test it.** Tell it a fact, open a new chat a day later, and ask.
 
@@ -90,7 +90,7 @@ Agent apps are a different case from chat apps. xAI's Grok Bot, for example, kee
 
 ### Which AI chatbot has the best memory?
 
-For most people it's ChatGPT or Claude. Both remember facts across chats, can draw on past conversations, and let you view and edit what they keep. ChatGPT pulls context from more sources (chats, files, Gmail on paid plans). Claude keeps memory as editable topics and separates each project's memory.
+For most people it's ChatGPT or Claude. Both remember facts across chats, can draw on past conversations, and let you view and edit what they keep. ChatGPT pulls context from more sources (chats, files, Gmail on paid plans). Claude keeps memory as editable topics, and each project has its own memory you can fully isolate.
 
 ### Is there a free AI that remembers past conversations?
 

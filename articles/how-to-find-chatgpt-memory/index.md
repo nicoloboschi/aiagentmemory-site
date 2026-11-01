@@ -83,7 +83,7 @@ OpenAI has reduced the problem twice. In October 2025 it began managing saved me
 
 Projects can have **project-only memory**. With it on, chats in the project can use other chats in that project, but nothing from outside, and nothing from the project leaks into other chats. You can change an existing project's setting from the project's three-dot menu under **Project settings > Memory**. Shared projects always use project-only memory.
 
-This is the cleanest way to keep, say, a work project from coloring personal chats. Claude does something similar with per-project memory; see [how chatbot memory compares across apps](/articles/best-chatbot-for-memory/).
+This is the cleanest way to keep, say, a work project from coloring personal chats. Claude also has per-project memory, but by default it mixes in your regular-chat memory unless you turn off Use account memory ([Claude's project memory](/articles/claude-ai-long-term-memory/#what-changed-since-early-october-2026)); see [how chatbot memory compares across apps](/articles/best-chatbot-for-memory/).
 
 ## ChatGPT memory vs memory you build yourself
 
