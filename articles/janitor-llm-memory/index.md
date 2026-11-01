@@ -2,12 +2,12 @@
 
 > How Janitor AI memory works: JLLM's ~9K token context, permanent vs temporary tokens, the Chat Memory box, the August 2026 memory changes, and how to make bots remember.
 
-Source: https://aiagentmemory.org/articles/janitor-llm-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/janitor-llm-memory/ · Updated 2026-11-01 · aiagentmemory.org
 
 
 **Janitor LLM memory** is how much of a roleplay chat the bot can see at once. On Janitor AI's free model, **JanitorLLM (JLLM)**, that's a context window of roughly **8,000 to 9,000 tokens**, shared between the bot's permanent definition, your **Chat Memory** note and the most recent messages. Anything older silently drops out, which is why bots forget.
 
-The fix isn't a hidden setting. It's managing that token budget: keep definitions lean, keep a short Chat Memory note, and refresh it with summaries. This page explains how each part works, using Janitor's [help center](https://help.janitorai.com/en/) and [changelog](https://janitorai.com/news/changelog/), checked on 8 October 2026.
+The fix isn't a hidden setting. It's managing that token budget: keep definitions lean, keep a short Chat Memory note, and refresh it with summaries. This page explains how each part works, using Janitor's [help center](https://help.janitorai.com/en/) and [changelog](https://janitorai.com/news/changelog/), checked on 1 November 2026.
 
 ## What is Janitor LLM memory?
 
@@ -52,6 +52,15 @@ What Janitor changed:
 - Model reasoning text no longer leaks into the memory box.
 
 A day later, Janitor found that deleting a message covered by memory also cleared the memory. It fixed that and restored memory on about **15,000 chats**, except memories made after 18 August that had been overwritten ([20 August entry](https://janitorai.com/news/changelog#20260820023555)).
+
+### October 2026: chat list summaries and renaming
+
+The [27 October changelog](https://janitorai.com/news/changelog/) redesigned "my chats" on web (the app gets it later). Two parts help with long stories:
+
+- **Rename any chat**, so you can tell long roleplays apart.
+- **Short chat summaries**, turned on in settings and **off by default**.
+
+The entry describes these as part of the chat list. It doesn't say they change what the bot reads, so the Chat Memory box is still the one place that carries facts into replies. No changelog entry between 20 August and 30 October changed JLLM's context or how Chat Memory works.
 
 ## What to put in Chat Memory
 
@@ -106,4 +115,8 @@ Use the Chat Memory box in the chat's memory panel. Keep it to short bullet fact
 ### What changed with Janitor AI chat memory in August 2026?
 
 A test where saved memory replaced the old messages it covered reached all users by mistake, and some memory text was lost or hidden. Janitor's 19 August 2026 changelog made that behavior an opt-in toggle, 'memory replaces old messages', off by default. Auto-summarizing now only runs when that toggle is on, and Janitor later restored memory on about 15,000 affected chats.
+
+### Does Janitor AI remember other chats with the same bot?
+
+No. Chat Memory belongs to one chat, not to the character, so a new chat with the same bot starts with an empty memory. Branching a chat copies its memory into the branch. To carry facts into a new chat, paste a short recap into its Chat Memory box.
 
