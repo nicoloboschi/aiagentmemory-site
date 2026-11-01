@@ -157,6 +157,8 @@ How it works, per the README:
 
 Install it from inside Claude Code with `/plugin marketplace add thedotmack/claude-mem` and `/plugin install claude-mem`, or run `npx claude-mem install`. The `npx` installer asks you to sign in and offers a hosted "claude-mem observer" with a 30-day free trial. You can instead pick your own OpenRouter or Gemini key or your Anthropic plan, or pass `--provider` to skip sign-in. Summaries cost model calls, so check which provider you picked. Full detail, including the other agents it installs for and what the hosted observer costs, is on [claude-mem](/articles/claude-mem/).
 
+ECC (Everything Claude Code, 294,084 GitHub stars on 1 November 2026) is a bigger workflow bundle that also carries memory: hooks save and reload session state, `/save-session` writes a full handoff file, and an opt-in Haiku observer turns your tool use into "instincts" with confidence scores. How each layer works and what's off by default is on [Everything Claude Code memory](/articles/everything-claude-code-memory/).
+
 ### Hindsight plugin for Claude Code
 
 **[Hindsight](https://github.com/vectorize-io/hindsight)** is an MIT-licensed memory server from Vectorize with a native Claude Code plugin (it has native plugins for Codex, Cursor and Copilot too). Instead of keeping a log of sessions, it extracts facts, times, entities and relations from what it retains, then merges related facts into **observations**: beliefs with supporting quotes that get refined as new sessions add evidence. Recall runs semantic, keyword, graph and time-range search in parallel and reranks the results. `reflect` reasons over many memories to answer questions like "why did we drop the Redis cache?"
