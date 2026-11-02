@@ -2,7 +2,7 @@
 
 > Hermes Agent remembers with MEMORY.md (2,200 chars) and USER.md (1,375 chars), loaded once per session, plus SQLite session search. Which of its 9 memory providers to pick, by need, and why Hermes forgets.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-10-28 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-02 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -64,6 +64,8 @@ Only ended sessions are deleted, aged from their last activity, and pruning runs
 ### Background review and write approval
 
 After a conversation, a background review can update memory and skills. It's on by default (`auxiliary.background_review.enabled`), uses the main model unless you set another, and caps input at 75% of the model's context window (up to 600,000 tokens). If you want to approve writes, set `memory.write_approval: true`; staged writes then appear under `/memory pending` and can be approved or rejected.
+
+Since v0.22.6 the review saves only facts the conversation supports: a user message or a tool result must back each one. Before, a one-off "make that one shorter" became a lasting "User prefers concise responses" in 3 of 3 test runs; now 0 of 3, while facts you state ("always use Celsius, remember that") and environment facts found while debugging are still saved ([PR #80788](https://github.com/NousResearch/hermes-agent/pull/80788), the PR author's own A/B with a deliberately weak model). A stated standing like or dislike ("stop doing Y") still counts.
 
 ## Configuring Hermes memory
 
@@ -136,6 +138,22 @@ Pick **Honcho** if modeling the user is the point, **Mem0** or **Supermemory** f
 
 Of the nine, Hindsight and Mem0 are the two with published head-to-head numbers. On Mem0's own comparison page they tie on LongMemEval (94.6 vs 94.4) and LoCoMo (92 vs 92.5), and Hindsight leads on the long-history BEAM test: 73.9 vs 64.1 at 1M tokens and 64.1 vs 48.6 at 10M (all vendor-run). That matters for a Hermes agent that runs for months. Hermes's own provider docs also say Hindsight's `hindsight_reflect` tool "provides cross-memory synthesis that no other provider offers". [Hindsight](https://github.com/vectorize-io/hindsight) is MIT with every feature in the self-hosted server, and it can use local models through Ollama, LM Studio or llama.cpp, so it also works when nothing may leave the machine. The trade-off: Hindsight's server returns more context per retrieval than Mem0 at its own defaults (24K-44K vs under 7K tokens, by Mem0's measurement). The Hermes plugin caps that at 4,096 tokens per turn (`recall_max_tokens`) and recalls only consolidated observations by default, per Hindsight's Hermes integration docs; since Hermes prefetches recall every turn, lower that cap if prompt cost matters. Each retain also calls an LLM, so writes cost more than a local FTS store. Details in [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
 
+## What changed for memory in Hermes v0.22.6
+
+[v0.22.6](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.6) (November 2, 2026) is a patch release rolling up 776 merged PRs; the full notes come with v0.23.0. The memory changes below are each checked against the PR and confirmed to be in the v0.22.6 tag:
+
+| Change | Before | Now | PR |
+|---|---|---|---|
+| Background review | Guessed preferences from one-off requests and passing remarks | Saves only facts backed by a user message or tool result | [#80788](https://github.com/NousResearch/hermes-agent/pull/80788) |
+| Kanban workers | Worker turns reached memory providers as the operator's own, so "work kanban task t_..." was filed as a fact about you | Worker turns carry a `kanban:dispatcher` author | [#144861](https://github.com/NousResearch/hermes-agent/pull/144861) |
+| Lowering `memory_char_limit` / `user_char_limit` | An entry longer than the new limit blocked every replace and remove until you hand-edited the file | Removes go through (a `.bak` snapshot is taken first); only writes that add text are refused | [#144240](https://github.com/NousResearch/hermes-agent/pull/144240) |
+| `hermes update` turns off a provider plugin | `memory.provider` was erased and Hermes fell back to built-in memory silently | The provider setting is kept, a later update turns the plugin back on once it fits, and `hermes memory status` and `hermes doctor` say it is off | [#144257](https://github.com/NousResearch/hermes-agent/pull/144257) |
+| Desktop and dashboard memory pages | Showed only MEMORY.md / USER.md, so a working provider looked inactive | Show the active provider with its readiness, and label the two files as the built-in layer that is always on | [#145574](https://github.com/NousResearch/hermes-agent/pull/145574) |
+| Compaction | The summary was written when compaction fired (a median 184-second pause in the linked issue) | Opt-in `compression.prepare_ahead: true` writes it in the background near the trigger; it turns itself off after the first compaction if the memory provider adds compaction context | [#144684](https://github.com/NousResearch/hermes-agent/pull/144684) |
+| Skills | The agent could rewrite any skill | `hermes curator lock <skill>` stops every agent write path to it; see [Hermes Agent skills](/articles/hermes-agent-skills/#keeping-skills-healthy-curator-approval-and-limits) | [#147557](https://github.com/NousResearch/hermes-agent/pull/147557) |
+
+The two that matter most for "Hermes remembers wrong things": the review no longer invents preferences, and Kanban runs no longer pollute your profile in an external provider. If you ran Kanban with a provider before v0.22.6, check it for task notes filed as facts about you.
+
 ## Hermes memory not working: what to check
 
 Most "Hermes forgot" reports come from a handful of causes:
@@ -146,7 +164,7 @@ Most "Hermes forgot" reports come from a handful of causes:
 4. **Writes are staged.** With `write_approval: true`, nothing lands until you approve it under `/memory pending`.
 5. **Wrong profile.** Each profile has its own memory directory.
 6. **The detail was never memory.** Long task history belongs in session search, so ask the agent to search past sessions. If auto-prune is on, sessions older than `retention_days` are gone.
-7. **Provider problems.** Run `hermes memory status`. Only one provider can be active, and cloud providers need their credentials (RetainDB, for example, reads `RETAINDB_API_KEY` from `~/.hermes/.env`).
+7. **Provider problems.** Run `hermes memory status`. Only one provider can be active, and cloud providers need their credentials (RetainDB, for example, reads `RETAINDB_API_KEY` from `~/.hermes/.env`). Since v0.22.6, `Plugin: turned off` there means an update parked the provider's plugin; the startup notice gives the reason, and `hermes plugins enable <name>` turns it back on.
 
 ## Hermes compared with other agents
 
@@ -170,4 +188,8 @@ As of October 2026 the docs list Honcho, OpenViking, Mem0, Hindsight, Holographi
 ### What is the best memory provider for Hermes Agent?
 
 It depends on the need; Hermes's docs don't name one. Hindsight for months of history, since its hindsight_reflect tool gives cross-memory synthesis that, per the docs, no other provider offers. Honcho for modeling the user, Mem0 for hands-off hosted extraction, Holographic for local-only memory with no extra services. Skip providers if the two built-in files are enough.
+
+### Why does Hermes save things about me I never said?
+
+Before v0.22.6 (November 2, 2026) the background memory review could turn a one-off request into a standing preference, and Kanban worker turns reached external providers as if you had said them. v0.22.6 fixes both: the review saves only facts backed by a user message or tool result (PR #80788), and Kanban turns carry a kanban:dispatcher author (PR #144861). Run hermes update, then remove wrong entries with the memory tool or hermes journey delete.
 

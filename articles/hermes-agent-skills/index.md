@@ -2,7 +2,7 @@
 
 > How Hermes Agent skills work: how the agent writes SKILL.md files from experience, where they live, how they load, the Skills Hub, the curator, and limits.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-skills/ · Updated 2026-10-21 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-skills/ · Updated 2026-11-02 · aiagentmemory.org
 
 
 **Hermes Agent skills** are the agent's procedural memory: markdown files that record how to do a task. Hermes writes them itself after working out a multi-step job, patches them when it hits a new pitfall, and loads one only when a task needs it. Each skill is a `SKILL.md` folder under `~/.hermes/skills/`, in the open Agent Skills format.
@@ -126,13 +126,21 @@ Hub operations use the GitHub API, which allows 60 unauthenticated requests per 
 
 ## Keeping skills healthy: curator, approval and limits
 
-A self-writing skill library grows. The curator docs name the risk: "dozens of narrow near-duplicates that pollute the catalog and waste tokens." Hermes has three controls.
+A self-writing skill library grows. The curator docs name the risk: "dozens of narrow near-duplicates that pollute the catalog and waste tokens." Hermes has four controls.
 
 **The curator** is a background pass that runs when at least 7 days have passed since the last run and the agent has been idle for 2 hours (Curator docs, October 2026). By default it only prunes: an agent-created skill unused for 14 days becomes stale, and one unused for 30 days moves to `~/.hermes/skills/.archive/`. The v0.22.0 release notes (14 October 2026) say unused skills now archive at 30 days, down from 90. An LLM pass that merges overlapping skills into umbrella skills exists but is off by default (`curator.consolidate: false`); the docs say a full sweep "typically takes 50–100 API calls." The curator never deletes outright, keeps a per-change ledger, and `hermes curator rollback` undoes a run or a single edit.
 
 **Write approval.** With `skills.write_approval: true`, every skill create, patch or delete is staged under `~/.hermes/pending/skills/` and reviewed with `/skills pending`, `/skills diff <id>` and `/skills approve <id>`. It's off by default. The docs suggest it for "small models that misjudge what they learned." A separate content scanner, `skills.guard_agent_created`, is also off by default.
 
 **Pinning.** `hermes curator pin <skill>` stops the curator and the agent from deleting a skill; patches still go through.
+
+**Locking** (v0.22.6, November 2, 2026). `hermes curator lock <skill>` stops the agent from changing a skill at all, and `hermes curator unlock <skill>` undoes it. Per [PR #147557](https://github.com/NousResearch/hermes-agent/pull/147557), a locked skill refuses every agent write path, in normal turns, cron, subagents, the review fork and the curator: `skill_manage`, `write_file` and `patch` on files in its folder, and shell commands that write there (redirects, `cp`/`mv`/`rm`, `sed -i`, `git`, inline `python -c`), even under `--yolo`. The agent can't run `unlock` itself, and the curator skips it when archiving. Reading, loading and running the skill's own scripts still work, and your own edits (editor, Desktop skill editor, CLI) are never blocked. This is the fix for the quality-drift limit below when you have a hand-written skill you trust.
+
+| Control | Stops agent deletes | Stops agent edits | Default |
+|---|---|---|---|
+| Write approval | Until you approve | Until you approve | Off |
+| Pin | Yes | No | Off |
+| Lock | Yes | Yes, every tool | Off |
 
 The limits worth knowing:
 
@@ -167,6 +175,10 @@ Other systems learn procedures differently. LangMem's prompt optimizer rewrites 
 ### How does Hermes Agent create skills?
 
 Hermes saves skills with its skill_manage tool. Its system prompt asks it to record non-trivial workflows, a nudge reminds it every 15 tool-calling iterations by default, and a background review after a turn can create or patch skills. You can also ask for one with /learn. New skills are SKILL.md files under ~/.hermes/skills/.
+
+### How do I stop Hermes Agent from changing a skill?
+
+Since v0.22.6 (November 2, 2026), run hermes curator lock <skill>. The agent then can't change the skill through skill_manage, write_file, patch or shell commands, even under --yolo, and can't unlock it itself. Your own edits still work. hermes curator pin only stops deletion, and skills.write_approval stages every agent change for your review.
 
 ### Where are Hermes Agent skills stored?
 
