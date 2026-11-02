@@ -65,7 +65,7 @@ The three biggest consumer apps all use the write, store, retrieve, inject loop,
 
 ### ChatGPT
 
-ChatGPT has two settings. **Reference saved memories** covers details you asked it to remember; these apply to every response until you remove them. **Reference chat history** lets it draw on past conversations, but OpenAI's [Memory FAQ](https://help.openai.com/en/articles/8590148-memory-faq) says it doesn't keep every detail, and suggests saved memories for anything that must always be used. Saved memories are stored apart from chats, so deleting a chat doesn't delete a memory made from it. To see and clean up what it holds, see [how to find ChatGPT memory](/articles/how-to-find-chatgpt-memory/).
+ChatGPT has two settings. **Reference saved memories** covers details you asked it to remember; these apply to every response until you remove them. **Reference chat history** lets it draw on past conversations, but OpenAI's [Memory FAQ](https://help.openai.com/en/articles/8590148-memory-in-chatgpt) says it doesn't keep every detail, and suggests saved memories for anything that must always be used. Saved memories are stored apart from chats, so deleting a chat doesn't delete a memory made from it. To see and clean up what it holds, see [how to find ChatGPT memory](/articles/how-to-find-chatgpt-memory/).
 
 ### Claude
 

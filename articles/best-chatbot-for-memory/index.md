@@ -30,16 +30,16 @@ This table reflects each vendor's help pages as of October 2026. Features roll o
 | **Microsoft Copilot** | Yes | Recent conversations | Ask "What do you know about me?", Delete all Memory | Yes | Not documented |
 | **Character.AI** | Pins and a 400-char chat memory | Within the chat's context only | Per chat | Yes (15 pins) | n/a |
 
-Sources: [OpenAI Memory FAQ](https://help.openai.com/en/articles/8590148-memory-faq), [Claude memory help](https://support.claude.com/en/articles/11817273-using-claude-s-chat-search-and-memory-to-build-on-previous-context), [Gemini past chats help](https://support.google.com/gemini/answer/16598469?hl=en), [Copilot privacy controls](https://support.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-privacy-controls), [Character.AI plan comparison](https://support.character.ai/hc/en-us/articles/56173313531675-About-c-ai-lite).
+Sources: [OpenAI Memory FAQ](https://help.openai.com/en/articles/8590148-memory-in-chatgpt), [Claude memory help](https://support.claude.com/en/articles/11817273-using-claude-s-chat-search-and-memory-to-build-on-previous-context), [Gemini past chats help](https://support.google.com/gemini/answer/16598469?hl=en), [Copilot privacy controls](https://support.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-privacy-controls), [Character.AI plan comparison](https://support.character.ai/hc/en-us/articles/56173313531675-About-c-ai-lite).
 
 ## ChatGPT: the most sources of memory
 
-ChatGPT can draw on past chats, saved memories, custom instructions, files in your Library and, on some plans, connected apps such as Gmail, according to [OpenAI's Memory FAQ](https://help.openai.com/en/articles/8590148-memory-faq). In June 2026 OpenAI switched Plus and Pro users in the US to an "improved memory" that keeps a running **memory summary** instead of a flat list. The rollout note says those plans also get twice the memory capacity, with Free and Go to follow.
+ChatGPT can draw on past chats, saved memories, custom instructions, files in your Library (now Space on some paid plans) and, on some plans, connected apps such as Gmail, according to [OpenAI's Memory FAQ](https://help.openai.com/en/articles/8590148-memory-in-chatgpt). In June 2026 OpenAI switched Plus and Pro users in the US to an "improved memory" that keeps a running **memory summary** instead of a flat list. The rollout note says those plans also get twice the memory capacity, with Free and Go to follow.
 
 What makes it strong:
 
 - **Sources** appear under some answers, showing which past chat or memory shaped the reply. You can delete or correct them from there.
-- **Temporary Chat** gives you a chat that doesn't create or update memories.
+- **Temporary Chat** gives you a chat that doesn't create or update memories. Since August 2026 it can still read your memory if you pick Personalized; locked chats (October 2026) are another twist, covered in [what changed in ChatGPT memory this fall](/articles/how-to-find-chatgpt-memory/#what-changed-in-chatgpt-memory-august-to-october-2026).
 - **Project-only memory** keeps a project's context from leaking into other chats.
 
 Free users have had saved memories plus references to recent chats since June 2025, per the [ChatGPT release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes). For the step-by-step on viewing and deleting it, see [how to find and manage ChatGPT memory](/articles/how-to-find-chatgpt-memory/).

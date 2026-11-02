@@ -2,14 +2,14 @@
 
 > How to find ChatGPT memory in Settings, see what it remembers, turn memory on or off, and fully delete saved memories and chat history, on web and phone.
 
-Source: https://aiagentmemory.org/articles/how-to-find-chatgpt-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/how-to-find-chatgpt-memory/ · Updated 2026-11-02 · aiagentmemory.org
 
 
 To **find ChatGPT memory**, open **Settings > Personalization > Memory**. There you'll see a memory summary or a list of saved memories, plus switches to turn memory and chat history reference on or off. You can also just ask ChatGPT "What do you remember about me?" or tap **Sources** under a reply.
 
 ## What is ChatGPT memory?
 
-**ChatGPT memory is the feature that lets ChatGPT reuse details from earlier chats to personalize new ones.** Depending on plan and region, OpenAI says it can draw on past chats, saved memories, custom instructions, files in your Library, and connected apps such as Gmail ([OpenAI Memory FAQ](https://help.openai.com/en/articles/8590148-memory-faq)).
+**ChatGPT memory is the feature that lets ChatGPT reuse details from earlier chats to personalize new ones.** Depending on plan and region, OpenAI says it can draw on past chats, saved memories, custom instructions, files in your Library or Space, and connected apps such as Gmail ([Memory in ChatGPT](https://help.openai.com/en/articles/8590148-memory-in-chatgpt), OpenAI's help page, re-checked November 2, 2026).
 
 It isn't a full transcript. OpenAI states that memory "does not retain every detail from every conversation" and that ChatGPT picks what seems relevant to each answer. It's also separate from your **chat history** in the sidebar, which is just the list of past conversations.
 
@@ -51,7 +51,9 @@ How they interact, per OpenAI:
 - Turning off **Reference chat history** keeps your saved memories, and schedules what ChatGPT learned from past chats for deletion within 30 days.
 - Turning off **Memory** doesn't delete past chats. If you turn it back on, ChatGPT may build new memories from chats still in your history.
 
-For a single conversation without memory, start a **Temporary Chat**: open a new chat, select **Temporary**, and choose **Unpersonalized** before your first message. Temporary chats never create or update memories, and they stay out of your history unless you save them ([Temporary chat help](https://help.openai.com/en/articles/8914046)).
+For a single conversation without memory, start a **Temporary Chat**: open a new chat, select **Temporary**, and choose **Unpersonalized** before your first message. Since August 27, 2026 you can instead pick **Personalized**, which lets the temporary chat read your memories, custom instructions and plugins. You can't change the choice once the chat starts. Either way, temporary chats never create or update memories, and they stay out of your history unless you save them. Saving turns it into a regular chat, so with memory on, ChatGPT may then use it later ([Temporary chat help](https://help.openai.com/en/articles/8914046), [release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes)).
+
+Two limits OpenAI states plainly: turning off Memory does not stop "limited safety and security uses of context in rare, high-risk situations", and memory is separate from model training. On a personal account, chats and remembered information can train models while **Improve the model for everyone** is on. Turn that off in **Data controls**.
 
 ## How to delete or wipe ChatGPT memory
 
@@ -62,7 +64,7 @@ Deleting memory takes more than one click because the same fact can live in seve
 | One memory | Delete it in **Memory > Manage**, edit the summary, or tell ChatGPT to forget it |
 | All memory at once | In the memory summary, open the **•••** menu and choose **Delete and turn off memory** |
 | The original source | Delete the chat where you shared it, including archived chats |
-| Files | Delete the file from **Library** |
+| Files | Delete the file from **Library** (or **Space**, which replaces Library on eligible Pro, Business and Enterprise accounts since September 29, 2026) |
 | Connected data | Disconnect the app (for example Gmail) |
 
 Three points catch people out:
@@ -79,9 +81,25 @@ The "memory full" message applies to the legacy saved memories list, which has a
 
 OpenAI has reduced the problem twice. In October 2025 it began managing saved memories automatically for Plus and Pro on the web, "moving less important ones to the background" to help "avoid 'memory full' state." The June 2026 improved memory gave Plus and Pro "twice as much memory capacity." OpenAI also says there's no separate storage limit for what ChatGPT can reference through chat history.
 
+## What changed in ChatGPT memory, August to October 2026
+
+From OpenAI's [release notes](https://help.openai.com/en/articles/6825453-chatgpt-release-notes) and help pages, checked November 2, 2026:
+
+| Date | Change | What it means for memory |
+|---|---|---|
+| Aug 14 | Change an existing project's memory setting | Switch an unshared project between default and project-only memory; shared projects stay project-only |
+| Aug 27 | Personalized temporary chats | A temporary chat can read your memory, but still never writes to it |
+| Sep 29 | Space replaces Library (eligible Pro, Business, Enterprise) | Files ChatGPT can draw on now live in Space; delete them there |
+| Oct 20 | Locked chats (PIN or Face ID) | Locked chats can use your regular memory, but new messages in them don't personalize regular chats |
+| Oct 30 | Account switching on iOS and Android | Up to 2 accounts signed in; each keeps its own chats and memory |
+
+**Locked chats and memory.** Locking a chat hides it from your history and search. It doesn't erase what ChatGPT already remembered from that chat. If you lock a chat that sits in a project, it leaves the project and stops using that project's memory. And resetting your account PIN permanently deletes all locked chats and any memory stored only inside them; OpenAI Support can't recover it ([Using locked chats](https://help.openai.com/en/articles/20001411-using-locked-chats-in-chatgpt)).
+
 ## Memory in ChatGPT projects
 
 Projects can have **project-only memory**. With it on, chats in the project can use other chats in that project, but nothing from outside, and nothing from the project leaks into other chats. You can change an existing project's setting from the project's three-dot menu under **Project settings > Memory**. Shared projects always use project-only memory.
+
+In ChatGPT for Healthcare and ChatGPT Enterprise with Regulated Workspace, improved memory is off by default and admins decide who gets it. OpenAI says it isn't covered under the BAA, so don't enter health data (PHI) while using it.
 
 This is the cleanest way to keep, say, a work project from coloring personal chats. Claude also has per-project memory, but by default it mixes in your regular-chat memory unless you turn off Use account memory ([Claude's project memory](/articles/claude-ai-long-term-memory/#what-changed-since-early-october-2026)); see [how chatbot memory compares across apps](/articles/best-chatbot-for-memory/).
 
@@ -103,4 +121,8 @@ Not necessarily. OpenAI says saved memories are stored separately from chat hist
 ### How do I fix 'memory full' in ChatGPT?
 
 Delete old or unneeded entries in Settings > Personalization > Memory > Manage. Since October 2025, Plus and Pro accounts also manage saved memories automatically, moving less important ones to the background to avoid a full memory, and the newer improved memory doubled capacity for Plus and Pro.
+
+### Do locked chats in ChatGPT use memory?
+
+Yes. Per OpenAI, a locked chat can use your regular memory, but new messages sent while it's locked don't personalize your regular chats, and locking doesn't remove what ChatGPT already remembered from it. Resetting your account PIN permanently deletes all locked chats and memory stored only inside them.
 

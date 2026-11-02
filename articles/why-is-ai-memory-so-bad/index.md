@@ -17,7 +17,7 @@ So when people say "the AI forgot," one of three things went wrong. The detail n
 
 A language model's knowledge is fixed when training ends. Talking to it doesn't change it. Each reply is computed fresh from whatever text the app sends: system instructions, recent messages, and any memory the app chose to include.
 
-That's why memory is a separate product feature. OpenAI describes ChatGPT's memory as something that can "remember relevant preferences and details from your chats and other available sources" ([OpenAI Memory FAQ](https://help.openai.com/en/articles/8590148-memory-faq)). It's a layer the app adds, not something the model does. Turn it off, or use a temporary or incognito chat, and you're back to a model with no memory of you at all.
+That's why memory is a separate product feature. OpenAI describes ChatGPT's memory as something that can "remember relevant preferences and details from your chats and other available sources" ([OpenAI Memory FAQ](https://help.openai.com/en/articles/8590148-memory-in-chatgpt)). It's a layer the app adds, not something the model does. Turn it off, or use a temporary or incognito chat, and you're back to a model with no memory of you at all.
 
 ## Reason 2: The context window runs out
 
