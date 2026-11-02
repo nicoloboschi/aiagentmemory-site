@@ -15,7 +15,7 @@ Both are open source and both have a managed service. They differ in license (Ap
 
 **[Mem0](https://github.com/mem0ai/mem0)** runs as a Python or TypeScript library, a self-hosted Docker server, or the hosted Mem0 Platform. It has about 68,000 GitHub stars, the most of any agent memory project. See [what Mem0 is](/articles/what-is-mem0-ai/).
 
-**[Honcho](https://github.com/plastic-labs/honcho)** is a FastAPI server (version 3.4.1) with Python (`honcho-ai`) and TypeScript SDKs, about 7,800 stars, and a managed service at api.honcho.dev. Our [Honcho guide](/articles/honcho-llm-memory/) covers its data model and setup in depth.
+**[Honcho](https://github.com/plastic-labs/honcho)** is a FastAPI server (version 3.5.0, 30 October 2026) with Python (`honcho-ai`) and TypeScript SDKs, about 7,900 stars, and a managed service at api.honcho.dev. Our [Honcho guide](/articles/honcho-llm-memory/) covers its data model and setup in depth.
 
 ## Mem0 vs Honcho at a glance
 
@@ -123,7 +123,7 @@ Both run on your own machines for free. Mem0's library has no server at all, whi
 
 Sources: Mem0's [server README](https://github.com/mem0ai/mem0/tree/main/server), `docker-compose.yaml`, `.env.example` and `main.py`; Honcho's [README](https://github.com/plastic-labs/honcho) and `docker-compose.yml.example`; checked 29 October 2026.
 
-Two things to watch. Honcho ships with auth off, so a stack reachable from a network is open until you set `AUTH_USE_AUTH` and `AUTH_JWT_SECRET` (its compose file binds ports to localhost by default). And Honcho's deriver makes LLM calls for every message you store, so a self-hosted Honcho is free to run but not free in tokens; point it at a cheap or local model if volume is high. The [Honcho guide](/articles/honcho-llm-memory/) covers the 3.4.1 changes.
+Two things to watch. Honcho ships with auth off, so a stack reachable from a network is open until you set `AUTH_USE_AUTH` and `AUTH_JWT_SECRET` (its compose file binds ports to localhost by default). And Honcho's deriver makes LLM calls for every message you store, so a self-hosted Honcho is free to run but not free in tokens; point it at a cheap or local model if volume is high. The [Honcho guide](/articles/honcho-llm-memory/) covers the 3.4.1 filter change and 3.5.0, where conclusions now cite the messages they came from.
 
 ## Where Hindsight fits
 

@@ -2,7 +2,7 @@
 
 > Cognee alternatives compared: Mem0, Graphiti, Zep, Letta, Hindsight, MemPalace and Supermemory. What each does, licenses, self-hosting and pricing, checked October 2026.
 
-Source: https://aiagentmemory.org/articles/cognee-alternatives/ · Updated 2026-10-30 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/cognee-alternatives/ · Updated 2026-11-02 · aiagentmemory.org
 
 
 **Cognee alternatives** are other memory systems for AI agents: Mem0, Graphiti, Zep, Letta, Hindsight, MemPalace and Supermemory. People look for one when Cognee's knowledge-graph pipeline is more than they need for simple per-user memory, when they want temporal fact tracking in open source, or when they want the agent itself to manage memory. For that second reason, Graphiti and Hindsight both fit; Graphiti needs a graph database, while Hindsight runs its graph and temporal recall on Postgres, all in the MIT release.
@@ -24,8 +24,22 @@ Cognee is a good fit for a "company brain" over docs, tickets and code. The comm
 
 1. **The job is per-user chat memory.** A graph pipeline is more machinery than storing "Dana prefers short answers."
 2. **Some production pieces are licensed.** The README calls Postgres-as-graph-store "a demo feature," with the production version "available as a licensed product," and says the bundled GLiNER extractor is a demo of the small-model pipeline.
-3. **Temporal memory is an Enterprise item.** Cognee's [pricing page](https://www.cognee.ai/pricing) lists "bi-temporal memory with conflict resolution" under Enterprise.
+3. **Temporal memory is an Enterprise item.** Cognee's [pricing page](https://www.cognee.ai/pricing) lists "bi-temporal memory & conflict resolution" under Enterprise (checked 2 November 2026). The open-source release now covers part of this: since [v1.6.6](https://github.com/topoteretes/cognee/releases/tag/v1.6.6) (29 October 2026), `improve()` reviews conflicting facts by default when an LLM is set (keyless installs skip it), and a new API lets a user pick the accepted fact. See the table below.
 4. **They want an agent runtime**, not a memory layer.
+
+### Conflict handling in open-source Cognee 1.6.6
+
+From the v1.6.6 release notes and the pull requests behind them ([#6401](https://github.com/topoteretes/cognee/pull/6401), [#6416](https://github.com/topoteretes/cognee/pull/6416)):
+
+| What | How it works |
+|---|---|
+| Automatic review | Runs in every `improve()`, including the automatic one after `remember()`. On by default (`IMPROVE_REVIEW_CONFLICTS=true`); skipped with no LLM configured |
+| List conflicts | `GET /api/v1/conflicts` or `cognee.list_conflicts()`, with fact IDs and source evidence |
+| Resolve | `POST /api/v1/conflicts/{conflict_id}/resolve` or `cognee.resolve_conflict()`; needs write permission; stores the chosen fact, author, time and an optional reason |
+| Retrieval after a choice | Graph, hybrid, chunk, lexical and summary search use the chosen fact, labeled `[accepted by user]`; the original facts stay for audit |
+| When data changes | A choice is retired if its fact is deleted, forgotten or lost in a rebuild; cached answers that used a competing fact are invalidated |
+
+In this design a person picks the winner: Cognee flags the conflict, and a person or your code decides. Graphiti and Hindsight take a different route. Graphiti records when each fact became valid and invalid, so a newer fact supersedes an older one on its own. Hindsight consolidates memories into evidence-backed observations and recalls by time as well as meaning, all in its MIT release.
 
 For background on graph-based memory in general, see [knowledge graphs for AI memory](/articles/ai-memory-knowledge-graph/).
 
@@ -141,6 +155,10 @@ Yes. Cognee is Apache 2.0 and free to self-host, and since v1.6 it can build and
 ### What is the closest alternative to Cognee?
 
 Graphiti is the closest in design: an Apache 2.0 framework that builds a temporal knowledge graph for agents. It focuses on facts that change over time, while Cognee focuses on turning documents, code and conversations into a searchable graph.
+
+### Does open-source Cognee resolve conflicting facts?
+
+Partly, since v1.6.6 (29 October 2026). When an LLM is configured, every improve() reviews conflicting facts by default, and you can list conflicts (GET /api/v1/conflicts or cognee.list_conflicts()) and pick the accepted fact (POST /api/v1/conflicts/{id}/resolve or cognee.resolve_conflict()). Retrieval then uses the chosen fact, labeled [accepted by user], and keeps the originals for audit. Cognee's pricing page still lists bi-temporal memory and conflict resolution under Enterprise.
 
 ### Can I migrate from Mem0, Zep or Letta to Cognee, or back?
 

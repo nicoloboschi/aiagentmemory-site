@@ -81,7 +81,7 @@ Builds temporal knowledge graphs: entities, facts with validity windows, and the
 
 ### Cognee
 
-Turns text, code and conversations into a graph plus vector index, with file-based defaults (SQLite, LanceDB, LadybugDB) so it runs with no setup. Version 1.6.0 (September 2026) added keyless workflows using local models. It has plugins for Claude Code, Codex and OpenClaw. See [Mem0 vs Cognee](/articles/mem0-vs-cognee/) and [Cognee alternatives](/articles/cognee-alternatives/).
+Turns text, code and conversations into a graph plus vector index, with file-based defaults (SQLite, LanceDB, LadybugDB) so it runs with no setup. Version 1.6.0 (September 2026) added keyless workflows using local models, and 1.6.6 (29 October) added [open-source conflict review](/articles/cognee-alternatives/#conflict-handling-in-open-source-cognee-166): it flags facts that disagree and lets a user pick the one to keep. It has plugins for Claude Code, Codex and OpenClaw. See [Mem0 vs Cognee](/articles/mem0-vs-cognee/) and [Cognee alternatives](/articles/cognee-alternatives/).
 
 ### Supermemory
 
@@ -97,7 +97,7 @@ Memory tools an agent calls during a conversation, plus a background manager tha
 
 ### Smaller and specialized projects
 
-- **Honcho**: peer-centric memory with background reasoning, on Postgres + pgvector. See [Honcho LLM memory](/articles/honcho-llm-memory/), and [Mem0 vs Honcho](/articles/mem0-vs-honcho/) for what each one runs when self-hosted (Honcho ships with auth off).
+- **Honcho**: peer-centric memory with background reasoning, on Postgres + pgvector. Since 3.5.0 (30 October 2026) its conclusions cite the messages they came from. See [Honcho LLM memory](/articles/honcho-llm-memory/#honcho-350-conclusions-cite-their-messages), and [Mem0 vs Honcho](/articles/mem0-vs-honcho/) for what each one runs when self-hosted (Honcho ships with auth off).
 - **MemOS**: memory cubes, async ingestion, local SQLite plugins for OpenClaw and Hermes Agent.
 - **TencentDB Agent Memory**: a proxy between coding agents (Claude Code, Codex, OpenClaw) and their LLM that turns sessions, documents and code into shared chat memory, skills, a wiki and a code graph, with a Memory Hub panel for team access. Version 2.0.3 (26 October 2026) added default session bindings and Word/Excel/PowerPoint/PDF wiki imports, and fixed a proxy that could not recover from a Redis outage. See [TencentDB Agent Memory](/articles/tencentdb-agent-memory/).
 - **Memori**: stores agent state in your own database ("BYODB"); its older home was GibsonAI. See [Memori by GibsonAI](/articles/ai-agents-memory-storage-memori-gibsonai/).

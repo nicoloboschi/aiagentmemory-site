@@ -48,7 +48,7 @@ If you're writing the bot yourself, a library handles extraction, storage and re
 | [getzep/graphiti](https://github.com/getzep/graphiti) | Apache-2.0 | ~32,200 | v0.31.2, 20 Oct | Temporal knowledge graph; facts have validity windows | Facts that change over time |
 | [supermemoryai/supermemory](https://github.com/supermemoryai/supermemory) | MIT | ~31,400 | server-v0.0.9, 12 Oct | Memory, RAG and user profiles behind one API | Memory plus connectors |
 | [letta-ai/letta](https://github.com/letta-ai/letta) | Apache-2.0 | ~25,300 | 0.16.8, 14 May | Agents that edit their own memory blocks (MemGPT design) | Stateful agents; new work is in letta-code |
-| [plastic-labs/honcho](https://github.com/plastic-labs/honcho) | AGPL-3.0 | ~7,800 | v3.4.1, 27 Oct | Models users and agents ("peers") over time | User modeling, multi-party chats |
+| [plastic-labs/honcho](https://github.com/plastic-labs/honcho) | AGPL-3.0 | ~7,900 | v3.5.0, 30 Oct | Models users and agents ("peers") over time | User modeling, multi-party chats |
 | [memodb-io/memobase](https://github.com/memodb-io/memobase) | Apache-2.0 | ~2,900 | none on GitHub; last push 11 Jan | User profiles and event timelines | Chatbots that need fast profile reads |
 | [langchain-ai/langmem](https://github.com/langchain-ai/langmem) | MIT | ~1,700 | none on GitHub; last push 2 Oct | Memory tools and background manager | LangGraph chatbots |
 

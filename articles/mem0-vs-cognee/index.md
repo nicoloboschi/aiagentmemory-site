@@ -98,7 +98,7 @@ Without an LLM key this returns matching source text; with `LLM_API_KEY` set, Co
 ### Where each one is weaker
 
 - Mem0 open source has **no graph, no temporal reasoning and no background consolidation**; those are Platform features.
-- Cognee lists **bi-temporal memory with conflict resolution** under Enterprise on its [pricing page](https://www.cognee.ai/pricing), and some production backends are licensed.
+- Cognee lists **bi-temporal memory with conflict resolution** under Enterprise on its [pricing page](https://www.cognee.ai/pricing), and some production backends are licensed. Open-source [v1.6.6](https://github.com/topoteretes/cognee/releases/tag/v1.6.6) (29 October 2026) added part of it: conflict review by default when an LLM is set, and an API to pick the accepted fact (details in [Cognee alternatives](/articles/cognee-alternatives/#conflict-handling-in-open-source-cognee-166)).
 - For plain per-user chat facts, a graph pipeline is more machinery than the job needs.
 
 ## Cost and benchmarks

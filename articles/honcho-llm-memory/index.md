@@ -1,21 +1,21 @@
-# Honcho Memory (v3.4.1): How It Works, Self-Hosting, Pricing
+# Honcho Memory (v3.5.0): How It Works, Self-Hosting, Pricing
 
-> Honcho by Plastic Labs: AGPL memory that models each user as a peer. $2 per 1M tokens, 90.4% LongMemEval (self-reported), self-hosting, and the 3.4.1 filter fix.
+> Honcho by Plastic Labs: AGPL memory that models each user as a peer. $2 per 1M tokens, 90.4% LongMemEval (self-reported), self-hosting, and 3.5.0 source citations.
 
-Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-10-29 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-11-02 · aiagentmemory.org
 
 
 **Honcho** is an open-source memory service for LLM agents, built by Plastic Labs. Instead of only storing extracted facts, it **reasons about the people and agents in your conversations**. You save messages; a background worker derives conclusions about each participant; then you ask Honcho what it knows, in plain language or as prompt-ready context.
 
-In short: Honcho memory is a peer model, not a fact list. It is AGPL-3.0, self-hostable on Postgres with pgvector, priced at $2 per million ingested tokens on the managed service, and built into Hermes Agent as a memory provider. The current server is **3.4.1** (27 October 2026).
+In short: Honcho memory is a peer model, not a fact list. It is AGPL-3.0, self-hostable on Postgres with pgvector, priced at $2 per million ingested tokens on the managed service, and built into Hermes Agent as a memory provider. The current server is **3.5.0** (30 October 2026).
 
-This page covers Honcho's data model, how its reasoning pipeline works, the Python SDK, self-hosting, what changed in 3.4 and 3.4.1, pricing and its benchmark claims. Sources are the [Honcho GitHub README](https://github.com/plastic-labs/honcho), the [Honcho docs](https://honcho.dev/docs/v3), [honcho.dev](https://honcho.dev/) and the [v3.4.0](https://github.com/plastic-labs/honcho/releases/tag/v3.4.0) and [v3.4.1](https://github.com/plastic-labs/honcho/releases/tag/v3.4.1) release notes, checked on 29 October 2026.
+This page covers Honcho's data model, how its reasoning pipeline works, the Python SDK, self-hosting, what changed in 3.4, 3.4.1 and 3.5.0, pricing and its benchmark claims. Sources are the [Honcho GitHub README](https://github.com/plastic-labs/honcho), the [Honcho docs](https://honcho.dev/docs/v3), [honcho.dev](https://honcho.dev/) and the [v3.4.0](https://github.com/plastic-labs/honcho/releases/tag/v3.4.0) [v3.4.1](https://github.com/plastic-labs/honcho/releases/tag/v3.4.1) and [v3.5.0](https://github.com/plastic-labs/honcho/releases/tag/v3.5.0) release notes, checked on 2 November 2026.
 
 ## What is Honcho?
 
 **Honcho is memory infrastructure for stateful agents. It stores messages and events on sessions, reasons over them asynchronously, and maintains a representation of every participant, called a peer. Agents query those representations, search history, or ask natural-language questions such as "what learning style does this user respond to?"**
 
-Its README describes it as memory for agents "that understand changing people, agents, groups, projects, and ideas over time." The server is a FastAPI app, licensed **AGPL-3.0**, at version 3.4.1 (27 October 2026), with about 7,800 GitHub stars. The Python SDK is `honcho-ai` (2.7.0) and the TypeScript SDK is `@honcho-ai/sdk`.
+Its README describes it as memory for agents "that understand changing people, agents, groups, projects, and ideas over time." The server is a FastAPI app, licensed **AGPL-3.0**, at version 3.5.0 (30 October 2026), with about 7,900 GitHub stars. The Python SDK is `honcho-ai` (2.7.0) and the TypeScript SDK is `@honcho-ai/sdk`.
 
 The emphasis is **user modeling** rather than retrieval. Most memory layers answer "which stored facts match this query?" Honcho also tries to answer "what kind of person is this, and what do they likely want?"
 
@@ -47,7 +47,7 @@ The loop the README describes:
 
 What you can read back:
 
-- **Conclusions**: deductive and inductive statements Honcho has derived about a peer.
+- **Conclusions**: deductive and inductive statements Honcho has derived about a peer. Since 3.5.0, explicit conclusions list the messages they came from.
 - **Representations**: low-latency snapshots of what Honcho knows, optionally per session.
 - **Peer cards**: compact identity summaries.
 - **Session context**: prompt-ready bundles with summaries, sized to a token budget.
@@ -142,6 +142,24 @@ The other changes:
 - **No retries on hard rejections.** With no fallback model set, a 4xx from the LLM provider (other than 408, 409, 425 and 429), such as a 400 for a prompt over the context window or a 401, now fails on the first try. Before, it was sent three times with about 8 seconds of backoff. This covers the deriver, summarizer, dialectic chat and dreamer. With a fallback set, nothing changes.
 - **Self-hosting.** The Docker image ships a newer certifi CA bundle and builds with uv 0.13.5. If you install from `uv.lock`, you need uv 0.13.5 or newer; older uv ignores a lockfile override and installs an older CA bundle.
 
+## Honcho 3.5.0: conclusions cite their messages
+
+Honcho 3.5.0 shipped on 30 October 2026. Per the [release notes](https://github.com/plastic-labs/honcho/releases/tag/v3.5.0), the change that matters most for memory is **provenance**: the deriver now records which messages each explicit conclusion came from.
+
+| Change | What it does | Watch out for |
+|---|---|---|
+| Conclusions cite messages | Responses carry `source_message_ids`; `POST /conclusions/list` can filter on it, so you can ask "which conclusions cite this message?" | Migration adds a table with no backfill: conclusions written before 3.5.0 show null. Derived levels (not explicit) have no citations |
+| Workspace config replaces, not merges | `{}` clears explicit settings and falls back to defaults | Before, left-out keys were kept. Send the full configuration to change one setting. Peer and session updates still merge |
+| Single-turn peer chat | Answers no longer end with "If you want, I can..." or a question back; contradictions in memory are still reported | Workspace chat is unchanged |
+| Streaming reuses the answer | No second LLM call for a streamed answer; it usually arrives as one chunk at the end | Clients that expect token-by-token output see one chunk |
+| Longer chat queries | `DIALECTIC_MAX_QUERY_LENGTH`, up to 200,000 characters | Default stays 10,000 |
+| Scope tools | Bulk remove up to 100 sessions from a scope (all or nothing), filter sessions by scope, count sessions per scope | None |
+| Langfuse 5.0.2 | Traces use the Langfuse v4 ingestion path | Self-hosted Langfuse must be v4.59.0 or later |
+
+Two fixes close silent memory loss. Removing a session from a scope and adding it back no longer lets a late cleanup task delete the scope's conclusions and dream notes for that session. And when a message is both a short and a long summary boundary, both summaries are now kept; before, one save could overwrite the other, and a failed summary could be dropped with no log line. The release also makes Claude 5.x models work as configured models instead of falling back.
+
+Citations bring Honcho closer to what [Hindsight](https://github.com/vectorize-io/hindsight) does with its observations, which are consolidated, evidence-backed beliefs. If you need to show a user *why* the agent believes something, both now give you a path back to the source. With Honcho, that path exists only for conclusions derived after the upgrade.
+
 ## Honcho pricing
 
 From [honcho.dev](https://honcho.dev/) in October 2026:
@@ -195,6 +213,10 @@ Mem0 extracts facts from messages and returns them by search. Honcho stores the 
 ### What is new in Honcho 3.4?
 
 Honcho 3.4.0 (22 October 2026) adds API keys bound to one named scope, a fixed uid on workspaces, peers and sessions, opt-in working memory for the dreamer, and a deriver that fails loudly instead of silently dropping malformed batches. It includes a database migration with concurrent index builds that self-hosters should plan for on large databases. 3.4.1 (27 October 2026) fixes how a '*' wildcard or an empty {} behaves inside AND, OR and NOT filters, and stops retrying LLM requests the provider rejected outright.
+
+### What is new in Honcho 3.5.0?
+
+Honcho 3.5.0 (30 October 2026) makes explicit conclusions cite the messages they came from (source_message_ids, filterable in POST /conclusions/list; conclusions written before the upgrade have no citations). It also adds bulk removal of sessions from a scope, a configurable peer-chat query limit up to 200,000 characters, and single-turn peer-chat answers. One change can surprise you: updating a workspace configuration now replaces it instead of merging, so send the full configuration.
 
 ### Did Honcho 3.4.1 change what my filters return?
 
