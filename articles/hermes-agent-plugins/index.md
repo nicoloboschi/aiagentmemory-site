@@ -1,8 +1,8 @@
 # Hermes Agent Plugins: Install, Catalog, Memory Providers
 
-> How Hermes Agent plugins work: plugin types, hermes plugins install, the SHA-pinned catalog, how memory provider plugins hook in, and which ones exist (Oct 2026).
+> How Hermes Agent plugins work: plugin types, hermes plugins install, the SHA-pinned catalog, memory provider plugins, and what v0.22.6 changed (Nov 2026).
 
-Source: https://aiagentmemory.org/articles/hermes-agent-plugins/ · Updated 2026-10-23 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-plugins/ · Updated 2026-11-03 · aiagentmemory.org
 
 
 **Hermes Agent plugins** are folders of Python code with a `plugin.yaml` manifest that add tools, hooks, slash commands, memory backends and other features without changing Hermes's core. You install them with `hermes plugins install <name>` from a human-reviewed, commit-pinned catalog, or from any Git repo. Memory provider plugins are a special kind: only one runs at a time.
@@ -30,7 +30,7 @@ The [Hermes plugin docs](https://hermes-agent.nousresearch.com/docs/user-guide/f
 
 Inside general plugins, `ctx` has more entry points: gateway platforms (Discord, Telegram, IRC), image and video generation backends, terminal sandboxes, computer-use drivers, approval transports, TTS and STT backends, and `ctx.llm.complete()` for borrowing the user's active model. Some extensions aren't Python plugins at all: MCP servers are declared under `mcp_servers` in `config.yaml`, and shell hooks under `hooks:`.
 
-Hooks are the main way a general plugin reacts to the agent. The docs list hooks such as `pre_tool_call`, `post_tool_call`, `pre_llm_call`, `post_llm_call`, `on_session_start`, `on_session_end` and `post_compaction`. A hook callback that blocks longer than `plugins.hook_callback_timeout` (default 30 seconds) is abandoned; a timed-out `pre_tool_call` blocks the tool.
+Hooks are the main way a general plugin reacts to the agent. The docs list hooks such as `pre_tool_call`, `post_tool_call`, `pre_llm_call`, `post_llm_call`, `on_session_start`, `on_session_end` and `post_compaction`. A hook callback that blocks longer than `plugins.hook_callback_timeout` (default 30 seconds) is abandoned; a timed-out `pre_tool_call` blocks the tool. Since v0.22.6, a `pre_llm_call` hook can also block the whole turn ([see below](#what-changed-for-plugins-in-hermes-v0226)).
 
 ## How to install Hermes Agent plugins
 
@@ -41,7 +41,7 @@ The usual path, from the docs:
 3. **Answer the enable prompt.** Hermes asks `Enable 'name' now? [y/N]` (default no). Use `--enable` or `--no-enable` in scripts. For a memory provider it asks `Use 'name' as the memory provider now?` instead.
 4. **Grant capabilities if asked.** Plugins that declare privileged capabilities (for example `tools.override`) get a one-time consent prompt. Grants are saved under `plugins.entries.<id>.granted_capabilities`. Without a terminal, they stay ungranted. Python dependencies have their own consent step that `--enable` doesn't skip: a declined or non-interactive dependency install leaves the plugin installed but disabled. Hermes v0.22.4 (released October 21, 2026) skips that step for a plugin that installs no dependencies, per its release notes.
 5. **Restart or start a new session.** Run `/plugins` in a session to see what loaded, or `hermes plugins list` for enabled, disabled and not-enabled states.
-6. **Update on purpose.** `hermes plugins update <name>` moves a catalog install to the catalog's current pin; with no name (v0.22.3) it lists every plugin with an update and asks "Update all N?" (`--yes` skips the question). `hermes plugins check-updates` only reports.
+6. **Update on purpose.** `hermes plugins update <name>` moves a catalog install to the catalog's current pin; with no name (v0.22.3) it lists every plugin with an update and asks "Update all N?" (`--yes` skips the question). `hermes plugins check-updates` only reports. Since v0.22.6, an update that needs a newer Hermes is skipped and the old pin stays.
 7. **Remove it.** `hermes plugins remove <name>` uninstalls it, drops it from `plugins.enabled` and `plugins.disabled`, and resets `memory.provider` if it was the live provider.
 
 The full command set:
@@ -79,6 +79,18 @@ Each entry has a tier. `official` means maintained by Nous Research, `verified` 
 Hermes is also moving its own features out of core into `official` plugins. In [v0.22.5](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.5) (October 22, 2026), `hermes import-agent` and the OpenClaw migration became the `agent-importers` plugin, and `hermes mcp serve` left core too. Run an old command without its plugin and Hermes prints the install line (`hermes plugins install agent-importers`). The importer is how memory moves in from OpenClaw, Claude Code, Codex CLI or Cursor; [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/#migrating-between-them) shows what it does with each file.
 
 The docs are blunt about what the catalog is not: "Cataloged ≠ audited." Review checks the pinned commit and the declared capabilities at admission. It isn't a security audit, so read the code of anything you give credentials to. A bare name that isn't in the catalog is an error; `owner/repo` installs skip the catalog and show an unvetted-code warning.
+
+## What changed for plugins in Hermes v0.22.6
+
+[Hermes v0.22.6](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.6) (November 2, 2026) is a patch release that rolls up hundreds of merged pull requests; the curated notes are due with v0.23.0. These three plugin changes are in the v0.22.6 tag (checked against the merge commits):
+
+| Change | Before | In v0.22.6 | PR |
+|---|---|---|---|
+| Catalog `requires_hermes` floor | Only displayed; install and update could pin a commit that needs a newer Hermes | Install is refused with "`<plugin>` needs Hermes `<spec>`; this is `<version>`" and the update command for your setup. `hermes plugins update` keeps the installed pin and lists the plugin as "update available after updating Hermes". `search` still shows it with a `needs Hermes` line | [#143468](https://github.com/NousResearch/hermes-agent/pull/143468) |
+| `pre_llm_call` can block a turn | A plugin or shell hook could add context but not stop the turn | Return `{"action": "block", "message": "..."}` (shell hooks: `{"decision": "block", "reason": "..."}`) and the turn ends before any model call; the user sees the message. The stored prompt becomes a withheld placeholder, so compaction, `session_search`, background review and the memory provider's `on_session_end` / `on_pre_compress` never see it | [#81434](https://github.com/NousResearch/hermes-agent/pull/81434) |
+| `hermes update` turns a plugin off | If the plugin was the memory provider, `memory.provider` was set to empty and the choice was lost | `memory.provider` is kept and the change is recorded under `plugins.disabled_by_update`; a later update turns the plugin back on once it fits. `hermes memory status` and `hermes doctor` now say the plugin is off instead of "All checks passed" | [#144257](https://github.com/NousResearch/hermes-agent/pull/144257) |
+
+The block directive matters for memory: a data-loss-prevention plugin can now stop a prompt with a secret in it from ever reaching the model or the external memory store, not only from the current reply. The PR's test with a real plugin showed the blocked turn made 0 API calls.
 
 ## How memory provider plugins hook in
 
@@ -293,4 +305,8 @@ On October 21, 2026 the Hermes plugin catalog had 67 entries on its Memory shelf
 ### What is the difference between plugins.enabled and memory.provider in Hermes?
 
 plugins.enabled is the allow-list for general plugins such as tools, hooks and slash commands. Memory providers ignore it: Hermes treats them as exclusive, and the one named in memory.provider is the only one that runs. hermes plugins enable does not activate a memory provider.
+
+### Why won't a Hermes plugin install or update?
+
+Since Hermes v0.22.6 (November 2, 2026), the catalog's requires_hermes floor is enforced. If a plugin needs a newer Hermes, install is refused with the version it needs and the update command for your setup, and hermes plugins update keeps the installed commit until you update Hermes.
 

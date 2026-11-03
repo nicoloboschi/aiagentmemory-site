@@ -1,8 +1,8 @@
 # AI Memory Architecture: Components and Design Patterns
 
-> How an AI memory architecture is built: extraction, stores, indexes, retrieval, context assembly and consolidation, plus the six main families of memory design.
+> How an AI memory architecture is built: extraction, stores, indexes, retrieval, context assembly and consolidation, the six families of memory design, and what benchmarks say about each choice.
 
-Source: https://aiagentmemory.org/articles/ai-memory-architecture/ · Updated 2026-10-17 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-memory-architecture/ · Updated 2026-11-03 · aiagentmemory.org
 
 
 An **AI memory architecture** is the set of components that let an LLM application keep information beyond one prompt: an extraction step that decides what to save, one or more stores, indexes to search them, a retrieval and ranking step, a context assembler that builds the prompt, and background jobs that consolidate and forget. Most designs differ only in how they build each piece.
@@ -114,6 +114,28 @@ A separate research line augments the model architecture itself rather than the 
 - **Memorizing Transformers** ([Wu et al., ICLR 2022](https://arxiv.org/abs/2203.08913)) add approximate kNN lookup into a non-differentiable memory of past (key, value) pairs; performance kept improving as memory grew to 262K tokens.
 - **Titans** ([Behrouz et al., 2024](https://arxiv.org/abs/2501.00663)) add a neural long-term memory module that learns to memorize at test time, with attention as short-term memory. The abstract claims scaling past a 2M-token context window on needle-in-haystack tasks.
 
+## What benchmarks say about memory architecture choices
+
+**More structure is not always better. On short chat histories, plain retrieval over the raw messages beat most memory systems. Structure (time, entities, consolidation) pays off on questions about change over time and on histories too long for any context window.**
+
+Each row compares two architecture choices inside one study, so the numbers in a row share a setup. Don't compare numbers across rows.
+
+| Choice tested | Result | Source |
+|---|---|---|
+| In-context (full history) vs external retrieval over raw messages | LoCoMo, GPT-4o-mini: full context 72.30, Raw-RAG 89.07 | [Bao et al.](https://arxiv.org/abs/2610.30755), Oct 2026 |
+| Extraction into a memory store vs keeping raw messages | Raw-RAG beat 12 memory systems (Mem0, A-MEM, MemOS, EverMemOS and others) in 6 of 7 settings, by 0.13 to 5.53 points | [Bao et al.](https://arxiv.org/abs/2610.30755) |
+| Full context vs temporal + entity memory, same 20B open model | LongMemEval temporal reasoning: 31.6 vs 79.7; multi-session: 21.1 vs 79.7 | [Hindsight paper](https://arxiv.org/abs/2512.12818), Table 3 (vendor-run) |
+| Flat extracted memory vs multi-strategy recall at 10M tokens | BEAM 10M: Mem0 48.6, Hindsight 64.1 | [Mem0's comparison page](https://mem0.ai/compare/mem0-vs-hindsight) (vendor-run) |
+
+What this means for design:
+
+- **Keep the raw messages.** Bao et al. found extraction throws away evidence some questions need. Store the source next to anything you extract.
+- **Start with retrieval over raw history as the baseline.** The paper's tests use histories that fit in a large context window; the authors list longer histories as future work.
+- **Add time and entity structure for questions about change.** The biggest gaps in the Hindsight paper are on temporal and multi-session questions, where a fact changed or is spread across sessions. Those are vendor-run numbers, and the paper's own caveat applies: some baseline columns use a different judge model.
+- **Long histories need more than one search.** At 10 million tokens nothing fits in context. [Hindsight](https://github.com/vectorize-io/hindsight) (MIT, self-hostable) runs semantic, keyword, graph and time search together and keeps quotes from the source messages in its consolidated observations, which is the "keep the raw evidence" advice built in. It wasn't in the Bao et al. test.
+
+For the full Bao et al. table and its limits, see [RAG vs agent memory](/articles/rag-vs-agent-memory/#does-plain-rag-lose-to-memory-systems-on-benchmarks).
+
 ## How to choose an architecture
 
 Start from the questions your agent must answer, not from a database.
@@ -146,4 +168,8 @@ The components are the same: extraction, stores, indexes, retrieval, context ass
 ### What is a self-organizing AI memory system?
 
 A memory system where the LLM decides how memories are structured, not a fixed schema. A-MEM (Xu et al., NeurIPS 2025) is the main example: each new memory becomes a note with keywords and tags, gets linked to related notes, and can update the descriptions of older notes it relates to.
+
+### Does a more complex memory architecture give better results?
+
+Not on short histories. In Bao et al. (October 2026), plain retrieval over the raw chat beat 12 memory systems in 6 of 7 settings, by 0.13 to 5.53 points. Structure helps on questions about facts that change and on very long histories: on BEAM 10M, Hindsight scored 64.1 against Mem0's 48.6 (vendor-run numbers on Mem0's comparison page). Keep raw messages, start with retrieval as a baseline, and add structure when tests show you need it.
 
