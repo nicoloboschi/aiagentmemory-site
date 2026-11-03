@@ -124,7 +124,7 @@ To run an open-weight model past its default window:
 
 With hosted APIs (about 1M tokens on current frontier models, per the [context window comparison](/articles/context-window-llm-ranking/)), you can't touch RoPE. You extend what the model can *use* by choosing what goes in:
 
-- **Trim or summarize history** so old turns don't crowd out new ones.
+- **Trim or summarize history** so old turns don't crowd out new ones. Frameworks now build this in: Spring AI 2.1's [session memory](/articles/spring-ai-conversational-memory/#spring-ai-21-chatmemory-is-deprecated-for-session-memory) compacts old turns on a turn or token threshold, without splitting a tool call from its result.
 - **Retrieve** only the relevant chunks of documents instead of pasting them whole.
 - **Store memories outside the model** and load the few that matter for each call. This is what people usually mean by "LLM memory extension": facts that persist across sessions, not a bigger window. Open-source memory servers such as [Hindsight](https://github.com/vectorize-io/hindsight) (MIT) and Mem0 do this; Hindsight reports the top vendor-run scores on BEAM, which tests memory over 1M and 10M tokens of history, though it returns more tokens per retrieval than Mem0 unless you lower its `max_tokens` budget.
 
