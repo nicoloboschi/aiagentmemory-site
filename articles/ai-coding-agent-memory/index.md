@@ -2,7 +2,7 @@
 
 > How AI coding agents remember projects: Claude Code CLAUDE.md and auto memory, Codex AGENTS.md and memories, Cursor rules, Copilot Memory, and external memory tools.
 
-Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-10-27 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-11-03 · aiagentmemory.org
 
 
 **AI coding agent memory** is how tools like Claude Code, Codex, Cursor and GitHub Copilot carry project knowledge from one session to the next. The main mechanism is a plain **instruction file** (CLAUDE.md, AGENTS.md or Cursor rules) loaded into every session. Some agents add **automatic memory** that saves lessons as they work. For more, teams add an external memory server. For Claude Code specifically, see [Claude Code memory](/articles/claude-code-memory/).
@@ -150,7 +150,26 @@ The limit: it returns more context per retrieval than Mem0 by default, so set a 
 
 Each adds a dependency and, for extraction-based tools, LLM calls per write. Start with instruction files; add a server when the same lesson keeps getting lost across people or machines. The options are compared on [AI memory MCP servers](/articles/ai-memory-mcp-server/).
 
-Memory files are also an attack surface. A malicious instruction written into a memory file, or committed in a shared CLAUDE.md, loads into every future session. Claude Code asks for approval before loading imports from outside the repo for that reason. More on the risk in [AI memory injection](/articles/ai-memory-injection/).
+## Can a coding agent's memory be poisoned?
+
+Yes, and the result is hard to spot. A malicious instruction written into a memory file, or committed in a shared CLAUDE.md, loads into every future session. Claude Code asks for approval before loading imports from outside the repo for that reason.
+
+[MemHarmBench](https://arxiv.org/abs/2611.01700) (Wang et al., November 2026) measured it on two real agents. The agent read a document or web page with a planted "workflow convention". When the rule got saved to the agent's own memory, the page was removed and a new session started with a normal task. Averaged over GPT-5 and Gemini-2.5-Flash (Table 3, rates over cases where the rule was saved):
+
+| Agent (version tested) | Followed the planted rule in the next session | Drifted from the user's task | Run looked odd |
+|---|---|---|---|
+| OpenClaw 2026.7.1 | 75.69% | 15.58% | 7.38% |
+| Claude Code 2.1.228 | 60.94% | 14.18% | 3.37% |
+
+In 55.71% of these cases the agent followed the rule, finished the task and showed nothing odd. For Claude Code the rule still worked after four unrelated sessions, in 50-60% of the cases where it first worked. GPT-5 graded the results, so the labels are model-judged.
+
+What helps in practice:
+
+- **Read what the agent saved** after a session that touched web pages, issues or other outside text. Claude Code's auto memory lives in `~/.claude/projects/<project>/memory/`.
+- **Keep outside content out of memory.** Codex's `memories.disable_on_external_context` skips memory for chats that used MCP or web search.
+- **Review memory files like code.** A shared CLAUDE.md or AGENTS.md change goes through the same pull request as any other change.
+
+More attacks and defenses are on [AI memory injection](/articles/ai-memory-injection/).
 
 
 ## FAQ
@@ -166,6 +185,10 @@ AGENTS.md is an open format read by Codex, Cursor, Copilot's coding agent, Gemin
 ### Can I move learned memory from Claude Code to Codex?
 
 Yes, once. Since Codex 0.165.0 (27 October 2026), Codex's import from Claude Code copies the Markdown files in ~/.claude/projects/<project>/memory/ into Codex memories and consolidates them, starting from MEMORY.md. It is a one-time copy: afterwards each agent keeps its own memory. Codex does not import Cursor memory. For memory both agents keep writing to, use a shared memory server.
+
+### Can a coding agent's memory be poisoned by a web page or document?
+
+Yes. In MemHarmBench (Wang et al., November 2026), a rule planted through a document or web page and saved to memory was followed in the next session 75.69% of the time by OpenClaw and 60.94% by Claude Code, averaged over GPT-5 and Gemini-2.5-Flash. In 55.71% of cases the agent still finished the task with nothing odd, so review what your agent saved after it reads outside content.
 
 ### Does Cursor still have Memories?
 

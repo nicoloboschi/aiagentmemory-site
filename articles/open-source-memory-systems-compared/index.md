@@ -114,7 +114,7 @@ Memory tools an agent calls during a conversation, plus a background manager tha
 
 - **Hindsight** calls each isolated store a bank, with strict isolation between banks.
 - **Google's Vertex AI Agent Engine** has a managed Memory Bank; see [Vertex AI Agent Engine Memory Bank](/articles/vertex-ai-agent-engine-memory-bank/).
-- **Coding-agent "memory bank" setups** keep project notes in markdown files that the agent reads at the start of each session.
+- **Coding-agent "memory bank" setups** keep project notes in markdown files that the agent reads at the start of each session. Anything saved there loads into every later session, including a rule planted by a web page the agent read; how often that works on Claude Code and OpenClaw is on [AI coding agent memory](/articles/ai-coding-agent-memory/).
 
 People searching GitHub for "awesome LLM memory" lists will find several, but as of October 2026 the ones we checked were small (under 10 stars). The repos in the table above are a better starting point.
 

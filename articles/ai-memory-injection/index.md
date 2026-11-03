@@ -1,8 +1,8 @@
 # AI Memory Injection: How Agent Memory Gets Poisoned
 
-> AI memory injection plants malicious content in an agent's long-term memory so it misleads later sessions. Real attacks (MINJA, AgentPoison, SpAIware, MemForm) and defenses.
+> AI memory injection plants malicious content in an agent's long-term memory so it misleads later sessions. Real attacks (MINJA, AgentPoison, SpAIware, MemForm, MemHarmBench) and defenses.
 
-Source: https://aiagentmemory.org/articles/ai-memory-injection/ · Updated 2026-10-14 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-memory-injection/ · Updated 2026-11-03 · aiagentmemory.org
 
 
 **AI memory injection** is an attack that gets malicious instructions or false facts **saved into an AI agent's long-term memory**, so they keep influencing the agent in later sessions. Unlike a one-off prompt injection, the bad entry persists. In shared memory it can reach other users. OWASP lists it as **ASI06: Memory and Context Poisoning** in its 2026 agentic Top 10.
@@ -59,6 +59,28 @@ Tested on EHRAgent, the RAP web-shopping agent and a QA agent with GPT-4 and GPT
 - **Path**: same experiences, but merged into memory in a different order.
 
 Across six LLMs, average attack success ranged from 35.2% to 84.0% on multiple-choice tasks and from 49.0% to 87.1% on free-form tasks. All five routes worked. Of the five defenses tested, the best (A-MemGuard) cut average attack success by only 8.2 points. The tests used one memory setup built on LangChain and LlamaIndex, not products like Mem0. The lesson for any memory that merges or summarizes experiences: check what gets kept and in what order, not only each record.
+
+### MemHarmBench: OpenClaw and Claude Code across sessions (2026)
+
+[MemHarmBench](https://arxiv.org/abs/2611.01700) (Wang et al., November 2026; [code](https://github.com/Kirito14IT/MemHarmBench)) tests real coding agents, not research prototypes. Each case has two sessions. First the agent sees a malicious "workflow convention", in a document or web page (indirect injection, IPI) or typed in the chat (direct, DPI). If the rule ends up in the agent's own memory, the attack content is removed and a new session starts with a normal task. The benchmark then checks three things: did the agent follow the attacker's rule (ASR), did it drift from the user's task (UTDR), and did its run look odd (ATAR).
+
+The tests used OpenClaw 2026.7.1 and Claude Code 2.1.228, each with GPT-5 and Gemini-2.5-Flash, three runs of 192 IPI and 96 DPI cases each (3,456 episodes). Rates count only cases where the rule was saved (Table 3):
+
+| Agent | Backbone | Followed the planted rule, IPI | Task drift, IPI | Odd run, IPI | Followed the planted rule, DPI |
+|---|---|---|---|---|---|
+| OpenClaw | GPT-5 | 75.00% | 13.33% | 6.67% | 88.10% |
+| OpenClaw | Gemini-2.5-Flash | 76.39% | 17.82% | 8.10% | 90.00% |
+| Claude Code | GPT-5 | 62.50% | 12.31% | 3.41% | 81.82% |
+| Claude Code | Gemini-2.5-Flash | 59.38% | 16.04% | 3.33% | 75.00% |
+
+What it shows:
+
+- **The harm is quiet.** In 55.71% of the indirect cases the agent followed the attacker's rule, finished the task and showed no odd behavior. A normal-looking deliverable can still carry the attacker's choice.
+- **The agent matters more than the model.** Swapping GPT-5 for Gemini moved adoption by 1-3 points; OpenClaw vs Claude Code differed by 12.5-17 points.
+- **Rules outlive unrelated work.** After four normal sessions, Claude Code still followed a saved rule in 60.00% (GPT-5) and 50.00% (Gemini) of cases that had followed it at the start, down from 70.00% and 62.50%.
+- **Other people get hurt.** Attacks aimed at outside parties were adopted 79.58% (OpenClaw) and 64.20% (Claude Code) of the time.
+
+GPT-5 also served as the judge, so the labels are model-graded. The lesson for anyone running a coding agent with memory: review what it saved after it read outside content, because the later task will look fine.
 
 ### OWASP ASI06
 
@@ -145,6 +167,10 @@ It's an attack that gets malicious instructions or false facts saved into an age
 ### Can an attacker poison memory without direct database access?
 
 Yes. The MINJA paper (Dong et al.) showed injection through ordinary queries alone, reporting a 98.2% average injection success rate and 76.8% attack success rate across GPT-4 and GPT-4o agents. Indirect prompt injection from a web page or email can also trigger a memory write, as Johann Rehberger showed against ChatGPT in 2024.
+
+### Can memory injection affect coding agents like Claude Code or OpenClaw?
+
+Yes. MemHarmBench (Wang et al., November 2026) planted a malicious rule through a document or web page, removed it, and started a new session. When the rule had been saved, OpenClaw followed it in 75.00-76.39% of cases and Claude Code in 59.38-62.50%, and in 55.71% of cases the agent also finished the task normally with no odd behavior, so the harm was hard to spot.
 
 ### How do you defend agent memory against poisoning?
 
