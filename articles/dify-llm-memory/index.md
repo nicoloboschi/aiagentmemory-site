@@ -2,12 +2,12 @@
 
 > How memory works in Dify: LLM node memory and window size in Chatflow, conversation variables, Agent App history compaction, and plugins for long-term memory.
 
-Source: https://aiagentmemory.org/articles/dify-llm-memory/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/dify-llm-memory/ · Updated 2026-11-03 · aiagentmemory.org
 
 
 **Dify LLM memory** is a per-node setting in Chatflow apps. Turn on **Memory** in an LLM node and Dify adds earlier turns of the same conversation to that node's prompt. A **window size** caps how many turns load, and Dify trims further to fit the model's context. For state you control, Chatflow also has **conversation variables**. Neither carries over to a new conversation.
 
-This page covers how each mechanism behaves in Dify 1.17.1 (September 2026), drawn from the [Dify docs](https://docs.dify.ai/en/cloud/use-dify/nodes/llm) and the open-source code, plus the options for long-term memory across conversations.
+This page covers how each mechanism behaves in Dify 1.17.1 (September 2026) and what [1.18.0](#what-dify-1180-changed-for-agent-memory) (October 2026) changed for agent sessions, drawn from the [Dify docs](https://docs.dify.ai/en/cloud/use-dify/nodes/llm) and the open-source code, plus the options for long-term memory across conversations.
 
 ## What is LLM memory in Dify?
 
@@ -106,6 +106,19 @@ If agents in your Chatflow forgot the conversation on 1.17.0, that was a bug. Th
 
 1.17.0 also added `ENABLE_CONVERSATION_CLEANUP_TASK`. The release notes call it a cleanup task "for old conversations", but in the [1.17.1 config code](https://github.com/langgenius/dify/blob/1.17.1/api/configs/feature/__init__.py) it is on by default and only finishes cleaning up conversations that were already deleted, every 5 minutes, 100 per sweep. It doesn't expire history you kept.
 
+### What Dify 1.18.0 changed for agent memory
+
+[Dify 1.18.0](https://github.com/langgenius/dify/releases/tag/1.18.0) (23 October 2026) is mostly about agents that route workflows and portable app packages, but four changes touch memory and session state:
+
+| Change | What it means for memory | Release note ref |
+|---|---|---|
+| Agent session snapshots move to a new format (v2) | Old snapshots are converted when read and saved back as v2. **Runtimes older than 1.18.0 can't read v2 snapshots**, so rolling the Agent Backend back after upgrading can strand live agent sessions. Upgrade the API, workers, Agent Backend and Agent runtime images together, and back up Agent snapshot and workspace storage first | #43833 |
+| Agent forms from before the upgrade no longer resume | The old Agent-specific AskHuman tool and its deferred resume were removed. Agent runs paused on such a form stay paused; Workflow Human Input nodes still work | #43833 |
+| Conversations continue after a cancelled tool call | A cancelled tool call no longer ends the agent conversation, and parallel tool results stay attached to the right step in the history | #41846, #43796, #43843 |
+| Chatflow memory settings are removed when pasted into a Workflow | Workflows are single-turn, so the editor now drops the LLM node memory settings they can't use. Published versions and API-only flows are not rewritten | #43597, #43752 |
+
+1.18.0 also adds **Agent Knowledge Base** as an opt-in beta: knowledge spaces that agents search, with retrieval traces and quality checks, on a separate service and database. That is document retrieval, not memory of the user, so the options in the next section still apply.
+
 That's still short-term memory: it keeps one long session usable. It doesn't build a profile of the user across sessions. The tradeoffs of clearing versus summarizing are covered in [LLM memory compression](/articles/llm-memory-compression/).
 
 ## Long-term memory across conversations in Dify
@@ -146,4 +159,8 @@ Workflow apps are single-turn: each run is independent, so there is no conversat
 ### Why does my Dify Chatflow agent forget earlier turns?
 
 On Dify 1.17.0, Chatflow Agent V2 lost its memory between turns. Dify 1.17.1 fixed it by keying agent sessions to the conversation_id (PR #41871). Upgrade, and make sure your client sends the same conversation_id on every call.
+
+### Is it safe to roll back Dify 1.18.0?
+
+Not for agent sessions. Dify 1.18.0 converts Agent session snapshots to a new v2 format when it reads them, and runtimes older than 1.18.0 can't read v2 snapshots (#43833). Back up the database and the Agent snapshot and workspace storage before upgrading, and upgrade the API, workers, Agent Backend and Agent runtime images together.
 

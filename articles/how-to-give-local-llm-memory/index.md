@@ -30,7 +30,7 @@ If you just want a local chat app that remembers you, these are the options we c
 
 Two caveats from the docs themselves. Open WebUI warns that memory quality "depends heavily on the model" and that "only very small models struggle with appropriate memory selection." AnythingLLM's automatic extraction needs a chat model that supports tool calling. A 1-3B model may store junk or nothing.
 
-**MCP memory servers** work with any app that can host MCP, including Jan and LM Studio. The reference [Knowledge Graph Memory Server](https://github.com/modelcontextprotocol/servers/tree/main/src/memory) stores entities, relations and observations in a local JSONL file you can point anywhere with `MEMORY_FILE_PATH`. More options are in [AI memory MCP servers](/articles/ai-memory-mcp-server/).
+**MCP memory servers** work with any app that can host MCP, including Jan and LM Studio. The reference [Knowledge Graph Memory Server](https://github.com/modelcontextprotocol/servers/tree/main/src/memory) stores entities, relations and observations in a local JSONL file you can point anywhere with `MEMORY_FILE_PATH`. Since version 2.0 (October 2026) it needs Node.js 24 or later; [what changed in 2.0](/articles/ai-memory-mcp-server/#what-changed-in-server-memory-10-and-20-october-2026) has the upgrade notes. More options are in [AI memory MCP servers](/articles/ai-memory-mcp-server/).
 
 ## How to give a local LLM memory in your own app
 

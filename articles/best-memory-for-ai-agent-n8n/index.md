@@ -83,7 +83,7 @@ With Define below, use a stable per-user value, for example `{{ $json.message.ch
 
 Sharing history between nodes takes care. The docs warn that several memory nodes of the same type use the same memory instance by default. In recent node versions, n8n's editor shows a different hint: with Connected Chat Trigger Node, the session is scoped to that one memory node, and to share it you switch to Define below and use the same key in each node. If two agents must read the same history, set the key explicitly in both.
 
-Langflow, the other common low-code builder, has the same trap in a different form: its default session ID is the flow ID, so every user of a flow shares one history until you pass a per-user ID. The [Langflow memory chatbot guide](/articles/memory-chatbot-langflow/) covers that and the gateway header Langflow 1.12 added for it.
+Langflow, the other common low-code builder, has the same trap in a different form: its default session ID is the flow ID, so every user of a flow shares one history until you pass a per-user ID. The [Langflow memory chatbot guide](/articles/memory-chatbot-langflow/) covers that and the gateway header Langflow 1.12 added for it. In Dify, memory follows the `conversation_id` your client sends back, and single-turn Workflow apps keep none; agent sessions in Dify 1.18 also can't survive a rollback to an older version ([Dify LLM memory](/articles/dify-llm-memory/#what-dify-1180-changed-for-agent-memory)).
 
 ## How to clear n8n AI Agent memory
 
