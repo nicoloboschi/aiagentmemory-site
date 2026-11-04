@@ -2,7 +2,7 @@
 
 > OpenClaw vs Hermes Agent memory compared: file layout, size limits, search, consolidation, external providers and migration, from each project's docs (Oct 2026).
 
-Source: https://aiagentmemory.org/articles/openclaw-vs-hermes-agent-memory/ · Updated 2026-10-23 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-vs-hermes-agent-memory/ · Updated 2026-11-04 · aiagentmemory.org
 
 
 **OpenClaw vs Hermes Agent memory** comes down to two philosophies. **Hermes** keeps memory tiny and fixed: two hard-capped files loaded as a frozen snapshot, plus full-text search over old sessions. **OpenClaw** keeps memory open-ended: Markdown files and daily notes, indexed for hybrid search, with a background job that promotes the best notes into `MEMORY.md`.
@@ -67,6 +67,17 @@ What it adds over the built-ins:
 - **Four searches, not one.** Recall runs semantic, keyword, graph and time-range search together, so "what did I say about the deploy last week" works without exact wording.
 - **Open and local.** MIT license, every feature in the open-source server, 25+ LLM providers including Ollama.
 
+### Same tools in both agents (Hindsight v1.2.0)
+
+Since [Hindsight v1.2.0](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0) (November 3, 2026), the OpenClaw plugin offers the same three memory tools the Hermes plugin has, with the same names and parameters ([#5965](https://github.com/vectorize-io/hindsight/pull/5965)). So a bank can move between the two agents without changing how the agent is prompted to use it. What each plugin does now:
+
+| | Hermes plugin | OpenClaw plugin |
+|---|---|---|
+| **Agent tools** | `hindsight_retain`, `hindsight_recall`, `hindsight_reflect` | The same three, plus seven knowledge-base tools (browse, search, read, create and edit pages; delete only with `allowKnowledgeDelete: true`) ([#6004](https://github.com/vectorize-io/hindsight/pull/6004)) |
+| **Tools vs automatic recall** | `memory_mode` | `memoryMode`: `hybrid` (default: auto-recall and tools), `context` (auto-recall only), `tools` (tools only) |
+| **Background runs** | Cron runs, kanban workers and `delegate_task` sub-agents are not saved to the bank ([#6000](https://github.com/vectorize-io/hindsight/pull/6000)) | Cron, heartbeat and sub-agent sessions skipped by default; `skipOperationalSessions: false` lets them use memory, and session patterns can make them read-only ([#5963](https://github.com/vectorize-io/hindsight/pull/5963)) |
+| **When a save fails** | Automatic saves are kept and re-sent, up to 5 tries, without storing twice; held in memory, so a crash while the server is down still loses them ([#6013](https://github.com/vectorize-io/hindsight/pull/6013)) | No such change in the v1.2.0 notes |
+
 The limit that matters here: it costs more tokens than Hermes's fixed ~1,300. Each `retain` calls an LLM, and recall returns more context than Mem0 does by default (about 4x, by Mem0's measurement), so set `max_tokens` low if prompt cost matters. More in [Hindsight explained](/articles/ai-memory-hindsight/).
 
 ## Migrating between them
@@ -111,4 +122,8 @@ Yes. Since Hermes v0.22.5 the import is the agent-importers plugin: hermes plugi
 ### Do OpenClaw and Hermes support Mem0, Honcho or Hindsight?
 
 Both do through plugins. Hermes lists nine external providers, including Honcho, Mem0, Hindsight and Supermemory, with one active at a time. OpenClaw ships Honcho and LanceDB engines, and Mem0 and Hindsight publish their own OpenClaw plugins.
+
+### Does Hindsight give OpenClaw the same memory tools as Hermes?
+
+Yes, since Hindsight v1.2.0 (November 3, 2026). The OpenClaw plugin offers hindsight_retain, hindsight_recall and hindsight_reflect with the same names and parameters as the Hermes plugin, a memoryMode setting (hybrid, context or tools), and seven knowledge-base tools. Cron, heartbeat and sub-agent sessions stay out of memory unless you set skipOperationalSessions to false.
 

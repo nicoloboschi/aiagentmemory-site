@@ -2,7 +2,7 @@
 
 > Hermes Agent remembers with MEMORY.md (2,200 chars) and USER.md (1,375 chars), loaded once per session, plus SQLite session search. Which of its 9 memory providers to pick, by need, and why Hermes forgets.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-02 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-04 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -137,6 +137,18 @@ There's no single best one; it depends on what the agent must remember. Hermes's
 Pick **Honcho** if modeling the user is the point, **Mem0** or **Supermemory** for a hosted fact store with little setup, **Hindsight** if you want memories consolidated into evidence-backed observations plus a reflect call, and **Holographic** (or Hindsight's embedded Postgres) if nothing may leave the machine. Avoid starting new setups on RetainDB or ByteRover until someone maintains them again. Mnemosyne, a single-file SQLite memory that Hermes's docs list as a catalog provider (`hermes plugins install mnemosyne`), is another local option; see [Mnemosyne vs Hindsight](/articles/mnemosyne-vs-hindsight/). If the built-in files already hold what you need, skip providers entirely; they add LLM calls and a dependency.
 
 Of the nine, Hindsight and Mem0 are the two with published head-to-head numbers. On Mem0's own comparison page they tie on LongMemEval (94.6 vs 94.4) and LoCoMo (92 vs 92.5), and Hindsight leads on the long-history BEAM test: 73.9 vs 64.1 at 1M tokens and 64.1 vs 48.6 at 10M (all vendor-run). That matters for a Hermes agent that runs for months. Hermes's own provider docs also say Hindsight's `hindsight_reflect` tool "provides cross-memory synthesis that no other provider offers". [Hindsight](https://github.com/vectorize-io/hindsight) is MIT with every feature in the self-hosted server, and it can use local models through Ollama, LM Studio or llama.cpp, so it also works when nothing may leave the machine. The trade-off: Hindsight's server returns more context per retrieval than Mem0 at its own defaults (24K-44K vs under 7K tokens, by Mem0's measurement). The Hermes plugin caps that at 4,096 tokens per turn (`recall_max_tokens`) and recalls only consolidated observations by default, per Hindsight's Hermes integration docs; since Hermes prefetches recall every turn, lower that cap if prompt cost matters. Each retain also calls an LLM, so writes cost more than a local FTS store. Details in [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
+
+[Hindsight v1.2.0](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0) (November 3, 2026) fixed the Hermes plugin's main gaps, per its PRs:
+
+| Problem before v1.2.0 | Now | PR |
+|---|---|---|
+| An automatic save that failed (server down, timeout, 5xx) was logged and dropped | Kept and re-sent before the next save and at exit, up to 5 tries, without storing it twice. Failed saves are held in memory, so a crash while the server is down still loses them | [#6013](https://github.com/vectorize-io/hindsight/pull/6013) |
+| A save the server accepted, then failed, counted as done | Watched until it settles; a failed one is retried on the server, up to 3 times | [#6013](https://github.com/vectorize-io/hindsight/pull/6013) |
+| Kanban workers and `delegate_task` sub-agents were saved into the bank | Skipped, like cron runs | [#6000](https://github.com/vectorize-io/hindsight/pull/6000) |
+| On Windows with a Chinese, Japanese or Korean locale the plugin failed to load | Loads | [#6000](https://github.com/vectorize-io/hindsight/pull/6000) |
+| In the Hermes Docker image the plugin couldn't find `uvx` | Found | [#6000](https://github.com/vectorize-io/hindsight/pull/6000) |
+
+The same release gives Hindsight's OpenClaw plugin the same three tools, so one bank works from both agents; see [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/#same-tools-in-both-agents-hindsight-v120).
 
 ## What changed for memory in Hermes v0.22.6
 
