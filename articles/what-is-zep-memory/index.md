@@ -2,7 +2,7 @@
 
 > What Zep memory is in 2026: the Zep Cloud temporal context graph, open-source Graphiti, how it stores and retrieves memory, outside test results, pricing, self-hosting, integrations.
 
-Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-10-23 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-11-04 · aiagentmemory.org
 
 
 **Zep memory** is Zep Cloud, a managed service that stores what an agent learns from users and data in a **temporal context graph**, then returns a prompt-ready block of relevant facts. Its open-source core is **Graphiti**, a framework for knowledge graphs that track when facts change. The old self-hosted Zep Community Edition is deprecated.
@@ -142,6 +142,19 @@ Not the current product, unless you're on Enterprise. Your options:
 - **BYOC** on the Enterprise plan deploys Zep inside your own cloud.
 - **Another open-source memory server.** If you want a whole service rather than an engine, [Hindsight](https://github.com/vectorize-io/hindsight) (MIT) runs in one Docker container with embedded PostgreSQL, with graph and time-range recall, consolidation and `reflect` all in the open-source release. It doesn't keep Zep-style validity windows per fact; it refines consolidated observations instead.
 
+### What changed in Graphiti 0.31 (October 2026)
+
+If you self-host Graphiti, the October releases change three things you will notice: the default model, who can reach the servers, and what deleting an episode does. From the [v0.31.0](https://github.com/getzep/graphiti/releases/tag/v0.31.0) and [v0.31.2](https://github.com/getzep/graphiti/releases/tag/v0.31.2) release notes and the linked pull requests:
+
+| Release | Change | What you need to do |
+|---|---|---|
+| 0.31.0 (Oct 14) | Default OpenAI model is now `gpt-6-luna` with prompt caching off; the default reranker moves from `gpt-4.1-nano` to `gpt-4.1-mini` ([#1999](https://github.com/getzep/graphiti/pull/1999)). The PR says OpenAI shuts down `gpt-4.1-nano` on October 23, 2026, after which old defaults fail on search reranking and small-model calls. | Upgrade if you rely on defaults; set models explicitly if you want the old cost profile. |
+| 0.31.0 | MCP server moves to MCP SDK 2.x ([#1921](https://github.com/getzep/graphiti/pull/1921)), and MCP tools now read and write the graph of the requested `group_id` ([#1926](https://github.com/getzep/graphiti/pull/1926)). Before, on FalkorDB, `add_memory` wrote to the group's graph while `get_episodes` searched the default one, so users saw empty results and failed deletes. | If FalkorDB MCP results looked empty, re-test after upgrading. |
+| 0.31.2 (Oct 20) | MCP and REST servers listen on `127.0.0.1` by default, and the Compose files publish the server and database ports on localhost only ([#2032](https://github.com/getzep/graphiti/pull/2032)). | Clients on another machine lose access until you set the host or change the port mapping. `docker run -p 8000:8000` with the published images is unchanged. |
+| 0.31.2 | `remove_episode` no longer deletes a fact that a later episode restated, and it rebuilds the summaries of entities the removed episode mentioned ([#2025](https://github.com/getzep/graphiti/pull/2025)). | Deletes now cost LLM calls: one per 10 remaining episodes of each touched entity. |
+
+The security note matters most. The repo now states ([#2029](https://github.com/getzep/graphiti/pull/2029)) that the MCP and REST servers are reference implementations with **no authentication or authorization**: any caller can read, change or delete all graph data. Graphiti also gives the same trust to every episode in a `group_id`, so untrusted content can change facts in that group; filtering what you ingest is your job. Put your own auth in front before you expose either server. Zep Cloud's Context MCP Server, by contrast, signs in through your identity provider. For the wider risk, see [memory injection attacks](/articles/ai-memory-injection/).
+
 ## Zep integrations: LangChain, LangGraph, n8n, MCP
 
 **LangGraph.** Zep maintains `zep-langgraph`, which adds helpers to persist messages, inject context before the model call, and give the agent a graph search tool. The getzep/zep repo also has packages for CrewAI, AutoGen, AG2, Google ADK, Pydantic AI, Strands, LiveKit, Microsoft Agent Framework, Mastra and the Vercel AI SDK.
@@ -178,6 +191,10 @@ Zep Cloud has a free tier for prototyping with 10,000 credits per month. Paid pl
 ### How accurate is Zep memory in independent tests?
 
 In the October 2026 MemoryTax study (Shanghai Jiao Tong University, not a vendor), open-source Graphiti 0.30.2 with default settings scored 43% with GPT-4o-mini, 51% with GPT-6 Luna and 87% with Claude Opus 5.5 on one LoCoMo conversation, below full context (74%, 92%, 95%) and Mem0 (78%, 80%, 95%). The model that builds the graph caps accuracy: a stronger reader did not recover facts a weaker model left out. It was one conversation and one run, and Zep Cloud was not tested.
+
+### Is the Graphiti MCP server safe to expose on a network?
+
+Not on its own. Since October 2026 the Graphiti repo states that its MCP and REST servers are reference implementations with no authentication or authorization, so any caller can read, change or delete all graph data. Graphiti 0.31.2 makes both listen on localhost by default. Put your own authentication in front before exposing them.
 
 ### Does Zep work with n8n and LangGraph?
 

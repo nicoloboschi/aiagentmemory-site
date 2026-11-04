@@ -135,7 +135,7 @@ So the history grows every turn, the bill grows with it, and eventually the wind
 
 A 1M-token window lets you paste a lot in. It doesn't decide what's worth keeping, it doesn't survive a new session, and you pay for every token again on every call. Accuracy also drops as the window fills, an effect Anthropic calls **context rot**: "As token count grows, accuracy and recall degrade."
 
-That's why agents pair the window with an external store. The store keeps facts across sessions; retrieval puts the few relevant ones back into the window. Memory servers such as Mem0, Zep and [Hindsight](https://github.com/vectorize-io/hindsight) do this for you. Hindsight (MIT) runs semantic, keyword, graph and time-based search at once and trims the result to a token budget you set with `max_tokens`, so memory takes a fixed slice of the window. Its default budget is generous: Mem0 measured 24K-44K tokens per retrieval against its own under 7K, so set it lower on small windows.
+That's why agents pair the window with an external store. The store keeps facts across sessions; retrieval puts the few relevant ones back into the window. Memory servers such as Mem0, [Zep](/articles/what-is-zep-memory/) and [Hindsight](https://github.com/vectorize-io/hindsight) do this for you. Hindsight (MIT) runs semantic, keyword, graph and time-based search at once and trims the result to a token budget you set with `max_tokens`, so memory takes a fixed slice of the window. Its default budget is generous: Mem0 measured 24K-44K tokens per retrieval against its own under 7K, so set it lower on small windows.
 
 The trade-offs between plain retrieval and agent memory are covered in [RAG vs agent memory](/articles/rag-vs-agent-memory/).
 
