@@ -2,7 +2,7 @@
 
 > How LLM memory works in LangChain 1.x: ConversationBufferMemory is deprecated, so use LangGraph checkpointers for chat history and stores for long-term memory.
 
-Source: https://aiagentmemory.org/articles/llm-memory-langchain/ · Updated 2026-10-22 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/llm-memory-langchain/ · Updated 2026-11-04 · aiagentmemory.org
 
 
 **LLM memory in LangChain** now means two LangGraph features: a **checkpointer** that saves each conversation thread's messages, and a **store** that keeps facts across threads. The old memory classes, such as `ConversationBufferMemory`, are deprecated. In LangChain 1.x they survive only in the `langchain-classic` compatibility package.
@@ -100,6 +100,14 @@ checkpointer.prune(["user-42-chat-1"], strategy="delete")  # drop the whole thre
 
 `keep_latest` (the default) keeps the checkpoint the agent loads next, plus its pending writes and blobs, and deletes everything older, including blobs only old checkpoints used, which the PR says is most of a long thread's storage. The conversation still works; you lose time travel and forks to older steps. Per the PR: a 6,000-checkpoint thread pruned in 100-200 ms in the author's local test; it refuses threads that use a `DeltaChannel` (deleting their history would empty them); two prunes of the same thread at once can fail, and retrying is safe; and Postgres reuses the freed space without shrinking the files (that takes `VACUUM FULL` or `pg_repack`). Pruning doesn't make the model see less: that's what summarization or trimming is for.
 
+`DeltaChannel` (beta) is the other way to keep long threads small. Instead of saving the full message list in every checkpoint, it saves only each step's new writes and rebuilds the list by replaying them, with a full snapshot every so often so replay stays short. [LangGraph 1.2.18](https://github.com/langchain-ai/langgraph/releases/tag/1.2.18) (26 October 2026, [#9420](https://github.com/langchain-ai/langgraph/pull/9420)) changed the default `snapshot_frequency` from 1,000 updates to 100, including for message channels. Per the release note, long threads now load faster but use more storage. If storage matters more than load time, pass `DeltaChannel(..., snapshot_frequency=1000)` to keep the old behavior.
+
+| Setting (LangGraph 1.2.18+) | Default | Effect on a long thread |
+|---|---|---|
+| `DeltaChannel(snapshot_frequency=...)` | 100 (was 1,000) | Full snapshot every N updates: lower = faster loads, more storage |
+| Supersteps since last snapshot ([`DELTA_MAX_SUPERSTEPS_SINCE_SNAPSHOT`](https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/channels/delta.py)) | 5,000 | Forces a snapshot, so replay stays bounded even when a channel stops changing |
+| `PostgresSaver.prune(...)` | `keep_latest` | Not allowed on threads that use `DeltaChannel` |
+
 ### Trimming instead of summarizing
 
 If you'd rather drop old turns than summarize them, the docs show a `@before_model` middleware that returns `RemoveMessage(id=REMOVE_ALL_MESSAGES)` followed by the messages to keep. One warning from the docs: the trimmed history must stay valid. Some providers need it to start with a user message, and every tool call needs its tool result. Cutting blindly in the middle of a tool exchange causes API errors. Trim at turn boundaries, or let summarization handle it.
@@ -187,4 +195,8 @@ Pass a LangGraph checkpointer to create_agent, for example InMemorySaver for tes
 ### What is the difference between short-term and long-term memory in LangChain?
 
 Short-term memory is the message history of one thread, saved by a checkpointer. Long-term memory is data shared across threads, such as user preferences, saved in a LangGraph store under a namespace like ('users', user_id) and read by tools or middleware.
+
+### Why do LangGraph threads that use DeltaChannel store more after upgrading to 1.2.18?
+
+LangGraph 1.2.18 (26 October 2026) made the beta DeltaChannel write a full snapshot every 100 updates instead of every 1,000, including for message channels. Long threads load faster but store more. Pass snapshot_frequency=1000 to DeltaChannel to keep the old behavior.
 

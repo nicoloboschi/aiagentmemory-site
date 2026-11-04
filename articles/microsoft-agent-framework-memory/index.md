@@ -2,12 +2,12 @@
 
 > How memory works in Microsoft Agent Framework (Python): AgentSession, history and context providers, and Mem0, Foundry, Cosmos DB, Redis, Hindsight compared.
 
-Source: https://aiagentmemory.org/articles/microsoft-agent-framework-memory/ · Updated 2026-10-24 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/microsoft-agent-framework-memory/ · Updated 2026-11-04 · aiagentmemory.org
 
 
 **Microsoft Agent Framework memory** is built from two pieces. An **`AgentSession`** holds one conversation's state across `agent.run` calls. **Context providers** run before and after each call: history providers reload and save the transcript, and memory providers extract and recall lasting facts through Mem0, Redis, Cosmos DB, Neo4j or Microsoft Foundry.
 
-Agent Framework is the [successor to Semantic Kernel and AutoGen](https://learn.microsoft.com/en-us/agent-framework/overview/), built by the same teams. The Python package hit 1.0 in April 2026 and is at 1.20 as of October 2026. Code below follows the [Agent Framework memory tutorial](https://learn.microsoft.com/en-us/agent-framework/get-started/memory) and the package's current signatures.
+Agent Framework is the [successor to Semantic Kernel and AutoGen](https://learn.microsoft.com/en-us/agent-framework/overview/), built by the same teams. The Python package hit 1.0 in April 2026 and is at 1.24 as of 30 October 2026, which [changes the Redis memory index](#what-changed-in-the-late-october-2026-releases) in a way that needs a re-ingest. Code below follows the [Agent Framework memory tutorial](https://learn.microsoft.com/en-us/agent-framework/get-started/memory) and the package's current signatures.
 
 ## What is memory in Microsoft Agent Framework?
 
@@ -128,7 +128,24 @@ That example only lasts as long as the session. For memory across sessions, use 
 | Redis | `agent-framework-redis` | Redis with a RedisVL index | Semantic search over stored context |
 | Hindsight | `hindsight-agent-framework` | Hindsight server (self-hosted, MIT) or Hindsight Cloud | Facts, entities, consolidated observations; `reflect` |
 
-The October 2026 releases mostly hardened these providers rather than adding new ones: Python 1.23.0 (22 October) rejects out-of-range Cosmos memory search parameters and closes the Redis search-index connection when the provider owns it, and .NET 1.26.0 (23 October) preserves caller cancellation in memory providers, per the [Agent Framework release notes](https://github.com/microsoft/agent-framework/releases).
+### What changed in the late-October 2026 releases
+
+The October 2026 releases mostly hardened these providers rather than adding new ones. One of them breaks existing Redis memory, per the [Agent Framework release notes](https://github.com/microsoft/agent-framework/releases):
+
+| Release | Date | Memory change | What you need to do |
+|---|---|---|---|
+| Python 1.23.0 | 22 Oct | Rejects out-of-range Cosmos memory search parameters; closes the Redis search-index connection when the provider owns it | Nothing |
+| .NET 1.26.0 | 23 Oct | Memory providers keep the caller's cancellation | Nothing |
+| .NET 1.27.0 | 30 Oct | Mem0 provider checks scopes on sessions restored from saved state ([#9827](https://github.com/microsoft/agent-framework/pull/9827)) | Upgrade if you restore sessions and use Mem0 |
+| Python 1.24.0 | 30 Oct | **Breaking:** `RedisContextProvider` uses a new index schema for user, agent, application and session scopes ([#9461](https://github.com/microsoft/agent-framework/pull/9461)) | Delete the old index and its hashes, then re-ingest |
+| Python 1.24.0 | 30 Oct | Experimental `AgentTriggeredCompactionStrategy` and `UnloadSkillsCompactionStrategy` ([#9384](https://github.com/microsoft/agent-framework/pull/9384)) | Optional |
+| Python 1.24.0 | 30 Oct | Python 3.11 is the supported baseline; the next release blocks 3.10 installs | Move off Python 3.10 |
+
+**The Redis change.** Before 1.24.0, the Redis provider matched scopes through Redis TAG defaults that don't keep every ID exactly. Per PR #9461, distinct application IDs (for example, ones differing only in case or punctuation) could be treated as the same one, which breaks the isolation the scopes are meant to give. The new schema stores scopes as exact, case-sensitive tokens and enforces the configured scope on every write and search. It refuses to start on an index built by an older version, and `overwrite_index=True` does not migrate it. To upgrade: delete the old context index and its context hashes, let the provider create the new index, and re-ingest your context data. Plan for this before you bump the package: there is no in-place migration.
+
+**The Mem0 fix (.NET).** The .NET `Mem0Provider` already refused empty storage and search scopes, but only when it created fresh state. A session restored from a saved state bag skipped that check. Per PR #9827, with empty restored scopes, clearing stored memories sent a delete request to Mem0 with no scope filter, and storage failures were only logged. From 1.27.0 the search, store and clear paths all run the same scope check and throw instead.
+
+**Agent-triggered compaction.** Compaction strategies used to run only on rules the developer set, such as a token count. The new `AgentTriggeredCompactionStrategy` wraps an existing strategy and gives the agent one tool to ask for compaction itself, for example after it finishes planning. The wrapped strategy still decides what is removed. `UnloadSkillsCompactionStrategy` adds an `unload_skill` tool that drops loaded skills from the context once the agent is done with them. Neither changes the saved history in sessions or history providers; they only trim what the model sees during the run.
 
 Third-party memory systems also ship providers. [Hindsight](https://github.com/vectorize-io/hindsight) publishes `hindsight-agent-framework`, whose `HindsightProvider` recalls memories in `before_run` and retains the exchange in `after_run`, so the model doesn't have to remember to call a memory tool:
 
@@ -176,4 +193,8 @@ Either in the model service, when it keeps server-side state such as OpenAI Resp
 ### Is Microsoft Agent Framework the replacement for Semantic Kernel and AutoGen?
 
 Yes. Microsoft's overview calls Agent Framework the direct successor to Semantic Kernel and AutoGen, built by the same teams, and provides migration guides from both. Version 1.0 of the Python package shipped in April 2026.
+
+### Why does RedisContextProvider reject my index after upgrading Agent Framework?
+
+Python 1.24.0 (30 October 2026) changed the beta RedisContextProvider index schema so user, agent, application and session scopes match exactly, and it refuses indexes built by older versions. overwrite_index=True does not migrate them. Delete the old context index and its context hashes, let the provider create a new index, and re-ingest the context data.
 
