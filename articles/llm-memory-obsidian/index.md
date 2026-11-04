@@ -85,7 +85,7 @@ An index file stops working once the wiki has thousands of pages. Options:
 - **qmd.** Karpathy mentions [qmd](https://github.com/tobi/qmd), a local Markdown search engine with BM25, vector search and LLM reranking, all on-device. It has a CLI and an MCP server (`qmd mcp`) with tools like `query` and `get`.
 - **Obsidian CLI.** Obsidian has an official command-line interface (it needs the 1.12 installer) that talks to the running app: `obsidian search query="..."`, `obsidian read`, `obsidian create`. An agent can call it from a shell.
 - **Basic Memory.** An AGPL-3.0 MCP server that stores notes as Markdown with an SQLite index. Point Obsidian at its folder and both see the same files. Version 1.0 (29 October 2026) renamed its MCP tools to `bm_write`, `bm_read`, `bm_search` and so on, so older prompts that call `write_note` need updating; the full list is in [AI memory MCP servers](/articles/ai-memory-mcp-server/#other-memory-mcp-servers-compared).
-- **OpenClaw Memory Wiki.** OpenClaw's `memory-wiki` plugin compiles agent knowledge into a vault with structured claims and evidence, and can write Obsidian-friendly Markdown.
+- **OpenClaw Memory Wiki.** [OpenClaw's](/articles/openclaw-ai-agent-memory/) `memory-wiki` plugin compiles agent knowledge into a vault with structured claims and evidence, and can write Obsidian-friendly Markdown.
 - **A memory server over the vault.** Hindsight's Obsidian plugin (beta) syncs a vault one way into a Hindsight bank, tags notes by vault, folder and date, and answers questions with citations to the source notes; the vault stays the source of truth.
 
 More options are compared on [AI memory MCP servers](/articles/ai-memory-mcp-server/).

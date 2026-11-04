@@ -127,7 +127,7 @@ Our run (with `qwen2.5:1.5b-instruct` as the LLM) printed `0.43 User is vegetari
 
 ## Lightweight open-source agents with SQLite memory
 
-If you want an agent framework rather than a memory library, two open-source options keep memory in a local SQLite file and run on Ollama:
+If you want an agent framework rather than a memory library, two open-source options keep memory in a local SQLite file and run on Ollama. (OpenClaw does too for its search index: its memory is Markdown notes, embedded with Ollama when you set `memory.search.provider` to `ollama`; see [OpenClaw memory](/articles/openclaw-ai-agent-memory/).)
 
 - **[Agno](https://docs.agno.com/memory/overview)** (Python): pass `db=SqliteDb(...)` and `update_memory_on_run=True`, and the agent saves sessions plus extracted user memories in one SQLite file.
 - **[Hermes Agent](/articles/hermes-agent-memory/)** (a full agent, not a library): stores every session in `~/.hermes/state.db` (SQLite with full-text search) next to small `MEMORY.md` and `USER.md` files. Its [provider docs](https://hermes-agent.nousresearch.com/docs/integrations/providers) point it at Ollama with `provider: custom` and `base_url: http://localhost:11434/v1`, and say it needs at least 64,000 tokens of context, so raise Ollama's default.

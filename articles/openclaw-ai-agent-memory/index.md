@@ -2,7 +2,7 @@
 
 > How OpenClaw memory works: MEMORY.md and daily notes, hybrid memory_search, embedding models, dreaming, and 8 memory plugins compared (OpenViking, Hindsight).
 
-Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 2026-10-24 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 2026-11-04 · aiagentmemory.org
 
 
 **OpenClaw memory** is a folder of Markdown files the agent writes and reads. `MEMORY.md` holds durable facts and decisions, `USER.md` holds your preferences, and dated daily notes hold running context. The first two load at session start. Everything is indexed in SQLite, and the agent finds older notes with `memory_search`, a hybrid of vector and keyword search.
@@ -104,6 +104,26 @@ Mem0 (`@mem0/openclaw-mem0` on [ClawHub](https://clawhub.ai/mem0/plugins/opencla
 
 For that months-of-history case, [Hindsight](https://github.com/vectorize-io/hindsight) has the strongest published numbers: on the long-history BEAM benchmark it leads Mem0 73.9 to 64.1 at 1M tokens and 64.1 to 48.6 at 10M, per [Mem0's own comparison](https://mem0.ai/compare/mem0-vs-hindsight) (vendor-run). It also does what dreaming does, in the background: related facts merge into evidence-backed **observations** that get refined rather than overwritten. Its plugin's setup wizard (`openclaw plugins install @vectorize-io/hindsight-openclaw`) offers Hindsight Cloud, your own server, or an embedded local daemon, which can run on Ollama to keep everything on the machine. The cost is more LLM calls on every write and more context per recall than Mem0. Memory also moves out of Markdown files you can read and edit into a database.
 
+## What changed in OpenClaw 2026.10.10 (November 2026)
+
+OpenClaw 2026.10.10 shipped on 3 November 2026. Its [changelog](https://github.com/openclaw/openclaw/blob/main/CHANGELOG/2026.10.10.md) has a long "Memory and search" section. Two changes can make memory behave differently after you upgrade: search ranking moved, and new conversation text takes longer to become searchable.
+
+| Change | What you notice | What to do | Source |
+|---|---|---|---|
+| Hybrid search gives weak keyword overlap less weight than a closer match in meaning | Results reorder; rare IDs or filename matches can move down | If you set a minimum search score, lower it when useful results disappear | [#177450](https://github.com/openclaw/openclaw/pull/177450), [#167004](https://github.com/openclaw/openclaw/pull/167004) |
+| Natural-language fallback when strict body and filename searches find nothing; keyword matches outside the first vector window can score | Questions that used to return nothing can now find notes | Nothing | [#161165](https://github.com/openclaw/openclaw/pull/161165) |
+| Relevant older dated notes stay eligible despite recency decay | Old daily notes show up again, though newer ones may still rank first | Nothing | [#168692](https://github.com/openclaw/openclaw/pull/168692) |
+| Session transcripts are indexed after a quiet period, not during active turns; searches use the published index | Something said a moment ago may not be in `memory_search` yet | Wait for the agent to go idle, or check `openclaw memory status` | [#170404](https://github.com/openclaw/openclaw/pull/170404) |
+| Growing transcripts only embed and write changed chunks; mostly unchanged sources reuse vectors | Less re-embedding work on long sessions | Nothing | [#103201](https://github.com/openclaw/openclaw/pull/103201), [#171402](https://github.com/openclaw/openclaw/pull/171402) |
+| A failed rebuild keeps the previous usable index; failed full reindexes retry with backoff | Search keeps working during a broken rebuild instead of going empty | Fix the embedding error; `openclaw doctor` explains it | [#168263](https://github.com/openclaw/openclaw/pull/168263), [#138786](https://github.com/openclaw/openclaw/pull/138786) |
+| Invalid, empty or all-zero query embeddings now show an error or Gateway warning | Before, vector matches were silently dropped | Check the embedding service and retry | [#168263](https://github.com/openclaw/openclaw/pull/168263), [#183475](https://github.com/openclaw/openclaw/pull/183475) |
+| A query embedding with the wrong vector size errors with an agent-specific force-rebuild command | Clear error after a model change instead of bad results | Run the rebuild command it prints | [#168465](https://github.com/openclaw/openclaw/pull/168465) |
+| Memory embeddings follow the provider's private-network rules, including redirects | A self-hosted embedding server on a private address can be refused | Allow that route explicitly on the embedding provider's ID | [#169847](https://github.com/openclaw/openclaw/pull/169847), [#170173](https://github.com/openclaw/openclaw/pull/170173) |
+| Private memory reads enforce role and admin checks; owner sessions and cross-agent subagents get access back | Automations linked to older chats can read memory again | Nothing | [#181359](https://github.com/openclaw/openclaw/pull/181359) |
+| Memory Wiki keeps handwritten text inside the marked Notes section when regenerating concept pages | Hand edits outside that section on older generated pages are not protected | Move hand edits into the Notes section | [#175707](https://github.com/openclaw/openclaw/pull/175707) |
+
+The changelog is careful to say the ranking change is "not a guarantee that every exact match comes first". The [report on exact recall](https://github.com/openclaw/openclaw/issues/162764) is still open. If your agent looks up exact tokens such as ticket numbers or env var names, test those queries after upgrading.
+
 ## Useful commands and fixes
 
 ```bash
@@ -128,6 +148,10 @@ OpenAI is the default embedding provider. You can set memory.search.provider to 
 ### Why is OpenClaw memory_search returning nothing?
 
 Check the index and provider with openclaw memory status, confirm the memory files aren't empty, and rebuild with openclaw memory index --force. If the embedding provider fails, OpenClaw falls back to keyword-only search, so exact words still match.
+
+### Why did OpenClaw memory search results change after updating to 2026.10.10?
+
+OpenClaw 2026.10.10 (3 November 2026) changed hybrid search so weak keyword overlap counts less than a closer match in meaning, so results reorder and rare IDs can move down. If you set a minimum search score, lower it. Session transcripts are also now indexed after a quiet period, so text from the current turn may not be searchable yet.
 
 ### Which memory plugins work with OpenClaw?
 
