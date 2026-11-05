@@ -2,7 +2,7 @@
 
 > Hindsight is an MIT-licensed agent memory server with retain, recall and reflect. How it works, its BEAM benchmark lead, its limits, and when to pick another tool.
 
-Source: https://aiagentmemory.org/articles/ai-memory-hindsight/ · Updated 2026-10-30 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-memory-hindsight/ · Updated 2026-11-05 · aiagentmemory.org
 
 
 **Hindsight** is an open-source agent memory server from Vectorize, released under the MIT license with the full server included. It gives an AI agent three operations: **retain** (store and extract facts), **recall** (search memories) and **reflect** (reason over them to answer a question). It runs on PostgreSQL with pgvector, self-hosted or as the managed Hindsight Cloud.
@@ -120,6 +120,22 @@ Clients also exist for Node.js/TypeScript (`@vectorize-io/hindsight-client`) and
 
 **Safety features.** An opt-in **Memory Defense** policy scans retained content against 45 patterns for secrets and PII and redacts or blocks matches. That's useful context for [memory poisoning risks](/articles/ai-memory-injection/), though pattern scanning won't catch a well-written malicious instruction.
 
+### What changed in v1.2.0 (November 2026)
+
+[Hindsight v1.2.0](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0) shipped on 3 November 2026. The changes that affect what a bank stores and returns, from the linked pull requests:
+
+| Area | Before v1.2.0 | Now |
+|---|---|---|
+| Deleting a bank | Its LLM request log (full prompts and model output, so the bank's memory text) stayed until the retention sweep, and never left with retention set to `-1`; maintenance queue rows also stayed | Both are deleted with the bank; a test checks that no table keeps a row. The audit log is kept on purpose and trimmed by `HINDSIGHT_API_AUDIT_LOG_RETENTION_DAYS` ([#5948](https://github.com/vectorize-io/hindsight/pull/5948), [#5958](https://github.com/vectorize-io/hindsight/pull/5958)) |
+| Same-day corrections | If an amendment was retained before the older rule it amends, consolidation could let the older rule overwrite it | The code compares the times and marks observations newer than the incoming facts; the model only adds history to them ([#5966](https://github.com/vectorize-io/hindsight/pull/5966)) |
+| Where things happened | Extraction asked for the place, but the fact text never stored it | Facts read like `Alice visited Paris \| When: 2023 \| Where: Paris` ([#6133](https://github.com/vectorize-io/hindsight/pull/6133)) |
+| A chunk too small to split | Dropped silently: the document was saved with 0 facts and a success status | The retain fails and the worker retries it ([#6133](https://github.com/vectorize-io/hindsight/pull/6133)) |
+| Reflect reading mental models | Only the top page came back whole, and only if under 4,000 tokens; the rest came back as their first 280 characters | Pages come back whole in rank order up to 16,000 tokens by default, configurable per request, bank or server ([#6009](https://github.com/vectorize-io/hindsight/pull/6009)) |
+| Coding agents (OpenCode, Kilo, pi, Prime Agent) | The memory block sat in the system prompt and broke the provider's prompt cache every turn | It goes in the user message, so the cache keeps working ([#6053](https://github.com/vectorize-io/hindsight/pull/6053)) |
+| A coding session that moves to another repo | The new repo's bank got a copy of the whole conversation | Each turn is saved once, into the bank of the folder it happened in ([#6052](https://github.com/vectorize-io/hindsight/pull/6052)) |
+
+Two costs come with this. Reflect can now read up to 16,000 tokens of pages per search instead of at most one page under 4,000, so it may use more input tokens. And one chunk that can't be split now fails the whole document instead of saving part of it. The Hermes and OpenClaw plugin changes in the same release are covered on [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/#same-tools-in-both-agents-hindsight-v120).
+
 ## Benchmarks: what the numbers say
 
 Hindsight's [benchmark site](https://benchmarks.hindsight.vectorize.io/) reports these scores. The comparison column comes from [Mem0's own Mem0 vs Hindsight page](https://mem0.ai/compare/mem0-vs-hindsight), which lists the same Hindsight numbers, so the head-to-head isn't only Hindsight's marketing:
@@ -187,4 +203,8 @@ Its benchmark site reports 94.6 on LongMemEval, 92 on LoCoMo, 73.9 on BEAM 1M an
 ### When should I not use Hindsight?
 
 Its own README says it may be overkill for simple n8n-style workflows. It also returns more context per retrieval than Mem0 by default and calls an LLM on every write. For a short coding-agent instruction file, document RAG with Drive or Gmail connectors, or Cypher graph queries, a plain file, Supermemory or Graphiti fits better.
+
+### Does deleting a Hindsight bank remove all its data?
+
+Since v1.2.0 (3 November 2026), yes, except the audit log. Deleting a bank now also deletes its LLM request log, which holds full prompts and model output, and its maintenance queue rows; before, the request log stayed until the retention sweep. The audit log of what was done to the bank is kept and trimmed by HINDSIGHT_API_AUDIT_LOG_RETENTION_DAYS.
 

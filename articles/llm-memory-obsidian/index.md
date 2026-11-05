@@ -2,7 +2,7 @@
 
 > How to use Obsidian as LLM memory, based on Andrej Karpathy's LLM Wiki gist: raw sources, an LLM-maintained wiki and a schema file, plus search and MCP tools.
 
-Source: https://aiagentmemory.org/articles/llm-memory-obsidian/ · Updated 2026-10-08 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/llm-memory-obsidian/ · Updated 2026-11-05 · aiagentmemory.org
 
 
 **Using Obsidian as LLM memory** means letting an AI agent write and maintain a folder of linked Markdown notes that you browse in Obsidian. The best-known version is **Andrej Karpathy's LLM Wiki**, published as a gist in April 2026. You drop sources into a folder, the agent compiles them into wiki pages, and both of you read the wiki instead of re-searching raw documents.
@@ -86,7 +86,18 @@ An index file stops working once the wiki has thousands of pages. Options:
 - **Obsidian CLI.** Obsidian has an official command-line interface (it needs the 1.12 installer) that talks to the running app: `obsidian search query="..."`, `obsidian read`, `obsidian create`. An agent can call it from a shell.
 - **Basic Memory.** An AGPL-3.0 MCP server that stores notes as Markdown with an SQLite index. Point Obsidian at its folder and both see the same files. Version 1.0 (29 October 2026) renamed its MCP tools to `bm_write`, `bm_read`, `bm_search` and so on, so older prompts that call `write_note` need updating; the full list is in [AI memory MCP servers](/articles/ai-memory-mcp-server/#other-memory-mcp-servers-compared).
 - **OpenClaw Memory Wiki.** [OpenClaw's](/articles/openclaw-ai-agent-memory/) `memory-wiki` plugin compiles agent knowledge into a vault with structured claims and evidence, and can write Obsidian-friendly Markdown.
-- **A memory server over the vault.** Hindsight's Obsidian plugin (beta) syncs a vault one way into a Hindsight bank, tags notes by vault, folder and date, and answers questions with citations to the source notes; the vault stays the source of truth.
+- **A memory server over the vault.** Hindsight's [Obsidian plugin](https://github.com/vectorize-io/hindsight/tree/main/hindsight-integrations/obsidian) (beta, installed through BRAT) syncs a vault one way into a Hindsight bank, tags notes by vault, folder and date, and answers questions with citations to the source notes; the vault stays the source of truth.
+
+### Dating notes by last edit (Hindsight v1.2.0)
+
+A vault synced into a memory server has a dating problem: a note written in March and extended in October is one file with one date. Hindsight's plugin used to send every re-synced note with its creation date, so text added months later got the old date, and a relative phrase like "in October" could be read against the wrong year. [Hindsight v1.2.0](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0) (3 November 2026) fixed this and a sync bug ([PR #5967](https://github.com/vectorize-io/hindsight/pull/5967)):
+
+| Change | Before v1.2.0 | Now |
+|---|---|---|
+| **Date facts by** setting (CLI: `--timestamp-from created\|updated`) | Notes always dated by creation time | Choose **Last-edit time**: uses the note's frontmatter `updated` / `modified`, else the file's modified time. Default is still creation time, so nothing changes unless you opt in |
+| Note deleted or renamed after its server copy was already gone | Sync failed on that note every time; a renamed note was never uploaded | Treated as already deleted; the sync finishes and the new path uploads |
+
+If your notes are journals or running logs that you keep appending to, switch to last-edit time. For notes written once and left alone, the default is fine. The same dating question matters for any memory over notes: see [temporal reasoning in AI memory](/articles/temporal-reasoning-ai-memory/).
 
 More options are compared on [AI memory MCP servers](/articles/ai-memory-mcp-server/).
 
@@ -122,4 +133,8 @@ Make the vault the agent's working folder, put source documents in a raw folder 
 ### Is an LLM wiki better than RAG?
 
 It's different. RAG re-finds fragments on every question. A wiki compiles knowledge once and keeps it updated, so cross-references and contradictions are already worked out. Karpathy notes an index file works at moderate scale; past that you add a search tool such as qmd.
+
+### How does a memory server date notes I keep editing?
+
+By default Hindsight's Obsidian plugin dates every note by its creation time, so text added months later gets the old date. Since Hindsight v1.2.0 (3 November 2026) the 'Date facts by' setting can use the last-edit time instead: the note's frontmatter updated or modified field, else the file's modified time. Use it for journals and running logs.
 
