@@ -2,7 +2,7 @@
 
 > How OpenClaw memory works: MEMORY.md and daily notes, hybrid memory_search, embedding models, dreaming, and 8 memory plugins compared (OpenViking, Hindsight).
 
-Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 2026-11-04 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 2026-11-05 · aiagentmemory.org
 
 
 **OpenClaw memory** is a folder of Markdown files the agent writes and reads. `MEMORY.md` holds durable facts and decisions, `USER.md` holds your preferences, and dated daily notes hold running context. The first two load at session start. Everything is indexed in SQLite, and the agent finds older notes with `memory_search`, a hybrid of vector and keyword search.
@@ -123,6 +123,18 @@ OpenClaw 2026.10.10 shipped on 3 November 2026. Its [changelog](https://github.c
 | Memory Wiki keeps handwritten text inside the marked Notes section when regenerating concept pages | Hand edits outside that section on older generated pages are not protected | Move hand edits into the Notes section | [#175707](https://github.com/openclaw/openclaw/pull/175707) |
 
 The changelog is careful to say the ranking change is "not a guarantee that every exact match comes first". The [report on exact recall](https://github.com/openclaw/openclaw/issues/162764) is still open. If your agent looks up exact tokens such as ticket numbers or env var names, test those queries after upgrading.
+
+### OpenClaw 2026.11.1 (5 November 2026)
+
+The next stable release, [2026.11.1](https://github.com/openclaw/openclaw/releases/tag/v2026.11.1), has no new memory features. It fixes how long conversations survive compaction and how big transcripts are read, which is what memory search and the memory flush work from.
+
+| Change | What you notice | Source |
+|---|---|---|
+| Compaction keeps the human request that is still being worked on, across repeated summaries. Before, a later internal update (a tool result, a background run) could replace it, or finished work could come back | After several compactions in one long task, the agent still knows what you asked for | [#180214](https://github.com/openclaw/openclaw/pull/180214) |
+| Memory indexing waits until an archived transcript is fully written before indexing it | Old sessions are indexed from the complete text, not a half-written copy | [release notes](https://github.com/openclaw/openclaw/releases/tag/v2026.11.1) |
+| Very long transcripts are read in pages instead of all at once (earlier failures at 8 MiB, worker out-of-memory on "Resume in new session") | Big sessions resume and load instead of crashing | [#188450](https://github.com/openclaw/openclaw/pull/188450), [#182091](https://github.com/openclaw/openclaw/pull/182091), [#190690](https://github.com/openclaw/openclaw/pull/190690) |
+
+None of these change ranking or what gets saved, so there is nothing to re-test after upgrading. The search changes in 2026.10.10 above still apply.
 
 ## Useful commands and fixes
 
