@@ -2,14 +2,14 @@
 
 > How conversational memory works in Spring AI 2.0: ChatMemory, MessageWindowChatMemory, advisors, JDBC/Redis/Neo4j repositories, 2.0 breaking changes, and the 2.1 move to session memory.
 
-Source: https://aiagentmemory.org/articles/spring-ai-conversational-memory/ · Updated 2026-11-03 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/spring-ai-conversational-memory/ · Updated 2026-11-05 · aiagentmemory.org
 
 
 **Spring AI conversational memory** is handled by the `ChatMemory` interface and a memory **advisor** on the `ChatClient`. `MessageWindowChatMemory` keeps the last 20 messages per conversation by default. A `ChatMemoryRepository` stores them in memory, JDBC, Cassandra, Neo4j, MongoDB or Redis. `MessageChatMemoryAdvisor` adds that history to every prompt.
 
 This page follows the [Spring AI 2.0.x chat memory reference](https://docs.spring.io/spring-ai/reference/api/chat-memory.html). Spring AI 2.0.0 shipped in June 2026 and changed memory behavior in ways that break 1.x code; those changes are covered below. Spring AI is a Java framework, so the examples are Java.
 
-**Coming in 2.1:** Spring AI 2.1.0-RC1 (23 October 2026) deprecates this whole `ChatMemory` API in favor of a new **session memory**, with removal planned for 3.0.0. Existing code still runs. See [what changes in Spring AI 2.1](#spring-ai-21-chatmemory-is-deprecated-for-session-memory) before you start new code on `ChatMemory`.
+**Coming in 2.1:** Spring AI 2.1.0-RC1 (23 October 2026, RC2 on 5 November) deprecates this whole `ChatMemory` API in favor of a new **session memory**, with removal planned for 3.0.0. Existing code still runs. See [what changes in Spring AI 2.1](#spring-ai-21-chatmemory-is-deprecated-for-session-memory) before you start new code on `ChatMemory`.
 
 ## What is conversational memory in Spring AI?
 
@@ -111,11 +111,11 @@ Before [2.0.2](https://github.com/spring-projects/spring-ai/releases/tag/v2.0.2)
 
 ## Spring AI 2.1: ChatMemory is deprecated for session memory
 
-[Spring AI 2.1.0-RC1](https://github.com/spring-projects/spring-ai/releases/tag/v2.1.0-RC1) adds **session memory** ([#7161](https://github.com/spring-projects/spring-ai/pull/7161)) and deprecates the chat memory API for removal in 3.0.0 ([#7186](https://github.com/spring-projects/spring-ai/pull/7186)). The deprecation itself changes nothing at runtime. 2.1.0 is a release candidate, not GA, as of early November 2026.
+[Spring AI 2.1.0-RC1](https://github.com/spring-projects/spring-ai/releases/tag/v2.1.0-RC1) adds **session memory** ([#7161](https://github.com/spring-projects/spring-ai/pull/7161)) and deprecates the chat memory API for removal in 3.0.0 ([#7186](https://github.com/spring-projects/spring-ai/pull/7186)). The deprecation itself changes nothing at runtime. [2.1.0-RC2](https://github.com/spring-projects/spring-ai/releases/tag/v2.1.0-RC2) followed on 5 November 2026; its only session change is the safe batch write described [below](#writing-to-a-session-from-several-places-21-rc2). 2.1.0 is still a release candidate, not GA.
 
 A session stores the conversation as an append-only log of events, and the prompt is built from a view of that log. When the history grows, **compaction** moves older turns out of the view (optionally replacing them with an LLM summary) but never deletes them from the log, and never splits a turn, so the model never sees a tool call without its result. That fixes the agent problem above, where the JDBC chat memory repository drops tool messages.
 
-| What | Status in 2.1.0-RC1 |
+| What | Status in 2.1.0-RC1 and RC2 |
 |---|---|
 | `ChatMemory`, `MessageWindowChatMemory`, `ChatMemoryRepository`, `InMemoryChatMemoryRepository` | Deprecated, removal in 3.0.0 |
 | `MessageChatMemoryAdvisor` | Deprecated; use `SessionAdvisors.builder(sessionService)` |
@@ -152,6 +152,17 @@ What to watch when you move:
 - **No data migration.** Sessions use their own tables and don't read `SPRING_AI_CHAT_MEMORY`, so old conversations don't carry over on their own.
 - **Fewer databases, for now.** If you store chat memory in Redis, Cassandra, Neo4j, MongoDB, Oracle, SQL Server, HSQLDB or SQLite, there is no session store for it yet. Stay on chat memory until one ships.
 - **Still one conversation.** A session is still scoped to one session ID. It doesn't carry facts about a user into a new conversation; that still needs a separate memory service (see below).
+
+### Writing to a session from several places (2.1-RC2)
+
+In RC1, only compaction could write to the session log safely when another writer was active. Any other code that read the log and wrote events based on it (your own summarizer, a note-taker, a second request on the same session) could write on top of a log that had already moved. RC2 puts the same safe write on `SessionService` ([#7314](https://github.com/spring-projects/spring-ai/pull/7314)):
+
+| Method | What it does |
+|---|---|
+| `getEventVersion(sessionId)` | Returns a counter that goes up on every new event and once per successful batch; `0` for an empty or unknown session |
+| `appendEvents(sessionId, events, expectedVersion)` | Writes all the events in one step only if the counter still equals `expectedVersion`; otherwise writes nothing and returns `false` |
+
+The pattern from the [session concepts docs](https://github.com/spring-projects/spring-ai/blob/v2.1.0-RC2/spring-ai-docs/src/main/antora/modules/ROOT/pages/api/session/concepts.adoc): read the version, read the events your write depends on, build the new events, call `appendEvents`, and on `false` read again and rebuild. A system message in the batch throws, as with `appendEvent`, unless `allowSystemMessages(true)` is set, and that check runs before the version check.
 
 ## Upgrading chat memory from Spring AI 1.x to 2.0
 

@@ -115,7 +115,7 @@ It does pair well with memory, though. A stable system prompt plus a memory bloc
 
 Since the model keeps nothing between calls, any LLM memory system that lasts has to live outside it. The app stores information in a database, then puts the relevant pieces back into the context window. The common forms:
 
-- **Chat history buffer:** resend recent turns, trim or summarize older ones.
+- **Chat history buffer:** resend recent turns, trim or summarize older ones. Frameworks ship this ready-made; Spring AI 2.1, for example, keeps every turn in an append-only [session log](/articles/spring-ai-conversational-memory/#spring-ai-21-chatmemory-is-deprecated-for-session-memory) and only drops (or summarizes) old turns in the view the model sees.
 - **RAG:** search a document store and add matching passages.
 - **Memory layers:** extract facts from conversations, store them per user, retrieve the few that matter. Tools like Mem0, Zep, Letta and [Hindsight](https://github.com/vectorize-io/hindsight) work this way. Hindsight also runs a `reflect` step that reasons over stored memories before answering, and it reports the highest scores among these tools on the long-history BEAM benchmark (73.9 at 1M tokens, 64.1 at 10M, vendor-reported). The cost is a larger memory block per retrieval than Mem0's, which you cap with a token budget. For how these memory layers are tested, and the newer benchmarks that score recall and the decision made from it separately, see [LLM memory evaluation](/articles/llm-memory-evaluation/).
 - **Self-managed memory:** the model calls tools to read and write its own store, as in [MemGPT](https://arxiv.org/abs/2310.08560) (Packer et al., 2023), which treats the context window like RAM and external storage like disk.
