@@ -2,7 +2,7 @@
 
 > How Hermes Agent skills work: how the agent writes SKILL.md files from experience, where they live, how they load, the Skills Hub, the curator, and limits.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-skills/ · Updated 2026-11-02 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-skills/ · Updated 2026-11-06 · aiagentmemory.org
 
 
 **Hermes Agent skills** are the agent's procedural memory: markdown files that record how to do a task. Hermes writes them itself after working out a multi-step job, patches them when it hits a new pitfall, and loads one only when a task needs it. Each skill is a `SKILL.md` folder under `~/.hermes/skills/`, in the open Agent Skills format.
@@ -102,7 +102,7 @@ The skill list is part of the system prompt, which stays fixed so the provider's
 
 ## The Skills Hub: installing and sharing skills
 
-The **Skills Hub** is Hermes's skill installer. It searches several registries and installs from them with a security scan. In the repo on 21 October 2026, Hermes shipped 58 bundled `SKILL.md` files under `skills/` and 153 optional ones under `optional-skills/` (counted from the repo tree).
+The **Skills Hub** is Hermes's skill installer. It searches several registries and installs from them with a security scan. At the [v0.23.0](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0) tag (5 November 2026), Hermes ships 44 bundled `SKILL.md` files under `skills/` and 142 optional ones under `optional-skills/` (counted from the repo tree), down from 58 and 153 on 21 October: Word, PowerPoint and Excel merged into one `microsoft-office` skill, 12 niche skills became optional installs, and optional skills that vendor repos or catalog MCPs now cover were removed, per the release notes.
 
 | Source | Example identifier | Trust level |
 |---|---|---|

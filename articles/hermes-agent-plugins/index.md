@@ -1,8 +1,8 @@
 # Hermes Agent Plugins: Install, Catalog, Memory Providers
 
-> How Hermes Agent plugins work: plugin types, hermes plugins install, the SHA-pinned catalog, memory provider plugins, and what v0.22.6 changed (Nov 2026).
+> How Hermes Agent plugins work: plugin types, hermes plugins install, the SHA-pinned catalog, memory provider plugins, and what v0.23.0 changed (Nov 2026).
 
-Source: https://aiagentmemory.org/articles/hermes-agent-plugins/ · Updated 2026-11-03 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-plugins/ · Updated 2026-11-06 · aiagentmemory.org
 
 
 **Hermes Agent plugins** are folders of Python code with a `plugin.yaml` manifest that add tools, hooks, slash commands, memory backends and other features without changing Hermes's core. You install them with `hermes plugins install <name>` from a human-reviewed, commit-pinned catalog, or from any Git repo. Memory provider plugins are a special kind: only one runs at a time.
@@ -80,9 +80,25 @@ Hermes is also moving its own features out of core into `official` plugins. In [
 
 The docs are blunt about what the catalog is not: "Cataloged ≠ audited." Review checks the pinned commit and the declared capabilities at admission. It isn't a security audit, so read the code of anything you give credentials to. A bare name that isn't in the catalog is an error; `owner/repo` installs skip the catalog and show an unvetted-code warning.
 
+## What changed for plugins in Hermes v0.23.0
+
+[Hermes v0.23.0](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0) (November 5, 2026) is the full release over the v0.22.x patches, so the v0.22.6 changes below are in it too. The plugin changes, from the release notes and PR bodies:
+
+| Change | In v0.23.0 | Source |
+|---|---|---|
+| Catalog size | 1,050 entries at the v0.23.0 tag (754 on October 21). By shelf: 389 tools, 225 desktop, 96 models, 79 memory, 65 general, 62 automation, 53 platform, 52 web, 27 voice, 2 uncategorized | Our count of `plugin-catalog/*.yaml` at the tag (excluding `removed.yaml`), November 6, 2026 |
+| Tiers | 1,019 `community`, 21 `official`, 9 `verified`, 1 with no tier. All 79 Memory-shelf entries are still `community`, including Honcho, Mem0, Supermemory and Hindsight | Same count |
+| Update everything | `hermes plugins update` with no name asks once and updates all; one failure doesn't stop the rest. Without a terminal it updates nothing unless you pass `--yes`, and then new capabilities stay ungranted | [#141513](https://github.com/NousResearch/hermes-agent/pull/141513) |
+| Auto-update | `plugins.auto_apply` (off by default), also `/plugins auto-update` and a switch in Desktop and the dashboard; catalog installs update too | Release notes, [#85794](https://github.com/NousResearch/hermes-agent/pull/85794) |
+| New plugin APIs | `ctx.post_message` posts one message to the current chat and edits it in place; `ctx.side_question` lets a plugin you allow ask the session's own agent (same memory, whole conversation) one text question after a turn | [#141005](https://github.com/NousResearch/hermes-agent/pull/141005), [#143791](https://github.com/NousResearch/hermes-agent/pull/143791) |
+| New hooks | `post_compaction` (once per compaction that lands, with before/after token estimates) and `on_session_delete` (delete, archive, prune; no exactly-once guarantee) | [#141017](https://github.com/NousResearch/hermes-agent/pull/141017), [#140995](https://github.com/NousResearch/hermes-agent/pull/140995) |
+| Breaking rename | `hermes mcp serve` is now `hermes mcp-serve`; MCP clients that launch Hermes must change their args, nothing rewrites them | Release notes |
+
+For memory providers, the two hooks fill gaps in the `MemoryProvider` interface below: a provider already got `on_pre_compress`, and can now also re-inject what compaction removed and clean up its copy when you delete a session. `ctx.side_question` is worth a look before you allow it: the answer comes from an agent with your memory loaded, so a plugin with that grant can ask about anything the agent knows. The new memory providers in the catalog this cycle are Mnemoverse, post-cortex, Membase, conxt, Inspeximus and nyx.
+
 ## What changed for plugins in Hermes v0.22.6
 
-[Hermes v0.22.6](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.6) (November 2, 2026) is a patch release that rolls up hundreds of merged pull requests; the curated notes are due with v0.23.0. These three plugin changes are in the v0.22.6 tag (checked against the merge commits):
+[Hermes v0.22.6](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.6) (November 2, 2026) is a patch release that rolls up hundreds of merged pull requests; v0.23.0 later documented it in full. These three plugin changes are in the v0.22.6 tag (checked against the merge commits):
 
 | Change | Before | In v0.22.6 | PR |
 |---|---|---|---|
@@ -300,7 +316,7 @@ Run hermes plugins search <term> to find it in the catalog, then hermes plugins 
 
 ### Which memory provider plugins does Hermes Agent have?
 
-On October 21, 2026 the Hermes plugin catalog had 67 entries on its Memory shelf, all community tier. The Hermes docs document Honcho, OpenViking, Mem0, Hindsight, Holographic and Supermemory as catalog providers, plus RetainDB, ByteRover and Memori outside the catalog. Only one external provider can be active at a time.
+At the Hermes v0.23.0 tag (November 5, 2026) the plugin catalog had 79 entries on its Memory shelf, up from 67 on October 21, all community tier. The Hermes docs document Honcho, OpenViking, Mem0, Hindsight, Holographic and Supermemory as catalog providers, plus RetainDB, ByteRover and Memori outside the catalog. Only one external provider can be active at a time.
 
 ### What is the difference between plugins.enabled and memory.provider in Hermes?
 

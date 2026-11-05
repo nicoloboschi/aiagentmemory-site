@@ -2,7 +2,7 @@
 
 > Hermes Agent remembers with MEMORY.md (2,200 chars) and USER.md (1,375 chars), loaded once per session, plus SQLite session search. Which of its 9 memory providers to pick, by need, and why Hermes forgets.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-04 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-06 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -109,7 +109,7 @@ If a provider you use stops shipping with Hermes, you don't have to reinstall it
 
 OpenViking has published a test against Hermes's own built-in memory. In its May 2026 benchmark post, Hermes scored 33.38% on LoCoMo with native memory and 82.86% with OpenViking, using 34.3% fewer input tokens. Those are OpenViking's own numbers, without a stated judge model, and they compare against Hermes's 1,300-token files rather than against other providers. OpenViking's Hermes setup also offers a Quick Local server or Volcengine's hosted service, and memories show up only after background extraction finishes; details in [OpenViking agent memory](/articles/openviking-agent-memory/).
 
-How these provider plugins install, update and hook into each turn, plus the full list of 67 Memory-shelf entries in the catalog, is covered in [Hermes Agent plugins](/articles/hermes-agent-plugins/).
+How these provider plugins install, update and hook into each turn, plus the 79 Memory-shelf entries in the catalog at v0.23.0, is covered in [Hermes Agent plugins](/articles/hermes-agent-plugins/).
 
 Setup is the same for each:
 
@@ -150,9 +150,23 @@ Of the nine, Hindsight and Mem0 are the two with published head-to-head numbers.
 
 The same release gives Hindsight's OpenClaw plugin the same three tools, so one bank works from both agents; see [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/#same-tools-in-both-agents-hindsight-v120).
 
+## What changed for memory in Hermes v0.23.0
+
+[v0.23.0](https://github.com/NousResearch/hermes-agent/releases/tag/v0.23.0) (November 5, 2026) is the full release that documents the v0.22.1 to v0.22.7 patches, so everything in the v0.22.6 table below is in it too. These are the memory-related changes not covered there, from the release notes and the PR bodies:
+
+| Change | Before | In v0.23.0 | Source |
+|---|---|---|---|
+| One gateway per profile | The CLI, TUI, Desktop, editors, bots and cron could each run their own agent and write the same conversation in `state.db` at once, so messages were written twice or went missing | One gateway process owns the profile's sessions; every surface attaches to it, with one queue and one writer per session | Release notes, [#106742](https://github.com/NousResearch/hermes-agent/pull/106742) |
+| Compaction summaries | Hedges like "probably" were often lost, so a guess came back after compaction as a fact | Each summary has an "Unverified / Working Hypotheses" section with one `UNVERIFIED: <claim> — <basis>` line per uncertain claim; about 79 more prompt tokens per summary call in the PR's test | [#86019](https://github.com/NousResearch/hermes-agent/pull/86019) |
+| Skills after compaction | Only skill bodies over 5,000 characters left a "reload" note; smaller ones vanished silently | Every skill compaction removes leaves a reload marker | [#138428](https://github.com/NousResearch/hermes-agent/pull/138428) |
+| Plugin hooks for memory | A provider got `on_pre_compress` but no signal after compaction or when a session was deleted | `post_compaction` fires once per compaction that lands, so a provider can re-inject what was summarized away; `on_session_delete` fires on delete, archive and prune (no exactly-once guarantee) | [#141017](https://github.com/NousResearch/hermes-agent/pull/141017), [#140995](https://github.com/NousResearch/hermes-agent/pull/140995) |
+| Memory shelf in the plugin catalog | 67 entries (October 21) | 79 entries at the v0.23.0 tag, all `community` tier; new ones include Mnemoverse, post-cortex, Membase, conxt, Inspeximus and nyx | Our count of `plugin-catalog/` at the tag |
+
+The change most people will notice is the single gateway. Before it, the same chat open in two places could have two agents writing one history, which is where duplicated or missing messages came from. Now a chat opened anywhere is one conversation with one writer, so `session_search` reads one clean history. The `UNVERIFIED:` lines matter for long sessions: a guess the agent made before compaction no longer comes back as a fact it "remembers". More on the plugin side in [Hermes Agent plugins](/articles/hermes-agent-plugins/#what-changed-for-plugins-in-hermes-v0230).
+
 ## What changed for memory in Hermes v0.22.6
 
-[v0.22.6](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.6) (November 2, 2026) is a patch release rolling up 776 merged PRs; the full notes come with v0.23.0. The memory changes below are each checked against the PR and confirmed to be in the v0.22.6 tag:
+[v0.22.6](https://github.com/NousResearch/hermes-agent/releases/tag/v0.22.6) (November 2, 2026) is a patch release rolling up 776 merged PRs; v0.23.0 later documented it in full. The memory changes below are each checked against the PR and confirmed to be in the v0.22.6 tag:
 
 | Change | Before | Now | PR |
 |---|---|---|---|
@@ -204,4 +218,8 @@ It depends on the need; Hermes's docs don't name one. Hindsight for months of hi
 ### Why does Hermes save things about me I never said?
 
 Before v0.22.6 (November 2, 2026) the background memory review could turn a one-off request into a standing preference, and Kanban worker turns reached external providers as if you had said them. v0.22.6 fixes both: the review saves only facts backed by a user message or tool result (PR #80788), and Kanban turns carry a kanban:dispatcher author (PR #144861). Run hermes update, then remove wrong entries with the memory tool or hermes journey delete.
+
+### What did Hermes v0.23.0 change for memory?
+
+v0.23.0 (November 5, 2026) makes one gateway own every session in a profile, so the CLI, Desktop, bots and cron no longer write the same chat at once (PR #106742). Compaction summaries now list guesses on UNVERIFIED: lines so they don't come back as facts (PR #86019), and plugins get post_compaction and on_session_delete hooks. The catalog's Memory shelf grew to 79 entries.
 
