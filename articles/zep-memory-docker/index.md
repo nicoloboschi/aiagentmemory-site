@@ -2,12 +2,14 @@
 
 > Can you run Zep memory with Docker? Zep Community Edition is deprecated. The self-hosting options now: Graphiti server and MCP containers, legacy CE, BYOC.
 
-Source: https://aiagentmemory.org/articles/zep-memory-docker/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/zep-memory-docker/ · Updated 2026-11-06 · aiagentmemory.org
 
 
 **You can't self-host today's Zep with Docker.** Zep Community Edition, the Docker-based self-hosted Zep, has been deprecated since April 2025. What you can run in Docker now is **Graphiti**, Zep's open-source temporal graph engine, as a REST server with Neo4j or an MCP server with FalkorDB. The full Zep product runs in your own cloud only on the Enterprise plan.
 
-Many guides still show `docker compose up` for Zep. They describe an edition that gets no updates or support. This page lays out the real options as of 8 October 2026, with working Compose setups, based on the [getzep/zep](https://github.com/getzep/zep) and [Graphiti](https://github.com/getzep/graphiti) repositories.
+Many guides still show `docker compose up` for Zep. They describe an edition that gets no updates or support. This page lays out the real options, with working Compose setups, based on the [getzep/zep](https://github.com/getzep/zep) and [Graphiti](https://github.com/getzep/graphiti) repositories, checked on 6 November 2026 against Graphiti 0.31.2.
+
+**If you upgraded Graphiti's Compose files after 20 October 2026 and can't reach the server from another machine:** that is intended. Graphiti 0.31.2 publishes the server and database ports on `127.0.0.1` only, because the servers have no authentication. See [what changed in Graphiti 0.31.2](#graphiti-0312-localhost-only-ports-october-2026).
 
 ## What are the Zep self-hosting options in 2026?
 
@@ -32,16 +34,16 @@ That folder still has `docker-compose.ce.yaml`. It starts the `zepai/zep:latest`
 
 ## Option 1: Graphiti REST server with Neo4j
 
-The Graphiti repo includes a FastAPI service, published to Docker Hub as `zepai/graphiti` with tags that match each `graphiti-core` release (0.30.2 as of September 2026). It needs a Neo4j database and an LLM key.
+The Graphiti repo includes a FastAPI service, published to Docker Hub as `zepai/graphiti` with tags that match each `graphiti-core` release (`0.31.2`, published 20 October 2026, is the latest). It needs a Neo4j database and an LLM key.
 
-This Compose file follows the [server README](https://github.com/getzep/graphiti/tree/main/server) and the repo's own `docker-compose.yml`:
+This Compose file follows the [server README](https://github.com/getzep/graphiti/tree/main/server) and the repo's own `docker-compose.yml`, including their localhost-only port mappings:
 
 ```yaml
 services:
   graph:
     image: zepai/graphiti:latest
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - NEO4J_URI=bolt://neo4j:7687
@@ -52,8 +54,8 @@ services:
   neo4j:
     image: neo4j:5.26.2
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
     environment:
       - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
     volumes:
@@ -104,7 +106,7 @@ The server also has `POST /get-memory` (facts relevant to a list of messages), `
 
 ## Option 2: Graphiti MCP server in Docker
 
-If the goal is memory for Claude Desktop, Cursor or another MCP client, use the Graphiti MCP server. A pre-built image is published as `zepai/knowledge-graph-mcp`. Its default setup runs **FalkorDB and the MCP server in a single container**:
+If the goal is memory for Claude Desktop, Cursor or another MCP client, use the Graphiti MCP server. A pre-built image is published as `zepai/knowledge-graph-mcp` (current tags `1.1.3-graphiti-0.31.2` and `1.1.3-graphiti-0.31.2-standalone`, the second without a bundled database). Its default setup runs **FalkorDB and the MCP server in a single container**:
 
 ```bash
 git clone https://github.com/getzep/graphiti.git
@@ -115,15 +117,35 @@ cd docker && docker compose up
 
 The Compose file reads keys from `mcp_server/.env`, so set them there rather than only exporting them in your shell.
 
-That exposes the MCP endpoint at `http://localhost:8000/mcp/` over HTTP, FalkorDB on port 6379, and FalkorDB's web UI on port 3000. A Neo4j variant is in `docker-compose-neo4j.yml` in the same folder. Point an HTTP-capable MCP client at the endpoint; stdio-only clients can run the server directly with `uv`, per the [MCP server README](https://github.com/getzep/graphiti/tree/main/mcp_server).
+That exposes the MCP endpoint at `http://localhost:8000/mcp/` over HTTP, FalkorDB on port 6379, and FalkorDB's web UI on port 3000, all on `127.0.0.1` only since 0.31.2. A Neo4j variant is in `docker-compose-neo4j.yml` in the same folder. Point an HTTP-capable MCP client at the endpoint; stdio-only clients can run the server directly with `uv`, per the [MCP server README](https://github.com/getzep/graphiti/tree/main/mcp_server).
 
 The MCP server supports OpenAI, Anthropic, Gemini, Groq and Azure OpenAI for the LLM, and OpenAI, Voyage, Sentence Transformers and Gemini for embeddings, configured in `config.yaml`. More on this pattern in [AI memory MCP servers](/articles/ai-memory-mcp-server/).
+
+## Graphiti 0.31.2: localhost-only ports (October 2026)
+
+Both Graphiti servers are reference implementations. The [server README](https://github.com/getzep/graphiti/tree/main/server) says they have "no authentication, no authorization, and no prompt-injection protection", so any caller can read, change or delete all graph data. Until 0.31.2, the default Compose files published the servers and the databases on every network interface. [PR #2032](https://github.com/getzep/graphiti/pull/2032), released in [v0.31.2](https://github.com/getzep/graphiti/releases/tag/v0.31.2) on 20 October 2026 after a triage of private security reports, changed that:
+
+| What | Before 0.31.2 | From 0.31.2 |
+|---|---|---|
+| REST and MCP server ports in the Compose files | `"8000:8000"` (all host interfaces) | `"127.0.0.1:8000:8000"` (this machine only) |
+| Neo4j 7474/7687, FalkorDB 6379, FalkorDB UI 3000 in the Compose files | All host interfaces | `127.0.0.1` only |
+| MCP server without Docker (`config.yaml`, `ServerConfig` default) | `host: "0.0.0.0"` | `host: "127.0.0.1"` |
+| Inside the containers | Binds `0.0.0.0` | Still binds `0.0.0.0` (REST `--host 0.0.0.0`, MCP images set `SERVER__HOST=0.0.0.0`) |
+| `docker run -p 8000:8000` with the published images | Reachable from the network | Unchanged: still reachable from the network |
+
+What this means in practice:
+
+- **A client on another machine stops connecting after you pull the new Compose files.** That includes a remote Neo4j Browser or Bolt client. To allow it, change the mapping back (for example `"127.0.0.1:7687:7687"` to `"7687:7687"`), set a strong database password, and put your own authentication in front of the Graphiti server.
+- **Services on the same Compose network are not affected.** The server still reaches its database by service name.
+- **`docker run -p 8000:8000` still exposes the server.** The change is in the Compose files and the non-Docker defaults, not in the images. Use `-p 127.0.0.1:8000:8000` if only this machine should reach it.
+
+The same release also changed what deleting an episode does, and 0.31.0 changed the default OpenAI models; those are covered in [what is Zep memory](/articles/what-is-zep-memory/).
 
 ## Running Zep-style memory fully local
 
 "Local" usually means no cloud LLM. Graphiti defaults to OpenAI for both extraction and embeddings, but its README says other providers, including local servers such as **Ollama, vLLM, llama.cpp and LM Studio**, work through their OpenAI-compatible endpoints. It also warns that Graphiti "works best with LLM services that support Structured Output." Small local models often fail to produce valid entity and edge JSON, so test extraction quality before you commit.
 
-Graph database choices for Graphiti 0.30: Neo4j 5.26, FalkorDB 1.1.2, or Amazon Neptune. Kuzu support is deprecated because the upstream Kuzu project is no longer maintained. FalkorDB also has an embedded "lite" install extra (`graphiti-core[falkordblite]`) for single-process setups.
+Graph database choices for Graphiti 0.31: Neo4j 5.26, FalkorDB 1.1.2, or Amazon Neptune. Kuzu support is deprecated because the upstream Kuzu project is no longer maintained. FalkorDB also has an embedded "lite" install extra (`graphiti-core[falkordblite]`) for single-process setups.
 
 ## Option 3: a full memory server without a graph database
 
@@ -164,7 +186,11 @@ Not the current Zep product. Zep stopped maintaining Zep Community Edition in Ap
 
 ### What is the Docker image for Graphiti?
 
-The Graphiti REST server is published as zepai/graphiti on Docker Hub and needs a Neo4j database. The Graphiti MCP server is published as zepai/knowledge-graph-mcp and by default bundles FalkorDB in the same container. Both need an LLM key, OpenAI by default.
+The Graphiti REST server is published as zepai/graphiti on Docker Hub (latest tag 0.31.2, October 2026) and needs a Neo4j database. The Graphiti MCP server is published as zepai/knowledge-graph-mcp and by default bundles FalkorDB in the same container. Both need an LLM key, OpenAI by default.
+
+### Why can't I reach my Graphiti Docker server from another machine?
+
+Since Graphiti 0.31.2 (20 October 2026), the repo's Docker Compose files publish the REST server, the MCP server, Neo4j and FalkorDB on 127.0.0.1 only, because the servers have no authentication. To allow remote access, change a mapping such as "127.0.0.1:8000:8000" back to "8000:8000" and put your own authentication in front. Running the published image with docker run -p 8000:8000 is unchanged and still reachable from the network.
 
 ### Is Graphiti the same as self-hosted Zep?
 

@@ -77,7 +77,7 @@ Stores conversations and project files verbatim, sorted into wings and rooms, an
 
 ### Graphiti
 
-Builds temporal knowledge graphs: entities, facts with validity windows, and the raw episodes they came from. Old facts are invalidated, not deleted, so you can query past states. Needs a graph database (Neo4j, FalkorDB or Amazon Neptune; Kuzu support is deprecated). Includes an MCP server. See [Zep alternatives](/articles/zep-alternatives/) and [knowledge graphs for AI memory](/articles/ai-memory-knowledge-graph/).
+Builds temporal knowledge graphs: entities, facts with validity windows, and the raw episodes they came from. Old facts are invalidated, not deleted, so you can query past states. Needs a graph database (Neo4j, FalkorDB or Amazon Neptune; Kuzu support is deprecated). Includes REST and MCP servers with no authentication; since 0.31.2 their Docker Compose files publish ports on localhost only ([running Graphiti in Docker](/articles/zep-memory-docker/)). See [Zep alternatives](/articles/zep-alternatives/) and [knowledge graphs for AI memory](/articles/ai-memory-knowledge-graph/).
 
 ### Cognee
 
