@@ -2,12 +2,12 @@
 
 > How AI Dungeon's Memory System works and why it forgets: memories every six actions, Auto Summarization, Memory Bank embedding search, slots per tier, and how context is built.
 
-Source: https://aiagentmemory.org/articles/ai-dungeon-memory-system/ · Updated 2026-10-23 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-dungeon-memory-system/ · Updated 2026-11-06 · aiagentmemory.org
 
 
 The **AI Dungeon memory system** is the feature that keeps long adventures coherent after the story outgrows the AI's context window. It has two parts: **Auto Summarization**, which maintains a running **Story Summary**, and the **Memory Bank**, which stores short AI-written summaries of past actions and pulls the most relevant ones back into context using embeddings.
 
-Both are built by Latitude, AI Dungeon's developer, and adapted from its other game, Voyage. Everything below comes from the [AI Dungeon help center](https://help.aidungeon.com/), checked on 23 October 2026.
+Both are built by Latitude, AI Dungeon's developer, and adapted from its other game, Voyage. Everything below comes from the [AI Dungeon help center](https://help.aidungeon.com/), checked on 23 October 2026, plus the live [pricing page](https://play.aidungeon.com/members) for tier limits, checked on 6 November 2026.
 
 ## What is the AI Dungeon memory system?
 
@@ -45,15 +45,24 @@ The **Memory Bank** works like automatic Story Cards. Each Memory is stored with
 
 When the bank is full, the **least-used memories are removed** ("Forgotten Memories"). Old memories that keep getting used can stay indefinitely. You can browse them with **Explore Memories** in the Context Viewer, in Timeline or Relevance view.
 
-| Membership tier | Price (USD/month) | Memory Bank slots | Context length |
+| Membership tier | Price (USD/month) | Memory Bank slots | Context (pricing page) |
 |---|---|---|---|
-| Wanderer | Free | 25 memories | Up to 4K tokens |
-| Journey | $14.99 | 100 memories | Up to 8K |
-| Legend | $29.99 | 200 memories | Up to 16K |
-| Mythic | $49.99 | 400 memories | Up to 32K |
-| Ultimate | $99.99 | 800 memories | Up to 32K |
+| Free | Free | 100 memories (help center: 25) | 2K-4K, by model |
+| Journey | $14.99 | 100 memories | 8K |
+| Legend | $29.99 | 200 memories | 16K |
+| Mythic | $49.99 | 400 memories | 32K |
+| Ultimate | $99.99 | 800 memories | 64K (help center: 32K) |
 
-Source: the [Memberships & Benefits page](https://help.aidungeon.com/memberships-benefits). Subscribers can also spend 1 credit per action for extra context on some models. All players get Auto Summarization; the Memory Bank size is what scales with tier.
+Source: the live [pricing page](https://play.aidungeon.com/members), checked 6 November 2026, which carries a "Pricing updated" note. The help center's [Memberships & Benefits page](https://help.aidungeon.com/memberships-benefits) still lists the older numbers in brackets: 25 memories for the free tier (then called Wanderer) and 32K for Mythic and Ultimate. When the two disagree, trust the pricing page, since it is what the app sells.
+
+The context figure is the tier's headline. Each model has its own limit, and the bigger models get less. Two examples from the same pricing page:
+
+| Model | Free | Journey | Legend | Mythic | Ultimate |
+|---|---|---|---|---|---|
+| DeepSeek V4 Flash | 3K | 6K | 12K | 20K | 36K |
+| GLM 5.3 Flash | n/a | 8K | 16K | 24K | 40K |
+
+Subscribers can spend 1 credit per action for extra context on some models. All players get Auto Summarization; the Memory Bank size is what scales with tier. Above Ultimate, three [Shadow Tiers](https://help.aidungeon.com/faq/about-shadow-tiers) (Banshee, Reaper, Apocalypse) each double the previous tier's context for models that can go higher, and add more memories; Latitude says they are not meant for the average player.
 
 **To turn it on**, open the game settings sidebar and go to **Gameplay > AI Models > Memory System**, then toggle Memory Bank and Auto Summarization. The setting carries to every adventure until you turn it off. It takes a few turns for the Story Summary to appear and longer for memories to be used.
 
@@ -64,11 +73,11 @@ Most "the AI forgot" cases trace back to one of these documented behaviors:
 | What you see | Why, per the help center | What to do |
 |---|---|---|
 | No memories show up in a new adventure | The Memory Bank stays empty until the story is 12 actions deep, and no memories are *used* until the full adventure no longer fits in context | Keep playing; check Explore Memories in the Context Viewer |
-| An old event is gone | The bank was full and the least-used memories were removed ("Forgotten Memories") | Put must-keep facts in Plot Essentials or a Story Card; a higher tier holds more memories (25 free, up to 800) |
+| An old event is gone | The bank was full and the least-used memories were removed ("Forgotten Memories") | Put must-keep facts in Plot Essentials or a Story Card; a higher tier holds more memories (100 free, up to 800 on Ultimate) |
 | A relevant memory exists but isn't used | Retrieval matches your **latest action** only, and the Memory Bank gets about 25% of the leftover context, so only the top matches that fit go in | Name the person or place in your action so the search finds it |
 | The summary contradicts an edit you made early on | Story Summary isn't re-written when you change old actions | Edit the Story Summary by hand |
 | Less story text in context than expected | The Story Summary replaces raw text it already covers | Intended; view it in the Context Viewer |
-| Details drop fast on the free tier | Free context is up to 4K tokens, so little raw history fits | Keep Plot Essentials and Author's Note short; spend a credit per action for extra context on supported models (subscribers) |
+| Details drop fast on the free tier | Free context is 2K-4K tokens depending on the model, so little raw history fits | Keep Plot Essentials and Author's Note short; spend a credit per action for extra context on supported models (subscribers) |
 
 You can't edit or delete single Memories, per the [Memory System article](https://help.aidungeon.com/faq/the-memory-system); only the Story Summary is editable.
 
@@ -121,7 +130,7 @@ Every six actions, AI Dungeon summarizes six older actions into a short Memory. 
 
 ### How many memories can the AI Dungeon Memory Bank store?
 
-Per Latitude's membership page (October 2026): 25 memories on the free Wanderer tier, 100 on Journey, 200 on Legend, 400 on Mythic and 800 on Ultimate. When the bank is full, the least-used memories are removed to make room for new ones.
+AI Dungeon's live pricing page (checked 6 November 2026, marked 'Pricing updated') lists 100 memories on Free and Journey, 200 on Legend, 400 on Mythic and 800 on Ultimate. The help center's membership page still says 25 for Free. When the bank is full, the least-used memories are removed to make room for new ones.
 
 ### Why does AI Dungeon forget things?
 
@@ -129,5 +138,5 @@ Usually for one of four reasons: the story still fits in context so no memories 
 
 ### What context length does AI Dungeon give each tier?
 
-Free gets up to 4K tokens of context, Journey up to 8K, Legend up to 16K, and Mythic and Ultimate up to 32K, according to AI Dungeon's help center. Subscribers can also spend credits per action for more context on some models.
+It depends on tier and model. AI Dungeon's live pricing page (6 November 2026) headlines 8K for Journey, 16K for Legend, 32K for Mythic and 64K for Ultimate; free models get 2K to 4K. Premium models get less on the same tier (DeepSeek V4 Flash: 3K free, 36K on Ultimate). The help center still caps Ultimate at 32K. Shadow tiers double context again for models that allow it.
 

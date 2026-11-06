@@ -65,7 +65,7 @@ Anthropic brought memory to the free plan on March 2, 2026, [Engadget reported](
 
 Character.AI is built for long character chats, but its memory tools are manual. Free users get **15 pinned messages** per chat and a **400-character Chat Memories box**. The paid lite plan raises pins to 30, and c.ai+ adds auto-memories and private Lorebooks, according to the [Character.AI help center](https://support.character.ai/hc/en-us/articles/56173313531675-About-c-ai-lite).
 
-Anything not pinned, saved or recent can drop out of what the character "sees." The full breakdown is in [Character.AI's memory limit explained](/articles/what-is-character-ai-memory-limit/).
+Anything not pinned, saved or recent can drop out of what the character "sees." The full breakdown is in [Character.AI's memory limit explained](/articles/what-is-character-ai-memory-limit/). For story games, AI Dungeon does more on its own: it summarizes every six actions and searches up to 100 stored memories on the free tier (800 on Ultimate), as covered in [how the AI Dungeon memory system works](/articles/ai-dungeon-memory-system/).
 
 ## How to pick the right chatbot for memory
 
