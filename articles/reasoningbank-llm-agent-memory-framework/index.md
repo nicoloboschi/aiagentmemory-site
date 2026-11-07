@@ -1,8 +1,8 @@
 # ReasoningBank: Agent Memory That Learns From Failures
 
-> ReasoningBank (Google, ICLR 2026) explained: how agents distill reasoning strategies from wins and failures, MaTTS, WebArena and SWE-Bench results, and the code.
+> ReasoningBank (Google, ICLR 2026) explained: how agents distill reasoning strategies from wins and failures, MaTTS, WebArena and SWE-Bench results, the code, and what Anthropic's 2026 memory study says about failure-only rules.
 
-Source: https://aiagentmemory.org/articles/reasoningbank-llm-agent-memory-framework/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/reasoningbank-llm-agent-memory-framework/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **ReasoningBank** is a memory framework for LLM agents from Google that stores **lessons, not logs**. After each task, the agent judges whether it succeeded, then writes down a few general reasoning strategies, including warnings from its failures. On new tasks it retrieves the closest lessons. On WebArena with Gemini 2.5 Flash, it lifted success from 40.5% to 48.8%.
@@ -55,6 +55,19 @@ The paper tests what happens when each method also learns from failed runs (WebA
 | ReasoningBank | 46.5 | 49.7 |
 
 Raw failed trajectories barely help Synapse and hurt AWM. ReasoningBank gains 3.2 points, because it turns a failure into an explicit "don't do this" lesson instead of storing a bad example.
+
+### Does "learn from failures" still hold for newer models?
+
+Partly. Anthropic's research post [The components of agent memory](https://www.anthropic.com/research/components-of-agent-memory) (November 6, 2026) ran a similar loop with no framework at all: on a Continual Learning Bench task, Claude answered one database question per fresh session, was told the right answer afterwards, and could write to a memory folder that persisted between sessions. Anthropic describes the loop ReasoningBank formalizes: "If Claude gets a question wrong, it can record the failure, come up with theories about what went wrong, test those theories, and turn what it finds into a rule about how to answer in the future."
+
+Two of its findings bear directly on the design above:
+
+| ReasoningBank choice | What Anthropic found (Claude models, CL-Bench, November 2026) |
+|---|---|
+| A fixed extraction prompt per outcome, including a failure-specific "counterfactual pitfalls" prompt | A rule to "record only failures" cost Opus 5 and Opus 4.7 "much of the performance boost that memory gave them". Telling the model what memory is for, but not how to use it, worked better: "For stronger models, giving them freedom to judge salience was more effective than setting fixed rules in advance" |
+| Memory retrieved into the prompt on every task | "Steering helped older models the most." Sonnet 4.6 "often didn't read files from its memory directory and failed to test its theories"; the newer models read and used memory on their own |
+
+So the paper's result that failure lessons beat success-only memory (above) and Anthropic's result that a failures-only rule hurts are not in conflict: ReasoningBank extracts from both outcomes, and its gain came from adding failures, not from restricting memory to them. The caveat is that ReasoningBank's extraction prompts are fixed in advance, which is the kind of rule Anthropic found can weaken a strong model. The prompts, judge and backbones also differ (Gemini 2.5 and Claude 3.7 Sonnet in the paper; Claude 4.6 to 5.5 in Anthropic's post), so treat this as a design signal, not a measured comparison. Anthropic's offline pass that rechecks such notes against the original transcripts is covered in [Claude dreaming and Managed Agents memory](/articles/claude-dreaming-agent-memory/).
 
 ## MaTTS: memory-aware test-time scaling
 
@@ -198,6 +211,10 @@ ReasoningBank is an agent memory framework from Google (Ouyang et al., arXiv 250
 ### How is ReasoningBank different from storing past trajectories?
 
 Trajectory memory (like Synapse) stores raw action logs, and workflow memory (like AWM) keeps only procedures from successful runs. ReasoningBank stores general lessons, including warnings learned from failures. With failures included, its WebArena-Shopping success rate rose from 46.5 to 49.7, while AWM's dropped.
+
+### Should an agent memory record only failures?
+
+No. ReasoningBank extracts lessons from both successes and failures; its gain came from adding failure lessons, not from keeping only them. Anthropic's November 2026 post on agent memory found that a fixed rule to record only failures cost Claude Opus 5 and Opus 4.7 much of the boost memory gave them, and that telling a strong model what memory is for, without fixed rules on how to use it, worked better.
 
 ### Is ReasoningBank code available?
 

@@ -26,7 +26,7 @@ Not between calls. OpenAI's [conversation state guide](https://developers.openai
 
 Even server-side conversation features don't change this. OpenAI's `previous_response_id` and Conversations API store the history for you, but the same guide notes that "all previous input tokens for responses in the chain are billed as input tokens." The model still reads the full history on every turn. The server just saves you from sending it.
 
-So the honest answer to "does an LLM have memory?" is: it has trained knowledge and a short-term view of the current input. It doesn't learn from your conversation, and it doesn't keep anything for next time.
+So the honest answer to "does an LLM have memory?" is: it has trained knowledge and a short-term view of the current input. It doesn't learn from your conversation, and it doesn't keep anything for next time. Learning across tasks has to be built outside the model, by writing lessons to a store and reading them back; [ReasoningBank](/articles/reasoningbank-llm-agent-memory-framework/) is a measured example of that loop.
 
 ## Memory in the weights (parametric memory)
 

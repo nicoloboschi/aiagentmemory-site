@@ -47,7 +47,7 @@ Data lives in three stores: a SQL database for facts and metadata, a vector data
 
 ### Memory types in Mem0
 
-Mem0's docs talk about user, session and agent memory, which are scopes rather than separate stores. The code still has a `memory_type` enum with semantic, episodic and procedural values, but only `procedural_memory` does anything: with an `agent_id`, it summarizes an agent's run into a procedure. A comment in the source marks procedural memory for removal "in a future breaking release." For the concepts behind these labels, see episodic memory in AI agents and [procedural memory in AI agents](/articles/ai-agent-procedural-memory/).
+Mem0's docs talk about user, session and agent memory, which are scopes rather than separate stores. The code still has a `memory_type` enum with semantic, episodic and procedural values, but only `procedural_memory` does anything: with an `agent_id`, it summarizes an agent's run into a procedure. A comment in the source marks procedural memory for removal "in a future breaking release." It is the simplest form of the run-to-lesson loop that research systems like [ReasoningBank](/articles/reasoningbank-llm-agent-memory-framework/) make explicit, with each run judged a success or failure first. For the concepts behind these labels, see episodic memory in AI agents and [procedural memory in AI agents](/articles/ai-agent-procedural-memory/).
 
 ## Open-source Mem0 vs Mem0 Platform
 
