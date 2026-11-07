@@ -1,8 +1,8 @@
 # Procedural Memory in AI Agents: Prompts, Skills, Workflows
 
-> Procedural memory in AI agents and LLMs: weights, code, prompts and skill files, how Voyager, AWM and Memp learn procedures, and LangMem prompt optimization.
+> Procedural memory in AI agents and LLMs: weights, code, prompts and skill files, how Voyager, AWM, Memp and Claude's memory folder learn rules, and LangMem prompt optimization.
 
-Source: https://aiagentmemory.org/articles/ai-agent-procedural-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-procedural-memory/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **Procedural memory in AI agents** is the agent's knowledge of how to do things: the rules and skills that shape how it acts. For LLM agents it lives in three places: the model's weights, the agent's code and its prompts. Most current work on learning procedures edits the text parts, because rewriting text is cheaper and safer than retraining the model.
@@ -47,6 +47,22 @@ Three lines of work show agents building procedural memory from experience, with
 [Memp](https://arxiv.org/abs/2508.06433) (Fang et al., 2025) distills past trajectories into two forms: step-by-step instructions and higher-level, script-like abstractions. It studies build, retrieval and update strategies separately, including a regimen that "updates, corrects, and deprecates" entries. On TravelPlanner and ALFWorld, success rates rose as the repository improved. Procedural memory built with a stronger model also helped when moved to a weaker one.
 
 A related approach, [ReasoningBank](/articles/reasoningbank-llm-agent-memory-framework/), stores distilled reasoning strategies from both successful and failed runs, which sits between episodic and procedural memory.
+
+### Anthropic's learning loop: validated rules in a memory folder
+
+Anthropic's research post [The components of agent memory](https://www.anthropic.com/research/components-of-agent-memory) (November 6, 2026) shows the same loop emerging in Claude without a library. On a Continual Learning Bench 1.0 task, Claude answered database questions one per fresh session, was told the correct answer after each, and could write to a memory directory that persisted between sessions.
+
+What each model wrote is a progression from episodic notes to procedural rules:
+
+| Model | What ended up in the memory directory (Anthropic, November 2026) |
+|---|---|
+| Claude Sonnet 4.6 | Scattered files, each with several untested guesses about why an answer was wrong |
+| Claude Opus 4.7 | One consolidated reference document, with checked facts marked apart from unconfirmed ones |
+| Claude Sonnet 5 | Each answer marked confirmed after grading, plus a correction when it had been wrong |
+| Claude Opus 5 | Closed the loop: most entries held a rule, how it knew the rule was true, earlier answers, and warnings about traps |
+| Claude Opus 5.5 and Sonnet 5.5 | Same validated rules; with memory they scored about as Opus 5 did, from a slightly higher no-memory baseline |
+
+Two findings matter for anyone designing writable procedural memory. First, Anthropic found it works best to tell Claude what memory is for, not how to use it: a fixed rule to "record only failures" cost Opus 5 and Opus 4.7 much of the gain memory gave them. Second, steering helped weaker models most: prompting Sonnet 4.6 to read its memory files before answering and to test its theories nearly doubled its score, while Sonnet 5 read its memory unprompted 9 times out of 10. Anthropic's offline "dreaming" pass, which checks such rules against the original transcripts and rewrites the wrong ones, is covered in [Claude dreaming and Managed Agents memory](/articles/claude-dreaming-agent-memory/).
 
 ## Procedural memory in production agents
 
@@ -123,7 +139,7 @@ Procedural memory is the agent's knowledge of how to do things. In the CoALA fra
 
 ### How do LLM agents learn procedural memory?
 
-Mostly by editing text, not weights. Agents rewrite their own instructions from feedback (LangMem's prompt optimizer), save working code as reusable skills (Voyager), or distill past trajectories into reusable workflows (Agent Workflow Memory, Memp). Fine-tuning the model is the costly alternative.
+Mostly by editing text, not weights. Agents rewrite their own instructions from feedback (LangMem's prompt optimizer), save working code as reusable skills (Voyager), or distill past trajectories into reusable workflows (Agent Workflow Memory, Memp). Anthropic's November 2026 tests show frontier Claude models doing this on their own: given a memory folder and the correct answer after each task, Opus 5 and later wrote validated rules with the evidence for each. Fine-tuning the model is the costly alternative.
 
 ### Why is writing procedural memory risky?
 

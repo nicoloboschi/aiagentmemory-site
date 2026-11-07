@@ -2,7 +2,7 @@
 
 > How to use Obsidian as LLM memory, based on Andrej Karpathy's LLM Wiki gist: raw sources, an LLM-maintained wiki and a schema file, plus search and MCP tools.
 
-Source: https://aiagentmemory.org/articles/llm-memory-obsidian/ · Updated 2026-11-05 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/llm-memory-obsidian/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **Using Obsidian as LLM memory** means letting an AI agent write and maintain a folder of linked Markdown notes that you browse in Obsidian. The best-known version is **Andrej Karpathy's LLM Wiki**, published as a gist in April 2026. You drop sources into a folder, the agent compiles them into wiki pages, and both of you read the wiki instead of re-searching raw documents.
@@ -112,6 +112,8 @@ More options are compared on [AI memory MCP servers](/articles/ai-memory-mcp-ser
 | **Weak spot** | Errors in pages propagate; ingest is slow | No synthesis across sources | Hard to audit by hand |
 
 The wiki pattern shines for one person or a small team building up understanding of a topic. It's a poor fit for remembering thousands of users' preferences, where a memory API is the right tool; see [RAG vs agent memory](/articles/rag-vs-agent-memory/) and [persistent memory in AI](/articles/persistent-memory-ai/).
+
+Anthropic tested the same pattern at scale in November 2026: a wiki that Claude built over 128 offline "dreaming" sessions on a 420M-token corpus took its answers from 13% to 48% of graded criteria on its own, and search plus wiki reached 61% against 53% for search alone, while on a single-document task the wiki gave no gain and grew larger than the sources. The numbers and the limits are in [Claude dreaming and Managed Agents memory](/articles/claude-dreaming-agent-memory/).
 
 ## Risks to watch
 

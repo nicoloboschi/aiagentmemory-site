@@ -2,7 +2,7 @@
 
 > What Letta is today: the MemGPT successor, how its memory works (MemFS, memory blocks, dreaming, archival memory), how to use it from Python, and its pricing.
 
-Source: https://aiagentmemory.org/articles/letta-ai-guide/ · Updated 2026-10-25 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/letta-ai-guide/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **Letta** is the open-source platform for stateful agents built by the team behind **MemGPT**. A Letta agent keeps its memory, identity and conversation history across sessions, and rewrites its own memory as it learns. In 2026 the main product is **Letta Code**, an agent harness with a CLI, desktop app and TypeScript SDK, backed by optional Letta Cloud hosting.
@@ -64,7 +64,7 @@ Both still exist in the Letta REST API. The Python client exposes `agents.passag
 
 **Sleep-time compute** comes from a 2025 Letta paper ([Lin et al., arXiv 2504.13171](https://arxiv.org/abs/2504.13171)). The model does work between queries, so less work is needed when a question arrives. The paper reports about 5x less test-time compute for the same accuracy on its stateful math benchmarks.
 
-In the old API this was the `enable_sleeptime` flag, which moved memory management to a background agent. In Letta Code it's called **dreaming**. Background subagents "review recent conversations, consolidate useful lessons, and update memory" (Letta memory docs). You configure it with `/sleeptime`, and it can run after a set number of agent steps or when the context window is compacted. There's an optional second review pass before updates apply, which costs more tokens.
+In the old API this was the `enable_sleeptime` flag, which moved memory management to a background agent. In Letta Code it's called **dreaming**. Background subagents "review recent conversations, consolidate useful lessons, and update memory" (Letta memory docs). You configure it with `/sleeptime`, and it can run after a set number of agent steps or when the context window is compacted. There's an optional second review pass before updates apply, which costs more tokens. Anthropic adopted the same word and credits the sleep-time paper; its Managed Agents version writes the result to a new store instead of editing in place, compared in [Claude dreaming and Managed Agents memory](/articles/claude-dreaming-agent-memory/).
 
 ### Skills and self-editing
 

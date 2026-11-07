@@ -2,7 +2,7 @@
 
 > How LLM agents consolidate and forget memory: reflection, hierarchical summaries, fact merging, invalidation, sleep-time jobs, and October 2026 results (PreCoMem, REM).
 
-Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-10-31 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **Memory consolidation in AI agents** is the step that turns raw records (messages, tool results, observations) into a smaller set of cleaner, longer-lived memories. It merges duplicates, resolves contradictions, and writes higher-level insights. Without it, an agent's memory store only grows, and retrieval gets noisier with every session.
@@ -83,6 +83,7 @@ Running consolidation inside a user's turn adds latency. Most current systems mo
 - **LangMem** ships a "background memory manager that automatically extracts, consolidates, and updates agent knowledge." The default prompt of its `create_memory_store_manager` tells the model to "Consolidate and compress redundant memories." Deletes are off by default (`enable_deletes=False`).
 - **Hindsight** ([GitHub](https://github.com/vectorize-io/hindsight), [paper](https://arxiv.org/abs/2512.12818)) runs background consolidation as facts are retained, turning related facts into **observations**, which its README calls "deduplicated beliefs the bank has built up over time." Each observation keeps its supporting quotes and a proof count, and is "refined rather than overwritten" when new evidence arrives. On top of that, **mental models** are standing answers you define, kept up to date in the background, so reading one is a database read with no retrieval or LLM call. Raw facts stay, and recall searches them alongside observations. All of it ships in the MIT open-source server. The cost is on the write side: both retain and consolidation call an LLM.
 - **MemoryOS** promotes mid-term memory segments into long-term persona memory when a "heat" score passes 5. The MemoryOS paper covers the details.
+- **Anthropic** calls its offline pass **dreaming**. In Claude Managed Agents, a *dream* is an asynchronous job that reads a memory store plus 1 to 100 past session transcripts and writes a reorganized copy to a new store, with duplicates merged and contradicted entries replaced by the latest value; the input store is never modified ([Dreams docs](https://platform.claude.com/docs/en/managed-agents/dreams), research preview, November 2026). Anthropic's [research post](https://www.anthropic.com/research/components-of-agent-memory) of November 6, 2026 reports that a wiki built by dreaming over 128 sessions on a 420M-token corpus took Claude from 13% to 48% of graded criteria, and that a dream caught a wrong map note that had made Claude fall off the same ledge three times in Pokémon Red. Details and limits in [Claude dreaming and Managed Agents memory](/articles/claude-dreaming-agent-memory/).
 
 ## New consolidation research (October 2026)
 
@@ -109,6 +110,7 @@ The trigger matters as much as the method. Here are the triggers used in publish
 | Popularity score | MemoryOS: heat above 5 | Chat assistants with recurring topics |
 | Every write | Mem0 extraction runs on each `add()` call | Simple personalization |
 | New facts, in the background | Hindsight consolidates retained facts into observations off the request path | Agents that should learn without slowing the user's turn |
+| On demand, into a copy | Claude Managed Agents Dreams: a job over a store plus up to 100 sessions, output to a new store you review first | Teams that want to inspect a consolidation before agents use it |
 | Schedule | Nightly batch over the day's sessions | High-volume apps where cost matters |
 
 The MemGPT numbers come from the [MemGPT paper](https://arxiv.org/abs/2310.08560) (Packer et al., 2023), which gives 70% and 100% as example thresholds, not fixed rules.

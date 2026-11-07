@@ -2,7 +2,7 @@
 
 > How Claude Code memory works: CLAUDE.md locations and load order, @imports, auto memory and how to turn it off, /memory, plus memory MCP servers, claude-mem and Hindsight.
 
-Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-10-17 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **Claude Code memory** is two built-in systems. **CLAUDE.md files** hold instructions you write, and Claude Code loads them at the start of every session. **Auto memory** holds notes Claude writes for itself in `~/.claude/projects/<project>/memory/`. You manage both with `/memory`. For more than notes, add a memory MCP server or a plugin such as claude-mem or Hindsight.
@@ -104,7 +104,7 @@ Claude skips anything it can work out from the code, such as architecture or fil
 
 Each project gets `~/.claude/projects/<project>/memory/`. The `<project>` name comes from the git repository, so all worktrees and subdirectories of one repo share one memory folder. Inside are a `MEMORY.md` index (one line per memory) and one topic file per memory, such as `feedback_testing.md`. Write times go into a `modified` front matter field.
 
-At session start Claude Code loads the first **200 lines or 25 KB** of `MEMORY.md`, whichever comes first. Topic files are not loaded at start; Claude opens them when it needs them. If `MEMORY.md` grows past the limit, Claude Code tells Claude to shorten it, because anything past the limit is dropped on the next load.
+At session start Claude Code loads the first **200 lines or 25 KB** of `MEMORY.md`, whichever comes first. Topic files are not loaded at start; Claude opens them when it needs them. If `MEMORY.md` grows past the limit, Claude Code tells Claude to shorten it, because anything past the limit is dropped on the next load. Anthropic's November 2026 research post on agent memory cites this limit as the reason the top layer of a memory hierarchy must stay small; its offline "dreaming" pass for Managed Agents does that pruning, see [Claude dreaming and Managed Agents memory](/articles/claude-dreaming-agent-memory/).
 
 Auto memory is **machine-local**. It is not shared across machines or cloud sessions. Memory files are kept when Claude Code cleans up old session transcripts. To move the folder, set `autoMemoryDirectory` in `settings.json` (an absolute path or one starting with `~/`).
 
