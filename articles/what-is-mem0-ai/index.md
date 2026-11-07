@@ -2,7 +2,7 @@
 
 > What Mem0 is in 2026: how it extracts and stores memories, open source vs Platform, graph memory, setup, delete, and the new Free + bring-your-own-key pricing (Oct 26).
 
-Source: https://aiagentmemory.org/articles/what-is-mem0-ai/ · Updated 2026-10-30 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/what-is-mem0-ai/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **Mem0** ("mem-zero") is an open-source memory layer for AI agents. It uses an LLM to pull durable facts out of conversations, stores them with embeddings per user, agent or session, and returns the relevant ones when you search. It ships as a Python and Node library, a self-hosted Docker server, and the managed Mem0 Platform.
@@ -37,7 +37,7 @@ Per the docs page [How Mem0 Works](https://docs.mem0.ai/core-concepts/how-it-wor
 
 Since the April 2026 algorithm, extraction is **single-pass and ADD-only**: one LLM call, and no automatic UPDATE or DELETE. If a user says "I moved from Austin to Seattle," Mem0 stores the new fact next to the old one. Retrieval is supposed to rank the current fact higher. When you need a correction, you call `update` or `delete` yourself.
 
-That's a change from the design in the [Mem0 research paper](/articles/mem0-building-production-ready-ai-agents/), where an LLM chose ADD, UPDATE, DELETE or NOOP for every new fact.
+That's a change from the design in the [Mem0 research paper](/articles/mem0-building-production-ready-ai-agents/), where an LLM chose ADD, UPDATE, DELETE or NOOP for every new fact. That older loop was recently measured by an outside group: Stanford's Memorilla paper ran Mem0 0.1.118 with a 4B extractor and found it [behind plain top-50 retrieval on seven of eight QA benchmarks](/articles/mem0-building-production-ready-ai-agents/#mem0-as-a-baseline-in-stanfords-memorilla-paper), which is part of why the extraction step's quality matters more than its design.
 
 ### The read path
 

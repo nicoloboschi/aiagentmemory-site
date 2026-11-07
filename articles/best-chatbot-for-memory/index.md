@@ -2,7 +2,7 @@
 
 > Which chatbot has the best memory in 2026? A sourced comparison of ChatGPT, Claude, Gemini, Copilot and Character.AI: what each remembers, free plans, controls.
 
-Source: https://aiagentmemory.org/articles/best-chatbot-for-memory/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/best-chatbot-for-memory/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 The **best chatbot for memory** in 2026 is ChatGPT or Claude for most people. Both save facts about you, search your past chats, and let you see and edit what they keep, on free and paid plans. Gemini and Copilot remember too, with fewer controls. Character.AI is the pick for roleplay, but its memory is small and mostly manual.
@@ -26,7 +26,7 @@ This table reflects each vendor's help pages as of October 2026. Features roll o
 |---|---|---|---|---|---|
 | **ChatGPT** | Yes (memory summary or saved memories) | Yes ("Reference chat history") | Memory summary, Sources under answers, Manage | Yes | Temporary Chat |
 | **Claude** | Yes (topics) | Yes (chat search) | Settings > Memory > Topics | Yes, since March 2026 | Incognito chat, or Memory off in "+" menu |
-| **Gemini** | Yes (paid Google AI plan, US) | Yes (18+, Keep Activity on) | Ask Gemini, delete chats in Activity | Past chats: yes | Delete the chat afterward |
+| **Gemini** | Yes (paid Google AI plan, US) | Yes (18+, Keep Activity on) | Memory summary (US, paid plan); otherwise ask Gemini, delete chats in Activity | Past chats: yes | Delete the chat afterward |
 | **Microsoft Copilot** | Yes | Recent conversations | Ask "What do you know about me?", Delete all Memory | Yes | Not documented |
 | **Character.AI** | Pins and a 400-char chat memory | Within the chat's context only | Per chat | Yes (15 pins) | n/a |
 
@@ -57,7 +57,7 @@ Anthropic brought memory to the free plan on March 2, 2026, [Engadget reported](
 
 ## Gemini and Copilot: memory with fewer knobs
 
-**Gemini** can personalize answers from your past chats if you're 18 or over, signed in with a personal Google Account, and have Keep Activity on. You switch it under Settings & help > Personal Intelligence. Asking Gemini to remember a specific fact ("Remember that I am vegetarian") needs a paid Google AI plan and is US-only for now, per [Google's help page](https://support.google.com/gemini/answer/16598625?hl=en). To make Gemini forget something, you delete the chats that contain it in Gemini Apps Activity. There's no list of saved facts to prune. Switching from ChatGPT or Claude? Gemini can import your memories and chat history; see [how Gemini's memory and import work](/articles/gemini-ai-long-term-memory/). Gemini's new skills (September 2026) are saved task instructions, not memory; the difference is explained in [Gemini memory vs skills](/articles/gemini-ai-long-term-memory/#gemini-memory-vs-skills-vs-instructions).
+**Gemini** can personalize answers from your past chats if you're 18 or over, signed in with a personal Google Account, and have Keep Activity on. You switch it under Settings & help > Personal Intelligence. Asking Gemini to remember a specific fact ("Remember that I am vegetarian") needs a paid Google AI plan and is US-only for now, per [Google's help page](https://support.google.com/gemini/answer/16598625?hl=en). To make Gemini forget something, you delete the chats that contain it in Gemini Apps Activity. US users on a paid plan now also get a **Memory summary** page (Settings > Personal Intelligence) that shows what Gemini has learned, edited by prompting, with a change history; see [Gemini's Memory summary](/articles/gemini-ai-long-term-memory/#geminis-memory-summary-see-edit-and-delete-what-it-knows). Everyone else still has no list of saved facts to prune. Switching from ChatGPT or Claude? Gemini can import your memories and chat history; see [how Gemini's memory and import work](/articles/gemini-ai-long-term-memory/). Gemini's new skills (September 2026) are saved task instructions, not memory; the difference is explained in [Gemini memory vs skills](/articles/gemini-ai-long-term-memory/#gemini-memory-vs-skills-vs-instructions).
 
 **Microsoft Copilot**, signed in with a personal Microsoft account, remembers details you share. You see them by asking "What do you know about me?" and remove one by asking it to forget. Profile > Memory > Delete all Memory wipes everything without deleting your chat history, per [Microsoft's privacy controls page](https://support.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-privacy-controls). Microsoft keeps conversation history for 18 months unless you delete it.
 
@@ -71,7 +71,7 @@ Anything not pinned, saved or recent can drop out of what the character "sees." 
 
 1. **Decide what you need remembered.** Personal preferences need saved facts. Long projects need chat search or project memory.
 2. **Check your plan and country.** Gemini's fact memory is US and paid only; ChatGPT's newest memory reached Plus and Pro first.
-3. **Look for a visible memory list.** Claude's topics and ChatGPT's summary let you audit what's stored. Gemini and Copilot mostly rely on asking the bot.
+3. **Look for a visible memory list.** Claude's topics and ChatGPT's summary let you audit what's stored. Gemini's Memory summary does the same but only in the US on a paid plan; Copilot mostly relies on asking the bot.
 4. **Check the per-chat off switch.** Temporary or incognito chats matter if you sometimes ask things you don't want stored.
 5. **Use projects for long work.** ChatGPT's project-only memory keeps a project sealed off; in Claude, switch off Use account memory on the project to get the same.
 6. **Put critical facts in instructions.** Custom instructions are always applied; memory is applied when the app thinks it's relevant.

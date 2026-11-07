@@ -1,13 +1,13 @@
 # Gemini AI Long-Term Memory: Past Chats and Settings
 
-> How Gemini's long-term memory works in 2026: memory from past chats, asking Gemini to remember, importing memory from ChatGPT or Claude, how to delete it, and context windows.
+> How Gemini's long-term memory works in 2026: memory from past chats, the new Memory summary you can view and edit, asking Gemini to remember, importing memory from ChatGPT or Claude, deleting it, context windows.
 
-Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-10-28 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **Gemini AI long-term memory** is the setting in the Gemini app that lets it use details from your **past chats** to personalize answers, plus the option to ask it to **remember specific facts**. It needs you to be 18 or older, signed in with a personal Google Account, with **Keep Activity** on. You switch it in Gemini's personalization settings and erase it by deleting chats.
 
-There's no list of saved memories to scroll through and prune, unlike ChatGPT or Claude. That's the biggest practical difference. Everything here comes from Google's Gemini Apps help pages and Google blog posts, checked on 8 October 2026; Google's own pages differ slightly by device and region, which is noted where it matters.
+For a long time there was no list of saved memories to scroll through and prune, unlike ChatGPT or Claude. That has started to change: Google's help pages now describe a **Memory summary** you can view, edit and delete, with a change history, but only for US users with a paid Google AI plan. Everyone else still controls memory by deleting chats. Everything here comes from Google's Gemini Apps help pages and Google blog posts, checked on 7 November 2026; Google's own pages differ slightly by device and region, which is noted where it matters.
 
 ## Does Gemini have long-term memory?
 
@@ -19,6 +19,7 @@ Google launched past-chat personalization on 13 August 2025, [per its blog post]
 |---|---|---|
 | **Memory of past chats** | Uses details from earlier chats in new answers | 18+, personal account, Keep Activity on |
 | **"Remember that..."** | Stores specific facts you state | Google AI plan required; US only for now |
+| **Memory summary** | A page that shows what Gemini understands about you, with edit, delete and a change history | US, Google AI plan, English, mobile and web app |
 | **Instructions** | Rules applied to every chat, like "start with a short summary" | All users |
 | **Temporary chat** | A chat that isn't used for memory | All users |
 
@@ -39,6 +40,22 @@ To check whether a reply drew on your history, ask: **"Did you use any info from
 You can also tell Gemini directly: "Remember that I am vegetarian." To fix a fact, correct it in chat: "Actually, my daughter is 8, not 7," and Gemini says it will update its memory.
 
 This narrower feature has stricter rules. Google's [memory management page](https://support.google.com/gemini/answer/16598625?hl=en) says you need a **Google AI plan**, and that for now it's **only available in the US**. Instructions are open to everyone. Add them under **Personal context > Your instructions for Gemini**, where you can edit, delete or switch them off.
+
+## Gemini's Memory summary: see, edit and delete what it knows
+
+**Gemini now has a Memory summary: one page that shows what Gemini Apps "understands about you", which you can edit and prune by prompting, with a Memory history that records when each item was added or changed.** It's described on Google's [Memory summary help page](https://support.google.com/gemini/answer/18617127?hl=en), which appeared in the Gemini Apps personalization help set alongside the past-chats and instructions pages (read on 7 November 2026; Google gives no launch date on the page).
+
+| | Memory summary |
+|---|---|
+| Where | Settings > **Personal Intelligence** > **Memory summary** (web and mobile app) |
+| What it shows | A summary of what Gemini has learned about you from chats and saved facts |
+| Quick check | Ask Gemini "What do you know about me?" in a chat |
+| Edit | Prompt it: "Add to my memory that I speak Japanese", "Remove my old phone number from your memory". Gemini may ask a follow-up question if the request is ambiguous |
+| History | **Memory history** (top right) lists when information was added or modified |
+| Who gets it | US users with an active Google AI plan, 18+, personal account, Keep Activity on, Memory on; English only for now |
+| Off switch | Memory toggle under Personal Intelligence; off stops Gemini from learning about you |
+
+Two things to note. The summary is edited by prompting, not by ticking items in a list, so it sits between ChatGPT's editable memory list and Gemini's old "just delete the chat" model. And it's gated the same way as "Remember that...": US and paid. If you're outside the US or on the free tier, the [deletion steps below](#how-to-turn-gemini-memory-on-off-or-delete-it) are still the only way to remove something. For developers, this is the kind of inspectable store a memory layer should give you by default: with an open server like [Hindsight](https://github.com/vectorize-io/hindsight), memories live in your own Postgres database, and each consolidated observation carries the quotes it was built from and a count of how much evidence backs it, so what the agent believes about a user can be audited for anyone, in any country.
 
 ## Can you import memory from ChatGPT or Claude into Gemini?
 
@@ -74,7 +91,7 @@ Google's pages use two labels for the same area, **Personal context** and **Pers
 1. **Mobile app:** tap Menu, then your profile picture, then **Personal context** (or Settings > Personal Intelligence).
 2. **Web app:** open Menu, then **Settings & help**, then **Personal context**.
 3. Switch **Memory** on or off.
-4. To remove what Gemini knows, open [Gemini Apps Activity](https://myactivity.google.com/product/gemini) and **delete every chat** that contains the information.
+4. To remove what Gemini knows, open [Gemini Apps Activity](https://myactivity.google.com/product/gemini) and **delete every chat** that contains the information. US users with a Google AI plan can instead open **Memory summary** and ask Gemini to remove the item (see above).
 5. For information that came from a connected Google app, delete those chats **and** disconnect the app. Google says doing only one isn't enough.
 
 Expect a lag. Google notes "a short delay before Gemini stops using" a deleted chat for personalization. It also warns that asking Gemini to forget or avoid a topic "doesn't always work perfectly," which is why deleting chats is the reliable route.
@@ -107,7 +124,7 @@ People searching "Google long-term memory AI" often mean Google Research's **Tit
 
 ## How Gemini's memory compares with other chatbots
 
-Gemini's memory is tied to your account activity rather than a separate memory store. That makes it simple to wipe (delete chats) but hard to inspect (no list of saved facts). ChatGPT and Claude both show what they've saved and let you edit single items; see [Claude AI long-term memory](/articles/claude-ai-long-term-memory/) and the [best chatbot for memory](/articles/best-chatbot-for-memory/) comparison.
+Gemini's memory is tied to your account activity rather than a separate memory store. That makes it simple to wipe (delete chats) but, for most users, hard to inspect: the Memory summary that fixes this is US-only and needs a paid plan. ChatGPT and Claude both show what they've saved and let you edit single items on every plan; see [Claude AI long-term memory](/articles/claude-ai-long-term-memory/) and the [best chatbot for memory](/articles/best-chatbot-for-memory/) comparison.
 
 
 ## FAQ
@@ -116,9 +133,13 @@ Gemini's memory is tied to your account activity rather than a separate memory s
 
 Yes, if Memory is on. Gemini can use details from your past chats to personalize answers when you're 18 or older, signed in with a personal Google Account, and have Keep Activity on. It isn't available in Gems or Live chats. You can ask Gemini 'Did you use any info from past chats?' to check.
 
+### Can I see what Gemini remembers about me?
+
+Yes, if you're in the US with a Google AI plan. Google's help page describes a Memory summary under Settings > Personal Intelligence > Memory summary, in the mobile and web apps, in English. It shows what Gemini understands about you; you add, fix or remove items by prompting ('Remove my old phone number from your memory'), and a Memory history view lists when each item was added or changed. Asking 'What do you know about me?' in a chat shows the same summary. Outside the US or without a plan, the only control is still deleting chats.
+
 ### How do I make Gemini forget something?
 
-Delete every chat that contains the information in Gemini Apps Activity (myactivity.google.com/product/gemini). Google says asking Gemini to forget a topic 'doesn't always work perfectly,' and there may be a short delay before deleted chats stop being used. For details from a connected app, delete the chats and also disconnect the app.
+If you have the Memory summary (US, Google AI plan), open it and ask Gemini to remove the item. Otherwise delete every chat that contains the information in Gemini Apps Activity (myactivity.google.com/product/gemini). Google says asking Gemini to forget a topic 'doesn't always work perfectly,' and there may be a short delay before deleted chats stop being used. For details from a connected app, delete the chats and also disconnect the app.
 
 ### Can I import my ChatGPT or Claude memory into Gemini?
 

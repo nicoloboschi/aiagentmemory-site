@@ -1,8 +1,8 @@
 # Mem0 Paper: Production-Ready Agents with Long-Term Memory
 
-> The Mem0 paper (arXiv 2504.19413) explained: extraction and update pipeline, the Mem0g graph variant, LoCoMo results, latency and tokens, and the Zep dispute.
+> The Mem0 paper (arXiv 2504.19413) explained: extraction and update pipeline, the Mem0g graph variant, LoCoMo results, latency and tokens, the Zep dispute, and two outside tests (MemoryTax, Memorilla).
 
-Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-10-24 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-11-07 · aiagentmemory.org
 
 
 **"Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory"** is the 2025 paper from the Mem0 team that describes how Mem0 extracts, updates and retrieves memories from conversations. It introduces two systems, Mem0 and a graph-based variant called **Mem0g**, and reports that both beat other memory systems on the LoCoMo benchmark while using far fewer tokens than full-context prompting.
@@ -122,6 +122,27 @@ Three results bear on the paper's claims:
 
 Limits, as the author states them: one conversation, one run per setup, a lenient GPT-4o-mini judge, defaults only, and a history short enough to fit every model's context window, which is the case where full context is strongest. The study's own conclusion is blunt: memory is "a costly patch for a weak model". Mem0's managed Platform wasn't tested, and neither was [Hindsight](https://github.com/vectorize-io/hindsight). Zep's open-source engine was, and did worse; see [what Zep memory is](/articles/what-is-zep-memory/#how-zeps-open-source-engine-did-in-an-outside-test).
 
+## Mem0 as a baseline in Stanford's Memorilla paper
+
+A second outside run of the paper-era Mem0 came from [Memorilla: Latent Semantic Memory for LLMs](https://arxiv.org/abs/2610.21375) (Fallahpour, Idehpour, Kothapalli, Mounier, Wu, Pardis and Leskovec; Stanford, Penn, Toronto, MIT; arXiv 15 October 2026, revised 3 November). Memorilla is a research system that compresses a document collection into 16 learned "memory tokens" for a frozen LLM. Mem0 is one of its baselines, so the numbers say something about Mem0 even though the paper isn't about it.
+
+The setup, from the paper's Table 6: **`mem0ai` 0.1.118** with its stock prompts and the ADD/UPDATE/DELETE/NONE loop this page describes, unmodified; a frozen **Qwen3-4B-Instruct-2507** as the fact extractor; one `add()` per document, each fact reconciled against its 5 nearest memories; one Qdrant collection per user, story or question; retrieval depth swept over 10, 30 and 50 memories and the best reported. Every method answered with the same frozen **Qwen3-8B** and the same Qwen3-Embedding-4B retriever, so the only difference is what reached the decoder.
+
+| Benchmark (metric) | RAG top-50 | Full context | Mem0 0.1.118 | Memorilla (16 tokens) |
+|---|---|---|---|---|
+| PMv2 personalization (acc) | 26.72 | 27.92 | 27.48 | 44.60 |
+| PV4 personalization (acc) | 65.78 | 59.12 | 65.07 | 66.65 |
+| PubMedQA (acc) | 67.00 | 67.00 | 24.00 | 59.00 |
+| NarrativeQA (ROUGE-L) | 17.23 | 17.99 | 13.80 | 19.31 |
+| TriviaQA (EM) | 55.60 | 52.60 | 44.60 | 57.00 |
+| FactKG (acc) | 78.39 | 80.43 | 72.79 | 84.33 |
+| LaMP-4 news headlines (ROUGE-L) | 15.09 | 14.21 | 12.70 | 18.15 |
+| LaMP-7 tweet paraphrase (ROUGE-L) | 43.77 | 43.71 | 43.68 | 48.37 |
+
+Source: Table 11 of the paper (v3). Across all benchmarks the paper reports averages of 38.02 for Mem0, 41.92 for xRAG, 40.75 for LLMLingua-2 and 49.68 for Memorilla. The point for Mem0 readers: **with a small writer model, extracted facts lost to plain top-50 chunk retrieval on seven of eight benchmarks**, and collapsed on PubMedQA (24 vs 67), where the answer sits in a few short abstracts that RAG hands over whole and fact extraction strips.
+
+Read it with three caveats. The version is **0.1.118**, the paper's original algorithm, not the April 2026 single-pass extractor or the managed Platform. The benchmarks are document QA and personalization over text collections, not multi-session chat like LoCoMo, which is what Mem0 was built for. And the memory writer was a 4B model; MemoryTax above found the writer sets Mem0's ceiling. Memorilla itself needs training per benchmark and isn't something you can install today. Still, it is the second academic group in a month to find that Mem0's extraction step, run on a cheap model, does not beat straightforward retrieval. It echoes the paper's own finding that full context beat Mem0 on accuracy: the case for fact extraction is tokens and latency, and only holds if the extractor is good enough. Memory servers that keep more than one layer, like [Hindsight](https://github.com/vectorize-io/hindsight), which stores world facts and experiences alongside the consolidated observations built from them and lets recall return either, hedge against a single extraction pass losing the detail an answer needs.
+
 ## What the paper still teaches
 
 Three ideas from the paper hold up regardless of the benchmark fight:
@@ -149,5 +170,5 @@ Not exactly. The paper's update phase let an LLM choose ADD, UPDATE, DELETE or N
 
 ### Has anyone tested Mem0 independently?
 
-Yes. The October 2026 MemoryTax study (Shanghai Jiao Tong University) ran Mem0 OSS 2.1.0 on one LoCoMo conversation. It scored 78%, 80% and 95% with GPT-4o-mini, GPT-6 Luna and Claude Opus 5.5, against 74%, 92% and 95% for full context, but building the memory cost more than the whole full-context run with every model.
+Yes, twice in October 2026. MemoryTax (Shanghai Jiao Tong University) ran Mem0 OSS 2.1.0 on one LoCoMo conversation: 78%, 80% and 95% with GPT-4o-mini, GPT-6 Luna and Claude Opus 5.5, against 74%, 92% and 95% for full context, but building the memory cost more than the whole full-context run. Stanford's Memorilla paper used Mem0 0.1.118 (the paper-era ADD/UPDATE/DELETE loop) as a baseline on eight document and personalization QA benchmarks with Qwen3 models: it averaged 38.02 against 49.68 for Memorilla and scored below plain top-50 RAG on seven of the eight.
 
