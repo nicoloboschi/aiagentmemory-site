@@ -2,7 +2,7 @@
 
 > Mem0 vs Letta (MemGPT) compared in 2026: memory model, who decides what to store, Python support, self-hosting, pricing, and which one fits your agent.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-letta/ · Updated 2026-10-30 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-letta/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **Mem0 vs Letta** comes down to one question: do you want a memory service for an agent you already have, or a runtime where the agent manages its own memory? Mem0 is a memory layer your code calls with `add` and `search`. Letta (formerly MemGPT) is a stateful agent harness whose agents read, edit and consolidate their own memory files.
@@ -25,6 +25,7 @@ The two are often listed side by side, but they sit at different levels of the s
 | License | Apache 2.0 | Apache 2.0 | MIT, full server included |
 | Who decides what to remember | Your code calls `add`; an LLM extracts facts | The agent itself, plus background "dreaming" | Your code or an integration calls `retain`; an LLM extracts facts, then background consolidation |
 | Memory format | Short extracted facts with embeddings and entities | Markdown memory files in a git-backed store (MemFS), plus message history | Facts, experiences, observations, mental models in PostgreSQL |
+| Portable to the others? | Export via API; MacPaw's `.mem` tool has a Mem0 adapter | `.af` Agent File, Letta-to-Letta | Transfer ZIP, Hindsight-to-Hindsight; see [agent memory formats](/articles/open-agent-memory-format/) |
 | Retrieval | Semantic + BM25 + entity matching, fused | Files in context; agent-driven message search | Semantic + BM25 + graph + temporal, fused and reranked; `reflect` for reasoned answers |
 | Updates | ADD-only since April 2026; explicit `update`/`delete` | Agent rewrites files; every edit is a git commit | Observations refined as new evidence arrives, not overwritten |
 | SDKs | Python, TypeScript, REST, CLI | TypeScript Agent SDK; Python client deprecated | Python, TypeScript, Go, REST, CLI |

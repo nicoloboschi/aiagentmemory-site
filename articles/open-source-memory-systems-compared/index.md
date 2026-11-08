@@ -2,7 +2,7 @@
 
 > Open-source AI memory systems compared: GitHub repos, licenses, stars (Oct 2026), languages and what each is good at. Mem0, Hindsight, MemPalace, Graphiti, Cognee.
 
-Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-10-29 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 The leading **open-source AI agent memory systems** on GitHub are Mem0, MemPalace, Hindsight, Graphiti, Cognee, Letta, LangMem, MemOS, Memori, Honcho, Basic Memory and Memobase. Most are Apache-2.0 or MIT, written in Python, and self-hostable with Docker. They differ in storage (vectors, graphs, files), in how much is truly open versus paid, and in what they're built for.
@@ -57,6 +57,7 @@ Several projects are **open core**: the repo is open, but some features or the b
 - **Letta:** the Letta V1 API server is retired to an `archive` branch. Current development is the Letta Code harness, which defaults to Letta Cloud but has a local backend.
 - **Hindsight:** MIT, with no open-core split: graph, temporal recall, consolidation, `reflect` and mental models are all in the open-source server. Its pricing page lists self-hosting as free with no usage limits. The paid part is the managed cloud.
 - **AGPL projects (Honcho, Basic Memory):** free to self-host, but if you modify them and offer them as a network service, AGPL-3.0 requires you to publish your changes. Many companies' legal teams treat AGPL differently from MIT or Apache.
+- **Open licence, closed format:** even the MIT and Apache projects store memory in their own shape, and none reads another's. Letta exports `.af` agent files, Hindsight exports a bank as a transfer ZIP another Hindsight instance restores, Mem0 exports through its API; moving between them means an adapter or re-ingestion. The proposals to fix that are compared in [is there a standard format for agent memory?](/articles/open-agent-memory-format/)
 - **Source-available, not open source:** [aoci-code](https://github.com/aoci-spec/aoci-code) (1,750 stars) keeps a Git-versioned map of a codebase and database schema for coding agents to read, and is often listed with the projects above. Its licence is the Functional Source License 1.1 with an MIT future grant, so you may read and use the code but not compete with it until the grant converts two years after each release. That is a different thing from the MIT and Apache repos in the table, and it is worth knowing before you build a product on it.
 
 ## What each open-source memory system is built for

@@ -1,11 +1,11 @@
 # Largest Context Window Open-Source LLMs (Local, 2026)
 
-> Open-weight LLMs with the largest context windows as of October 2026, how to run long context in Ollama and llama.cpp, and how much VRAM the KV cache needs.
+> Open-weight LLMs with the largest context windows as of November 2026 (Llama 4 Scout, Kimi K3.1 Pro, Mistral Large 4), Ollama and llama.cpp settings, KV cache VRAM math.
 
-Source: https://aiagentmemory.org/articles/largest-context-window-llm-open-source/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/largest-context-window-llm-open-source/ · Updated 2026-11-08 · aiagentmemory.org
 
 
-The **largest context window open-source LLM** as of October 2026 is **Llama 4 Scout**, with 10M tokens. A wider group supports about 1M: Llama 4 Maverick, Kimi K3, DeepSeek V4, GLM-5.3 and MiniMax-M3. Qwen3.6 and Qwen3.8 run 262,144 tokens natively. Running any of them at full length locally is limited by GPU memory, not the model card.
+The **largest context window open-source LLM** as of November 2026 is **Llama 4 Scout**, with 10M tokens. A wider group supports about 1M: Llama 4 Maverick, Kimi K3 and the new Kimi K3.1 Pro, DeepSeek V4, GLM-5.3, MiniMax-M3, Mistral Large 4 and Meta's Muse Spark Open. Qwen3.6 and Qwen3.8 run 262,144 tokens natively. Running any of them at full length locally is limited by GPU memory, not the model card.
 
 This page lists the open-weight models with the most context, explains why long context eats VRAM, and shows the exact settings for Ollama and llama.cpp. For hosted models, see the [LLM context window comparison](/articles/context-window-llm-ranking/).
 
@@ -21,7 +21,10 @@ A note on terms: most of these are **open-weight** models. You can download and 
 |---|---|---|---|---|
 | Llama 4 Scout | 109B / 17B | 10M | Llama 4 Community | `llama4` |
 | Llama 4 Maverick | 400B / 17B | 1M | Llama 4 Community | `llama4` |
+| Kimi K3.1 Pro (2 Nov 2026) | 2.8T / 104B | 1,048,576 (card and config) | Kimi K3.1 Pro License | not checked |
 | Kimi K3 | 2.8T / 104B | 1M | Kimi K3 License | `kimi-k3` (cloud) |
+| Mistral Large 4 (30 Sep 2026) | ~1T / ~52B | 1M (1,048,576 in config) | Mistral Ecosystem Open-Weight License | not checked |
+| Muse Spark Open (Meta, 15 Oct 2026) | 816B / 42B | 1M | Muse Model License | not checked |
 | DeepSeek-V4.1-Flash | 552B backbone | up to 1M | MIT | not checked |
 | DeepSeek-V4-Pro-0813 | not stated in card | 1,048,576 (config) | MIT | not checked |
 | GLM-5.3 | not checked | 1,048,576 (config) | GLM-5.3 license | `glm-5.3` |
@@ -36,9 +39,11 @@ A note on terms: most of these are **open-weight** models. You can download and 
 | Gemma 4 E2B, E4B | small | 128K | Apache 2.0 | `gemma4` |
 | gpt-oss-120b, gpt-oss-20b | 117B / 5.1B; 21B / 3.6B | 131,072 | Apache 2.0 | `gpt-oss` |
 
-*As of October 2026. Sources: each model's official Hugging Face card and config (for example [Qwen3.6-27B](https://huggingface.co/Qwen/Qwen3.6-27B), [DeepSeek-V4.1-Flash](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash), [Kimi K3](https://huggingface.co/moonshotai/Kimi-K3)) and the [Ollama library](https://ollama.com/library).*
+*As of 8 November 2026. Sources: each model's official Hugging Face card and config (for example [Qwen3.6-27B](https://huggingface.co/Qwen/Qwen3.6-27B), [DeepSeek-V4.1-Flash](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash), [Kimi K3.1 Pro](https://huggingface.co/moonshotai/Kimi-K3.1-Pro), [Mistral Large 4](https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B)), Meta's [Muse Spark Open post](https://research.meta.ai/blog/muse-spark-open) and the [Ollama library](https://ollama.com/library).*
 
-The models that fit on one consumer GPU are the small and mid-size ones: Gemma 4, Qwen3.6, Qwen3.8-27B, gpt-oss-20b. The 1M-token giants (Kimi K3, DeepSeek V4, GLM-5.3, MiniMax-M3) need multi-GPU servers, and in Ollama some are offered as cloud models rather than local downloads.
+Three 1M-token models joined the list since October. **Kimi K3.1 Pro** (Moonshot, weights published 2 November 2026) keeps K3's 2.8T total and 104B active parameters and its 1,048,576-token window, and its card says it swaps the full-attention layers for Gated DeepSeek Sparse Attention "for more efficient long-context modeling". **Mistral Large 4** (1T total, about 52B active, 128 experts with 4 active per token) ships under the Mistral Ecosystem Open-Weight License, a modified MIT that the card says allows commercial use but requires a separate licence to run a model-as-a-service business. **Muse Spark Open** (816B total, 42B active) is released by Meta under the Muse Model License "with limited commercial terms". The license column matters: three of the four newest 1M models are not under a standard open-source licence.
+
+The models that fit on one consumer GPU are the small and mid-size ones: Gemma 4, Qwen3.6, Qwen3.8-27B, gpt-oss-20b. The 1M-token giants (Kimi K3 and K3.1 Pro, DeepSeek V4, GLM-5.3, MiniMax-M3, Mistral Large 4, Muse Spark Open) need multi-GPU servers, and in Ollama some are offered as cloud models rather than local downloads.
 
 ## The real cost of long context: KV cache VRAM
 
@@ -80,7 +85,7 @@ Because of these designs, the simple formula overstates the cache for hybrid mod
 
 ## How to run a long context window in Ollama
 
-[Ollama](https://docs.ollama.com/context-length) doesn't load a model's full context by default. It picks the default from your VRAM: 4K tokens under 24 GiB, 32K from 24 to 48 GiB, and 256K at 48 GiB or more. Cloud models default to their maximum.
+[Ollama](https://docs.ollama.com/context-length) doesn't load a model's full context by default. It picks the default from your VRAM: 4K tokens under 24 GiB, 32K from 24 to 48 GiB, and 256K at 48 GiB or more. Cloud models default to their maximum. The same page says tasks that need large context, "like web search, agents, and coding tools", should be set to at least 64,000 tokens, which means most laptops run agents below Ollama's own recommended floor until you raise it.
 
 Steps to raise it:
 
@@ -141,7 +146,11 @@ Front ends that sit on top of Ollama or llama.cpp work within whatever context t
 
 ## When long context isn't the answer locally
 
-Long context on a local GPU is slow to fill and expensive in memory. For most local agents, it's cheaper to keep a short window and store history outside the model. Open-source memory servers such as [Hindsight](https://github.com/vectorize-io/hindsight) run fully local with Ollama, LM Studio or llama.cpp and send back only the memories that fit a token budget you set; keep that `max_tokens` budget well under your window, since its default retrievals are larger than Mem0's. Our guide on [how to give a local LLM memory](/articles/how-to-give-local-llm-memory/) covers that route, and [context window limitations and solutions](/articles/context-window-limitations-solutions/) explains why accuracy also falls as the window fills.
+Long context on a local GPU is slow to fill and expensive in memory. For most local agents, it's cheaper to keep a short window and store history outside the model.
+
+### What the numbers say about long context vs memory
+
+The one published head-to-head on an open model is in the Hindsight paper ([arXiv 2512.12818](https://arxiv.org/abs/2512.12818), December 2025, run by the vendor). On LongMemEval-S, the same open 20B model (GPT-OSS-20B) scored 39.0% overall with the whole conversation history placed in its context window, and 83.6% when a memory layer retrieved the relevant parts instead. By question type, full context scored 21.1% on multi-session questions against 79.7% with memory, and 31.6% on temporal reasoning against 79.7%. Hindsight's own runs were judged by GPT-OSS-120B, so compare them with its competitors' numbers with care, but the full-context and memory runs here use the same model and judge. A bigger window lets the model see more; it does not make it find the right line in a long history, and the KV cache bill above grows with every token you add. Open-source memory servers such as [Hindsight](https://github.com/vectorize-io/hindsight) run fully local with Ollama, LM Studio or llama.cpp and send back only the memories that fit a token budget you set; keep that `max_tokens` budget well under your window, since its default retrievals are larger than Mem0's. Our guide on [how to give a local LLM memory](/articles/how-to-give-local-llm-memory/) covers that route, and [context window limitations and solutions](/articles/context-window-limitations-solutions/) explains why accuracy also falls as the window fills.
 
 For the basics of tokens, input and output, start with [what the context window of an LLM is](/articles/context-window-of-an-llm/).
 
@@ -150,7 +159,11 @@ For the basics of tokens, input and output, start with [what the context window 
 
 ### Which open-source LLM has the largest context window?
 
-As of October 2026, Llama 4 Scout has the largest advertised window among open-weight models at 10M tokens. Llama 4 Maverick, Kimi K3, DeepSeek V4, GLM-5.3 and MiniMax-M3 support about 1M tokens. Qwen3.6 and Qwen3.8 run 262,144 tokens natively and about 1M with YaRN.
+As of November 2026, Llama 4 Scout has the largest advertised window among open-weight models at 10M tokens. Llama 4 Maverick, Kimi K3 and K3.1 Pro, DeepSeek V4, GLM-5.3, MiniMax-M3, Mistral Large 4 and Meta's Muse Spark Open support about 1M tokens. Qwen3.6 and Qwen3.8 run 262,144 tokens natively and about 1M with YaRN.
+
+### Does a 1M-token local model replace agent memory?
+
+Not on the evidence. In the Hindsight paper (arXiv 2512.12818, vendor-run), the same open 20B model scored 39.0% on LongMemEval-S with the whole history in context and 83.6% with a memory layer in front of it; on multi-session questions the gap was 21.1% vs 79.7%. Long context also costs VRAM that grows with every token, while memory retrieval returns a fixed token budget.
 
 ### Why does Ollama use a small context window by default?
 

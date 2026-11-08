@@ -2,7 +2,7 @@
 
 > How Claude Code memory works: CLAUDE.md locations and load order, @imports, auto memory and how to turn it off, /memory, plus memory MCP servers, claude-mem and Hindsight.
 
-Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **Claude Code memory** is two built-in systems. **CLAUDE.md files** hold instructions you write, and Claude Code loads them at the start of every session. **Auto memory** holds notes Claude writes for itself in `~/.claude/projects/<project>/memory/`. You manage both with `/memory`. For more than notes, add a memory MCP server or a plugin such as claude-mem or Hindsight.
@@ -207,7 +207,7 @@ OpenAI's Codex uses the same two-layer idea with different files:
 
 Per OpenAI's [Codex memories docs](https://learn.chatgpt.com/docs/customization/memories), you turn memories on with `memories = true` under `[features]` in `config.toml`, or in **Settings > Personalization**. Codex skips short sessions, redacts secrets, and calls its memory files "generated state" that you shouldn't edit by hand. Claude Code's auto memory files, by contrast, are plain Markdown you are invited to edit. Both vendors give the same advice: put rules that must always apply in the instruction file, not in automatic memory. Codex's instruction chain is described in its [AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md). The full breakdown is on [Codex memory](/articles/codex-memory/).
 
-If your team uses both tools, keep one `AGENTS.md` and let Claude Code read it, or import it with `@AGENTS.md`. Memory files are also an attack surface: a bad instruction committed to a shared CLAUDE.md loads into every session. See [AI memory injection](/articles/ai-memory-injection/).
+If your team uses both tools, keep one `AGENTS.md` and let Claude Code read it, or import it with `@AGENTS.md`. The two tools' auto memories, by contrast, can't read each other: there is [no standard format for agent memory](/articles/open-agent-memory-format/) yet, so notes both must see belong in a shared file or a shared memory server. Memory files are also an attack surface: a bad instruction committed to a shared CLAUDE.md loads into every session. See [AI memory injection](/articles/ai-memory-injection/).
 
 
 ## FAQ

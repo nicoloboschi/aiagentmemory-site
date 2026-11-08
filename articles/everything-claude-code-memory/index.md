@@ -2,7 +2,7 @@
 
 > How memory works in ECC (Everything Claude Code, affaan-m/ECC): session hooks, instincts with confidence scores, the Memory Vault, defaults, limits, and where Hindsight fits.
 
-Source: https://aiagentmemory.org/articles/everything-claude-code-memory/ · Updated 2026-11-01 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/everything-claude-code-memory/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **ECC (Everything Claude Code)** gives Claude Code memory through three local layers: hooks that save a session summary and reload it next time, **instincts** (small learned habits with confidence scores) built from your sessions, and a **Memory Vault** of Markdown handoffs shared across agents. Instinct learning is off by default, and ECC publishes no memory benchmarks.
@@ -53,7 +53,7 @@ This is a form of [procedural memory](/articles/ai-agent-procedural-memory/): le
 
 ## The ECC Memory Vault: one memory for several agents
 
-The **Memory Vault**, added in ECC 2.2, is a local store of portable Markdown memories that Claude Code, Codex, Hermes, OpenClaw, Kimi and other harnesses can all read. It's meant for durable context and handoffs between agents ("continue the auth migration in Codex"), not for copying vendor transcripts around.
+The **Memory Vault**, added in ECC 2.2, is a local store of portable Markdown memories that Claude Code, Codex, Hermes, OpenClaw, Kimi and other harnesses can all read. It's meant for durable context and handoffs between agents ("continue the auth migration in Codex"), not for copying vendor transcripts around. It is one of several attempts at the same problem; [is there a standard format for agent memory?](/articles/open-agent-memory-format/) compares it with Agent Memory Repo, MacPaw's `.mem` bundle and the shared-server route.
 
 ```bash
 npm install -g ecc-universal@2.2.3

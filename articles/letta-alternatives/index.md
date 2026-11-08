@@ -2,7 +2,7 @@
 
 > What Letta (formerly MemGPT) does now, why teams look for Letta alternatives, and how Mem0, Zep, Graphiti, Cognee, LangMem, Hindsight and Supermemory compare.
 
-Source: https://aiagentmemory.org/articles/letta-alternatives/ · Updated 2026-10-30 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/letta-alternatives/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **Letta alternatives** are memory systems you can use instead of Letta (formerly MemGPT) to give agents long-term memory. The main ones are Mem0, Zep, Graphiti, Cognee, LangMem, Hindsight and Supermemory. Most teams switch because they want a memory layer for their own agent, while Letta is now a full agent runtime that owns the loop.
@@ -33,7 +33,7 @@ These are the common reasons, based on how Letta works now:
 4. **You need structured recall.** Letta memory is text files plus message search. Systems built on knowledge graphs or time-aware facts handle questions like "what changed since March?" more directly.
 5. **Per-agent pricing.** The API plan charges per active agent per month. If you run one agent per end user, a usage-based memory service may cost less. Check the numbers for your own workload.
 
-None of these make Letta a bad choice. If you want agents that persist, learn across machines and manage their own context, it's built for exactly that.
+None of these make Letta a bad choice. If you want agents that persist, learn across machines and manage their own context, it's built for exactly that. One thing to know before you switch: Letta's `.af` Agent File moves an agent between Letta servers, not into another vendor, and no alternative reads it natively, because there is [no standard format for agent memory](/articles/open-agent-memory-format/) yet. Plan to re-ingest the source conversations rather than convert the memory files.
 
 ## Letta alternatives compared
 
