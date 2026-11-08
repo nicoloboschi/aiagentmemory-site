@@ -91,7 +91,7 @@ In our run, even a 1.5B model (`qwen2.5:1.5b-instruct`) answered the second, fre
 
 One gotcha: embeddings need an embedding model. Asking a chat model for embeddings on current Ollama returned "This server does not support embeddings" in our test, so pull `nomic-embed-text` or another embedding model. For other small local options, such as EmbeddingGemma 2 (Apache-2.0, released October 2026), see [embedding models for RAG and agent memory](/articles/embedding-models-for-rag/).
 
-This stores raw messages, so it grows forever and never updates a changed fact. That's fine to start, and keeping raw messages is a good habit: on short histories, plain search over raw chat beat most fact-extracting memory systems in a 2026 study ([benchmarks by architecture](/articles/ai-memory-architecture/#what-benchmarks-say-about-memory-architecture-choices)). For cleaner memories and facts that update, use a library that extracts facts.
+This stores raw messages, so it grows forever and never updates a changed fact. That's fine to start, and keeping raw messages is a good habit: on short histories, plain search over raw chat beat most fact-extracting memory systems in a 2026 study ([benchmarks by architecture](/articles/ai-memory-architecture/#what-benchmarks-say-about-memory-architecture-choices)). For cleaner memories and facts that update, use a library that extracts facts; [how each system handles a changed fact](/articles/semantic-memory-ai-agents/#how-each-system-handles-a-changed-fact) compares their update rules.
 
 ## Example 2: Mem0 fully local with Ollama
 

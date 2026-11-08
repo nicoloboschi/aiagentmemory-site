@@ -1,13 +1,13 @@
 # CrewAI Long-Term Memory: The Unified Memory Class
 
-> How CrewAI long-term memory works since v1.10: one Memory class with scopes, LanceDB storage, composite recall scoring, embedder setup, and how to reset it.
+> How CrewAI long-term memory works since v1.10: one Memory class with scopes, LanceDB storage, composite recall scoring, every Memory() parameter and its default, memory events, and how to reset it.
 
-Source: https://aiagentmemory.org/articles/crewai-long-term-memory/ · Updated 2026-10-28 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/crewai-long-term-memory/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **CrewAI long-term memory** is handled by one `Memory` class. You save text with `remember()` and get it back with `recall()`. An LLM tags each item with a scope, categories and an importance score, and CrewAI embeds it into a local LanceDB store. Turn on `memory=True` on a `Crew` and it recalls context before each task and saves facts after it.
 
-That's the design since **CrewAI 1.10** (released February 27, 2026). Before it, CrewAI had separate short-term, long-term, entity and external memory, with SQLite for task results. Most tutorials online still show that older API, which no longer exists in current releases (1.15.32 as of 28 October 2026). Facts here come from the [CrewAI memory docs](https://docs.crewai.com/en/concepts/memory) and the installed package.
+That's the design since **CrewAI 1.10** (released February 27, 2026). Before it, CrewAI had separate short-term, long-term, entity and external memory, with SQLite for task results. Most tutorials online still show that older API, which no longer exists in current releases (1.15.37 as of 7 November 2026; the 1.15.33 to 1.15.37 release notes change nothing in memory). Facts here come from the [CrewAI memory docs](https://docs.crewai.com/en/concepts/memory) (v1.15.37, read 8 November 2026) and the installed package.
 
 ## What is CrewAI long-term memory?
 
@@ -80,7 +80,7 @@ Inside a CrewAI Flow, the same calls are available as `self.remember()`, `self.r
 
 ## How CrewAI recall works
 
-Each saved record goes through an LLM (default `gpt-4o-mini`) that infers its scope, categories and importance. On save, **consolidation** compares the new record with stored ones at or above a similarity of 0.85 (`consolidation_threshold`; set it to `1.0` to turn consolidation off), and the LLM picks one action: `keep`, `update`, `delete` or `insert_new`. `remember_many()` queues a batch in the background and drops in-batch duplicates at 0.98 similarity with vector math only, no LLM call.
+Each saved record goes through an LLM (default `gpt-4o-mini`) that infers its scope, categories and importance. On save, **consolidation** compares the new record with stored ones at or above a similarity of 0.85 (`consolidation_threshold`; set it to `1.0` to turn consolidation off), at most 5 of them (`consolidation_limit`), and the LLM picks one action: `keep`, `update`, `delete` or `insert_new`. `remember_many()` queues a batch in the background and drops in-batch duplicates at 0.98 similarity with vector math only, no LLM call.
 
 Background writes have a read barrier: every `recall()` first calls `drain_writes()`, and `Crew.kickoff()` drains pending saves when it finishes. A standalone script that exits right after `remember_many()` should call `drain_writes()` or `close()` so the queued saves finish, as the docs advise.
 
@@ -94,7 +94,7 @@ Recall ranks by a **composite score**:
 | Recency (30-day half-life) | 0.3 |
 | Importance | 0.2 |
 
-`recall()` has two depths. `depth="shallow"` is a direct vector search with that scoring and no LLM calls. `depth="deep"` (the default) runs a multi-step recall flow with LLM query analysis, though queries under 200 characters skip the analysis step. Use shallow when latency matters more than precision.
+`recall()` has two depths. `depth="shallow"` is a direct vector search with that scoring and no LLM calls; the docs put it at about 200 ms. `depth="deep"` (the default) runs a multi-step recall flow: LLM query analysis, scope selection, parallel vector search, then a confidence check. Results above `confidence_threshold_high` (0.8) come back directly; below `confidence_threshold_low` (0.5) the flow runs up to `exploration_budget` (1) extra LLM-driven rounds. Queries under 200 characters (`query_analysis_threshold`) skip the analysis step, which the docs say saves 1-3 s per recall. Use shallow when latency matters more than precision, and raise `query_analysis_threshold` if deep recall is slow on long task descriptions.
 
 The weighting is a reasonable heuristic, similar to the recency-importance-relevance scoring from the Generative Agents paper. It isn't time-aware in a stronger sense: an old fact and a newer, contradicting one can both come back, and the higher-scored one wins. For why that matters, see [temporal reasoning in AI memory](/articles/temporal-reasoning-ai-memory/).
 
@@ -120,7 +120,9 @@ If you stored private records without a source on an older version, nothing in t
 
 ## Storage, embedders and reset commands
 
-**Storage.** The built-in backend is LanceDB on local disk, at `./.crewai/memory` by default (`$CREWAI_STORAGE_DIR/memory` if set, or pass `storage="path/to/dir"`), with a Qdrant Edge option. You can supply your own backend by implementing the `StorageBackend` protocol (`save`, `search` and friends) and passing it as `storage=`. That's the path for a shared database when several workers run the same crew. One ready-made backend exists: [`crewai-mongodb-memory`](https://github.com/mongodb-developer/crewai-mongodb-memory) (from the mongodb-developer GitHub org, PyPI 0.1.0, July 2026) provides a `MongoDBStorageBackend` on MongoDB Atlas.
+**Storage.** The built-in backend is LanceDB on local disk, at `./.crewai/memory` by default (`$CREWAI_STORAGE_DIR/memory` if set, or pass `storage="path/to/dir"`), with a Qdrant Edge option. Two `Memory` instances on the same directory (agent memory plus crew memory, say) are safe: LanceDB writes go through a shared lock and are retried on conflict. You can supply your own backend by implementing the `StorageBackend` protocol (`save`, `search` and friends) and passing it as `storage=`. That's the path for a shared database when several workers run the same crew. One ready-made backend exists: [`crewai-mongodb-memory`](https://github.com/mongodb-developer/crewai-mongodb-memory) (from the mongodb-developer GitHub org, PyPI 0.1.0, July 2026) provides a `MongoDBStorageBackend` on MongoDB Atlas.
+
+**Privacy.** Every record's text goes to the analysis LLM on save, and long queries go to it on deep recall. The docs' own advice for sensitive data is a local model such as Ollama, or a provider that meets your compliance needs.
 
 **Embedders.** The default is OpenAI `text-embedding-3-large`. Pass `embedder={"provider": "ollama", "config": {"model_name": "mxbai-embed-large"}}` to run locally. The docs list OpenAI, Azure, Google, Vertex, Cohere, VoyageAI, Bedrock, Hugging Face, Jina, WatsonX and sentence-transformers. Pair it with `Memory(llm="ollama/llama3.2")` for a fully local setup.
 
@@ -130,6 +132,43 @@ If you stored private records without a source on an older version, nothing in t
 - `crewai reset-memories -m` wipes memory from the CLI.
 - `crew.reset_memories(command_type="memory")`, `memory.reset()` or `memory.forget(scope="/project/old")` do it in code.
 - `memory.tree()` and `memory.info("/path")` show record counts per scope.
+
+## Configuration reference
+
+Everything is a keyword argument to `Memory(...)`. Defaults from the docs' configuration reference (v1.15.37):
+
+| Parameter | Default | What it does |
+|---|---|---|
+| `llm` | `"gpt-4o-mini"` | Model for save analysis, extraction and deep-recall query analysis |
+| `storage` | `"lancedb"` | Backend: `"lancedb"`, a path, or a `StorageBackend` instance |
+| `embedder` | `None` (OpenAI `text-embedding-3-large`) | Config dict, callable, or default |
+| `semantic_weight` | `0.5` | Share of similarity in the composite score |
+| `recency_weight` | `0.3` | Share of recency |
+| `importance_weight` | `0.2` | Share of importance |
+| `recency_half_life_days` | `30` | Days for the recency score to halve |
+| `consolidation_threshold` | `0.85` | Similarity that triggers consolidation on save; `1.0` disables it |
+| `consolidation_limit` | `5` | Existing records compared per save |
+| `default_importance` | `0.5` | Importance when the LLM analysis is skipped or fails |
+| `batch_dedup_threshold` | `0.98` | Cosine similarity for dropping duplicates inside a `remember_many()` batch |
+| `confidence_threshold_high` | `0.8` | Deep recall returns results directly above this |
+| `confidence_threshold_low` | `0.5` | Deep recall explores further below this |
+| `complex_query_threshold` | `0.7` | For complex queries, explore below this confidence |
+| `exploration_budget` | `1` | LLM-driven exploration rounds in deep recall |
+| `query_analysis_threshold` | `200` | Queries shorter than this (characters) skip LLM analysis |
+
+The docs' two tuning examples: a sprint retrospective gets a short half-life and a high recency weight; an architecture knowledge base gets a long half-life and a high importance weight.
+
+## Watching memory from code
+
+Every memory operation emits an event with `source_type="unified_memory"`, so you can time recalls and catch background save errors without reading logs:
+
+| Event | When | Useful fields |
+|---|---|---|
+| `MemoryQueryStartedEvent` / `MemoryQueryCompletedEvent` / `MemoryQueryFailedEvent` | A `recall()` runs | `query`, `results`, `query_time_ms`, `error` |
+| `MemorySaveStartedEvent` / `MemorySaveCompletedEvent` / `MemorySaveFailedEvent` | A record is saved | `value`, `metadata`, `save_time_ms`, `error` |
+| `MemoryRetrievalStartedEvent` / `MemoryRetrievalCompletedEvent` | A crew recalls context before a task | `task_id`, `memory_content`, `retrieval_time_ms` |
+
+Subscribe with a `BaseEventListener` on `crewai_event_bus` and filter on `source_type`. Background saves that fail raise no exception in the agent; the only trace is a `MemorySaveFailedEvent` and a log line, so a listener on that event is how you find out that memory stopped being written.
 
 ## When CrewAI's built-in memory is enough
 
@@ -165,6 +204,10 @@ By default in ./.crewai/memory, as a LanceDB vector store. You can override the 
 ### Does CrewAI still have short-term, long-term and entity memory?
 
 No. In current releases those separate classes, along with ExternalMemory, are gone. The docs describe a single Memory class that replaces short-term, long-term, entity and external memory. Older tutorials and some third-party integrations still target the pre-1.10 API.
+
+### Why is CrewAI memory recall slow, and how do I speed it up?
+
+The default depth='deep' sends queries of 200 characters or more through an LLM query analysis step, which the docs say costs 1-3 seconds, and can run extra exploration rounds when confidence is below 0.5. Use depth='shallow' for routine context (a direct vector search, about 200 ms), or raise query_analysis_threshold so more queries skip the LLM step.
 
 ### Are private memories in CrewAI really private?
 

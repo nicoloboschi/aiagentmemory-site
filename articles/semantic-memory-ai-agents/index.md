@@ -1,8 +1,8 @@
 # Semantic Memory in AI Agents: Facts, Profiles, Graphs
 
-> What semantic memory is in AI agents: profiles vs collections, triples and graphs, extracting facts with LangMem, keeping facts current, and LongMemEval knowledge-update scores by system.
+> What semantic memory is in AI agents: profiles vs collections, triples and graphs, extracting facts with LangMem, how Mem0, CrewAI, Graphiti and Hindsight handle a changed fact, and LongMemEval knowledge-update scores by system.
 
-Source: https://aiagentmemory.org/articles/semantic-memory-ai-agents/ · Updated 2026-10-25 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/semantic-memory-ai-agents/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **Semantic memory in AI agents** stores facts: who the user is, what they prefer, what's true about the domain, and how entities relate. Unlike episodic memory, a semantic fact isn't tied to the moment it was learned. The agent saves these facts outside the model and pulls the relevant ones into the prompt to ground and personalize its answers.
@@ -105,6 +105,24 @@ Facts change. "I live in NYC" in January becomes "I just moved to SF" in June. I
 
 Test this case with real data before you pick a system. LongMemEval ([Wu et al., 2024](https://arxiv.org/abs/2410.10813)) has a dedicated "knowledge update" category for it, because it's where many setups fail quietly.
 
+### How each system handles a changed fact
+
+The five strategies above map onto real systems like this. "Decides" is who settles the conflict; "old fact" is what happens to the record that was true before.
+
+| System | When it checks | Who decides | Old fact | Source |
+|---|---|---|---|---|
+| Profile (LangMem profile, Mastra working memory) | Every write | The extraction LLM rewrites the document | Overwritten, no history | [LangMem guide](https://langchain-ai.github.io/langmem/concepts/conceptual_guide/) |
+| LangMem collection, `enable_deletes=True` | Each extraction, against the `existing` memories you pass in | LLM emits `RemoveDoc` | Removed, if your code acts on the `RemoveDoc` | [LangMem extraction guide](https://langchain-ai.github.io/langmem/guides/extract_semantic_memories/) |
+| Mem0, as in the 2025 paper | Each new fact against its 10 most similar memories | LLM picks ADD, UPDATE, DELETE or NOOP | Extended or deleted | [Mem0 paper](/articles/mem0-building-production-ready-ai-agents/) |
+| Mem0, since April 2026 | Never during extraction | Nobody: single-pass, ADD-only | Kept next to the new one; time-aware retrieval is meant to rank the current one; you call `update` or `delete` | [Mem0 README](https://github.com/mem0ai/mem0) |
+| CrewAI `Memory` (1.10+) | On save, when similarity is at or above 0.85, against up to 5 records | LLM picks keep, update, delete or insert_new | Merged or deleted | [CrewAI docs](https://docs.crewai.com/en/concepts/memory) |
+| Graphiti / Zep | On ingest, when a new edge contradicts an existing one | LLM-based resolver | Invalidated with a validity window, not deleted | [Graphiti README](https://github.com/getzep/graphiti) |
+| [Hindsight](https://github.com/vectorize-io/hindsight) | Background consolidation after each `retain` | LLM refines the observation; since v1.2.0 the code, not the model, decides which fact is newer | Kept as evidence under the observation, with its quote | README, [v1.2.0 notes](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0) |
+
+Two things stand out. Mem0 moved from "the LLM decides" to "nothing is decided at write time", and pushed the conflict to retrieval; that keeps writes to one LLM call, but it also means both facts stay in the store. Every other row still spends an LLM call per conflict, and Hindsight spends one on consolidation as well as on `retain`, which is its main cost.
+
+Letting a model judge which fact is newer has a failure mode Hindsight documented when it fixed it. In [PR #5966](https://github.com/vectorize-io/hindsight/pull/5966) (merged 22 October 2026, shipped in v1.2.0), when a rule and an amendment to it were stated on the same day and the amendment was retained first, consolidation let the older rule overwrite it every time. The PR gives two causes from the model's own reasoning: the two timestamps reached it in different formats, so it misread which was later; and wording like "updated policy" outweighed the times. The fix moved the comparison into code: one time format in the prompt, and a `newer_than_input_facts` flag on every observation that was last true after every fact in the batch, which the model only follows. The lesson holds for any row in the table where an LLM decides: hand it the comparison already made, not two timestamps to compare.
+
 ## How memory systems score on facts that change
 
 Two LongMemEval question types test semantic memory directly. **Knowledge-update** (78 questions) asks for a fact the user later changed. **Single-session-preference** (30 questions) asks the assistant to use a preference the user stated once. Table 3 of the Hindsight paper ([Latimer et al., arXiv 2512.12818](https://arxiv.org/abs/2512.12818), Dec 2025) breaks results down by type, on the S setting (about 115,000 tokens over roughly 50 sessions):
@@ -155,6 +173,10 @@ No. Semantic memory is a psychology term for stored facts and knowledge. Semanti
 ### Should agent semantic memory be a profile or a collection?
 
 Use a profile (one structured document per user) when you need fast access to the current state of a known set of fields. Use a collection (many small fact records) when facts are open-ended and you want to recall them contextually. LangGraph's docs note collections tend to give higher recall but are harder to update.
+
+### Which memory systems delete a changed fact, and which keep it?
+
+LangMem (with enable_deletes) and CrewAI's Memory let an LLM delete or merge the old record on write. Mem0 has been ADD-only since April 2026: both facts stay, and retrieval is meant to rank the newer one. Graphiti marks the old edge invalid with a validity window. Hindsight keeps the old fact as evidence under a refined observation; since v1.2.0 its code, not the model, decides which fact is newer. A profile just overwrites the field.
 
 ### Which memory system handles changed facts best?
 

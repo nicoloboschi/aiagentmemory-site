@@ -35,7 +35,7 @@ Per the docs page [How Mem0 Works](https://docs.mem0.ai/core-concepts/how-it-wor
 3. **Deduplication and embedding.** Redundant facts are dropped; each memory gets an embedding.
 4. **Entity extraction.** People, places, organizations and concepts are stored for entity matching.
 
-Since the April 2026 algorithm, extraction is **single-pass and ADD-only**: one LLM call, and no automatic UPDATE or DELETE. If a user says "I moved from Austin to Seattle," Mem0 stores the new fact next to the old one. Retrieval is supposed to rank the current fact higher. When you need a correction, you call `update` or `delete` yourself.
+Since the April 2026 algorithm, extraction is **single-pass and ADD-only**: one LLM call, and no automatic UPDATE or DELETE. If a user says "I moved from Austin to Seattle," Mem0 stores the new fact next to the old one. Retrieval is supposed to rank the current fact higher. When you need a correction, you call `update` or `delete` yourself. Most other systems still resolve the conflict at write time; see [how each system handles a changed fact](/articles/semantic-memory-ai-agents/#how-each-system-handles-a-changed-fact).
 
 That's a change from the design in the [Mem0 research paper](/articles/mem0-building-production-ready-ai-agents/), where an LLM chose ADD, UPDATE, DELETE or NOOP for every new fact. That older loop was recently measured by an outside group: Stanford's Memorilla paper ran Mem0 0.1.118 with a 4B extractor and found it [behind plain top-50 retrieval on seven of eight QA benchmarks](/articles/mem0-building-production-ready-ai-agents/#mem0-as-a-baseline-in-stanfords-memorilla-paper), which is part of why the extraction step's quality matters more than its design.
 
@@ -134,7 +134,7 @@ print(memory.history("<memory-id>"))      # change log for a memory
 
 ## Mem0 integrations and pricing
 
-Mem0's docs list integrations for LangChain, LangGraph, LlamaIndex, CrewAI, AutoGen, Agno, the OpenAI Agents SDK, Google ADK, Mastra, the Vercel AI SDK and AWS Strands. Most are written against the Platform. There are also plugins for coding agents: Claude Code, Cursor, Codex, OpenCode and others.
+Mem0's docs list integrations for LangChain, LangGraph, LlamaIndex, CrewAI (the guide calls the Mem0 client directly, since [CrewAI's own memory](/articles/crewai-long-term-memory/) dropped external providers in 1.10), AutoGen, Agno, the OpenAI Agents SDK, Google ADK, Mastra, the Vercel AI SDK and AWS Strands. Most are written against the Platform. There are also plugins for coding agents: Claude Code, Cursor, Codex, OpenCode and others.
 
 For **Hermes Agent**, Mem0 maintains a standalone memory plugin with three modes: Platform, a self-hosted Mem0 server, or in-process open source. It recalls memories for the current question with a 3-second wait, extracts facts in the background after each turn, and gives the model `mem0_search`, `mem0_add`, `mem0_update` and `mem0_delete` tools. Our Hermes Agent memory guide compares it with other providers.
 
