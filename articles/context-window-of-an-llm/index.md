@@ -137,7 +137,7 @@ A 1M-token window lets you paste a lot in. It doesn't decide what's worth keepin
 
 That's why agents pair the window with an external store. The store keeps facts across sessions; retrieval puts the few relevant ones back into the window. Memory servers such as Mem0, [Zep](/articles/what-is-zep-memory/) and [Hindsight](https://github.com/vectorize-io/hindsight) do this for you. Hindsight (MIT) runs semantic, keyword, graph and time-based search at once and trims the result to a token budget you set with `max_tokens`, so memory takes a fixed slice of the window. Its default budget is generous: Mem0 measured 24K-44K tokens per retrieval against its own under 7K, so set it lower on small windows.
 
-The trade-offs between plain retrieval and agent memory are covered in [RAG vs agent memory](/articles/rag-vs-agent-memory/).
+The trade-offs between plain retrieval and agent memory are covered in [RAG vs agent memory](/articles/rag-vs-agent-memory/). The build itself, with tested Python examples and a recall test by question type, is in [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/).
 
 ## Advertised vs effective context window
 

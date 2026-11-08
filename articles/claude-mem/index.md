@@ -2,12 +2,12 @@
 
 > What claude-mem is, how its hooks and local worker store and search your coding sessions, how to install it on Claude Code and other agents, what it costs, and when to pick something else.
 
-Source: https://aiagentmemory.org/articles/claude-mem/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-mem/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **claude-mem** is an Apache 2.0 plugin that gives a coding agent memory of its own past sessions. Lifecycle hooks capture what the agent does, an LLM compresses that into observations and summaries, a local worker stores them in SQLite, and the next session starts with the relevant parts already in context.
 
-It is one of the most starred agent memory projects on GitHub: **114,381 stars** on 7 November 2026 (103,771 on 28 October), from a repo created on 31 August 2025 by Alex Newman ([@thedotmack](https://github.com/thedotmack)). Every fact below comes from the [claude-mem README](https://github.com/thedotmack/claude-mem) and [docs.claude-mem.ai](https://docs.claude-mem.ai/), checked on 17 October 2026; the release changes through v15.11.1 come from the [release notes](https://github.com/thedotmack/claude-mem/releases), checked on 7 November 2026. For Claude Code's own built-in memory, which is a separate thing, see [Claude Code memory](/articles/claude-code-memory/).
+It is one of the most starred agent memory projects on GitHub: **114,617 stars** on 8 November 2026 (103,771 on 28 October), from a repo created on 31 August 2025 by Alex Newman ([@thedotmack](https://github.com/thedotmack)). Every fact below comes from the [claude-mem README](https://github.com/thedotmack/claude-mem) and [docs.claude-mem.ai](https://docs.claude-mem.ai/), checked on 17 October 2026 (the install and trial wording re-read on 8 November); the release changes through v15.12.0 come from the [release notes](https://github.com/thedotmack/claude-mem/releases), checked on 8 November 2026. For Claude Code's own built-in memory, which is a separate thing, see [Claude Code memory](/articles/claude-code-memory/).
 
 ## What is claude-mem?
 
@@ -78,7 +78,7 @@ The README puts the saving at about **10x** versus fetching details first. Since
 
 The code is free. The compression is not, because it calls a model on your sessions.
 
-`npx claude-mem install` sets everything up and then asks you to sign in with an email magic link, no card. Signing in provisions a memory key and unlocks the hosted **claude-mem observer** with a **30-day free trial**, which runs memory off your Anthropic plan. When the trial ends, memory falls back to your Anthropic plan unless you subscribe. After sign-in you choose the provider: the observer, your own OpenRouter or Gemini key, or your Anthropic plan.
+`npx claude-mem install` sets everything up and then asks you to sign in with an email magic link; no card is needed to sign in. Choosing the hosted **claude-mem observer** starts its **30-day free trial** on a checkout page that asks for a payment method (README wording as of 8 November 2026), and the installer then saves your memory key. The observer runs memory off your Anthropic plan. When the trial ends, memory falls back to your Anthropic plan unless you subscribe. After sign-in you choose the provider: the observer, your own OpenRouter or Gemini key, or your Anthropic plan.
 
 To avoid the account step entirely, pass an explicit `--provider` flag, set `CLAUDE_MEM_ONLINE_OPTIN=false`, or run the installer in CI or a non-interactive shell.
 
@@ -88,7 +88,7 @@ One oddity worth knowing: the README ends by noting that **CMEM**, a token creat
 
 ## What changed in claude-mem 14 and 15 (17 October to 7 November 2026)
 
-claude-mem ships several releases a week (23 tagged releases in these three weeks). The memory-relevant changes since this page was first written, from the [release notes](https://github.com/thedotmack/claude-mem/releases):
+claude-mem ships several releases a week (24 tagged releases in these three weeks). The memory-relevant changes since this page was first written, from the [release notes](https://github.com/thedotmack/claude-mem/releases):
 
 | Version (date) | Change | What it means for memory |
 |---|---|---|
@@ -103,6 +103,7 @@ claude-mem ships several releases a week (23 tagged releases in these three week
 | 15.9.0 (2 Nov) | Devin CLI and Desktop installer; `CLAUDE_MEM_WORKER_URL` for a remote worker (must be https off your machine); switching observer providers mid-session no longer duplicates observations; more secret types redacted before storage | Memory can run on another box. Fewer duplicate records |
 | 15.10.0 (5 Nov) | `CLAUDE_MEM_OBSERVER_ENABLED=false` turns capture off while keeping search and context; `CLAUDE_MEM_PROVIDER_BY_SOURCE` picks the observer per agent; `CLAUDE_CODE_OAUTH_TOKEN` in `~/.claude-mem/.env` keeps capture running after the stored login expires; installers for Copilot CLI, Goose on Windows and Kimi; Devin context re-injected after compaction | First clean off switch. Capture no longer silently stops on an expired login |
 | 15.10.1 to 15.11.1 (6 to 7 Nov) | Context reads survive missing SQLite WAL files; queued batches are kept on a 429; an over-budget condense reply is clamped instead of dropped; the Stop hook reads `last_assistant_message` instead of the transcript; installer screen telemetry (follows `DO_NOT_TRACK`, no prompts or paths) | Reliability of capture under rate limits. One more telemetry stream to opt out of |
+| 15.12.0 (7 Nov) | **Screenshots and images the agent reads or makes are kept by default**, linked to that turn's observations and converted locally to WebP; they are not sent to a model (image inference stays off). A **Keep images** switch in the viewer's Settings stops new ones; kept images stay. cmem.ai stores up to 25 GiB of images per owner. `PreToolUse` memory lookups are scoped to the current platform, so one harness no longer gets another's observations. `CLAUDE_MEM_DATA_DIR` and `CLAUDE_MEM_WORKER_HOST` can no longer be changed through `POST /api/settings`. The README now says the observer trial goes through a checkout that asks for a payment method | A new kind of data lands on disk by default: screen captures. Turn Keep images off if your screens show secrets. The cross-harness context leak is closed |
 
 The direction is clear: claude-mem is growing from a session log into a work tracker with a cloud tier, and the privacy defaults have moved twice in two weeks. The local core, hooks plus SQLite plus search, still works without an account.
 
@@ -156,7 +157,7 @@ The code is Apache 2.0 and free to self-host, but the compression step costs mod
 
 ### What changed in claude-mem 15?
 
-Version 15.0.0 (20 October 2026) made Smart search the default: the agent runs search, then timeline, then get_observations and judges relevance between steps; the old one-call lookup is now dumb_search. Later 15.x releases added a browser setup flow that scans 30 days of local agent history and uploads filtered prompts to CMEM Cloud for goal extraction (15.2.0, made opt-in with a consent panel in 15.8.3), copies of files agents make plus opt-in local database backups (15.3.0), focus areas in the My Work view (15.4.0), a capture off switch CLAUDE_MEM_OBSERVER_ENABLED and per-agent observer choice (15.10.0), and a remote worker URL (15.9.0).
+Version 15.0.0 (20 October 2026) made Smart search the default: the agent runs search, then timeline, then get_observations and judges relevance between steps; the old one-call lookup is now dumb_search. Later 15.x releases added a browser setup flow that scans 30 days of local agent history and uploads filtered prompts to CMEM Cloud for goal extraction (15.2.0, made opt-in with a consent panel in 15.8.3), copies of files agents make plus opt-in local database backups (15.3.0), focus areas in the My Work view (15.4.0), a capture off switch CLAUDE_MEM_OBSERVER_ENABLED and per-agent observer choice (15.10.0), a remote worker URL (15.9.0), and screenshots kept by default with a Keep images switch (15.12.0).
 
 ### Does claude-mem upload my prompts?
 

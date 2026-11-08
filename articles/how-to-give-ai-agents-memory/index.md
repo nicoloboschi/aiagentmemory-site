@@ -1,8 +1,8 @@
 # How to Give AI Agents Memory (Python Examples)
 
-> How to give AI agents memory that lasts across sessions: the two main patterns, a 7-step build, and tested Python code with Pydantic AI, LangMem and Mem0.
+> How to give AI agents memory that lasts across sessions: the two main patterns, a 7-step build, tested Python code with Pydantic AI, LangMem and Mem0, and how to test recall by question type.
 
-Source: https://aiagentmemory.org/articles/how-to-give-ai-agents-memory/ · Updated 2026-10-28 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/how-to-give-ai-agents-memory/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 To **give an AI agent memory**, you save information outside the model and put the relevant parts back into its prompt later. The LLM itself forgets everything between calls. Your code decides what to store, where to store it (a database keyed by user), and when to search it, either automatically before each call or through memory tools the agent calls itself.
@@ -40,8 +40,8 @@ The tool pattern comes from the [MemGPT paper](https://arxiv.org/abs/2310.08560)
 3. **Choose a store.** SQLite or Postgres for small setups, a vector index for fuzzy search, a graph when relationships and time matter.
 4. **Write after the turn.** Save in the background if you can, so the user doesn't wait.
 5. **Read before the call.** Search with the user's message and add the top few results to the system prompt. Keep the memory block to a fixed token budget.
-6. **Handle change and deletion.** People move, change jobs and ask to be forgotten. Update or invalidate old facts and support deleting a user's whole scope.
-7. **Test recall.** Write 20-50 questions your agent should answer from memory and check them after every change.
+6. **Handle change and deletion.** People move, change jobs and ask to be forgotten. Update or invalidate old facts and support deleting a user's whole scope. Each library does this differently (Mem0 keeps both versions, CrewAI and Graphiti update or invalidate, Hindsight merges into observations); the side-by-side is in [semantic memory in AI agents](/articles/semantic-memory-ai-agents/#how-each-system-handles-a-changed-fact).
+7. **Test recall.** Write 20-50 questions your agent should answer from memory and check them after every change. How to build that set so it catches real failures is in the [testing section](#how-to-test-that-memory-actually-helps) below.
 
 ### Should memory hold summaries or raw history?
 
@@ -51,6 +51,35 @@ The tool pattern comes from the [MemGPT paper](https://arxiv.org/abs/2310.08560)
 - **Coding agents.** The [REM paper](https://arxiv.org/abs/2610.27377) (October 2026) found that injecting a past bug-fix run as a plain summary or as the raw trajectory did not help an agent fix a related bug. What helped was a compact record split by work phase, with the detailed record shown only when the agent got stuck. Details in [AI coding agent memory](/articles/ai-coding-agent-memory/#does-reusing-past-coding-sessions-help).
 
 So don't dump everything into the prompt, and don't throw the source away after summarizing it. Store short, searchable facts for the prompt, keep the raw history (or a pointer to it) for when the agent needs the detail, and give the agent a search tool to reach it. This is also why the two wiring patterns above are often combined.
+
+### How to test that memory actually helps
+
+**Test memory the way the benchmarks do: a fixed set of questions with known answers, run with memory on and with memory off, scored by question type.** A test set that only asks "what is the user's name" passes and still ships an agent that forgets preferences. Three sources say what to ask and how to score it.
+
+**Cover the question types that fail.** The [LongMemEval](https://arxiv.org/abs/2410.10813) benchmark sorts questions into six types, and the published scores show they are not equally hard. In Table 3 of the [Hindsight paper](https://arxiv.org/abs/2512.12818) (Vectorize, December 2025, LongMemEval-S), GPT-4o with the full history in its context answered 81.4% of single-session-user questions but only 20.0% of single-session-preference, 44.3% of multi-session and 45.1% of temporal-reasoning questions. Those three types are where "resend the whole history" breaks, and where a memory layer earns its cost: Hindsight on a 20B open model scored 66.7, 79.7 and 79.7 on the same three. The table maps each type to a question you can write for the agent in Example 1.
+
+| LongMemEval type | A test question for the Example 1 agent | Full-context GPT-4o | Hindsight (OSS-20B) |
+|---|---|---|---|
+| single-session-user | "What am I training for?" (said once, one session earlier) | 81.4 | 95.7 |
+| single-session-assistant | "What dinner did you suggest last time?" | 94.6 | 94.6 |
+| single-session-preference | "Plan my dinner" (must come out vegetarian without being told again) | 20.0 | 66.7 |
+| knowledge-update | "What am I training for?" after the user switched to a 10K | 78.2 | 84.6 |
+| temporal-reasoning | "How many weeks have I been training?" | 45.1 | 79.7 |
+| multi-session | "Which goals have I mentioned more than once?" | 44.3 | 79.7 |
+
+Scores are percent correct, vendor-run. The GPT-4o column is the full-context baseline the paper copies from Supermemory's report (GPT-4o as judge); Hindsight's column is judged by GPT-OSS-120B, so the two are not a strict like-for-like. The point is the shape: preference, temporal and multi-session questions are the hard ones, so write at least as many of those as of plain fact lookups.
+
+**Score a memory by the task it serves, with and without it.** Yang et al. ([arXiv 2611.03930](https://arxiv.org/abs/2611.03930), November 2026) measured what they call task-conditioned utility: a writer stores a memory without seeing the later task, then a frozen reader answers that task once with the memory and once without, with identical filler text in the prompt. On factual-recall tasks built from LongMemEval-V2 web-agent memories, a memory that held the answer raised the reward by 0.33 more (95% interval 0.21 to 0.46) than a matched memory that did not. Two of their results matter for your test design. Raw memories gave bigger gains than the task-blind summaries and structured records they tested, even at a fixed total context, which backs the keep-the-raw-history advice above. And the recall gains did not carry over to the software-engineering and scientific-coding benchmarks they tested, where even raw memories had no measurable effect. A coding agent's memory needs its own test set; a passing chatbot test says nothing about it.
+
+**Don't read the retrieval log to decide which memories to keep.** Behnam ([arXiv 2611.03289](https://arxiv.org/abs/2611.03289), November 2026) shows that when an agent always retrieves its top-k memories, the log of what was retrieved and whether the run succeeded cannot determine the value of any single memory, however many runs you record, because the same memories always travel together. On 14 memory benchmarks in 55 configurations, no memory's value was determined. If you want to prune, ablate instead: rerun a question with one memory removed, or vary what gets retrieved on purpose so the log becomes informative. The paper's LEDGER method does the second and raised the share of memories with a determined value from 0.001 to 0.797 on pooled HotpotQA, at a cost of 2.6 accuracy points there and a gain of 2.7 on LoCoMo.
+
+Put together, a recall test for step 7 looks like this:
+
+1. Write 5-10 questions per type in the table above, taken from real transcripts, each with a known correct answer.
+2. Run every question twice with the same prompt and the same amount of history: once with the memory store on, once with it off.
+3. Score by type. Flag any type where "on" is not clearly above "off"; preference and temporal questions are the usual failures.
+4. When you decide what to prune or how to summarize, ablate single memories and compare, instead of trusting retrieval counts.
+5. Put the set in CI next to the cross-user leak test below, and rerun it after every change to extraction, retrieval or the prompt.
 
 ## Python examples: three ways to add agent memory
 
@@ -211,6 +240,10 @@ Yes. A bigger context window lets the model see more text in one call, but it st
 ### Does Pydantic AI have built-in long-term memory?
 
 Pydantic AI keeps message history you can pass back into a run, but it has no built-in store that persists facts across sessions. The usual approach is to add tools backed by your own database, as in the example on this page, or plug in a memory service such as Mem0, Zep or Hindsight.
+
+### How do you test an AI agent's memory?
+
+Write a fixed set of questions with known answers, run each with the memory store on and off under the same prompt, and score by question type. Cover the types that fail most: in the Hindsight paper's LongMemEval table, GPT-4o with the full history in context scored 20.0% on preference questions, 44.3% on multi-session and 45.1% on temporal reasoning, against 81.4% on single facts. To decide which memories to keep, remove one at a time and compare; the retrieval log alone cannot tell you a memory's value when the top-k are always retrieved together (Behnam, 2026).
 
 ### How do you stop one user's agent memory from leaking to another?
 
