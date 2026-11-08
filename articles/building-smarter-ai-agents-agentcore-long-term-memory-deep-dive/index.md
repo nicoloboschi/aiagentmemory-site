@@ -1,13 +1,13 @@
 # AgentCore Memory: AWS Long-Term Memory Deep Dive
 
-> How Amazon Bedrock AgentCore Memory works: events, short-term vs long-term memory, the four built-in strategies, direct ingestion, long-term record TTL, Python code and October 2026 pricing.
+> How Amazon Bedrock AgentCore Memory works: events, short-term vs long-term memory, the four built-in strategies, direct ingestion, record TTL, harness managed memory, record streaming, metadata filters, Python code and pricing (November 2026).
 
-Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-10-28 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **AgentCore long-term memory** is the part of Amazon Bedrock AgentCore Memory that turns raw conversation events into durable records an agent can search later. You write turns as **events** (short-term memory). Configured **memory strategies** then extract facts, preferences, summaries or episodes from those events and store them as **memory records** in namespaces, where any later session can retrieve them.
 
-AgentCore became generally available in October 2025. This page follows the [AgentCore Memory developer guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory.html), the API reference and the [pricing page](https://aws.amazon.com/bedrock/agentcore/pricing/), checked on 8 October 2026.
+AgentCore became generally available in October 2025. This page follows the [AgentCore Memory developer guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory.html), the API reference and the [pricing page](https://aws.amazon.com/bedrock/agentcore/pricing/), checked on 8 November 2026. The [new additions since October](#whats-new-in-agentcore-memory-october-and-november-2026) (harness managed memory, record streaming, metadata filters, cross-account access, redrive) are covered below.
 
 ## What is AgentCore Memory?
 
@@ -104,6 +104,45 @@ aws bedrock-agentcore-control create-memory \
 
 A TTL deletes records by age, not by whether they're still true or used. For memory that should fade by relevance instead, see [AI memory decay](/articles/ai-memory-decay/).
 
+## What's new in AgentCore Memory (October and November 2026)
+
+Five additions landed in the developer guide after the TTL release. None changed the pricing table below; all were read in the docs on 8 November 2026.
+
+| Addition | What it does | Where it's documented |
+|---|---|---|
+| **Harness managed memory** | New harnesses get an AgentCore Memory resource by default, with automatic retrieval before each turn | [Harness: Memory](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/harness-memory.html) (page dated 28 October 2026) |
+| **Memory record streaming** | Pushes `MemoryRecordCreated` / `Updated` / `Deleted` events to a Kinesis Data Stream in your account | [Memory record streaming](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory-record-streaming.html) |
+| **Metadata filtering** | Up to 10 indexed keys per memory, up to 5 `AND` filters per retrieval; the LLM can fill keys from the conversation | [Structured metadata](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/long-term-memory-metadata.html) |
+| **Cross-account access** | A resource policy lets another AWS account call the memory's data-plane APIs; S3, SNS and Kinesis destinations can live in another account | [Cross-account memory access](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory-cross-account-access.html) |
+| **Redrive failed ingestions** | `ListMemoryExtractionJobs` shows failed extractions with a `failureReason`; `StartMemoryExtractionJob` re-runs one | [Redrive failed ingestions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/long-term-redrive.html) |
+
+### The harness turns memory on by default
+
+The AgentCore **harness** (GA, documented alongside the [AgentCore CLI 1.0 release](https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-bedrock-agentcore-cli-version-1-0-available/) of 28 October 2026) is AWS's managed agent loop: you declare model, tools, skills and instructions, and AWS runs the compute, filesystem, identity and memory. The memory part is this service:
+
+- **Managed memory is the default.** Creating a harness without a memory configuration provisions an AgentCore Memory resource for it. The CLI does the same unless you pass `--memory` with mode `disabled` or `existing`. The strategy names are `SEMANTIC`, `SUMMARIZATION`, `USER_PREFERENCE` and `EPISODIC`, set with `eventExpiryDuration` for the raw events; you change them later through `UpdateHarness`, and can still read and write events and records through the Memory APIs directly.
+- **Bring your own memory** when you need custom namespace templates or one memory shared by several harnesses: attach an existing resource by ARN, or by name if the same project declares it. Only the by-name form accepts a `retrievalConfig` and survives `agentcore export harness`.
+- **Retrieval is automatic.** With active strategies, the harness queries long-term memory on every invocation with `topK=10` and `relevanceScore=0.2` per strategy namespace and injects the results before the model reasons. Pass your own `retrievalConfig` to change `topK`, the score threshold or the namespaces, or to skip a strategy. If you add or remove strategies on a BYO memory, call `UpdateHarness` or the retrieval configuration goes stale.
+- **Per-user scoping** comes from the `actorId` you pass at invoke time; each actor gets isolated short-term and long-term memory.
+- **Context truncation** is separate from memory: `sliding_window` (default, keeps the last N messages), `summarization` (compresses older turns) or `none`.
+- **Cost.** The harness itself is free; managed memory bills at the standard AgentCore Memory rates below for events, stored records and retrievals. AWS's own advice: "To avoid persistent Memory charges, disable Memory when you create the harness."
+
+```bash
+agentcore add harness --name Support \
+  --memory '{"mode":"managed","strategies":["SEMANTIC","SUMMARIZATION"],"eventExpiryDuration":30}'
+# or, no memory at all:
+agentcore add harness --name Support --memory '{"mode":"disabled"}'
+```
+
+### Streaming, metadata and the other operational additions
+
+- **Record streaming** fires on extraction from events, direct `BatchCreateMemoryRecords`, `BatchUpdateMemoryRecords`, explicit deletes and, notably, on **consolidation**: when the pipeline de-duplicates or supersedes a record, you get a `MemoryRecordDeleted` event. Choose `METADATA_ONLY` (ids and timestamps) or `FULL_CONTENT` (adds `memoryRecordText`) per stream; deletion events carry only the ids either way. The memory needs a `memoryExecutionRoleArn` that can write to your stream, and a `StreamingEnabled` test event confirms the setup.
+- **Metadata filtering** adds structured attributes inside a namespace. You declare up to 10 indexed keys per memory (`STRING`, `STRINGLIST` or `NUMBER`); a key can't be removed once added, and existing records aren't backfilled. A query combines up to 5 filters with `AND`, using `EQUALS_TO`, `CONTAINS`, numeric comparisons, and `BEFORE` / `AFTER` on the system timestamps `x-amz-agentcore-memory-createdAt` and `updatedAt`, which need no indexed key. Each strategy can carry a metadata schema that tells the LLM what to extract from the conversation (for example `sentiment`, or an escalated `priority`, with allowed values capped at 10). Keys marked `STRICTLY_CONSISTENT` are copied from the event without LLM inference, and they also **partition extraction and consolidation**: a record tagged `compliance_level: hipaa` never merges with one tagged `standard`. Changing which keys are strict isolates old records from new ones, so AWS says to plan this before ingesting, and to start with 3 to 5 keys.
+- **Cross-account** access attaches a resource-based policy to the memory with `PutResourcePolicy`, so a role in another account can call `BatchCreateMemoryRecords`, `RetrieveMemoryRecords` and the other data-plane actions by passing the full memory ARN as the memory id. Self-managed strategy and streaming destinations in another account need the execution role plus bucket, topic or stream policies on the other side.
+- **Redrive** covers the case where extraction from events to records fails. For built-in strategies AWS says "the only failure scenario is hitting the ingestion limit"; overrides add model and permission failures. Watch the `FailedExtraction` CloudWatch metric, list the failed jobs, fix the reason, then re-run each job by id.
+
+What this adds up to: AgentCore Memory now has the operational surface of a database (change feed, typed filters, cross-account IAM, dead-letter redrive) on top of the extraction pipeline. The open-source equivalents are partial. [Hindsight](https://github.com/vectorize-io/hindsight) has no change stream; its data-movement path is a bank export to a transfer ZIP that another Hindsight instance restores or merges, in its own format rather than a cross-vendor one. It scopes memory with isolated banks and a retrieval token budget rather than per-record indexed keys. If you need Kinesis-style events on every memory change today, AgentCore is the one that ships them.
+
 ## Using AgentCore Memory from Python
 
 AWS's getting-started guide creates the memory resource with the AgentCore CLI (`agentcore add memory --strategies SEMANTIC` then `agentcore deploy`) and uses the `bedrock-agentcore` Python SDK for events. You can also create it with boto3:
@@ -145,7 +184,7 @@ for record in records:
 
 Extraction is asynchronous, so records show up some time after the events. For Strands agents, the SDK ships an `AgentCoreMemorySessionManager` that loads history and retrieves records per namespace automatically.
 
-## AgentCore Memory pricing (October 2026)
+## AgentCore Memory pricing (checked November 2026)
 
 | Item | Price |
 |---|---|
@@ -200,6 +239,14 @@ Yes. Since 8 September 2026 the IngestData API sends conversation messages or JS
 ### Do AgentCore long-term memory records expire?
 
 Not by default. Since 13 October 2026 you can set a time-to-live of at least 31 days per strategy (CreateMemory or UpdateMemory) or per batch write (BatchCreateMemoryRecords or BatchUpdateMemoryRecords). It applies only to records created after the change, deletion can take a few days, and setting it needs the bedrock-agentcore:UpdateMemoryRecordExpirySpecification permission.
+
+### Does the AgentCore harness use AgentCore Memory?
+
+Yes. A harness created without a memory configuration gets a managed AgentCore Memory resource by default, with SEMANTIC, SUMMARIZATION, USER_PREFERENCE and EPISODIC strategies available, and it retrieves long-term memories automatically before each turn (topK 10, relevance score 0.2 per strategy). You can attach an existing memory instead, or pass --memory with mode disabled. The harness is free but managed memory bills at normal AgentCore Memory rates.
+
+### Can I filter AgentCore long-term memory by metadata?
+
+Yes, since late 2026. Declare up to 10 indexed keys per memory (string, string list or number), attach metadata to events or let the strategy's metadata schema have the LLM extract it, then combine up to 5 AND filters on RetrieveMemoryRecords or ListMemoryRecords. Keys marked STRICTLY_CONSISTENT are copied without LLM inference and also keep records with different values from merging during consolidation.
 
 ### What is the best way to give an LLM memory on AWS?
 

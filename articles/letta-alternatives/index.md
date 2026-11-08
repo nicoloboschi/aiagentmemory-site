@@ -105,6 +105,7 @@ Start from what you're replacing:
 - **You want simple user memory with minimal setup, or the smallest prompt per retrieval:** Mem0 or Supermemory.
 - **Facts change and history matters:** Zep (managed) or Graphiti (self-hosted).
 - **Your memory is mostly documents and domain knowledge:** Cognee.
+- **You're on AWS and want the cloud to run it:** [AgentCore Memory](/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/), which the new AgentCore harness turns on by default; it bills per record and retrieval instead of per model call.
 - **You need everything self-hosted and open source:** Mem0, Graphiti, Cognee, LangMem and Hindsight all run on your infrastructure; Hindsight is the one with no paid-only memory features. See this [comparison of open-source memory systems](/articles/open-source-memory-systems-compared/) for more detail.
 
 Then test with your own data. Vendor benchmark scores are mostly self-reported and use different setups, so a small evaluation on real conversations tells you more. For a broader map of memory types and tools, see [AI agent memory explained](/articles/ai-agent-memory-explained/). Vectorize also maintains a separate [Letta alternatives comparison](https://vectorize.io/articles/letta-alternatives).

@@ -1,8 +1,8 @@
 # What Is Zep Memory? Zep Cloud, Graphiti and Pricing
 
-> What Zep memory is in 2026: the Zep Cloud temporal context graph, open-source Graphiti, how it stores and retrieves memory, outside test results, pricing, self-hosting, integrations.
+> What Zep memory is in 2026: the Zep Cloud temporal context graph, open-source Graphiti, how it stores and retrieves memory, outside test results, pricing, self-hosting, integrations, and the October-November 2026 changelog.
 
-Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-11-04 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-11-08 · aiagentmemory.org
 
 
 **Zep memory** is Zep Cloud, a managed service that stores what an agent learns from users and data in a **temporal context graph**, then returns a prompt-ready block of relevant facts. Its open-source core is **Graphiti**, a framework for knowledge graphs that track when facts change. The old self-hosted Zep Community Edition is deprecated.
@@ -38,7 +38,7 @@ Zep's data model has a few parts:
 - **Threads.** Conversations of a user. By default, every message added to any of the user's threads is ingested into that user's graph.
 - **Episodes.** Any single piece of data sent to Zep: a chat message, a JSON payload or a block of text. Episodes are the raw source that facts trace back to.
 - **Entities and facts.** Zep extracts entities (nodes) and facts (edges) from episodes. A fact is a relation between two entities, like "Jane prefers window seats."
-- **Fact invalidation.** When new data contradicts an old fact, Zep stores the time the old fact became invalid on its edge, instead of deleting it.
+- **Fact invalidation.** When new data contradicts an old fact, Zep stores the time the old fact became invalid on its edge, instead of deleting it. Since 26 October 2026 a new fact that says an earlier fact *ended* also invalidates it, even without a later start date (details [below](#what-changed-in-zep-cloud-late-october-and-november-2026)).
 
 Graphiti works the same way at its core. Its README calls these **bi-temporal** graphs: facts have validity windows, entities have summaries that evolve, and everything links back to episodes. Ingestion is incremental, so new data joins the graph without recomputing it. That's what separates Zep from a plain vector store, which stores chunks with no notion of when a fact stopped being true. For background on why time matters, see [temporal reasoning in AI memory](/articles/temporal-reasoning-ai-memory/).
 
@@ -155,6 +155,25 @@ If you self-host Graphiti, the October releases change three things you will not
 
 The security note matters most. The repo now states ([#2029](https://github.com/getzep/graphiti/pull/2029)) that the MCP and REST servers are reference implementations with **no authentication or authorization**: any caller can read, change or delete all graph data. Graphiti also gives the same trust to every episode in a `group_id`, so untrusted content can change facts in that group; filtering what you ingest is your job. Put your own auth in front before you expose either server. Zep Cloud's Context MCP Server, by contrast, signs in through your identity provider. For the wider risk, see [memory injection attacks](/articles/ai-memory-injection/).
 
+## What changed in Zep Cloud (late October and November 2026)
+
+Zep publishes a dated [changelog](https://help.getzep.com/changelog) for the cloud service. The entries from 26 October to 4 November 2026 (read on 8 November) fall into three groups: one change to how memory itself behaves, several features gated to paid plans, and two breaking SDK changes.
+
+| Date | Change | Why it matters |
+|---|---|---|
+| 26 Oct | **A fact that ends an earlier fact now invalidates it.** The earlier fact's `invalid_at` becomes the new fact's end date, or the episode's reference time if the new fact has no date. Before, the old fact stayed valid unless the new one had a later start date. | "I no longer work at Acme" now closes "works at Acme" instead of leaving both facts current. If you built workarounds for that, remove them. |
+| 26 Oct | Episode and batch **webhooks** are sent only on plans that include webhooks. | Check your plan before relying on webhooks for sync jobs. |
+| 26 Oct | Node search from `bfs_origin_node_uuids` reaches entities through observation nodes; before, observation nodes used up the traversal's node limit and searches could return no entities. | Graph-walk retrieval returns more entities with no change on your side. |
+| 27 Oct | `user.update` (v4) now updates the user node's name and attributes in the graph. Node and edge responses list only true source episodes, not Zep's internal ones. | Fewer stale user nodes; cleaner provenance. |
+| 28 Oct | **Content policies need the Enterprise plan**, turned on per account on request; otherwise the API returns HTTP 403 `content_policy_not_entitled` and existing protected graphs ingest new episodes without evaluation. | Content filtering of memory is an Enterprise feature now. |
+| 29 Oct | **SCIM provisioning** (beta, Enterprise) maps identity-provider groups to Zep roles. The `connector` key is **reserved** in episode and message metadata; writes with it return 400. | Rename any `connector` metadata key you set yourself. |
+| 1 Nov | `user.get_by_email` (v4); `filters.document_id` on `graph.episode.list`. **Breaking:** `graph.episode.list_for_document` is removed from the v4 SDKs (4.0.0 and 4.0.1 still work against the API). | Update code that lists a document's episodes. |
+| 3 Nov | **v4 SDKs 4.1.0** ship those methods plus `graph.list_metadata_keys` (a key stays listed after nothing uses it). Episodes processed without a content policy report `content_policy.status: not_evaluated` instead of `pending`. | Pin 4.1.0 if you need the new methods. |
+
+Two of these change what "memory" means in Zep. The invalidation fix makes the validity windows that Zep sells more trustworthy: a fact's end is now recorded when a later statement ends it, not only when a contradicting fact starts. And the Enterprise gate on content policies means the free, Flex and Flex Plus plans store whatever the model extracts, with no server-side filter on prohibited content.
+
+For comparison, [Hindsight](https://github.com/vectorize-io/hindsight) fixed a neighbouring "which fact wins" bug in the same month: its consolidation no longer lets an older fact overwrite a newer same-day amendment ([PR #5966](https://github.com/vectorize-io/hindsight/pull/5966), merged 22 October, in v1.2.0). The two systems handle the problem differently. Zep keeps both facts and marks the old one's end date; Hindsight refines a consolidated observation and keeps the evidence behind it. Hindsight has no per-fact validity window. The Zep changelog describes Zep Cloud only; it doesn't say whether self-hosted Graphiti's invalidation behaves the same way.
+
 ## Zep integrations: LangChain, LangGraph, n8n, MCP
 
 **LangGraph.** Zep maintains `zep-langgraph`, which adds helpers to persist messages, inject context before the model call, and give the agent a graph search tool. The getzep/zep repo also has packages for CrewAI, AutoGen, AG2, Google ADK, Pydantic AI, Strands, LiveKit, Microsoft Agent Framework, Mastra and the Vercel AI SDK.
@@ -195,6 +214,10 @@ In the October 2026 MemoryTax study (Shanghai Jiao Tong University, not a vendor
 ### Is the Graphiti MCP server safe to expose on a network?
 
 Not on its own. Since October 2026 the Graphiti repo states that its MCP and REST servers are reference implementations with no authentication or authorization, so any caller can read, change or delete all graph data. Graphiti 0.31.2 makes both listen on localhost by default. Put your own authentication in front before exposing them.
+
+### What changed in Zep Cloud in late 2026?
+
+Per Zep's changelog, from 26 October 2026 a fact stating that an earlier fact ended now invalidates that fact (its invalid_at becomes the new fact's end date). Webhooks are limited to plans that include them, content policies and SCIM provisioning (beta) require the Enterprise plan, the connector metadata key is reserved, and the v4 SDKs 4.1.0 (3 November) add user.get_by_email, a document_id filter on graph.episode.list and graph.list_metadata_keys while removing graph.episode.list_for_document.
 
 ### Does Zep work with n8n and LangGraph?
 
