@@ -1,13 +1,13 @@
 # Codex Memory: AGENTS.md, Memories and Add-ons
 
-> How OpenAI Codex memory works (0.166.0): AGENTS.md load order and 32 KiB limit, Codex memories (v2 by default for new users), default limits, config keys, importing Claude Code memory, and adding Hindsight.
+> How OpenAI Codex memory works (0.167.0): AGENTS.md load order and 32 KiB limit, Codex memories (v2 by default for new users), default limits and models (gpt-6-luna extraction, gpt-6.1-terra consolidation), config keys, importing Claude Code memory, and adding Hindsight.
 
-Source: https://aiagentmemory.org/articles/codex-memory/ · Updated 2026-10-29 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/codex-memory/ · Updated 2026-11-09 · aiagentmemory.org
 
 
 **Codex memory** is two built-in layers. **AGENTS.md files** hold instructions you write, and Codex loads them at the start of every run. **Codex memories**, off by default, turn useful context from past chats into local files under `~/.codex/memories/`. For memory that is searchable, shared across agents or kept on a server, add a hook-based plugin such as Hindsight.
 
-[Codex](https://github.com/openai/codex) is OpenAI's coding agent for the terminal, IDE and ChatGPT desktop app. Each session starts with an empty context window, so anything Codex should know must come back in from a file or a tool. Facts below come from OpenAI's [Codex memories docs](https://learn.chatgpt.com/docs/customization/memories) and [AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), checked 13 October 2026, and from the Codex source and release notes up to 0.166.0 (29 October 2026). For Claude Code, Cursor and Copilot, see [AI coding agent memory](/articles/ai-coding-agent-memory/).
+[Codex](https://github.com/openai/codex) is OpenAI's coding agent for the terminal, IDE and ChatGPT desktop app. Each session starts with an empty context window, so anything Codex should know must come back in from a file or a tool. Facts below come from OpenAI's [Codex memories docs](https://learn.chatgpt.com/docs/customization/memories) and [AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), checked 13 October 2026, and from the Codex source and release notes up to 0.167.0 (6 November 2026). For Claude Code, Cursor and Copilot, see [AI coding agent memory](/articles/ai-coding-agent-memory/).
 
 ## What is Codex memory?
 
@@ -61,13 +61,13 @@ The `/memories` command (desktop app and CLI) sets, for the current chat only, w
 | `memories.use_memories` | Whether existing memories are injected into new sessions |
 | `memories.disable_on_external_context` | Keeps chats that used MCP tools, web search or tool search out of memory |
 | `memories.min_rate_limit_remaining_percent` | Minimum rate limit left before generation starts |
-| `memories.extract_model` | Model for per-chat extraction |
-| `memories.consolidation_model` | Model for the global consolidation pass |
+| `memories.extract_model` | Model for per-chat extraction; `gpt-6-luna` by default since 0.167.0 (was `gpt-5.6-luna`) |
+| `memories.consolidation_model` | Model for the global consolidation pass; `gpt-6.1-terra` by default since 0.167.0 (was `gpt-5.6-terra`) |
 | `memories.consolidation_service_tier` | Service tier for the consolidation pass, `"default"` (Standard) unless set; since 0.166.0 |
 
-### Default limits (Codex 0.166.0)
+### Default limits (Codex 0.167.0)
 
-The docs don't say when memories update. The source does. These are the defaults in `codex-rs/config/src/types.rs` and the config schema at tag `rust-v0.166.0` (released 29 October 2026; the limits are the same as in 0.164.0 and 0.165.0, and 0.166.0 only adds `consolidation_service_tier`):
+The docs don't say when memories update. The source does. These are the defaults in `codex-rs/config/src/types.rs` and the config schema at tag `rust-v0.167.0` (released 6 November 2026; the limits are unchanged since 0.164.0, 0.166.0 added `consolidation_service_tier` and 0.167.0 changed only the default models):
 
 | Key | Default | What it means |
 |---|---|---|
@@ -82,10 +82,12 @@ The docs don't say when memories update. The source does. These are the defaults
 
 So with defaults, a busy week of chats can take several passes to show up in memory: two chats per pass, each idle for at least six hours.
 
-### What changed in October 2026
+### What changed in October and November 2026
 
 | Version (date) | Memory change | Source |
 |---|---|---|
+| 0.167.0 (6 Nov) | Default memory models move to `gpt-6-luna` (extraction) and `gpt-6.1-terra` (consolidation), from `gpt-5.6-luna` and `gpt-5.6-terra` | [PR #58091](https://github.com/openai/codex/pull/58091) |
+| 0.167.0 (6 Nov) | Context-size estimates now count retained output from failed responses and responses with no usage data, so automatic compaction isn't delayed | [PR #58404](https://github.com/openai/codex/pull/58404) |
 | 0.166.0 (29 Oct) | Consolidation gets its own service tier (Standard by default) instead of inheriting the session's | [PR #57568](https://github.com/openai/codex/pull/57568) |
 | 0.166.0 (29 Oct) | Memory baseline snapshots capped at 10 MiB per file and rebuilt when broken, without losing memory files | [PR #57240](https://github.com/openai/codex/pull/57240) |
 | 0.166.0 (29 Oct) | Resumed and forked chats no longer count reasoning tokens twice, so they don't compact too early | [PR #57839](https://github.com/openai/codex/pull/57839) |
@@ -95,6 +97,8 @@ So with defaults, a busy week of chats can take several passes to show up in mem
 | 0.164.0 (23 Oct) | v2 pipeline added behind `memories.version`, with `dual_write` | [PR #55262](https://github.com/openai/codex/pull/55262) |
 | 0.163.0 (15 Oct) | Memory reads run in parallel with other read-only tools | [PR #52245](https://github.com/openai/codex/pull/52245) |
 
+- **Newer default models for memory (0.167.0).** The models Codex picks when you don't set `memories.extract_model` or `memories.consolidation_model` are constants in `codex-rs/model-provider/src/provider.rs`. 0.167.0 moves per-chat extraction from `gpt-5.6-luna` to `gpt-6-luna` and the global consolidation pass from `gpt-5.6-terra` to `gpt-6.1-terra`, "when the provider does not require a backend-specific model ID" ([PR #58091](https://github.com/openai/codex/pull/58091), merged 29 October). Extraction and consolidation use different models, so the two config keys matter separately.
+- **Compaction counts failed responses too (0.167.0).** Output kept from a failed response, or from one that came back without token usage, used to be left out of the context estimate, so automatic compaction could run late while reasoning piled up. Codex now tracks the point in history that the last usable usage report covered and estimates everything added after it ([PR #58404](https://github.com/openai/codex/pull/58404)). Like the 0.166.0 resume fix below, this is about the context window, not memory files.
 - **Consolidation stops using your fast tier (0.166.0).** Before, the background consolidation pass ran on the same service tier as the chat that started it, so a session on a priority ("fast") tier also ran consolidation on it. Now `memories.consolidation_service_tier` sets it apart, and it defaults to `"default"`, the Standard tier. Set it to `"flex"` or `"priority"` to change that; `"fast"` is read as `"priority"` ([PR #57568](https://github.com/openai/codex/pull/57568)).
 - **Safer memory snapshots (0.166.0).** Codex keeps a baseline snapshot of the memory folder to see what changed since the last consolidation. Baseline files are now capped at 10 MiB, oversized files are skipped, and a missing, outdated or broken baseline is replaced by an empty one, so existing memory files count as new input to consolidation instead of being treated as already processed. A cross-process lock stops two Codex processes from updating the baseline at once ([PR #57240](https://github.com/openai/codex/pull/57240)).
 - **Less early compaction after resume (0.166.0).** Resuming or forking a chat used to lose a flag that said the token count already included reasoning. Codex then counted reasoning twice and could compact the context too early. The flag is now saved with the chat ([PR #57839](https://github.com/openai/codex/pull/57839)). This is about the context window, not memories, but it means a resumed chat keeps more of its history.
@@ -174,7 +178,7 @@ In the ChatGPT desktop app, open Settings > Personalization and turn on Enable C
 
 ### Why don't my Codex memories update right away?
 
-By default (Codex 0.165.0 and 0.166.0) a chat must be idle for 6 hours before it can become a memory, each pass processes at most 2 chats, chats older than 10 days are skipped, and generation pauses when less than 25% of your rate limit is left. You can change these with the memories keys in config.toml, such as min_rollout_idle_hours and max_rollouts_per_startup.
+By default (Codex 0.165.0 through 0.167.0) a chat must be idle for 6 hours before it can become a memory, each pass processes at most 2 chats, chats older than 10 days are skipped, and generation pauses when less than 25% of your rate limit is left. You can change these with the memories keys in config.toml, such as min_rollout_idle_hours and max_rollouts_per_startup.
 
 ### Can Codex import Claude Code's memory?
 
@@ -183,6 +187,10 @@ Yes, since Codex 0.165.0 (27 October 2026). Codex's import from Claude Code copi
 ### Does Codex memory consolidation run on my fast (priority) tier?
 
 Not since Codex 0.166.0 (29 October 2026). Consolidation used to inherit the chat's service tier. Now memories.consolidation_service_tier sets it and defaults to the Standard tier ("default"). Set it to "priority" (or "fast") or "flex" in config.toml to change it.
+
+### Which model does Codex use to build memories?
+
+Since Codex 0.167.0 (6 November 2026) the defaults are gpt-6-luna for per-chat extraction and gpt-6.1-terra for the global consolidation pass, when the provider does not need a backend-specific model ID. Before that they were gpt-5.6-luna and gpt-5.6-terra. memories.extract_model and memories.consolidation_model in config.toml override them.
 
 ### Can I add long-term memory to Codex beyond its built-in memories?
 

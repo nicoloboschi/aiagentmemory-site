@@ -1,6 +1,6 @@
 # AI Memory Injection: How Agent Memory Gets Poisoned
 
-> AI memory injection plants malicious content in an agent's long-term memory so it misleads later sessions. Real attacks (MINJA, AgentPoison, SpAIware, MemForm, MemHarmBench) and defenses.
+> AI memory injection plants malicious content in an agent's long-term memory so it misleads later sessions. Real attacks (MINJA, AgentPoison, SpAIware, MemForm, MemHarmBench), MemoryDojo's poisoning numbers for Mem0, Letta, Graphiti, A-MEM and Memora, and defenses.
 
 Source: https://aiagentmemory.org/articles/ai-memory-injection/ · Updated 2026-11-09 · aiagentmemory.org
 
@@ -81,6 +81,33 @@ What it shows:
 - **Other people get hurt.** Attacks aimed at outside parties were adopted 79.58% (OpenClaw) and 64.20% (Claude Code) of the time.
 
 GPT-5 also served as the judge, so the labels are model-graded. The lesson for anyone running a coding agent with memory: review what it saved after it read outside content, because the later task will look fine.
+
+### MemoryDojo: the same poison across five memory systems (2026)
+
+[MemoryDojo](https://arxiv.org/abs/2611.09721) (Yang, Bullwinkel, Minnich, Amiri and Severi, Microsoft and Rensselaer Polytechnic Institute, 6 November 2026) is the first benchmark that runs the **same** poisoning attack through **different memory systems** and follows the payload through its whole life: was it stored (ISR), was it retrieved in later tasks (RSR), did it spread into other memories, and did a later task actually do what the attacker wanted (BRT, per later task; BR, per trajectory). It builds 155 multi-session trajectories from [AgentDojo](https://arxiv.org/abs/2406.13352) tasks in four domains (Workspace, Travel, Banking, Slack): 93 same-domain trajectories of 3-35 sessions, 31 cross-domain ones of up to 60 sessions, and a set whose memory is pre-filled with LongMemEval chat history. Each session starts a fresh context window with retrieved memory prepended, and the attack is one payload added to one tool result in the first session.
+
+Five open-source systems were tested through their own write and read paths: A-MEM (linked notes), Graphiti (entity-relation graph, the open-source engine under [Zep](/articles/what-is-zep-memory/)), Letta (core blocks plus archival memory), [Mem0](/articles/mem0-building-production-ready-ai-agents/) (extracted facts) and Memora (linked semantic and episodic memory). The agent, the memory-side model and the judge were all GPT-5.6-Luna. Same-domain results (Table 1 of the paper):
+
+| Memory system | Poison stored | Retrieved in later tasks | Later tasks that followed it (BRT) | Trajectories reached (BR) | BRT with a tuned payload |
+|---|---|---|---|---|---|
+| Graphiti | 98.39% | 33.43% | 7.76% | 24.73% | 9.31% |
+| Mem0 | 60.75% | 56.70% | 7.90% | 14.52% | 21.02% |
+| Letta | 98.92% | 64.88% | 15.30% | 16.67% | 46.26% |
+| Memora | 97.85% | 86.18% | 20.38% | 38.71% | 29.76% |
+| A-MEM | 98.92% | 89.84% | 21.02% | 45.70% | 44.01% |
+
+What the numbers say:
+
+- **Architecture decides how far a poison travels.** Storage was near 100% for four systems, yet later-task reach ran from under 8% (Graphiti, Mem0) to over 20% (A-MEM, Memora). Graphiti keeps the full episode but returns relation facts at read time, so the instruction often never reaches the prompt. A-MEM returns stored session notes and Memora links back to original episodes, so it does.
+- **Mem0's extraction is a partial filter.** Its LLM fact-extraction dropped the poison in about four writes out of ten (60.75% stored), the only system under 95%. The paper suggests extraction abstracts the instruction away. It is a side effect, not a defense, and a payload tuned for Mem0 pushed storage to 77.42% and reach to 21.02%.
+- **Tuning the payload per system raises reach for all five** (about 2 to 31 points). Letta moved most: retrieval rose only about 8 points, but the share of retrievals that changed behavior went from 23.59% to 64.06%, because a poisoned core block is shown in every session. The tuned payloads also carried over to GPT-5.4-mini, DeepSeek-V4-Flash and GLM-5.3-Flash, with Graphiti lowest on all four models.
+- **Over long runs, Letta is the outlier.** In cross-domain trajectories of up to 60 sessions, reach fell with distance for A-MEM, Graphiti, Mem0 and Memora but stayed near 15% for Letta, with retrieval above 50%, again because core memory is always visible.
+- **Existing memory dilutes the attack but doesn't stop it.** With LongMemEval history pre-loaded (Table 2), retrieval dropped for every system (Letta from 55.66% to 7.94%, with zero reach) and later-task reach was at most 5.32% (Memora) and 4.66% (A-MEM), yet Memora still reached 45.16% of trajectories. Poisoning also lowered memory utility on benign questions for A-MEM, Graphiti and Mem0.
+- **Immediate harm and delayed harm are different.** In every system the attack succeeded more often in the session it was injected (ASR 21-25%) than in later ones, and only about one retrieval in four led to the attacker's behavior. Retrieval alone is not reach.
+
+Limits the authors state: one judge model, same-domain numbers for one agent model, and the code is "to be released soon" at the time of writing. The systems ran with default or near-default retrieval settings (Mem0 at k=20 with a 0.1 threshold and no reranker, Letta with k=5 searches plus always-on core blocks), so a tuned deployment may differ. Hindsight, Zep Cloud and the built-in memory of Claude Code or Codex were not tested.
+
+The practical reading, for anyone choosing a system: a write path that extracts or rewrites (Mem0, Graphiti) lowers the odds that a raw instruction reaches the prompt, while a read path that returns verbatim notes or always-on blocks (A-MEM, Letta) raises them. Neither replaces the provenance and write-gating defenses below.
 
 ### OWASP ASI06
 
@@ -171,6 +198,10 @@ Yes. The MINJA paper (Dong et al.) showed injection through ordinary queries alo
 ### Can memory injection affect coding agents like Claude Code or OpenClaw?
 
 Yes. MemHarmBench (Wang et al., November 2026) planted a malicious rule through a document or web page, removed it, and started a new session. When the rule had been saved, OpenClaw followed it in 75.00-76.39% of cases and Claude Code in 59.38-62.50%, and in 55.71% of cases the agent also finished the task normally with no odd behavior, so the harm was hard to spot.
+
+### Which memory system resists poisoning best?
+
+None is immune. MemoryDojo (Microsoft and RPI, November 2026) poisoned one tool result in the first session of 93 same-domain trajectories and measured how often later tasks followed the attacker. With an unoptimized payload, Graphiti (7.76%) and Mem0 (7.90%) had the lowest later-task reach, Letta 15.30%, Memora 20.38% and A-MEM 21.02%. Mem0 was the only system where the poison often failed to be stored at all (60.75% insertion). A payload tuned per system raised reach for all five, Letta most (46.26%).
 
 ### How do you defend agent memory against poisoning?
 
