@@ -1,8 +1,8 @@
-# Hermes Agent Memory: Limits, Best Provider and Fixes
+# Hermes Agent Memory: 2,200-Char Limit, Providers and Fixes
 
 > Hermes Agent remembers with MEMORY.md (2,200 chars) and USER.md (1,375 chars), loaded once per session, plus SQLite session search. Which of its 9 memory providers to pick, by need, and why Hermes forgets.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-06 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-09 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.

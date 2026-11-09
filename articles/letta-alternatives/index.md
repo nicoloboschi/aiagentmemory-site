@@ -89,7 +89,7 @@ It runs on Postgres with pgvector (or an embedded Postgres) via Docker, pip or H
 
 ### LangMem
 
-**LangMem** from LangChain gives agents tools to save and search memories during a conversation, plus a background manager that extracts and consolidates memories after it. It stores data in LangGraph's long-term memory store, so it's the natural pick if you already run LangGraph. It can also refine an agent's prompt over time, based on its interactions.
+**LangMem** from LangChain gives agents tools to save and search memories during a conversation, plus a background manager that extracts and consolidates memories after it. It stores data in LangGraph's long-term memory store, so it's the natural pick if you already run LangGraph. It can also refine an agent's prompt over time, based on its interactions. For how Letta and LangChain's memory options differ, see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/).
 
 ### Supermemory
 

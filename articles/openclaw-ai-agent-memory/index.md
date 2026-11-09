@@ -7,7 +7,7 @@ Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 
 
 **OpenClaw memory** is a folder of Markdown files the agent writes and reads. `MEMORY.md` holds durable facts and decisions, `USER.md` holds your preferences, and dated daily notes hold running context. The first two load at session start. Everything is indexed in SQLite, and the agent finds older notes with `memory_search`, a hybrid of vector and keyword search.
 
-[OpenClaw](https://github.com/openclaw/openclaw) is an open-source (MIT) personal AI assistant built by Peter Steinberger and contributors and now stewarded by the OpenClaw Foundation. It runs on your own machine and talks to you through WhatsApp, Telegram, Slack, Discord, iMessage and 20+ other channels. Facts on this page come from the official [memory docs](https://docs.openclaw.ai/concepts/memory) and [memory search docs](https://docs.openclaw.ai/concepts/memory-search), checked October 2026.
+[OpenClaw](https://github.com/openclaw/openclaw) is an open-source (MIT) personal AI assistant built by Peter Steinberger and contributors and now stewarded by the OpenClaw Foundation. It runs on your own machine and talks to you through WhatsApp, Telegram, Slack, Discord, iMessage and 20+ other channels. Facts on this page come from the official [memory docs](https://docs.openclaw.ai/concepts/memory) and [memory search docs](https://docs.openclaw.ai/concepts/memory-search), checked October 2026. New to OpenClaw? Start with the [OpenClaw guide](/articles/openclaw-guide/) for install, onboarding and the Gateway.
 
 ## What is OpenClaw memory?
 
