@@ -13,7 +13,7 @@ Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-
 
 **Hermes Agent memory is a bounded, curated store that persists across sessions. The agent decides what to save, writes short entries into MEMORY.md and USER.md through a memory tool, and Hermes injects both files into the system prompt as a frozen block when each session starts.**
 
-The design is small on purpose. Together the two files are about 1,300 tokens, always in context. Everything else (full transcripts, old tasks) stays out of the prompt until the agent searches for it. That split between always-loaded memory and on-demand recall is the same one described in [AI agent memory explained](/articles/ai-agent-memory-explained/).
+The design is small on purpose. Together the two files are about 1,300 tokens, always in context. Everything else (full transcripts, old tasks) stays out of the prompt until the agent searches for it. That split between always-loaded memory and on-demand recall is the same one described in [AI agent memory explained](/articles/ai-agent-memory-explained/). New to Hermes? The [Hermes Agent guide](/articles/hermes-agent/) covers install, setup and where each memory file lives.
 
 ## The layers of Hermes memory
 
