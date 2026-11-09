@@ -2,7 +2,7 @@
 
 > How AI coding agents remember projects: Claude Code CLAUDE.md and auto memory, Codex AGENTS.md and memories, Cursor rules, Copilot Memory, and external memory tools.
 
-Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-11-03 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-11-09 · aiagentmemory.org
 
 
 **AI coding agent memory** is how tools like Claude Code, Codex, Cursor and GitHub Copilot carry project knowledge from one session to the next. The main mechanism is a plain **instruction file** (CLAUDE.md, AGENTS.md or Cursor rules) loaded into every session. Some agents add **automatic memory** that saves lessons as they work. For more, teams add an external memory server. For Claude Code specifically, see [Claude Code memory](/articles/claude-code-memory/).
@@ -27,7 +27,7 @@ Instructions belong in version control. Learnings are often machine-local and ge
 | **Claude Code** | `CLAUDE.md`, `CLAUDE.local.md`, `.claude/rules/`, or `AGENTS.md` | Auto memory in `~/.claude/projects/<project>/memory/` | On (local sessions) | First 200 lines or 25 KB of `MEMORY.md` loaded |
 | **Codex** | `AGENTS.md`, `AGENTS.override.md`, fallback names | Memories in `~/.codex/memories/` | Off | 32 KiB of combined AGENTS.md |
 | **Cursor** | `.cursor/rules/*.mdc`, `AGENTS.md`, user and team rules | Memories removed in 2.1.x | n/a | Rule modes control loading |
-| **GitHub Copilot** | `AGENTS.md` and repo instructions | Copilot Memory (repo facts and user preferences), in cloud agent, code review, CLI and autofix | On for paid individual plans; admin policy for orgs | Unused entries deleted after 28 days; IDE not listed as a surface |
+| **GitHub Copilot** | `AGENTS.md` and repo instructions | Copilot Memory (repo facts and user preferences), GA since 28 Oct 2026, in the Copilot app, CLI, VS Code, cloud agent, code review, autofix, Mobile, Slack and Teams | On for paid individual plans; admin policy for orgs; VS Code setting off by default | Expires 90 days after creation or last upvote (admins: 7 to 180 days for repo facts) |
 | **Cline** | `.clinerules/*.md`, global custom instructions | Memory Bank: six markdown files the agent maintains in `memory-bank/` | Off until you add the instructions | All files re-read at the start of every task |
 
 ### Claude Code: CLAUDE.md and auto memory
@@ -54,11 +54,11 @@ Cursor used to have an automatic **Memories** feature. On the official forum, a 
 
 ### GitHub Copilot: Copilot Memory
 
-[Copilot Memory](https://docs.github.com/en/copilot/concepts/agents/copilot-memory) is in public preview. It stores **repository facts** (conventions, architecture decisions, build commands) and **user preferences**. Repository facts come only from users with write access and **cite the code that supports them**; before using one, Copilot checks those citations against the current branch and drops facts that no longer hold. Entries unused for 28 days are deleted. Memory is shared across Copilot cloud agent, code review, CLI and agentic autofix. It's on by default for individual plans; organizations need an admin to enable the policy.
+[Copilot Memory](https://docs.github.com/en/copilot/concepts/prompting-and-context/copilot-memory) has been generally available on paid plans since 28 October 2026. It stores **repository facts** (conventions, architecture decisions, build commands) and **user preferences**. Repository facts come only from users with write access and **cite the code that supports them**; before using one, Copilot checks those citations against the current branch, then upvotes or downvotes the fact. A memory expires 90 days after it was created or last upvoted (retrieval alone doesn't count), and admins can set repository facts to anywhere from 7 to 180 days. Memory is shared across the Copilot app, CLI, VS Code, cloud agent, code review, agentic autofix, GitHub Mobile, Slack and Teams. It's on by default for individual plans; organizations need an admin to enable the policy. A public-preview **dreaming** job can now curate memories in the background and propose edits to `AGENTS.md`, `CLAUDE.md` and other instruction files as pull requests.
 
 Citation checking is the most interesting design here. It addresses the main failure of coding memory: notes that were true once and quietly go stale.
 
-Two scope limits are easy to miss. Code review uses repository facts **only**, never personal preferences. And GitHub's docs don't list any IDE among the surfaces that use Copilot Memory, so in VS Code your persistent context still comes from `AGENTS.md`, `.github/copilot-instructions.md` and `.github/instructions/*.instructions.md`. Full breakdown, including the settings and the `/memory` commands in Copilot CLI, in [GitHub Copilot Memory](/articles/github-copilot-memory/).
+Two scope limits are easy to miss. Code review and agentic autofix use repository facts **only**, never personal preferences. And in VS Code the feature is off until you enable `chat.copilot.memory.enabled`, so by default your persistent context there still comes from `AGENTS.md`, `.github/copilot-instructions.md` and `.github/instructions/*.instructions.md`. Full breakdown, including the retention rules, the `/memory` commands and the JSONL bulk import in Copilot CLI, in [GitHub Copilot Memory](/articles/github-copilot-memory/).
 
 ### Cline: rules and the Memory Bank
 

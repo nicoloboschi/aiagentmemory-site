@@ -1,13 +1,13 @@
 # Microsoft Agent Framework Memory: Sessions and Providers
 
-> How memory works in Microsoft Agent Framework (Python): AgentSession, history and context providers, and Mem0, Foundry, Cosmos DB, Redis, Hindsight compared.
+> How memory works in Microsoft Agent Framework (Python 1.25): AgentSession, history and context providers, the Harness Agent's MEMORY.md memory with extraction and consolidation, and Mem0, Foundry, Cosmos DB, Redis, Hindsight compared.
 
-Source: https://aiagentmemory.org/articles/microsoft-agent-framework-memory/ · Updated 2026-11-04 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/microsoft-agent-framework-memory/ · Updated 2026-11-09 · aiagentmemory.org
 
 
 **Microsoft Agent Framework memory** is built from two pieces. An **`AgentSession`** holds one conversation's state across `agent.run` calls. **Context providers** run before and after each call: history providers reload and save the transcript, and memory providers extract and recall lasting facts through Mem0, Redis, Cosmos DB, Neo4j or Microsoft Foundry.
 
-Agent Framework is the [successor to Semantic Kernel and AutoGen](https://learn.microsoft.com/en-us/agent-framework/overview/), built by the same teams. The Python package hit 1.0 in April 2026 and is at 1.24 as of 30 October 2026, which [changes the Redis memory index](#what-changed-in-the-late-october-2026-releases) in a way that needs a re-ingest. Code below follows the [Agent Framework memory tutorial](https://learn.microsoft.com/en-us/agent-framework/get-started/memory) and the package's current signatures.
+Agent Framework is the [successor to Semantic Kernel and AutoGen](https://learn.microsoft.com/en-us/agent-framework/overview/), built by the same teams. The Python package hit 1.0 in April 2026 and is at 1.25.0 as of 7 November 2026; the [October and November releases](#what-changed-in-the-october-and-november-2026-releases) changed the Redis memory index in a way that needs a re-ingest, dropped Python 3.10 and fixed two bookkeeping bugs in the harness's file memory. Code below follows the [Agent Framework memory tutorial](https://learn.microsoft.com/en-us/agent-framework/get-started/memory) and the package's current signatures.
 
 ## What is memory in Microsoft Agent Framework?
 
@@ -128,9 +128,9 @@ That example only lasts as long as the session. For memory across sessions, use 
 | Redis | `agent-framework-redis` | Redis with a RedisVL index | Semantic search over stored context |
 | Hindsight | `hindsight-agent-framework` | Hindsight server (self-hosted, MIT) or Hindsight Cloud | Facts, entities, consolidated observations; `reflect` |
 
-### What changed in the late-October 2026 releases
+### What changed in the October and November 2026 releases
 
-The October 2026 releases mostly hardened these providers rather than adding new ones. One of them breaks existing Redis memory, per the [Agent Framework release notes](https://github.com/microsoft/agent-framework/releases):
+The October and November 2026 releases mostly hardened these providers rather than adding new ones. One of them breaks existing Redis memory, and the 7 November release closes the door on Python 3.10, per the [Agent Framework release notes](https://github.com/microsoft/agent-framework/releases):
 
 | Release | Date | Memory change | What you need to do |
 |---|---|---|---|
@@ -140,6 +140,12 @@ The October 2026 releases mostly hardened these providers rather than adding new
 | Python 1.24.0 | 30 Oct | **Breaking:** `RedisContextProvider` uses a new index schema for user, agent, application and session scopes ([#9461](https://github.com/microsoft/agent-framework/pull/9461)) | Delete the old index and its hashes, then re-ingest |
 | Python 1.24.0 | 30 Oct | Experimental `AgentTriggeredCompactionStrategy` and `UnloadSkillsCompactionStrategy` ([#9384](https://github.com/microsoft/agent-framework/pull/9384)) | Optional |
 | Python 1.24.0 | 30 Oct | Python 3.11 is the supported baseline; the next release blocks 3.10 installs | Move off Python 3.10 |
+| .NET 1.28.0 | 6 Nov | `Mem0Client.ClearMemoryAsync` throws `ArgumentException` when all four scope IDs are blank instead of sending an unscoped DELETE to Mem0 ([#10109](https://github.com/microsoft/agent-framework/pull/10109)) | Upgrade if you clear Mem0 memories from .NET |
+| Python 1.25.0 | 7 Nov | **Breaking:** Python 3.10 installs are refused across every `agent-framework-*` package ([#9948](https://github.com/microsoft/agent-framework/pull/9948)) | Be on 3.11 or later before `pip install -U` |
+| Python 1.25.0 | 7 Nov | Harness memory: a session whose extraction was still running when a consolidation pass started is no longer dropped from the pending count ([#9294](https://github.com/microsoft/agent-framework/pull/9294)) | Nothing; consolidation now triggers on time |
+| Python 1.25.0 | 7 Nov | Harness memory: a corrupt `state.json` is moved aside to `.state.json.<uuid>.corrupt` and the store restarts clean, instead of raising on every turn ([#9547](https://github.com/microsoft/agent-framework/pull/9547)) | Nothing; check for `.corrupt` files if memory bookkeeping ever reset |
+| Python 1.25.0 | 7 Nov | Background agents keep finished tasks until cleared, so a session snapshot restored mid-task no longer marks the result `LOST` ([#9387](https://github.com/microsoft/agent-framework/pull/9387)) | Nothing |
+| Python 1.25.0 | 7 Nov | Redis integration installs on Python 3.15; RedisVL range widened to include 0.31 ([#10143](https://github.com/microsoft/agent-framework/pull/10143)) | Optional |
 
 **The Redis change.** Before 1.24.0, the Redis provider matched scopes through Redis TAG defaults that don't keep every ID exactly. Per PR #9461, distinct application IDs (for example, ones differing only in case or punctuation) could be treated as the same one, which breaks the isolation the scopes are meant to give. The new schema stores scopes as exact, case-sensitive tokens and enforces the configured scope on every write and search. It refuses to start on an index built by an older version, and `overwrite_index=True` does not migrate it. To upgrade: delete the old context index and its context hashes, let the provider create the new index, and re-ingest your context data. Plan for this before you bump the package: there is no in-place migration.
 
@@ -171,6 +177,22 @@ Compared with the Mem0 provider, Hindsight's open-source server includes graph a
 
 Agent Framework also has a **Harness Agent** (`create_harness_agent` in Python): an opinionated agent for long, multi-step tasks with planning, context compaction, file access and memory built in. It uses the same `AgentSession` lifecycle. Per the docs, the harness saves history after each model call inside a tool loop, not just at the end of a run. Reuse and serialize the session so todos, file memory and tool approvals survive a restart.
 
+Its long-term memory is a `MemoryContextProvider`, a history provider that also keeps a Markdown memory store. These defaults come from the provider's [source](https://github.com/microsoft/agent-framework/blob/main/python/packages/core/agent_framework/_harness/_memory.py) at 1.25.0, read on 9 November 2026; every one is a constructor argument:
+
+| Piece | Default | What it does |
+|---|---|---|
+| `MEMORY.md` | Up to 200 pointer lines of 150 characters (`index_line_limit`, `index_line_length`) | One line per topic: slug, summary, last update. Rebuilt from the topic files before every run |
+| `topics/<slug>.md` | One file per topic | The durable memory lines for that topic, plus a summary |
+| `transcripts/` | Saved every run | The conversation history, written by the same provider (`FileHistoryProvider` underneath) |
+| `state.json` | Per owner | Consolidation bookkeeping: last pass time, sessions finished since, pending turn ids |
+| Auto-loaded topics | 3 (`selection_limit`) | Topic files whose pointer matches keywords in the user's message are injected with `MEMORY.md`; 0 turns it off |
+| Recent turns | 0 (`recent_turns`) | How many recent transcript turns to inject next to durable memory |
+| Extraction | 5 items per turn (`max_extractions`) | After each run, the agent's own chat client reads the turn and returns `{"memories":[{"topic","memory"}]}`: durable facts, preferences, decisions, one sentence each, no "transient tasks ... or tool chatter" |
+| Consolidation | 5 sessions and 24 hours (`consolidation_min_sessions`, `consolidation_interval`) | Rewrites each topic file "into a tighter durable form": dedupes, drops stale items, shortens the summary. `consolidation_client` lets the pass run on a cheaper model |
+| Tools given to the model | `list_memory_topics`, `read_memory_topic`, `write_memory`, `delete_memory_topic`, `search_memory_transcripts`, `consolidate_memories` | All run without approval prompts; `consolidate_memories` forces an immediate pass across all topic files |
+
+So the harness follows the same index-plus-topic-files layout as Claude Code's auto memory (also a 200-line `MEMORY.md`, see [Claude Code memory](/articles/claude-code-memory/)), with two differences: extraction is a separate model call after every turn rather than the agent writing notes mid-task, and consolidation is scheduled rather than left to the user. The 1.25.0 fixes above matter here. Before [#9294](https://github.com/microsoft/agent-framework/pull/9294), a consolidation pass that started while another session was still extracting cleared that session from the pending list, so its facts were saved but didn't count toward the next pass and "wait for unrelated sessions before they are consolidated". And before [#9547](https://github.com/microsoft/agent-framework/pull/9547), a half-written or hand-edited `state.json` raised `JSONDecodeError` on every later turn; it is now quarantined next to the original and the store restarts from a clean state. The source also warns that the storage directory must not be writable by untrusted users, since the final memory files could be swapped outside the store's own atomic writes, the same class of risk covered on [memory poisoning in AI agents](/articles/ai-memory-injection/).
+
 ## Coming from Semantic Kernel
 
 Microsoft's [Semantic Kernel migration guide](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/) maps the conversation pieces directly. Semantic Kernel's `ChatHistoryAgentThread` becomes `agent.create_session()`, and `agent.get_session(service_session_id=...)` continues a service-managed conversation. There's no session delete API, since not every provider supports deleting hosted history, so track and delete server-side history through the provider's own SDK.
@@ -197,4 +219,8 @@ Yes. Microsoft's overview calls Agent Framework the direct successor to Semantic
 ### Why does RedisContextProvider reject my index after upgrading Agent Framework?
 
 Python 1.24.0 (30 October 2026) changed the beta RedisContextProvider index schema so user, agent, application and session scopes match exactly, and it refuses indexes built by older versions. overwrite_index=True does not migrate them. Delete the old context index and its context hashes, let the provider create a new index, and re-ingest the context data.
+
+### How does the Agent Framework Harness Agent store long-term memory?
+
+As Markdown files: a MEMORY.md index of up to 200 one-line topic pointers, one file per topic under topics/, saved transcripts under transcripts/ and a state.json for bookkeeping. Before each run the provider injects MEMORY.md plus up to 3 topic files whose keywords match the user's message. After each run a model call extracts up to 5 durable memory items from the new turn, and a consolidation pass rewrites topic files once 5 sessions have finished and 24 hours have passed since the last pass. All of these are constructor arguments on MemoryContextProvider.
 

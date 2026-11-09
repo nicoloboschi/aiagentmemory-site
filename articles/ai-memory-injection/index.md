@@ -2,7 +2,7 @@
 
 > AI memory injection plants malicious content in an agent's long-term memory so it misleads later sessions. Real attacks (MINJA, AgentPoison, SpAIware, MemForm, MemHarmBench) and defenses.
 
-Source: https://aiagentmemory.org/articles/ai-memory-injection/ · Updated 2026-11-03 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-memory-injection/ · Updated 2026-11-09 · aiagentmemory.org
 
 
 **AI memory injection** is an attack that gets malicious instructions or false facts **saved into an AI agent's long-term memory**, so they keep influencing the agent in later sessions. Unlike a one-off prompt injection, the bad entry persists. In shared memory it can reach other users. OWASP lists it as **ASI06: Memory and Context Poisoning** in its 2026 agentic Top 10.
@@ -147,7 +147,7 @@ Some agents and memory systems now ship controls for this, per their docs:
 | **Hermes Agent** | Scans memory entries for injection, credential exfiltration, SSH backdoors and invisible Unicode; optional write approval |
 | **OpenClaw** | Excludes untrusted candidates from promotion into `MEMORY.md`; dreaming output goes to a review file |
 | **Codex** | `memories.disable_on_external_context` keeps chats that used MCP or web search out of memory |
-| **GitHub Copilot Memory** | Repository facts cite code and are checked against the current branch before use; unused entries expire after 28 days |
+| **GitHub Copilot Memory** | Repository facts cite code and are checked against the current branch before use; memories containing secrets or recognized model-control tokens are rejected at write time; anything not upvoted for 90 days expires |
 | **Claude Code** | Asks for approval before loading CLAUDE.md imports from outside the repo |
 | **Hindsight** | Opt-in, per-bank Memory Defense scans every retain against 45 secret and PII patterns, then redacts the match or blocks the item before storage (aimed at data leaks, not injected instructions); banks are strictly isolated |
 
