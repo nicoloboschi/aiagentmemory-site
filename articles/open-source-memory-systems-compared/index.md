@@ -1,4 +1,4 @@
-# Open Source AI Memory Systems Compared: GitHub Repos
+# Open Source AI Memory Systems Compared (2026): Stars, Licenses
 
 > Open-source AI memory systems compared: GitHub repos, licenses, stars (Oct 2026), languages and what each is good at. Mem0, Hindsight, MemPalace, Graphiti, Cognee.
 

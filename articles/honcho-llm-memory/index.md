@@ -1,4 +1,4 @@
-# Honcho Memory (v3.5.0): How It Works, Self-Hosting, Pricing
+# Honcho Memory (2026): Self-Hosting, Pricing, v3.5.0
 
 > Honcho by Plastic Labs: AGPL memory that models each user as a peer. $2 per 1M tokens, 90.4% LongMemEval (self-reported), self-hosting, and 3.5.0 source citations.
 

@@ -27,6 +27,8 @@ The docs are clear about one limit: CLAUDE.md is "context, not enforced configur
 
 ## CLAUDE.md files: locations and load order
 
+Skills are a separate thing. They hold task instructions, not facts, and load on demand. See [Claude Code skills: where they live, limits and memory](/articles/claude-code-skills/).
+
 Claude Code reads CLAUDE.md from four scopes. They load from the broadest to the most specific, so project instructions appear in context after user instructions:
 
 | Scope | Location | Shared with |
