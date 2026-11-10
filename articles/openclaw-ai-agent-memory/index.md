@@ -66,7 +66,7 @@ OpenAI is the default embedding provider. You change it with `memory.search.prov
 
 Set `none` for keyword-only search, or `auto` to let OpenClaw pick and fall back to keywords if embeddings fail. For local embeddings, install `@openclaw/llama-cpp-provider`; OpenClaw then installs `llama-server` and downloads the GGUF for you.
 
-How to pick: stay on the default if you already use OpenAI. Use **local** or **Ollama** if notes must never leave the machine. Use **Gemini** if you want images and audio indexed. Changing provider or model means rebuilding the index with `openclaw memory index --force`, because vectors from different models aren't comparable. Background on choosing models is in [embedding models for RAG](/articles/embedding-models-for-rag/).
+How to pick: stay on the default if you already use OpenAI. Use **local** or **Ollama** if notes must never leave the machine. Use **Gemini** if you want images and audio indexed. Changing provider or model means rebuilding the index with `openclaw memory index --force`, because vectors from different models aren't comparable. Background on choosing models is in [embedding models for RAG](/articles/vector-database-for-llm-memory/#embedding-models-for-agent-memory).
 
 ## Flush, dreaming and compaction
 

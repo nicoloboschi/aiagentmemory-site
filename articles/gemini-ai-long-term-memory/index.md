@@ -1,4 +1,4 @@
-# Gemini AI Long-Term Memory: Past Chats and Settings
+# Gemini AI Long-Term Memory (2026): Past Chats and Deletion
 
 > How Gemini's long-term memory works in 2026: memory from past chats, the new Memory summary you can view and edit, asking Gemini to remember, importing memory from ChatGPT or Claude, deleting it, context windows.
 

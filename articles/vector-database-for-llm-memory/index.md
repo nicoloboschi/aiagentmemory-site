@@ -2,7 +2,7 @@
 
 > How vector databases store long-term memory for LLM agents, what memory needs beyond RAG, and how pgvector, Qdrant, Chroma, Milvus, Pinecone and Redis compare.
 
-Source: https://aiagentmemory.org/articles/vector-database-for-llm-memory/ · Updated 2026-10-25 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/vector-database-for-llm-memory/ · Updated 2026-11-10 · aiagentmemory.org
 
 
 **A vector database for LLM memory** stores past messages, facts and documents as embeddings, then finds the ones closest in meaning to the current query so they can be added to the prompt. It's the storage layer under most long-term memory systems. For most teams the best choice is the database they already run (pgvector in Postgres, or Redis), with a dedicated vector database like Qdrant, Milvus or Pinecone once scale or multi-tenancy demands it.
@@ -160,7 +160,7 @@ remember("u42", "Prefers aisle seats on long flights")
 print(recall("u42", "Book a flight to Tokyo"))
 ```
 
-The `user_id` filter is the line that matters most. Leave it out and one user's memories can show up in another user's prompt. Payload indexes only take effect on a Qdrant server, not in local mode. Which embedding model to use is covered in [embedding models for RAG and memory](/articles/embedding-models-for-rag/).
+The `user_id` filter is the line that matters most. Leave it out and one user's memories can show up in another user's prompt. Payload indexes only take effect on a Qdrant server, not in local mode. Which embedding model to use is covered in [embedding models for agent memory](#embedding-models-for-agent-memory).
 
 ## What a vector database won't do for memory
 
@@ -174,6 +174,50 @@ A vector store answers "what's similar to this?" Agent memory needs more:
 That's the gap memory frameworks fill on top of the database, and why many add a graph or keyword index.
 
 [Hindsight](https://github.com/vectorize-io/hindsight) is one example of all four layered on pgvector. Its `retain` step uses an LLM to extract facts, time, entities and relationships instead of storing raw messages. Related facts are consolidated into observations that get refined as things change. Recall runs vector search alongside BM25 keyword, entity-graph and time-range search, then fuses and reranks the results. On long histories that pays off: it reports 64.1 on BEAM at 10M tokens, where Mem0's comparison page lists Mem0 at 48.6 (vendor-run). The cost is LLM calls on every write and more tokens per retrieval than a plain top-k vector query, so set its `max_tokens` budget. The difference between plain retrieval and memory is covered in [RAG vs agent memory](/articles/rag-vs-agent-memory/).
+
+## Embedding models for agent memory
+
+The embedding model turns each memory and each query into a vector. Memory differs from document RAG in ways that affect that choice:
+
+- **Units are short.** "User is vegetarian" is five words. Pick a model that does well on short-text retrieval, and test with real memory items.
+- **Queries and memories look different.** The query is a new user message; the memory is a terse fact. Asymmetric query/document prompts help here.
+- **Everything is re-embedded on a switch.** A memory store grows for years. Changing models later means re-embedding all of it, and Google's docs state that `gemini-embedding-001` and `gemini-embedding-2` spaces are "incompatible."
+- **Embeddings don't know time.** "I moved to SF" and "I live in NYC" are both close to "where do I live?" Handling changed facts is the job of the memory system, not the embedding model. [Hindsight](https://github.com/vectorize-io/hindsight), for example, treats the embedding as one of four recall strategies: it runs semantic, BM25 keyword, entity-graph and time-range search in parallel, fuses them and reranks with a cross-encoder, so a weak embedding match on an ID or a date can still be found. The cost is an LLM call on every write to extract entities and timestamps.
+
+### Models compared
+
+Specs from each provider's docs or model card, checked 8 October 2026. Prices change often, so check the provider's page.
+
+| Model | Provider | Open weights | Max input | Dimensions | Notes |
+|---|---|---|---|---|---|
+| text-embedding-3-small | OpenAI | No | 8,192 tokens | 1,536 (shortenable) | ~62,500 pages per dollar; MTEB 62.3% (OpenAI) |
+| text-embedding-3-large | OpenAI | No | 8,192 tokens | 3,072 (shortenable) | ~9,615 pages per dollar; MTEB 64.6% (OpenAI) |
+| gemini-embedding-2 | Google | No | 8,192 tokens | 128-3,072 (768, 1,536, 3,072 recommended) | Text, images, video, audio, PDF in one space |
+| gemini-embedding-001 | Google | No | 2,048 tokens | 128-3,072 | Text only; `task_type` parameter |
+| voyage-4-large / voyage-4 / voyage-4-lite | Voyage AI | No | 32,000 tokens | 1,024 default; 256, 512, 2,048 | int8 and binary output; the three are compatible |
+| voyage-4-nano | Voyage AI | Yes | 32,000 tokens | 1,024 default; 256, 512, 2,048 | Open-weight member of the family |
+| embed-v4.0 | Cohere | No | 128k tokens | 256-1,536 | Text and images |
+| Qwen3-Embedding (0.6B / 4B / 8B) | Alibaba Qwen | Yes, Apache-2.0 | 32K tokens | Up to 1,024 / 2,560 / 4,096; 32 and up | 100+ languages; 8B scored 70.58 on MTEB multilingual (June 2025) |
+| BGE-M3 | BAAI | Yes, MIT | 8,192 tokens | 1,024 | Dense, sparse and multi-vector output from one model |
+| bge-small-en-v1.5 | BAAI | Yes, MIT | 512 tokens | 384 | 33M parameters, English only; a common local default for memory stores |
+| EmbeddingGemma | Google | Yes, Gemma license | 2,048 tokens | 768; 512, 256, 128 | 300M parameters, built for on-device use |
+| EmbeddingGemma 2 | Google | Yes, Apache-2.0 | 8,192 tokens | 768; 512, 256, 128 | Released 6 Oct 2026; 740M parameters (270M text-only); text, code, images, video, audio |
+
+Sources: [OpenAI embeddings guide](https://developers.openai.com/api/docs/guides/embeddings), [Gemini embeddings docs](https://ai.google.dev/gemini-api/docs/embeddings), [Voyage docs](https://docs.voyageai.com/docs/embeddings), [Cohere Embed docs](https://docs.cohere.com/docs/cohere-embed), and the Hugging Face model cards for [Qwen3-Embedding-8B](https://huggingface.co/Qwen/Qwen3-Embedding-8B), [BGE-M3](https://huggingface.co/BAAI/bge-m3) and [EmbeddingGemma](https://huggingface.co/google/embeddinggemma-300m). Cohere's docs also list newer `embed-v5.0-pro` and `embed-v5.0-fast` models with 128k context and up to 2,048 dimensions.
+
+**EmbeddingGemma 2 is the newest open option, released by Google on 6 October 2026** ([announcement](https://blog.google/innovation-and-ai/technology/developers-tools/embeddinggemma-2/), [model card](https://huggingface.co/google/embeddinggemma-2)). Google's model card reports MTEB English v2 68.46, Multilingual v2 61.36 and Code 78.68 at 768 dimensions; the first EmbeddingGemma scored 61.15 multilingual and 68.76 on code. These are Google's own numbers. Google says the text-only weights need about 191MB of active RAM on a Pixel 11 Pro with quantization, which makes it a fit for local or on-device memory where nothing should leave the machine. Because its context grew to 8K tokens and the license moved to Apache-2.0, it removes the two main limits of the first version.
+
+### Check your memory system's default model
+
+Self-hosted memory systems ship with a default embedding model, and the default can be small and English-only. Hindsight is an example. Its [configuration docs](https://github.com/vectorize-io/hindsight/blob/main/skills/hindsight-docs/references/developer/configuration.md) set the embedding provider to `local` and the model to `BAAI/bge-small-en-v1.5` by default. Its [multilingual guide](https://github.com/vectorize-io/hindsight/blob/main/hindsight-docs/docs/developer/multilingual.mdx) says that model and the default reranker (`cross-encoder/ms-marco-MiniLM-L-6-v2`) are English-only, and recommends `BAAI/bge-m3` and `BAAI/bge-reranker-v2-m3` for other languages:
+
+| Setting | Hindsight default | For non-English memories |
+|---|---|---|
+| `HINDSIGHT_API_EMBEDDINGS_PROVIDER` | `local` (also `openai`, `cohere`, `google`, `tei`, `litellm` and others) | any provider with a multilingual model |
+| `HINDSIGHT_API_EMBEDDINGS_LOCAL_MODEL` | `BAAI/bge-small-en-v1.5` (384 dimensions, 512 tokens) | `BAAI/bge-m3` |
+| `HINDSIGHT_API_RERANKER_LOCAL_MODEL` | `cross-encoder/ms-marco-MiniLM-L-6-v2` | `BAAI/bge-reranker-v2-m3` |
+
+The small local default means embeddings need no API key. If your users write in other languages, change it before you store anything, because a later switch means re-embedding the whole bank. Hindsight applies the query and document prompts of models that ship them, such as Qwen3-Embedding, on its own. Whatever system you use, find this setting first: the best model in the table above only helps if the memory layer actually uses it.
 
 ## How to choose
 

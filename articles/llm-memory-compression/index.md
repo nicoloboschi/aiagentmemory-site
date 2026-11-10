@@ -126,7 +126,7 @@ Agent memory stored as embeddings can get large: one million 1,536-dimension flo
 - **Integer and binary output.** Some embedding APIs return compressed vectors directly. Voyage's `voyage-4` family supports `int8`, `uint8`, `binary` and `ubinary` output types.
 - **Shorter vectors.** Models trained with Matryoshka-style objectives can be truncated. OpenAI's docs say a `text-embedding-3-large` vector "can be shortened to a size of 256" and still beat an unshortened ada-002 vector at 1,536 dimensions on MTEB.
 
-The trade-offs are covered in [embedding models for RAG](/articles/embedding-models-for-rag/).
+The trade-offs are covered in [embedding models for RAG](/articles/vector-database-for-llm-memory/#embedding-models-for-agent-memory).
 
 ## How to choose a compression method
 

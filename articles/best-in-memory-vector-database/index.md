@@ -129,7 +129,7 @@ The raw vectors are easy to estimate: **count × dimensions × 4 bytes** for flo
 | 1 million | 1.5 GB | 3.1 GB | 6.1 GB |
 | 10 million | 15 GB | 31 GB | 61 GB |
 
-An HNSW graph adds neighbor lists on top, growing with M. If that doesn't fit, you have three levers: a smaller embedding model or truncated dimensions, half precision or int8 vectors, or compressed indexes like FAISS's IVF-PQ. Choosing a model with the right size is covered in [embedding models for RAG](/articles/embedding-models-for-rag/).
+An HNSW graph adds neighbor lists on top, growing with M. If that doesn't fit, you have three levers: a smaller embedding model or truncated dimensions, half precision or int8 vectors, or compressed indexes like FAISS's IVF-PQ. Choosing a model with the right size is covered in [embedding models for RAG](/articles/vector-database-for-llm-memory/#embedding-models-for-agent-memory).
 
 ## When to use an in-memory vector database
 

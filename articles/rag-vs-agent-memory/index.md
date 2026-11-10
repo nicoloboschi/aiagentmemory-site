@@ -7,7 +7,7 @@ Source: https://aiagentmemory.org/articles/rag-vs-agent-memory/ · Updated 2026-
 
 **RAG vs agent memory** comes down to who writes the data. **Retrieval-augmented generation (RAG)** searches a corpus of documents someone curated, like product docs or policies, and adds the best matches to the prompt. **Agent memory** searches information the agent wrote itself from its interactions, like a user's preferences or what happened last week. RAG is mostly read-only and shared; memory is read-write, per user, and keeps changing.
 
-They use the same building blocks ([embeddings](/articles/embedding-models-for-rag/), vector search, reranking), which is why they're often confused. This page explains each one, the differences that matter, and how to run both in one agent.
+They use the same building blocks ([embeddings](/articles/vector-database-for-llm-memory/#embedding-models-for-agent-memory), vector search, reranking), which is why they're often confused. This page explains each one, the differences that matter, and how to run both in one agent.
 
 ## What is retrieval-augmented generation (RAG)?
 
