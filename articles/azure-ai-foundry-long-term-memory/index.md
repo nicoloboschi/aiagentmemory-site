@@ -1,4 +1,4 @@
-# Azure AI Foundry Memory: Agent Service Long-Term Memory
+# Azure AI Foundry Memory (2026): Pricing, Quotas and Python Code
 
 > How long-term memory works in Azure AI Foundry Agent Service (Microsoft Foundry): memory stores, memory types, scope, TTL, quotas, regions, pricing and Python code.
 

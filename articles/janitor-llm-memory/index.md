@@ -1,4 +1,4 @@
-# Janitor AI Memory: Chat Memory, JLLM Context and Fixes
+# Janitor AI Memory (2026): JLLM's 9K Context, Chat Memory and Fixes
 
 > How Janitor AI memory works: JLLM's ~9K token context, permanent vs temporary tokens, the Chat Memory box, the August 2026 memory changes, and how to make bots remember.
 

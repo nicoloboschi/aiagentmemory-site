@@ -118,6 +118,8 @@ Auto memory is on by default in local sessions. To change it:
 - **One project:** put `{"autoMemoryEnabled": false}` in that project's settings.
 - **By environment:** set `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`.
 
+Which settings file wins, and the other keys you can set, are in [Claude Code settings: files, precedence and key reference](/articles/claude-code-settings/).
+
 The toggle can turn memory off, but not back on, in background sessions or in a session that another Claude Code session started. Run `claude` directly in a terminal to turn it back on.
 
 ## The /memory command
