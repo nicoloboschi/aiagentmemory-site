@@ -65,6 +65,8 @@ The `/memories` command (desktop app and CLI) sets, for the current chat only, w
 | `memories.consolidation_model` | Model for the global consolidation pass; `gpt-6.1-terra` by default since 0.167.0 (was `gpt-5.6-terra`) |
 | `memories.consolidation_service_tier` | Service tier for the consolidation pass, `"default"` (Standard) unless set; since 0.166.0 |
 
+For every other `config.toml` key, with its allowed values and where the file is read from, see the [Codex CLI config reference](/articles/codex-cli-config-reference/).
+
 ### Default limits (Codex 0.167.0)
 
 The docs don't say when memories update. The source does. These are the defaults in `codex-rs/config/src/types.rs` and the config schema at tag `rust-v0.167.0` (released 6 November 2026; the limits are unchanged since 0.164.0, 0.166.0 added `consolidation_service_tier` and 0.167.0 changed only the default models):
