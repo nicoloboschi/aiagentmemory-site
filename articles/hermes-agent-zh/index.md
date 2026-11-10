@@ -2,12 +2,12 @@
 
 > 如何安装 Hermes Agent、完成第一次会话、选择模型、连接消息网关，以及它的内置记忆和 Hindsight 插件如何工作。内容来自官方文档。
 
-Source: https://aiagentmemory.org/articles/hermes-agent-zh/ · Updated 2026-11-09 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-zh/ · Updated 2026-11-10 · aiagentmemory.org
 
 
 **Hermes Agent** 是 Nous Research 开发的开源 AI Agent。它在终端里运行，也能接入 Telegram、Discord、Slack 等聊天应用。你可以用一条命令切换模型，它还会把过去工作中的技能和笔记保存下来。它的内置记忆是两个很小的文本文件，加上一份可以搜索的历史会话记录。如果需要更大的记忆层，可以再接入外部提供商，比如 [Hindsight](https://github.com/vectorize-io/hindsight)。
 
-本指南介绍安装、首次运行、消息网关和记忆。官方文档在 [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/)。内容于 2026 年 11 月 9 日核对，最新版本为 v0.23.0（2026 年 11 月 5 日发布）。
+本指南介绍安装、首次运行、消息网关和记忆。官方文档在 [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/)。内容于 2026 年 11 月 10 日核对，最新版本为 v0.23.1（2026 年 11 月 10 日发布）。
 
 ## 什么是 Hermes Agent？
 
@@ -59,7 +59,7 @@ Hermes 有两层内置记忆，以及一层可选的外部记忆。
 
 Hindsight 是一个独立的记忆系统。Hermes 有对应的插件，这个插件在 Hermes 的插件目录里。
 
-1. 安装插件：`hermes plugins install hindsight`。
+1. 安装插件：`hermes plugins install hindsight`。请先把 Hermes 更新到 v0.23.1（2026 年 11 月 10 日）。在 v0.23.0 及更早版本上，插件目录超过了客户端 2 MiB 的上限，所以安装可能会退回到某个插件的旧固定版本，而这个插件是在你上次更新后才新增的。
 2. 在 `~/.hermes/hindsight/config.json` 中选择模式：
    - `cloud`（默认）使用 Hindsight 云账号。
    - `local_embedded` 运行一个本地守护进程，带自己的 Postgres。它需要一个 LLM 密钥，闲置 5 分钟后停止。

@@ -2,12 +2,12 @@
 
 > How to install Hermes Agent, run its first session, pick a model, connect a messaging gateway, and how its built-in memory and the Hindsight plugin work. Sourced from the official docs.
 
-Source: https://aiagentmemory.org/articles/hermes-agent/ · Updated 2026-11-09 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent/ · Updated 2026-11-10 · aiagentmemory.org
 
 
 **Hermes Agent** is an open-source AI agent from Nous Research that runs in your terminal and in chat apps such as Telegram, Discord and Slack. You can switch its model with one command, and it saves skills and notes from past work. Its built-in memory is two small text files plus a searchable log of past sessions. For a larger memory layer, you can add an external provider such as [Hindsight](https://github.com/vectorize-io/hindsight).
 
-This guide covers the install, first run, gateway, and memory. The official docs are at [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/). Checked on 9 November 2026, with the latest release at v0.23.0 (5 November 2026).
+This guide covers the install, first run, gateway, and memory. The official docs are at [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs/). Checked on 10 November 2026, with the latest release at v0.23.1 (10 November 2026).
 
 ## What is Hermes Agent?
 
@@ -59,7 +59,7 @@ For the details of the built-in files and how to tune them, see [Hermes Agent me
 
 Hindsight is a separate memory system. Hermes has a plugin for it, and the plugin is in Hermes's plugin catalog.
 
-1. Install it: `hermes plugins install hindsight`.
+1. Install it: `hermes plugins install hindsight`. Update Hermes to v0.23.1 (10 November 2026) first. On v0.23.0 and older, the plugin catalog was too large for the client's 2 MiB cap, so the install could fall back to an older pinned copy of a plugin added after your last update.
 2. Choose a mode in `~/.hermes/hindsight/config.json`:
    - `cloud` (the default) uses a Hindsight cloud account.
    - `local_embedded` runs a local daemon with its own Postgres. It needs an LLM key and stops after 5 minutes idle.
