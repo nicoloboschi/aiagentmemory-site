@@ -1,6 +1,6 @@
 # Claude Code Hooks: Every Event and How to Use Them for Memory (2026)
 
-> The Claude Code hook events (SessionStart, UserPromptSubmit, Stop, PreCompact and 30 more), the four hook types, exit code rules, where hooks live in settings.json, and how hooks feed memory tools such as claude-mem and Hindsight.
+> The Claude Code hook events (SessionStart, UserPromptSubmit, Stop, PreCompact and 28 more: 33 in all), the four hook types, exit code rules, where hooks live in settings.json, and how hooks feed memory tools such as claude-mem and Hindsight.
 
 Source: https://aiagentmemory.org/articles/claude-code-hooks-memory/ · Updated 2026-11-11 · aiagentmemory.org
 
@@ -9,7 +9,7 @@ Source: https://aiagentmemory.org/articles/claude-code-hooks-memory/ · Updated 
 
 **Claude Code hooks** are commands that run at fixed points in a session. You set them in a JSON settings file, and Claude Code runs them when the event fires, with no model choice involved. They are the only part of Claude Code's setup that runs code on its own, which makes them the main way to save or reload memory automatically.
 
-The Claude Code hooks reference lists more than 35 events. The ones that matter most for memory are `SessionStart`, `UserPromptSubmit`, `Stop`, `PreCompact` and `SessionEnd`.
+The Claude Code hooks reference lists 33 events. The ones that matter most for memory are `SessionStart`, `UserPromptSubmit`, `Stop`, `PreCompact` and `SessionEnd`.
 
 ## Hook events and when they fire
 
@@ -20,7 +20,7 @@ Event names come from the [Claude Code hooks reference](https://code.claude.com/
 | `SessionStart` | When a session begins or resumes | No |
 | `UserPromptSubmit` | When a prompt is submitted, before Claude processes it | Yes |
 | `Stop` | When Claude finishes responding | Yes (exit 2 keeps Claude working) |
-| `PreCompact` | Before context compaction (matcher: `manual` or `auto`) | No |
+| `PreCompact` | Before context compaction (matcher: `manual` or `auto`) | Yes (exit 2 blocks compaction) |
 | `PostCompact` | After context compaction completes | No |
 | `SessionEnd` | When a session terminates | No |
 | `Setup` | With `--init-only`, or with `--init` or `--maintenance` in `-p` mode | No |
@@ -30,26 +30,26 @@ Event names come from the [Claude Code hooks reference](https://code.claude.com/
 | `PermissionDenied` | When auto mode denies a tool call | No |
 | `PostToolUse` | After a tool call succeeds | Shows stderr to Claude only |
 | `PostToolUseFailure` | After a tool call fails | No |
-| `PostToolBatch` | After a batch of parallel tool calls, before the next model call | No |
+| `PostToolBatch` | After a batch of parallel tool calls, before the next model call | Yes (stops the loop before the next model call) |
 | `Notification` | When Claude Code sends a notification | No |
 | `MessageDisplay` | While assistant message text is displayed | No |
 | `SubagentStart` | When a subagent is spawned | No |
 | `SubagentStop` | When a subagent finishes | Yes (exit 2 keeps it working) |
-| `TaskCreated` | When a task is created with `TaskCreate` | No |
-| `TaskCompleted` | When a task is marked completed | No |
+| `TaskCreated` | When a task is created with `TaskCreate` | Yes (rolls back the task) |
+| `TaskCompleted` | When a task is marked completed | Yes |
 | `StopFailure` | When the turn ends because of an API error | No |
-| `TeammateIdle` | When an agent team teammate is about to go idle | No |
+| `TeammateIdle` | When an agent team teammate is about to go idle | Yes (keeps the teammate working) |
 | `InstructionsLoaded` | When a CLAUDE.md or `.claude/rules/*.md` file loads | No |
-| `ConfigChange` | When a configuration file changes during a session | No |
+| `ConfigChange` | When a configuration file changes during a session | Yes (except policy settings) |
 | `CwdChanged` | When the working directory changes | No |
 | `DirectoryAdded` | When a directory is added mid-session with `/add-dir` | No |
 | `FileChanged` | When a watched file changes on disk | No |
-| `WorktreeCreate` | When a worktree is being created | No |
-| `WorktreeRemove` | When a worktree made by a `WorktreeCreate` hook is removed | No |
+| `WorktreeCreate` | When a worktree is being created | Yes (any non-zero exit fails it) |
+| `WorktreeRemove` | When a worktree made by a `WorktreeCreate` hook is removed | Yes (any non-zero exit fails it) |
 | `PreModelSwitch` | Before a requested model switch applies | Yes |
 | `PostModelSwitch` | After the session's model changes | No |
-| `Elicitation` | When an MCP server asks the user for input during a tool call | No |
-| `ElicitationResult` | After the user answers an MCP elicitation | No |
+| `Elicitation` | When an MCP server asks the user for input during a tool call | Yes (declines the request) |
+| `ElicitationResult` | After the user answers an MCP elicitation | Yes (response becomes decline) |
 
 ## The four hook types
 
@@ -134,7 +134,7 @@ For a full comparison, see [Claude Code memory](/articles/claude-code-memory/) a
 
 ### What are Claude Code hooks?
 
-Claude Code hooks are commands, HTTP calls or prompts that run at fixed points in a session, such as when a session starts, a prompt is submitted, a tool is called, or the context is compacted. You set them under the "hooks" key in settings.json. The docs list about 35 event names, from SessionStart to SessionEnd.
+Claude Code hooks are commands, HTTP calls or prompts that run at fixed points in a session, such as when a session starts, a prompt is submitted, a tool is called, or the context is compacted. You set them under the "hooks" key in settings.json. The docs list 33 event names, from SessionStart to SessionEnd.
 
 ### Can a Claude Code hook save memory?
 
