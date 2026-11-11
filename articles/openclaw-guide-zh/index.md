@@ -77,7 +77,7 @@ OpenClaw 的文档也说明，这些文件里的记忆只是给模型的参考�
 - 保存失败的内容会暂存在内存里，所以如果服务器宕机时进程崩溃，这些内容会丢失。
 - OpenClaw 插件的删除工具只有在 `allowKnowledgeDelete: true` 时才能使用。
 
-关于 OpenClaw 和 Hermes 在记忆方面的比较，请看 [OpenClaw 与 Hermes Agent 记忆对比](/articles/openclaw-vs-hermes-agent-memory/)（英文）。Hermes 这一侧，请看 [Hermes Agent 指南](/articles/hermes-agent-zh/)。
+关于如何添加 skill（从 ClawHub 安装、编写 SKILL.md、安装前检查），请看 [OpenClaw Skills](/articles/openclaw-skills-zh/)。关于 OpenClaw 和 Hermes 在记忆方面的比较，请看 [OpenClaw 与 Hermes Agent 记忆对比](/articles/openclaw-vs-hermes-agent-memory/)（英文）。Hermes 这一侧，请看 [Hermes Agent 指南](/articles/hermes-agent-zh/)。
 
 ## 先检查什么
 

@@ -77,7 +77,7 @@ Memory in these files is guidance for the model, not a hard rule. OpenClaw's doc
 - Saves that fail are held in memory, so a crash while the server is down loses them.
 - The OpenClaw plugin's delete tools only work with `allowKnowledgeDelete: true`.
 
-For how OpenClaw and Hermes compare on memory, see [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/). For the Hermes side, see [Hermes Agent guide](/articles/hermes-agent/).
+To add skills (install from ClawHub, write a SKILL.md, check before you install), see [OpenClaw skills](/articles/openclaw-skills/). For how OpenClaw and Hermes compare on memory, see [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/). For the Hermes side, see [Hermes Agent guide](/articles/hermes-agent/).
 
 ## What to check first
 

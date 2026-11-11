@@ -1,4 +1,48 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OpenClaw on Agent Memory: AI Memory Systems Explained</title><link>https://aiagentmemory.org/tags/openclaw/</link><description>Recent content in OpenClaw on Agent Memory: AI Memory Systems Explained</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 10 Nov 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://aiagentmemory.org/tags/openclaw/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenClaw 记忆：文件、搜索与嵌入模型</title><link>https://aiagentmemory.org/articles/openclaw-ai-agent-memory-zh/</link><pubDate>Tue, 10 Nov 2026 00:00:00 +0000</pubDate><guid>https://aiagentmemory.org/articles/openclaw-ai-agent-memory-zh/</guid><description>&lt;p&gt;&lt;strong&gt;OpenClaw 的记忆是一组文件。&lt;/strong&gt; agent 写下它要记住的内容，再读回来。&lt;code&gt;MEMORY.md&lt;/code&gt; 存持久的事实和决定，&lt;code&gt;USER.md&lt;/code&gt; 存你的偏好，按日期命名的每日笔记存正在进行的上下文。前两个文件在会话开始时加载。所有内容都会被存入 SQLite 建立索引，agent 通过 &lt;code&gt;memory_search&lt;/code&gt;（向量搜索和关键词搜索的混合）找回更早的笔记。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OpenClaw on Agent Memory: AI Memory Systems Explained</title><link>https://aiagentmemory.org/tags/openclaw/</link><description>Recent content in OpenClaw on Agent Memory: AI Memory Systems Explained</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Wed, 11 Nov 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://aiagentmemory.org/tags/openclaw/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenClaw Skills (2026): Install from ClawHub, Write SKILL.md, Safety</title><link>https://aiagentmemory.org/articles/openclaw-skills/</link><pubDate>Wed, 11 Nov 2026 00:00:00 +0000</pubDate><guid>https://aiagentmemory.org/articles/openclaw-skills/</guid><description>&lt;p&gt;&lt;strong&gt;OpenClaw skills&lt;/strong&gt; are folders of instructions that teach the agent a task, such as a calendar, a
+Todoist client or a database backup. You install them from ClawHub, the public registry, or write
+your own. A skill is not memory. It does not store what the agent learns. For that, see
+&lt;a href="https://aiagentmemory.org/articles/openclaw-ai-agent-memory/"&gt;OpenClaw memory&lt;/a&gt; and the &lt;a href="https://aiagentmemory.org/articles/openclaw-guide/"&gt;OpenClaw guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Sources: the OpenClaw ClawHub docs (documentation.openclaw.ai/clawhub) and the skill format page
+(documentation.openclaw.ai/clawhub/skill-format). Both read 2026-11-11.&lt;/p&gt;</description></item><item><title>OpenClaw Skills（2026）：从 ClawHub 安装、编写 SKILL.md、安全注意事项</title><link>https://aiagentmemory.org/articles/openclaw-skills-zh/</link><pubDate>Wed, 11 Nov 2026 00:00:00 +0000</pubDate><guid>https://aiagentmemory.org/articles/openclaw-skills-zh/</guid><description>&lt;p&gt;&lt;strong&gt;OpenClaw skills&lt;/strong&gt; 是一些文件夹，里面放着教 agent 完成某项任务的指令，例如日历、Todoist 客户端或数据库备份。你可以从公共注册表 ClawHub 安装，也可以自己编写。skill 不是记忆：它不会保存 agent 学到的内容。关于记忆，请看 &lt;a href="https://aiagentmemory.org/articles/openclaw-ai-agent-memory-zh/"&gt;OpenClaw 记忆&lt;/a&gt; 和 &lt;a href="https://aiagentmemory.org/articles/openclaw-guide-zh/"&gt;OpenClaw 指南&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;来源：OpenClaw ClawHub 文档（documentation.openclaw.ai/clawhub）和 skill 格式页面（documentation.openclaw.ai/clawhub/skill-format）。两者都在 2026-11-11 读取。&lt;/p&gt;
+&lt;h2 id="命令"&gt;命令&lt;/h2&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;你想做什么&lt;/th&gt;
+ &lt;th&gt;命令&lt;/th&gt;
+ &lt;th&gt;文档中的说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;查找 skill&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;openclaw skills search &amp;quot;calendar&amp;quot;&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;在 ClawHub 中搜索&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;安装一个&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;openclaw skills install @openclaw/demo&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;记录来源，之后的更新仍然走 ClawHub&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;更新全部&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;openclaw skills update --all&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;OpenClaw 原生命令&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;发布或删除&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;clawhub&lt;/code&gt; CLI（&lt;code&gt;npm i -g clawhub&lt;/code&gt;）&lt;/td&gt;
+ &lt;td&gt;需要先运行 &lt;code&gt;clawhub login&lt;/code&gt;。用于发布、删除和恢复&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;安装插件（不是 skill）&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;openclaw plugins install clawhub:&amp;lt;package&amp;gt;&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;插件和 skill 是两回事&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;文档说，原生 &lt;code&gt;openclaw&lt;/code&gt; 命令会安装到当前 OpenClaw 工作区。单独的 &lt;code&gt;clawhub&lt;/code&gt; CLI 会安装到你运行命令的文件夹下的 &lt;code&gt;./skills&lt;/code&gt;，并写入 &lt;code&gt;.clawhub/lock.json&lt;/code&gt;。每个 skill 只用其中一种方式安装，这样你才知道它存在哪里。&lt;/p&gt;</description></item><item><title>OpenClaw 记忆：文件、搜索与嵌入模型</title><link>https://aiagentmemory.org/articles/openclaw-ai-agent-memory-zh/</link><pubDate>Tue, 10 Nov 2026 00:00:00 +0000</pubDate><guid>https://aiagentmemory.org/articles/openclaw-ai-agent-memory-zh/</guid><description>&lt;p&gt;&lt;strong&gt;OpenClaw 的记忆是一组文件。&lt;/strong&gt; agent 写下它要记住的内容，再读回来。&lt;code&gt;MEMORY.md&lt;/code&gt; 存持久的事实和决定，&lt;code&gt;USER.md&lt;/code&gt; 存你的偏好，按日期命名的每日笔记存正在进行的上下文。前两个文件在会话开始时加载。所有内容都会被存入 SQLite 建立索引，agent 通过 &lt;code&gt;memory_search&lt;/code&gt;（向量搜索和关键词搜索的混合）找回更早的笔记。&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/openclaw/openclaw"&gt;OpenClaw&lt;/a&gt; 是开源（MIT）的个人 AI 助手，由 Peter Steinberger 和社区贡献者构建，现在由 OpenClaw Foundation 维护。它运行在你自己的电脑上，通过 WhatsApp、Telegram、Slack、Discord、iMessage 以及 20 多个其他渠道与你交流。本页内容来自官方&lt;a href="https://docs.openclaw.ai/concepts/memory"&gt;记忆文档&lt;/a&gt;和&lt;a href="https://docs.openclaw.ai/concepts/memory-search"&gt;记忆搜索文档&lt;/a&gt;，2026 年 10 月核对。第一次使用 OpenClaw？请先看 &lt;a href="https://aiagentmemory.org/articles/openclaw-guide-zh/"&gt;OpenClaw 指南&lt;/a&gt;，里面有安装、入门引导和 Gateway。&lt;/p&gt;
 &lt;h2 id="什么是-openclaw-记忆"&gt;什么是 OpenClaw 记忆？&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;OpenClaw 记忆基于文件。&lt;/strong&gt; 模型只能记住写到磁盘上、以 Markdown 形式保存在 agent 工作区里的内容。记忆插件（默认是 memory-core）为这些文件建立索引，并给 agent 提供搜索和读取它们的工具，所以知识在重启、压缩和新会话之后仍然保留。&lt;/p&gt;
