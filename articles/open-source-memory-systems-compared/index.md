@@ -2,7 +2,7 @@
 
 > Open-source AI memory systems compared: GitHub repos, licenses, stars (Oct 2026), languages and what each is good at. Mem0, Hindsight, MemPalace, Graphiti, Cognee.
 
-Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-11-08 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 The leading **open-source AI agent memory systems** on GitHub are Mem0, MemPalace, Hindsight, Graphiti, Cognee, Letta, LangMem, MemOS, Memori, Honcho, Basic Memory and Memobase. Most are Apache-2.0 or MIT, written in Python, and self-hostable with Docker. They differ in storage (vectors, graphs, files), in how much is truly open versus paid, and in what they're built for.
@@ -147,7 +147,7 @@ asyncio.run(main())
 To pick a repo for production, run through this list:
 
 1. **Check the license** against how you'll ship (internal tool, SaaS, on-prem product).
-2. **Check what's gated**: read the pricing page for features that are cloud-only.
+2. **Check what's gated**: read the pricing page for features that are cloud-only. The plan prices and limits for Mem0, Zep, Supermemory and Hindsight are side by side in [AI memory pricing compared](/articles/ai-memory-pricing-compared/).
 3. **Check activity**: recent commits, open issues and release notes in the last 90 days.
 4. **Check dependencies**: Postgres only, or also a graph DB, Redis and a vector DB?
 5. **Check the LLM cost per write**: most systems call an LLM on every memory add.

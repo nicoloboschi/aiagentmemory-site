@@ -2,7 +2,7 @@
 
 > Which chatbot has the best memory in 2026? A sourced comparison of ChatGPT, Claude, Gemini, Copilot and Character.AI: what each remembers, free plans, controls.
 
-Source: https://aiagentmemory.org/articles/best-chatbot-for-memory/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/best-chatbot-for-memory/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 The **best chatbot for memory** in 2026 is ChatGPT or Claude for most people. Both save facts about you, search your past chats, and let you see and edit what they keep, on free and paid plans. Gemini and Copilot remember too, with fewer controls. Character.AI is the pick for roleplay, but its memory is small and mostly manual.
@@ -65,7 +65,19 @@ Anthropic brought memory to the free plan on March 2, 2026, [Engadget reported](
 
 Character.AI is built for long character chats, but its memory tools are manual. Free users get **15 pinned messages** per chat and a **400-character Chat Memories box**. The paid lite plan raises pins to 30, and c.ai+ adds auto-memories and private Lorebooks, according to the [Character.AI help center](https://support.character.ai/hc/en-us/articles/56173313531675-About-c-ai-lite).
 
-Anything not pinned, saved or recent can drop out of what the character "sees." The full breakdown is in [Character.AI's memory limit explained](/articles/what-is-character-ai-memory-limit/). For story games, AI Dungeon does more on its own: it summarizes every six actions and searches up to 100 stored memories on the free tier (800 on Ultimate), as covered in [how the AI Dungeon memory system works](/articles/ai-dungeon-memory-system/).
+Anything not pinned, saved or recent can drop out of what the character "sees." The full breakdown is in [Character.AI's memory limit explained](/articles/what-is-character-ai-memory-limit/). For story games, AI Dungeon does more on its own: it summarizes every six actions and searches up to 100 stored memories on the free tier (800 on Ultimate). The details are in [AI Dungeon: summaries and a memory bank](#ai-dungeon-summaries-and-a-memory-bank) below.
+
+## AI Dungeon: summaries and a memory bank
+
+AI Dungeon writes its own memory for long adventures. Every six actions a model turns the story into a short **Memory**. A **Story Summary** of the whole plot is refreshed every 15 actions. When the story no longer fits in context, the app embeds your latest action and brings back the stored memories that match it. Source: the [AI Dungeon help center](https://help.aidungeon.com/faq/the-memory-system), checked 23 October 2026.
+
+The Memory Bank has a size limit that depends on the paid tier: 100 memories on Free and Journey, 200 on Legend, 400 on Mythic and 800 on Ultimate, per the [pricing page](https://play.aidungeon.com/members), checked 6 November 2026. The help center still says 25 for the free tier. Trust the pricing page, since it is what the app sells, and check it before you rely on the number.
+
+Limits to know:
+
+- **Retrieval uses your latest action only.** Name the person or place you mean in that action, or the right memory may not come back.
+- **A full bank drops its least-used memories.** You can't edit single memories. Only the Story Summary is editable.
+- **Free-tier context is small.** It runs from 2K to 4K tokens depending on the model, so little raw history fits.
 
 ## How to pick the right chatbot for memory
 

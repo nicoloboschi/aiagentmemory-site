@@ -2,7 +2,7 @@
 
 > What is Character.AI's memory limit? Why characters forget, the real limits on pins (15 or 30) and Chat Memories (400 characters), and how to improve memory.
 
-Source: https://aiagentmemory.org/articles/what-is-character-ai-memory-limit/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/what-is-character-ai-memory-limit/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 **Character.AI's memory limit** is the amount of recent conversation a character can consider at once. Character.AI doesn't publish that number. What it does publish: free users can pin 15 messages per chat and write 400 characters of fixed facts into Chat Memories. Anything outside those tools and the recent context can be forgotten.
@@ -74,7 +74,7 @@ Research backs up the general pattern. Language models use information at the st
 
 ## Does Character.AI remember you across chats?
 
-Not in the way ChatGPT or Claude do. Character.AI documents its memory tools per chat: pins and Chat Memories belong to the conversation they were made in. It doesn't describe an account-wide memory that carries your past conversations into a new chat. If cross-chat memory is what you want, see the [best chatbots for memory](/articles/best-chatbot-for-memory/) compared side by side. For how other story games approach the same problem, see the [AI Dungeon memory system](/articles/ai-dungeon-memory-system/).
+Not in the way ChatGPT or Claude do. Character.AI documents its memory tools per chat: pins and Chat Memories belong to the conversation they were made in. It doesn't describe an account-wide memory that carries your past conversations into a new chat. If cross-chat memory is what you want, see the [best chatbots for memory](/articles/best-chatbot-for-memory/) compared side by side. For how other story games approach the same problem, see the [AI Dungeon memory system](/articles/best-chatbot-for-memory/#ai-dungeon-summaries-and-a-memory-bank).
 
 If you're building your own character bot, you can avoid a fixed memory box by storing facts outside the context window and fetching the relevant ones each turn. Open-source memory servers such as Mem0 and [Hindsight](https://github.com/vectorize-io/hindsight) do this; Hindsight also searches by time ("what happened last week?") and merges related facts into beliefs that update as the story changes. The cost is an extra LLM call each time you save memory. See [how to add memory to a chatbot](/articles/how-to-add-memory-to-chatbot/).
 

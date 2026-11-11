@@ -2,7 +2,7 @@
 
 > How Janitor AI memory works: JLLM's ~9K token context, permanent vs temporary tokens, the Chat Memory box, the August 2026 memory changes, and how to make bots remember.
 
-Source: https://aiagentmemory.org/articles/janitor-llm-memory/ · Updated 2026-11-01 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/janitor-llm-memory/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 **Janitor LLM memory** is how much of a roleplay chat the bot can see at once. On Janitor AI's free model, **JanitorLLM (JLLM)**, that's a context window of roughly **8,000 to 9,000 tokens**, shared between the bot's permanent definition, your **Chat Memory** note and the most recent messages. Anything older silently drops out, which is why bots forget.
@@ -97,7 +97,7 @@ In January 2026 Janitor's changelog said a new FP8 version of JLLM would be test
 
 ## Why Janitor bots forget, compared with other apps
 
-Janitor's model is the simplest kind of chatbot memory: a fixed window plus one note you manage yourself. Other roleplay apps add automation. [AI Dungeon's memory system](/articles/ai-dungeon-memory-system/) summarizes every six actions and retrieves memories by embedding similarity. [Character.AI](/articles/what-is-character-ai-memory-limit/) uses pinned messages and a short chat memory field. All of them hit the same limit described in the [context window guide](/articles/context-window-of-an-llm/): what doesn't fit in the prompt doesn't exist for the model. For the general reasons chatbots lose track, see [why AI memory is so bad](/articles/why-is-ai-memory-so-bad/).
+Janitor's model is the simplest kind of chatbot memory: a fixed window plus one note you manage yourself. Other roleplay apps add automation. [AI Dungeon's memory system](/articles/best-chatbot-for-memory/#ai-dungeon-summaries-and-a-memory-bank) summarizes every six actions and retrieves memories by embedding similarity. [Character.AI](/articles/what-is-character-ai-memory-limit/) uses pinned messages and a short chat memory field. All of them hit the same limit described in the [context window guide](/articles/context-window-of-an-llm/): what doesn't fit in the prompt doesn't exist for the model. For the general reasons chatbots lose track, see [why AI memory is so bad](/articles/why-is-ai-memory-so-bad/).
 
 If you build your own roleplay bot instead, an open-source memory server such as [Hindsight](https://github.com/vectorize-io/hindsight) can do the note-keeping for you: it extracts facts from each chat and merges them into observations that get updated as the story changes. It runs with local models through Ollama or LM Studio, but each write calls an LLM, so it costs more per message than a manual note. The build is covered in [how to add memory to a chatbot](/articles/how-to-add-memory-to-chatbot/).
 
