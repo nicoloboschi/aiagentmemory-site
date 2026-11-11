@@ -163,7 +163,7 @@ The limits: each retain calls an LLM, so writes cost more than Codex's built-in 
 | Light personal recall on one machine | Codex memories (`memories = true`) |
 | Free, local session memory, no LLM key | agentmemory |
 | Memory shared by Codex, Claude Code and other agents on a repo, with search and reasoning | Hindsight |
-| Memory for a non-coding agent you build | See [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/) |
+| Memory for a non-coding agent you build | See [how to give AI agents memory](/articles/ai-agent-long-term-memory/) |
 
 Start with AGENTS.md. Turn on memories if you want Codex to pick up your habits. Add a memory server when the project outlives what a 32 KiB file and a background summary can hold, or when more than one agent works on the same code.
 

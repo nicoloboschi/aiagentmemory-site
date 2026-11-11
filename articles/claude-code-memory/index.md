@@ -23,7 +23,7 @@ The docs compare the two like this:
 | What loads | Every file in scope, in full | First 200 lines or 25 KB of `MEMORY.md` |
 | Shared with the team | Yes, through git (project files) | No, machine-local |
 
-The docs are clear about one limit: CLAUDE.md is "context, not enforced configuration." If an action must never happen, block it with a PreToolUse hook or a `permissions.deny` rule. Don't rely on a line in CLAUDE.md.
+The docs are clear about one limit: CLAUDE.md is "context, not enforced configuration." If an action must never happen, block it with a PreToolUse hook or a `permissions.deny` rule. Don't rely on a line in CLAUDE.md. The [Claude Code hooks reference](/articles/claude-code-hooks-memory/) lists every event and how each one can save or load memory.
 
 Claude Code changes often. For the memory and compaction fixes in each recent release, see [Claude Code release notes: memory changes](/articles/claude-code-release-notes-memory/).
 

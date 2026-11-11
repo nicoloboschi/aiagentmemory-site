@@ -238,7 +238,7 @@ def chat(message: str, user_id: str) -> str:
     return text
 ```
 
-The same loop works with any memory system; only the two calls change. With Hindsight they're `client.recall(bank_id=..., query=...)` and `client.retain(bank_id=..., content=...)`; with LangMem the agent calls memory tools itself. A step-by-step walkthrough with more options is in [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/), and coding-agent setups are in [AI coding agent memory](/articles/ai-coding-agent-memory/).
+The same loop works with any memory system; only the two calls change. With Hindsight they're `client.recall(bank_id=..., query=...)` and `client.retain(bank_id=..., content=...)`; with LangMem the agent calls memory tools itself. A step-by-step walkthrough with more options is in [how to give AI agents memory](/articles/ai-agent-long-term-memory/), and coding-agent setups are in [AI coding agent memory](/articles/ai-coding-agent-memory/).
 
 
 ## FAQ

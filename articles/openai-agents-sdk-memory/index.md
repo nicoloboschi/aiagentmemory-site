@@ -134,7 +134,7 @@ session = SQLiteSession("user-42-chat-7", "conversations.db")
 
 Why pick it for this job: its open-source server includes graph and temporal recall and background consolidation of facts into observations, and `hindsight_reflect` returns a reasoned answer over the whole bank instead of raw hits. On the long-history BEAM benchmark it leads Mem0 64.1 to 48.6 at 10M tokens, per [Mem0's own comparison](https://mem0.ai/compare/mem0-vs-hindsight) (vendor-run). The limit: it returns more context per recall than Mem0, about 4x by Mem0's numbers, which is why `max_tokens` is set above. See [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
 
-Our guide on [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/) compares those patterns in detail.
+Our guide on [how to give AI agents memory](/articles/ai-agent-long-term-memory/) compares those patterns in detail.
 
 ## Not the same as ChatGPT memory
 

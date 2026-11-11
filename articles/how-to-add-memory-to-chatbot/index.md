@@ -145,7 +145,7 @@ History and summaries are per conversation. When the user opens a new chat, they
 - **At the start of each chat,** retrieve the facts that match the first message and add them to the system prompt.
 - **When facts change,** update or replace them so "lives in NYC" doesn't survive the move to SF.
 
-Tested code for both the do-it-yourself and library versions is in [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/). If you'd rather not build it, memory libraries handle extraction and updates for you:
+Tested code for both the do-it-yourself and library versions is in [how to give AI agents memory](/articles/ai-agent-long-term-memory/). If you'd rather not build it, memory libraries handle extraction and updates for you:
 
 - **Mem0:** the lightest option. One LLM pass per write, under 7K tokens per retrieval by its own measurement.
 - **Zep:** a managed service that tracks when facts change, so "lives in NYC" gets a validity window instead of lingering.

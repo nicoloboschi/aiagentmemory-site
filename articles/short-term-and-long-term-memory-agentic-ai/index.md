@@ -106,7 +106,7 @@ out = graph.invoke(
 print(out["messages"][-1].content)
 ```
 
-The `thread_id` scopes short-term memory. The namespace `(user_id, "memories")` scopes long-term memory. Swap `InMemorySaver` and `InMemoryStore` for Postgres-backed versions in production, and replace the keyword check with an LLM extractor such as LangMem's `create_memory_store_manager`. A full walkthrough is in [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/).
+The `thread_id` scopes short-term memory. The namespace `(user_id, "memories")` scopes long-term memory. Swap `InMemorySaver` and `InMemoryStore` for Postgres-backed versions in production, and replace the keyword check with an LLM extractor such as LangMem's `create_memory_store_manager`. A full walkthrough is in [how to give AI agents memory](/articles/ai-agent-long-term-memory/).
 
 You can also hand the long-term side to a memory server and keep LangGraph's checkpointer for the short-term side. [Hindsight](https://github.com/vectorize-io/hindsight), which has a LangGraph integration, maps onto steps 2, 5 and 6 of the loop: `recall` searches by meaning, keyword, entity graph and time range at once and trims results to a token budget, `retain` uses an LLM to extract facts with their time and entities, and background consolidation merges them into observations. It's open source (MIT) with all of that in the free server, and it leads on long histories (64.1 on BEAM 10M, vendor-reported). The cost is that every `retain` and every consolidation pass calls an LLM, which is more write cost than a plain store `put`.
 

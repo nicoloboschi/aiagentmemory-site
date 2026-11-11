@@ -1,8 +1,8 @@
-# Episodic Memory in AI Agents: How Agents Recall Events
+# Episodic Memory in AI Agents (2026): Recall Events, FAISS
 
 > What episodic memory is in AI agents and LLMs, what an episode record holds, how Generative Agents and Reflexion use it, and how to build one with FAISS.
 
-Source: https://aiagentmemory.org/articles/episodic-memory-in-ai-agents/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/episodic-memory-in-ai-agents/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 **Episodic memory in AI agents** is a store of specific past events, each tied to when it happened and in what context. It lets an agent answer "what happened last time?" and reuse what worked. LLMs don't have it built in. The agent's code saves episodes outside the model and retrieves the relevant ones into the prompt.

@@ -178,7 +178,7 @@ Run locally, none of these tools has a free tier or a usage cap: you pay only fo
 
 Mem0 and Hindsight also sell hosted cloud versions with their own pricing; the self-hosted versions above don't need them.
 
-How they differ is covered in [open-source memory systems compared](/articles/open-source-memory-systems-compared/), and the general build (with hosted models) is in [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/).
+How they differ is covered in [open-source memory systems compared](/articles/open-source-memory-systems-compared/), and the general build (with hosted models) is in [how to give AI agents memory](/articles/ai-agent-long-term-memory/).
 
 ## Choosing a model for local memory
 

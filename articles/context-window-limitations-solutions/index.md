@@ -1,8 +1,8 @@
-# Context Window Limitations in LLMs: Research and Fixes (2026)
+# Context Window Limitations (2026): Lost in the Middle, Fixes
 
 > Why LLMs get worse as the context window fills (lost in the middle, RULER, NoLiMa, context rot), what long prompts cost, and when retrieval or memory beats full context, with October 2026 results.
 
-Source: https://aiagentmemory.org/articles/context-window-limitations-solutions/ · Updated 2026-10-31 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/context-window-limitations-solutions/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 **Context window limitations** are the ways an LLM falls short as its prompt grows: it misses facts buried in the middle, its accuracy drops long before the advertised limit, and every extra token adds cost and latency. The fixes all do the same thing: keep the window small and relevant through retrieval, summarization and external memory.

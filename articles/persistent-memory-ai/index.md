@@ -76,7 +76,7 @@ print(recall("u42"))                # goes into the system prompt
 
 Output: `- city: Berlin` and `- diet: vegetarian`. You'd put that string in the system prompt before each model call.
 
-This covers a handful of structured facts. It doesn't cover search by meaning, extracting facts from free text, or thousands of memories per user. That's what memory frameworks add. A full walkthrough is in [how to give AI agents memory](/articles/how-to-give-ai-agents-memory/).
+This covers a handful of structured facts. It doesn't cover search by meaning, extracting facts from free text, or thousands of memories per user. That's what memory frameworks add. A full walkthrough is in [how to give AI agents memory](/articles/ai-agent-long-term-memory/).
 
 ## Persistent memory in AnythingLLM
 
