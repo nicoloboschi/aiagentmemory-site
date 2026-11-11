@@ -2,7 +2,7 @@
 
 > LangGraph, CrewAI, OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Letta, LlamaIndex and Pydantic AI compared on memory: sessions, long-term stores, plug-ins.
 
-Source: https://aiagentmemory.org/articles/ai-agent-framework-comparison/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-framework-comparison/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 An **AI agent framework comparison** that matters in production usually comes down to state: how each framework keeps conversation history, what it offers for long-term memory, and how easily you can plug in an external memory system. In October 2026, **LangGraph** and **Letta** give the most memory control, **CrewAI** and **LlamaIndex** the most built-in automation, and **ADK**, **Microsoft Agent Framework** and the **OpenAI Agents SDK** lean on sessions plus cloud or plug-in memory.
@@ -71,7 +71,13 @@ for match in memory.recall("What database did we choose?"):
     print(f"[{match.score:.2f}] {match.record.content}")
 ```
 
-Memories sit in a path-like tree (`/project/alpha`), and you can scope or slice it. The default embedder is OpenAI `text-embedding-3-large`; stores built with older 1536-dimension embeddings can hit a dimension mismatch. More in [CrewAI long-term memory](/articles/crewai-long-term-memory/).
+Memories sit in a path-like tree (`/project/alpha`), and you can scope or slice it. The default embedder is OpenAI `text-embedding-3-large`; stores built with older 1536-dimension embeddings can hit a dimension mismatch. Recall weights default to 0.5 similarity, 0.3 recency (30-day half-life) and 0.2 importance, and `Memory(...)` takes the same settings as keyword arguments.
+
+**Private records need CrewAI 1.15.29 or later.** Until that release (23 October 2026), a record saved with `private=True` and no `source` came back to every caller. The 1.15.29 release notes say it "prevent[s] private memories without a source from leaking to every recall." Upgrade before you rely on `private=True`, and pass a `source` such as a user ID on every save.
+
+**Upgrading from before 1.10.** `ShortTermMemory`, `LongTermMemory` and `EntityMemory` were replaced by `Memory`, and `ExternalMemory` and `memory_config={"provider": "mem0"}` were removed. Old local data can hit the dimension mismatch above; reset it or pin the old embedder. Hindsight's `hindsight-crewai` package pins `crewai<1.10`, so on 1.10 and later call the Hindsight Python client directly.
+
+Reset and inspect from the shell with `crewai memory` (a terminal browser) and `crewai reset-memories -m`.
 
 **Best for:** multi-agent crews that want useful memory with little code.
 

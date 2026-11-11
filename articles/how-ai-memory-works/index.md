@@ -1,8 +1,8 @@
-# How AI Memory Works: Write, Store, Retrieve, Inject
+# How Does Memory Work in AI? Write, Store, Retrieve, Inject
 
 > How does memory work in AI? The model forgets, so the app saves notes, searches them and adds them to the prompt. ChatGPT, Claude, Gemini, Mem0, Letta and Hindsight compared step by step.
 
-Source: https://aiagentmemory.org/articles/how-ai-memory-works/ · Updated 2026-10-25 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/how-ai-memory-works/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 **AI memory works by saving information outside the model and adding it back into the prompt later.** The language model forgets everything after each reply. So the app around it writes notes or keeps past chats, searches them when you send a new message, and pastes the relevant pieces into the model's input. ChatGPT, Claude, Gemini and custom agents all follow this loop.

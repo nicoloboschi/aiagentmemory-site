@@ -74,7 +74,7 @@ Forgetting is a feature. Three mechanisms cover most needs.
 
 **Decay-weighted ranking** keeps memories but lowers their score as they age. Generative Agents uses exponential recency decay (factor 0.995 per game hour since last access). [MemoryBank](https://arxiv.org/abs/2305.10250) (Zhong et al., 2023) bases its updates on the Ebbinghaus forgetting curve, weakening or reinforcing memories by elapsed time and importance. See [AI memory decay](/articles/ai-memory-decay/).
 
-**Hard deletion** is required for user requests and data protection rules. It only works if every memory is stored under a clear user or tenant namespace, so you can find all of it. Test the scope filter too, not just the write path: until CrewAI 1.15.29, a record saved with `private=True` but no source was returned to every caller (details in [CrewAI long-term memory](/articles/crewai-long-term-memory/)).
+**Hard deletion** is required for user requests and data protection rules. It only works if every memory is stored under a clear user or tenant namespace, so you can find all of it. Test the scope filter too, not just the write path: until CrewAI 1.15.29, a record saved with `private=True` but no source was returned to every caller (details in [CrewAI long-term memory](/articles/ai-agent-framework-comparison/#crewai-one-unified-memory-class)).
 
 ## Example: budget, TTL and deletion in Python
 

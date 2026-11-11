@@ -2,7 +2,7 @@
 
 > How Gemini's long-term memory works in 2026: memory from past chats, the new Memory summary you can view and edit, asking Gemini to remember, importing memory from ChatGPT or Claude, deleting it, context windows.
 
-Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 **Gemini AI long-term memory** is the setting in the Gemini app that lets it use details from your **past chats** to personalize answers, plus the option to ask it to **remember specific facts**. It needs you to be 18 or older, signed in with a personal Google Account, with **Keep Activity** on. You switch it in Gemini's personalization settings and erase it by deleting chats.
@@ -39,7 +39,7 @@ To check whether a reply drew on your history, ask: **"Did you use any info from
 
 You can also tell Gemini directly: "Remember that I am vegetarian." To fix a fact, correct it in chat: "Actually, my daughter is 8, not 7," and Gemini says it will update its memory.
 
-This narrower feature has stricter rules. Google's [memory management page](https://support.google.com/gemini/answer/16598625?hl=en) says you need a **Google AI plan**, and that for now it's **only available in the US**. Instructions are open to everyone. Add them under **Personal context > Your instructions for Gemini**, where you can edit, delete or switch them off.
+This narrower feature has stricter rules. Google's [memory management page](https://support.google.com/gemini/answer/16598625?hl=en) says you need a **Google AI plan**, and that for now it's **only available in the US**. Instructions are open to everyone. Add them under **Personal context > Your instructions for Gemini**, where you can edit, delete or switch them off. Google's page also says remembered items and instructions are **kept for at most 18 months**, then removed. You can add them again.
 
 ## Gemini's Memory summary: see, edit and delete what it knows
 

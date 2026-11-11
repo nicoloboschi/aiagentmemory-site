@@ -25,6 +25,8 @@ The docs compare the two like this:
 
 The docs are clear about one limit: CLAUDE.md is "context, not enforced configuration." If an action must never happen, block it with a PreToolUse hook or a `permissions.deny` rule. Don't rely on a line in CLAUDE.md.
 
+Claude Code changes often. For the memory and compaction fixes in each recent release, see [Claude Code release notes: memory changes](/articles/claude-code-release-notes-memory/).
+
 ## CLAUDE.md files: locations and load order
 
 Skills are a separate thing. They hold task instructions, not facts, and load on demand. See [Claude Code skills: where they live, limits and memory](/articles/claude-code-skills/).

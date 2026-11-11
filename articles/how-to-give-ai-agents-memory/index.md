@@ -212,7 +212,7 @@ Most memory bugs show up only after weeks of use. Plan for these from the start:
 
 ### A missing user key must fail, not match
 
-**The most common leak isn't a missing filter. It's a filter that passes when the key is empty.** CrewAI's memory had this bug until version 1.15.29 (23 October 2026). A record saved with `private=True` but no `source` was returned to every caller. The filter compared the record's source with the caller's, and when neither had one, `None == None` was true. Both of CrewAI's recall paths had the bug. [PR #8400](https://github.com/crewAIInc/crewAI/pull/8400) fixed it. The details and a before/after table are on [CrewAI long-term memory](/articles/crewai-long-term-memory/).
+**The most common leak isn't a missing filter. It's a filter that passes when the key is empty.** CrewAI's memory had this bug until version 1.15.29 (23 October 2026). A record saved with `private=True` but no `source` was returned to every caller. The filter compared the record's source with the caller's, and when neither had one, `None == None` was true. Both of CrewAI's recall paths had the bug. [PR #8400](https://github.com/crewAIInc/crewAI/pull/8400) fixed it. The details and a before/after table are on [CrewAI long-term memory](/articles/ai-agent-framework-comparison/#crewai-one-unified-memory-class).
 
 The same thing can happen in a from-scratch store like Example 1. A `WHERE user_id = ?` with an empty string matches every row saved with an empty string. Three rules prevent it:
 

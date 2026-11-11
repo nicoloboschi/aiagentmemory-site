@@ -1,8 +1,8 @@
-# Mem0 Paper: Production-Ready Agents with Long-Term Memory
+# Mem0 Paper: Building Production-Ready AI Agents (2026)
 
 > The Mem0 paper (arXiv 2504.19413) explained: extraction and update pipeline, the Mem0g graph variant, LoCoMo results, latency and tokens, the Zep dispute, and two outside tests (MemoryTax, Memorilla).
 
-Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-11-11 · aiagentmemory.org
 
 
 **"Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory"** is the 2025 paper from the Mem0 team that describes how Mem0 extracts, updates and retrieves memories from conversations. It introduces two systems, Mem0 and a graph-based variant called **Mem0g**, and reports that both beat other memory systems on the LoCoMo benchmark while using far fewer tokens than full-context prompting.
