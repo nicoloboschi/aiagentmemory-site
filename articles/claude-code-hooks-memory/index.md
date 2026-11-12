@@ -2,7 +2,7 @@
 
 > The Claude Code hook events (SessionStart, UserPromptSubmit, Stop, PreCompact and 28 more: 33 in all), the four hook types, exit code rules, where hooks live in settings.json, and how hooks feed memory tools such as claude-mem and Hindsight.
 
-Source: https://aiagentmemory.org/articles/claude-code-hooks-memory/ · Updated 2026-11-11 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-hooks-memory/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 ## What are Claude Code hooks?
@@ -104,7 +104,7 @@ Existing tools already do this. [claude-mem](https://github.com/thedotmack/claud
 
 ## Where Hindsight fits
 
-[Hindsight](https://github.com/vectorize-io/hindsight) is an MIT-licensed memory server from Vectorize. It has a native Claude Code plugin, so you can use it without writing your own hooks. The plugin stores what a session produces and answers later questions from it. Its `reflect` call reasons over stored memories, which helps with "why did we decide X?" questions across many sessions.
+[Hindsight](https://github.com/vectorize-io/hindsight) is an MIT-licensed memory server from Vectorize. Its Claude Code setup is an npm package, `@vectorize-io/hindsight-coding-agents` (run `npx @vectorize-io/hindsight-coding-agents install claude-code`), which installs the hooks for you, so you do not write them yourself. The old Claude Code plugin is retired. The package stores what a session produces and answers later questions from it. Its `reflect` call reasons over stored memories, which helps with "why did we decide X?" questions across many sessions.
 
 Hindsight's numbers come from Vectorize and are not independent. On the BEAM benchmark for long histories, Hindsight scores 73.9 at 1M tokens against Mem0's 64.1, and 64.1 at 10M against Mem0's 48.6. Both Mem0 figures come from [Mem0's own comparison page](https://mem0.ai/compare/mem0-vs-hindsight).
 

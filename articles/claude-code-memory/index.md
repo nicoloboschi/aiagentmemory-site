@@ -2,7 +2,7 @@
 
 > How Claude Code memory works: CLAUDE.md locations and load order, @imports, auto memory and how to turn it off, /memory, plus memory MCP servers, claude-mem and Hindsight.
 
-Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-08 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 **Claude Code memory** is two built-in systems. **CLAUDE.md files** hold instructions you write, and Claude Code loads them at the start of every session. **Auto memory** holds notes Claude writes for itself in `~/.claude/projects/<project>/memory/`. You manage both with `/memory`. For more than notes, add a memory MCP server or a plugin such as claude-mem or Hindsight.
@@ -26,6 +26,8 @@ The docs compare the two like this:
 The docs are clear about one limit: CLAUDE.md is "context, not enforced configuration." If an action must never happen, block it with a PreToolUse hook or a `permissions.deny` rule. Don't rely on a line in CLAUDE.md. The [Claude Code hooks reference](/articles/claude-code-hooks-memory/) lists every event and how each one can save or load memory.
 
 Claude Code changes often. For the memory and compaction fixes in each recent release, see [Claude Code release notes: memory changes](/articles/claude-code-release-notes-memory/).
+
+New to Claude Code? Install it first with the steps in [How to install Claude Code](/articles/install-claude-code/).
 
 ## CLAUDE.md files: locations and load order
 
@@ -165,9 +167,9 @@ Install it from inside Claude Code with `/plugin marketplace add thedotmack/clau
 
 ECC (Everything Claude Code, 294,084 GitHub stars on 1 November 2026) is a bigger workflow bundle that also carries memory: hooks save and reload session state, `/save-session` writes a full handoff file, and an opt-in Haiku observer turns your tool use into "instincts" with confidence scores. How each layer works and what's off by default is on [Everything Claude Code memory](/articles/everything-claude-code-memory/).
 
-### Hindsight plugin for Claude Code
+### Hindsight for Claude Code
 
-**[Hindsight](https://github.com/vectorize-io/hindsight)** is an MIT-licensed memory server from Vectorize with a native Claude Code plugin (it has native plugins for Codex, Cursor and Copilot too). Instead of keeping a log of sessions, it extracts facts, times, entities and relations from what it retains, then merges related facts into **observations**: beliefs with supporting quotes that get refined as new sessions add evidence. Recall runs semantic, keyword, graph and time-range search in parallel and reranks the results. `reflect` reasons over many memories to answer questions like "why did we drop the Redis cache?"
+**[Hindsight](https://github.com/vectorize-io/hindsight)** is an MIT-licensed memory server from Vectorize. Its old Claude Code plugin is retired. Its replacement is the npm package `@vectorize-io/hindsight-coding-agents`, which covers Claude Code and about 20 other coding agents. Install it for Claude Code with `npx @vectorize-io/hindsight-coding-agents install claude-code` from your repo folder ([Hindsight Coding Agents docs](https://hindsight.vectorize.io/sdks/integrations/coding-agents), read 2026-11-12). Instead of keeping a log of sessions, it extracts facts, times, entities and relations from what it retains, then merges related facts into **observations**: beliefs with supporting quotes that get refined as new sessions add evidence. Recall runs semantic, keyword, graph and time-range search in parallel and reranks the results. `reflect` reasons over many memories to answer questions like "why did we drop the Redis cache?"
 
 Where it leads, by the numbers:
 
@@ -180,9 +182,9 @@ The limits: it returns more context per retrieval than Mem0 by default (about 4x
 
 ## Built-in memory vs claude-mem vs Hindsight
 
-| | CLAUDE.md + auto memory | claude-mem | Hindsight plugin |
+| | CLAUDE.md + auto memory | claude-mem | Hindsight (Coding Agents package) |
 |---|---|---|---|
-| Ships with Claude Code | Yes | No, plugin | No, plugin + server |
+| Ships with Claude Code | Yes | No, plugin | No, npm package + server |
 | License | Part of Claude Code | Apache 2.0 | MIT, full server included |
 | Who writes memory | You (CLAUDE.md), Claude (auto memory) | Automatic, from hooks on every session | Automatic: extracted facts, consolidated into observations |
 | What is stored | Instructions; short typed notes | Tool-use observations and AI-compressed session summaries | Facts, experiences, observations, mental models |

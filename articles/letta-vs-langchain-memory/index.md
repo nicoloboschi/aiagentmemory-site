@@ -35,7 +35,7 @@ LangChain's memory lives in LangGraph. The [LangChain short-term memory docs](ht
 - **Checkpointer**: saves agent state per `thread_id` (InMemory, SQLite, Postgres, Redis, MongoDB). This is conversation history.
 - **Store**: JSON documents under namespaces like `("users", user_id)`, with optional embedding search. This is long-term memory.
 
-The old classes, such as `ConversationBufferMemory`, are deprecated since 0.3.1 and moved to `langchain-classic`. See [LLM memory in LangChain](/articles/llm-memory-langchain/) for the full migration map.
+The old classes, such as `ConversationBufferMemory`, are deprecated since 0.3.1 and moved to `langchain-classic`. See [LangChain memory in LangGraph](/articles/chatbot-with-memory-langgraph/#is-conversationbuffermemory-deprecated) for the full migration map.
 
 On top of that, LangChain offers two opinionated layers:
 

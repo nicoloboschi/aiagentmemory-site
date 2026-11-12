@@ -2,7 +2,7 @@
 
 > How to build a chatbot with memory in LangGraph: a checkpointer for chat history, a store for long-term user memory, Postgres for production, and example repos.
 
-Source: https://aiagentmemory.org/articles/chatbot-with-memory-langgraph/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/chatbot-with-memory-langgraph/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 A **chatbot with memory in LangGraph** uses two features. A **checkpointer** saves each conversation's messages under a `thread_id`, so the bot remembers earlier turns. A **store** saves facts under a user namespace, so the bot remembers the user in new conversations. You compile both into the graph with `builder.compile(checkpointer=..., store=...)`.
@@ -58,7 +58,7 @@ Useful thread operations from the [LangGraph memory docs](https://docs.langchain
 - `graph.get_state_history(config)` lists every snapshot, newest first.
 - `checkpointer.delete_thread("dana-1")` wipes a conversation.
 
-If you don't need a custom graph, LangChain's `create_agent(model, tools, checkpointer=...)` builds the same loop for you. See [LLM memory in LangChain](/articles/llm-memory-langchain/) for that route and for how the deprecated `ConversationBufferMemory` maps to it. To build the same chatbot without code, Langflow's Agent component keeps per-session history by default; the [Langflow memory chatbot guide](/articles/memory-chatbot-langflow/) shows how, and where its session ID plays the role of `thread_id`.
+If you don't need a custom graph, LangChain's `create_agent(model, tools, checkpointer=...)` builds the same loop for you. The section [Is ConversationBufferMemory deprecated?](#is-conversationbuffermemory-deprecated) maps the deprecated classes to it. To build the same chatbot without code, Langflow's Agent component keeps per-session history by default; the [Langflow memory chatbot guide](/articles/memory-chatbot-langflow/) shows how, and where its session ID plays the role of `thread_id`.
 
 ## Step 2: long-term memory with a store
 
@@ -156,7 +156,7 @@ with PostgresSaver.from_conn_string(DB_URI) as checkpointer, \
 
 Two production habits matter more than the backend. Keep the thread history bounded, by trimming or summarizing old turns, so it fits the [model's context window](/articles/context-window-of-an-llm/), but keep the old turns searchable instead of deleting them: a recent handoff test found a summary alone loses detail that one search gets back (see [summaries or raw history](/articles/ai-agent-long-term-memory/#should-memory-hold-summaries-or-raw-history)). And derive `user_id` on the server from the authenticated user, never from client input, because the namespace is your only isolation between users.
 
-The checkpoint table also grows on its own: every step adds a checkpoint and none are deleted. Since langgraph-checkpoint-postgres 3.2.0 (October 2026), `checkpointer.prune([thread_id])` keeps only each thread's latest checkpoint and drops the rest; [LLM memory in LangChain](/articles/llm-memory-langchain/#keeping-the-checkpoint-table-from-growing) covers what it keeps and its limits.
+The checkpoint table also grows on its own: every step adds a checkpoint and none are deleted. Since langgraph-checkpoint-postgres 3.2.0 (October 2026), `checkpointer.prune([thread_id])` keeps only each thread's latest checkpoint and drops the rest; the section [Keeping the checkpoint table from growing](#keeping-the-checkpoint-table-from-growing) covers what it keeps and its limits.
 
 ## The DeepLearning.AI course: Long-Term Agentic Memory with LangGraph
 
@@ -182,6 +182,54 @@ These are the maintained, first-party examples worth starting from, checked Octo
 | langchain-ai/memory-template | Older template that memory-agent was generated from | Archived |
 
 Many third-party "LangChain chatbot with memory" repos use `ConversationBufferMemory` and `ConversationChain`. Both are deprecated and now live in `langchain-classic`; treat those repos as reading material, not a base. For repos outside LangGraph, including self-hosted chat apps with built-in memory and standalone memory libraries, see [chatbot memory on GitHub](/articles/chatbot-memory-github/).
+
+## Is ConversationBufferMemory deprecated?
+
+Yes. The [LangChain API reference](https://reference.langchain.com/python/langchain-classic/memory/buffer/ConversationBufferMemory) says: "Deprecated since version 0.3.1. Use langchain.agents.create_agent instead. Will be removed in version 2.0.0." It adds that agents which need to remember earlier turns should use `create_agent` with checkpointing or the Store API.
+
+LangChain 1.0 shipped on PyPI on October 17, 2025. Its release notes say legacy functionality "has moved to `langchain-classic`," including the old chains. So this still works, but only as a bridge:
+
+```python
+# Legacy: still importable in 2026, deprecated, removal planned for 2.0
+from langchain_classic.memory import ConversationBufferMemory
+```
+
+The same applies to its siblings: `ConversationBufferWindowMemory`, `ConversationTokenBufferMemory`, `ConversationSummaryMemory`, `ConversationSummaryBufferMemory` and `ConversationEntityMemory`. LangGraph's `create_react_agent` is also deprecated; the LangGraph v1 notes point to LangChain's `create_agent` instead.
+
+### Mapping old memory classes to the new API
+
+| Old class | What it did | Replacement in LangChain 1.x |
+|---|---|---|
+| `ConversationBufferMemory` | Kept every message | Checkpointer + `thread_id` |
+| `ConversationBufferWindowMemory` | Kept the last k turns | Checkpointer + trimming in `@before_model` middleware |
+| `ConversationTokenBufferMemory` | Kept messages under a token cap | Checkpointer + token-based trimming |
+| `ConversationSummaryMemory` / `SummaryBufferMemory` | Summarized older turns | `SummarizationMiddleware` |
+| `ConversationEntityMemory` | Tracked facts about entities | Store + tools, or LangMem memory tools |
+| `VectorStoreRetrieverMemory` | Retrieved past text by similarity | Store with an embedding `index` and `search(query=...)` |
+| `RunnableWithMessageHistory` | Wrapped a chain with history | Still exists in `langchain-core`; the docs recommend LangGraph persistence for most users |
+
+## Keeping the checkpoint table from growing
+
+A checkpointer saves a new checkpoint after every step and keeps all of them, so a long-lived thread piles up thousands of rows. Until October 2026, `PostgresSaver` had no supported way to clean that up: it inherited a `prune` method that just raised `NotImplementedError`. [langgraph-checkpoint-postgres 3.2.0](https://github.com/langchain-ai/langgraph/pull/9290) (14 October 2026) implements it for `PostgresSaver` and `AsyncPostgresSaver`:
+
+```python
+checkpointer.prune(["user-42-chat-1"])                     # keep only the latest checkpoint
+checkpointer.prune(["user-42-chat-1"], strategy="delete")  # drop the whole thread
+```
+
+`keep_latest` (the default) keeps the checkpoint the agent loads next, plus its pending writes and blobs, and deletes everything older, including blobs only old checkpoints used, which the PR says is most of a long thread's storage. The conversation still works; you lose time travel and forks to older steps. Per the PR: a 6,000-checkpoint thread pruned in 100-200 ms in the author's local test; it refuses threads that use a `DeltaChannel` (deleting their history would empty them); two prunes of the same thread at once can fail, and retrying is safe; and Postgres reuses the freed space without shrinking the files (that takes `VACUUM FULL` or `pg_repack`). Pruning doesn't make the model see less: that's what summarization or trimming is for.
+
+`DeltaChannel` (beta) is the other way to keep long threads small. Instead of saving the full message list in every checkpoint, it saves only each step's new writes and rebuilds the list by replaying them, with a full snapshot every so often so replay stays short. [LangGraph 1.2.18](https://github.com/langchain-ai/langgraph/releases/tag/1.2.18) (26 October 2026, [#9420](https://github.com/langchain-ai/langgraph/pull/9420)) changed the default `snapshot_frequency` from 1,000 updates to 100, including for message channels. Per the release note, long threads now load faster but use more storage. If storage matters more than load time, pass `DeltaChannel(..., snapshot_frequency=1000)` to keep the old behavior.
+
+| Setting (LangGraph 1.2.18+) | Default | Effect on a long thread |
+|---|---|---|
+| `DeltaChannel(snapshot_frequency=...)` | 100 (was 1,000) | Full snapshot every N updates: lower = faster loads, more storage |
+| Supersteps since last snapshot ([`DELTA_MAX_SUPERSTEPS_SINCE_SNAPSHOT`](https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/langgraph/channels/delta.py)) | 5,000 | Forces a snapshot, so replay stays bounded even when a channel stops changing |
+| `PostgresSaver.prune(...)` | `keep_latest` | Not allowed on threads that use `DeltaChannel` |
+
+### Trimming instead of summarizing
+
+If you'd rather drop old turns than summarize them, the docs show a `@before_model` middleware that returns `RemoveMessage(id=REMOVE_ALL_MESSAGES)` followed by the messages to keep. One warning from the docs: the trimmed history must stay valid. Some providers need it to start with a user message, and every tool call needs its tool result. Cutting blindly in the middle of a tool exchange causes API errors. Trim at turn boundaries, or let summarization handle it.
 
 ## When to add a dedicated memory layer
 

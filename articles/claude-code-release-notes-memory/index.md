@@ -2,7 +2,7 @@
 
 > Claude Code releases 2.1.311 to 2.1.322 (Oct 26 to Nov 10, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
 
-Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-11 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 ## What are the Claude Code release notes for memory?
@@ -50,7 +50,7 @@ your files take up.
 ## Where Hindsight fits
 
 Claude Code's built-in memory is the files and compaction above. Hindsight is a separate memory server.
-It has a native Claude Code plugin, so Claude Code can save and recall facts outside the context window.
+Its Claude Code setup is the `@vectorize-io/hindsight-coding-agents` npm package, so Claude Code can save and recall facts outside the context window.
 Setup and the plugin's behavior are in [Claude Code memory](/articles/claude-code-memory/).
 
 The release notes do not mention Hindsight. The claims below come from Hindsight's own material, not from

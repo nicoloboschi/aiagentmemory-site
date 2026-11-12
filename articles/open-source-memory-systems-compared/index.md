@@ -94,7 +94,7 @@ From the authors of [MemGPT](https://arxiv.org/abs/2310.08560). Letta Code agent
 
 ### LangMem
 
-Memory tools an agent calls during a conversation, plus a background manager that extracts and consolidates memories, on top of LangGraph's store. Least effort if you already run LangGraph. See [LLM memory with LangChain](/articles/llm-memory-langchain/).
+Memory tools an agent calls during a conversation, plus a background manager that extracts and consolidates memories, on top of LangGraph's store. Least effort if you already run LangGraph. See [LangChain memory with LangGraph](/articles/chatbot-with-memory-langgraph/).
 
 ### Smaller and specialized projects
 
