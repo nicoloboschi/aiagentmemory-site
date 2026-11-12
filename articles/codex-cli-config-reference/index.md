@@ -2,7 +2,7 @@
 
 > Where Codex CLI reads config.toml, which file wins, and the main keys people change: model, approval_policy, sandbox_mode, web_search, memories and MCP. Taken from OpenAI's config reference, November 2026.
 
-Source: https://aiagentmemory.org/articles/codex-cli-config-reference/ · Updated 2026-11-10 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/codex-cli-config-reference/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 **Codex CLI reads its settings from `config.toml`.** The main file is `~/.codex/config.toml`. Set a key there and every project uses it. Put a `.codex/config.toml` in a repo to change one project only. This page lists the keys people change most, their allowed values and defaults, using OpenAI's configuration reference (checked 2026-11-10). Built-in memories are one key group; the [Codex memory guide](/articles/codex-memory/) covers how they behave.
@@ -76,7 +76,7 @@ Use `[model_providers.<id>]` to point Codex at another API. The main fields are 
 
 ## Where Hindsight fits
 
-Codex's own memories keep short notes that the model writes from past threads. They are local and simple to switch off. Hindsight is a separate memory server that you run or host. It sits beside Codex through its Codex plugin, which is one of the native Codex, Claude Code, Cursor and Copilot plugins listed in its [README](https://github.com/vectorize-io/hindsight).
+Codex's own memories keep short notes that the model writes from past threads. They are local and simple to switch off. Hindsight is a separate memory server that you run or host. It plugs into Codex through its Coding Agents package (`npx @vectorize-io/hindsight-coding-agents install codex`), which also covers Claude Code, Cursor, Copilot and other CLI agents with one memory bank per repo ([docs](https://hindsight.vectorize.io/sdks/integrations/coding-agents)).
 
 - **Where it leads:** on the BEAM 10M benchmark, Hindsight scored 64.1 against 48.6 for Mem0. Mem0 published this comparison on its own site, so it is vendor-run, not independent. Hindsight's own site also reports LongMemEval S at 94.6.
 - **Open source:** the full server is MIT-licensed, including graph recall, consolidation and mental models. You can self-host it with Docker.

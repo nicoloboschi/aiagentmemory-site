@@ -2,7 +2,7 @@
 
 > What dreaming means in Claude's agent memory: Managed Agents memory stores, the Dreams API, Anthropic's CL-Bench, Pokémon and wiki results, vs Letta and Hindsight.
 
-Source: https://aiagentmemory.org/articles/claude-dreaming-agent-memory/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-dreaming-agent-memory/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 **Claude dreaming** is an offline memory pass: Claude rereads past session transcripts and its own memory notes, corrects notes that turned out wrong, merges duplicates, and builds new structures such as a wiki or an index that later sessions can navigate. Anthropic described it in [The components of agent memory](https://www.anthropic.com/research/components-of-agent-memory) (November 6, 2026) and ships it in Claude Managed Agents as **Dreams**, a research-preview API.
@@ -104,7 +104,7 @@ Letta details are in the [Letta guide](/articles/letta-ai-guide/). Hindsight's c
 
 ## Where Hindsight fits
 
-[Hindsight](https://github.com/vectorize-io/hindsight) is the closest open-source match to what Dreams do, for teams that run their own agent loop instead of Managed Agents. It consolidates in the background as memories arrive, turning related facts into **observations** that keep their supporting quotes and a proof count and are refined rather than overwritten. **Mental models** are standing answers to questions you define, kept current in the background, which is the "promoted top layer" idea without a separate job. Its `reflect` operation reasons over memory to answer questions that need thinking, not lookup. All of this ships in the MIT server, with Claude Code, Codex and Cursor plugins among 60+ integrations.
+[Hindsight](https://github.com/vectorize-io/hindsight) is the closest open-source match to what Dreams do, for teams that run their own agent loop instead of Managed Agents. It consolidates in the background as memories arrive, turning related facts into **observations** that keep their supporting quotes and a proof count and are refined rather than overwritten. **Mental models** are standing answers to questions you define, kept current in the background, which is the "promoted top layer" idea without a separate job. Its `reflect` operation reasons over memory to answer questions that need thinking, not lookup. All of this ships in the MIT server, with one Coding Agents package for Claude Code, Codex, Cursor and 19 other CLI agents among 60+ integrations.
 
 The honest trade-offs: Hindsight pays an LLM call on every retain and again on consolidation, so writes cost more than a plain file store; it returns more context per retrieval than Mem0 by default (set `max_tokens` lower); and like Dreams, when consolidation runs is not spelled out. Its benchmark numbers (LongMemEval-S 94.6, BEAM 10M 64.1, vendor-run) measure recall over long histories, not the wiki-building task Anthropic tested, so don't compare the two. More in [Hindsight AI memory](/articles/ai-memory-hindsight/).
 

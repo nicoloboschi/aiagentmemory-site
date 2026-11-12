@@ -2,7 +2,7 @@
 
 > Honcho by Plastic Labs: AGPL memory that models each user as a peer. $2 per 1M tokens, 90.4% LongMemEval (self-reported), self-hosting, and 3.5.0 source citations.
 
-Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-11-02 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 **Honcho** is an open-source memory service for LLM agents, built by Plastic Labs. Instead of only storing extracted facts, it **reasons about the people and agents in your conversations**. You save messages; a background worker derives conclusions about each participant; then you ask Honcho what it knows, in plain language or as prompt-ready context.
@@ -106,7 +106,7 @@ The **AGPL-3.0** license is worth checking with your legal team. It requires you
 
 ## Integrations for coding agents
 
-Honcho ships first-party memory plugins for **Claude Code, Codex, Cursor, OpenCode, OpenClaw** and the DeepSeek Harness, and it's built into **Hermes Agent** as a memory provider (`hermes memory setup`). All of them read one `~/.honcho/config.json`, so pointing two tools at the same workspace gives them shared memory. A hosted MCP server at mcp.honcho.dev covers other clients. [Hindsight](https://github.com/vectorize-io/hindsight) covers the same ground with native Claude Code, Codex, Cursor and Copilot plugins, an MCP server per memory bank and 60+ integrations in total. See [Hermes Agent memory](/articles/hermes-agent-memory/) and OpenClaw memory for how Honcho compares with other providers there.
+Honcho ships first-party memory plugins for **Claude Code, Codex, Cursor, OpenCode, OpenClaw** and the DeepSeek Harness, and it's built into **Hermes Agent** as a memory provider (`hermes memory setup`). All of them read one `~/.honcho/config.json`, so pointing two tools at the same workspace gives them shared memory. A hosted MCP server at mcp.honcho.dev covers other clients. [Hindsight](https://github.com/vectorize-io/hindsight) covers the same ground with one Coding Agents package for Claude Code, Codex, Cursor, Copilot and other CLI agents (one bank per repo, shared by all of them), an MCP server per memory bank and 60+ integrations in total. See [Hermes Agent memory](/articles/hermes-agent-memory/) and OpenClaw memory for how Honcho compares with other providers there.
 
 ## What changed in Honcho 3.4
 
