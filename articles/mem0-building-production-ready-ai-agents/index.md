@@ -1,6 +1,6 @@
 # Mem0 Paper: Building Production-Ready AI Agents (2026)
 
-> The Mem0 paper (arXiv 2504.19413) explained: extraction and update pipeline, the Mem0g graph variant, LoCoMo results, latency and tokens, the Zep dispute, and two outside tests (MemoryTax, Memorilla).
+> The paper 'Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory' (arXiv 2504.19413) explained: extraction and update pipeline, the Mem0g graph variant, LoCoMo results, latency and tokens, the Zep dispute, and two outside tests (MemoryTax, Memorilla).
 
 Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-11-11 · aiagentmemory.org
 

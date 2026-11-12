@@ -109,6 +109,10 @@ The listed [context provider integrations](https://learn.microsoft.com/en-us/age
 
 **Best for:** .NET and Azure shops, and AutoGen users who need a supported path.
 
+**Upgrade warnings (Oct to Nov 2026).** Python 1.24.0 (30 Oct) changed the Redis context provider to a new index schema for user, agent, application and session scopes (PR #9461). There is no in-place migration: delete the old context index and its hashes, let the provider create the new index, and re-ingest your data. Python 1.25.0 (7 Nov) refuses installs on Python 3.10 across every `agent-framework-*` package (PR #9948), so move to 3.11 or later first. Source: [Agent Framework release notes](https://github.com/microsoft/agent-framework/releases), read 2026-11-09.
+
+**Hindsight in MAF.** Hindsight publishes `hindsight-agent-framework`, whose `HindsightProvider` recalls memories before each run and retains the exchange after it, so the model does not have to call a memory tool. Compared with the Mem0 provider, Hindsight's open-source server adds graph and temporal recall and background consolidation. It leads Mem0 on BEAM at 10M tokens (64.1 vs 48.6, [per Mem0's own comparison](https://mem0.ai/compare/mem0-vs-hindsight), so vendor-run). It also injects more context per run, so set `max_tokens` if prompt size matters. See [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
+
 ## Google ADK: state prefixes and memory services
 
 ADK separates **session state** from **memory**. State keys are scoped by prefix: none (this session), `user:` (all of a user's sessions in the app), `app:` (all users) and `temp:` (this invocation only). Persistence depends on the session service.

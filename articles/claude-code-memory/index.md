@@ -150,7 +150,7 @@ claude mcp add --scope user --env MEMORY_FILE_PATH=$HOME/.claude/memory.jsonl \
   memory -- npx -y @modelcontextprotocol/server-memory
 ```
 
-Set `MEMORY_FILE_PATH`, because the default file sits in the server's own install folder. Claude only uses the graph when it decides to call the tools, so tell it to in CLAUDE.md. Other memory servers (Mem0, Basic Memory, Hindsight and more) are compared in [AI memory MCP servers](/articles/ai-memory-mcp-server/).
+Set `MEMORY_FILE_PATH`, because the default file sits in the server's own install folder. Claude only uses the graph when it decides to call the tools, so tell it to in CLAUDE.md. For every way to add, scope and check an MCP server, see [Claude Code MCP](/articles/claude-code-mcp/). Other memory servers (Mem0, Basic Memory, Hindsight and more) are compared in [AI memory MCP servers](/articles/ai-memory-mcp-server/).
 
 ### claude-mem
 

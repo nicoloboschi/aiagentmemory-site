@@ -99,7 +99,7 @@ It's a good fit if you're studying memory representations, want to reproduce the
 
 The closest in spirit is [Hindsight](https://github.com/vectorize-io/hindsight), which also keeps raw facts while building merged entries on top: related facts consolidate into **observations** that keep their supporting quotes. It's an MIT server with a REST API, isolated memory banks and 25+ LLM providers, and recall runs semantic, keyword, graph and temporal search in parallel; its entity links play a role similar to Memora's cue anchors, reaching memories that aren't close in embedding space. It reports 94.6 on LongMemEval and 92 on LoCoMo, but those are vendor-run with different models and judges than Memora's, so the numbers don't compare directly.
 
-If you're building on Microsoft's own agent stack, note that Memora is separate from the memory features in Microsoft's agent SDKs, covered in [Microsoft Agent Framework memory](/articles/microsoft-agent-framework-memory/).
+If you're building on Microsoft's own agent stack, note that Memora is separate from the memory features in Microsoft's agent SDKs, covered in [Microsoft Agent Framework memory](/articles/ai-agent-framework-comparison/).
 
 
 ## FAQ
