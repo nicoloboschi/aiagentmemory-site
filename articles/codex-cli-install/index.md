@@ -64,6 +64,7 @@ Hindsight is open source at [github.com/vectorize-io/hindsight](https://github.c
 ## Related
 
 - [How to install Claude Code](/articles/install-claude-code/): the same steps for the other terminal coding agent.
+- [How to install Gemini CLI](/articles/gemini-cli-install/): Google's terminal agent, with its GEMINI.md memory files.
 - [Codex memory](/articles/codex-memory/): AGENTS.md, memories and how to add Hindsight.
 - [Codex CLI config reference](/articles/codex-cli-config-reference/): the keys in `config.toml`.
 

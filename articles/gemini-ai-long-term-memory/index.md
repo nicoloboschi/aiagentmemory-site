@@ -2,7 +2,7 @@
 
 > How Gemini's long-term memory works in 2026: memory from past chats, the new Memory summary you can view and edit, asking Gemini to remember, importing memory from ChatGPT or Claude, deleting it, context windows.
 
-Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-11-11 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 **Gemini AI long-term memory** is the setting in the Gemini app that lets it use details from your **past chats** to personalize answers, plus the option to ask it to **remember specific facts**. It needs you to be 18 or older, signed in with a personal Google Account, with **Keep Activity** on. You switch it in Gemini's personalization settings and erase it by deleting chats.
@@ -31,7 +31,7 @@ When Memory is on, Gemini can reference relevant earlier conversations to tailor
 - Sign in with a **personal** Google Account. It "isn't available when you sign in to a work, school, or supervised Google Account."
 - Have **Keep Activity** on. Without it, the feature is off.
 
-It works in the Gemini mobile app, the web app at gemini.google.com, Gemini in Chrome where available, and on smartwatches. It's **not available in Gems or Live chats**, though in a text chat you can ask Gemini to reference a past Live conversation.
+It works in the Gemini mobile app, the web app at gemini.google.com, Gemini in Chrome where available, and on smartwatches. It's **not available in Gems**. Gemini Live (voice) can use past-chat memories too. Google's [Gemini Live help page](https://support.google.com/gemini/answer/15274899), read 2026-11-12, says Gemini "can use memories of your past chats" in Live, and that this "is only available in English in the US." The older past-chats help page still lists Live as excluded, so the two pages disagree; check both before you rely on either. In a text chat you can also ask Gemini to reference a past Live conversation.
 
 To check whether a reply drew on your history, ask: **"Did you use any info from past chats?"** One version of the help page (iPhone) adds that the feature isn't offered in the EEA, Switzerland or the UK and needs Gemini set to English; check the page for your device and region.
 
@@ -72,7 +72,7 @@ Who gets it: personal accounts of users 18 and over, with personalization on. Go
 
 **Memory decides what Gemini knows about you. Skills decide how it does a repeated task. Instructions apply to every chat.** Since 30 September 2026, Gemini has **skills**: saved sets of instructions for a task, per [Gemini's release notes](https://gemini.google/release-notes/). Gemini "can now help you build custom skills from your chats" and runs a skill on its own when your prompt matches it. You can also stack skills, for example a writing-style skill plus a brand-guidelines skill.
 
-Skills will replace **Gems**. Google says it "will automatically migrate your Gems into skills when Gems go away." This matters for memory because Google's help page says memory of past chats is "not available in certain features, like Gems or Live chats." Google hasn't said yet whether memory will work inside skills. On 13 October 2026 Google added a **Customize** item to the left menu, where you manage skills and 40+ connected apps.
+Skills will replace **Gems**. Google says it "will automatically migrate your Gems into skills when Gems go away." This matters for memory because Google's past-chats help page says memory of past chats is "not available in certain features, like Gems or Live chats." Google hasn't said yet whether memory will work inside skills. On 13 October 2026 Google added a **Customize** item to the left menu, where you manage skills and 40+ connected apps.
 
 | | Memory | Skills | Instructions |
 |---|---|---|---|
@@ -131,7 +131,7 @@ Gemini's memory is tied to your account activity rather than a separate memory s
 
 ### Does Gemini remember past conversations?
 
-Yes, if Memory is on. Gemini can use details from your past chats to personalize answers when you're 18 or older, signed in with a personal Google Account, and have Keep Activity on. It isn't available in Gems or Live chats. You can ask Gemini 'Did you use any info from past chats?' to check.
+Yes, if Memory is on. Gemini can use details from your past chats to personalize answers when you're 18 or older, signed in with a personal Google Account, and have Keep Activity on. It isn't available in Gems. Gemini Live (voice) can use it too, in English and only in the US, per Google's Gemini Live help page. You can ask Gemini 'Did you use any info from past chats?' to check.
 
 ### Can I see what Gemini remembers about me?
 

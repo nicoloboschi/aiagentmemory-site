@@ -1,8 +1,8 @@
-# Agent Workflow Memory (2026): WebArena Results and Code
+# Agent Workflow Memory (2026): Paper Results, Limits and Code
 
 > Agent Workflow Memory (AWM) lets LLM agents reuse routines from past runs: 35.5% vs 23.5% on WebArena with GPT-4. How it works, limits, and code to build it.
 
-Source: https://aiagentmemory.org/articles/agent-workflow-memory/ · Updated 2026-10-31 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agent-workflow-memory/ · Updated 2026-11-12 · aiagentmemory.org
 
 
 **Agent workflow memory** means an LLM agent keeps reusable routines learned from its own past runs and follows them on new tasks. The best-known version is **Agent Workflow Memory (AWM)** by Wang, Mao, Fried and Neubig (CMU and MIT, [ICML 2025](https://proceedings.mlr.press/v267/wang25bx.html)). AWM induces workflows from past trajectories and puts the relevant ones in the agent's prompt.
