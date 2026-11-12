@@ -15,7 +15,7 @@ Prices and limits as shown on each vendor's pricing page, read on 11 November 20
 
 | Product | Free tier | Paid plans | Usage prices | Self-hosting |
 |---|---|---|---|---|
-| Hindsight (Vectorize) | Self-hosting is free. Cloud gives new accounts $5 of free credit. | None. Pay as you go. | Retain $10.00 per 1M tokens. Recall $0.75 per 1M tokens. Reflect $0.05 per call. Storage $0.25 per 1M tokens per month, first 30 days free. | Yes, free. MIT license, full server. |
+| Hindsight (Vectorize) | Self-hosting is free. Cloud gives new accounts free credits to start. | None. Pay as you go. | Retain $10.00 per 1M tokens. Recall $0.75 per 1M tokens. Reflect $0.05 per call. Storage $0.25 per 1M tokens per month, first 30 days free. | Yes, free. MIT license, full server. |
 | Mem0 | Free: 10,000 adds and 1,000 retrievals a month for the first 30 days, model calls included. With your own LLM key: 50,000 adds and 10,000 retrievals a month. | Custom, priced by Mem0. Includes graph memory, user profiles, Dream consolidation, SSO and an SLA. | Usage past the free limits, with a monthly cap you set. | Only as on-prem deployment, on the Custom plan. |
 | Zep | Free: $0, 10,000 credits a month, 2 projects. | Flex: $125 a month, 50,000 credits, 5 projects. Flex Plus: $375 a month, 200,000 credits, 10 projects. Enterprise: custom. | Overage $25 per 10,000 credits on Flex. $75 per 40,000 credits on Flex Plus. | Flex is cloud only. Enterprise can run inside your own VPC. |
 | Supermemory | Free: $0, $5 of credits, 1M memory tokens, 1M queries. | Pro: $19 a month, $20 credits. Max: $100 a month, $130 credits. Scale: $399 a month, $600 credits. Enterprise: custom. | Credits are the meter. The page lists no per-unit price. | Scale has a self-hosted option. Enterprise has air-gapped or dedicated managed instances. |
@@ -27,7 +27,7 @@ Mem0's page shows a date of 10 November 2026. Our fact sheet notes that since 26
 ## Where Hindsight is strongest on cost
 
 - **Self-hosting with the full feature set.** The open-source Hindsight server is MIT licensed, with no usage limits and no telemetry, according to its [pricing page](https://vectorize.io/pricing). Its graph, temporal recall, consolidation, reflect and mental models are in that free version. Mem0 keeps graph memory and Dream on its paid Custom plan. Zep's self-hosting is Enterprise only. Supermemory's is on its $399 Scale plan.
-- **Pay per token, start free.** New Cloud accounts get $5 of credit, and stored memories are free for their first 30 days. There is no monthly seat fee.
+- **Pay per token, start free.** New Cloud accounts get free credits to start, and stored memories are free for their first 30 days. There is no monthly seat fee.
 - **Model calls are cheap.** Hindsight Models are billed per million input tokens: hs-embed-1 at $0.005, hs-decide-1-flash at $0.02, and hs-rerank-1 at $0.015, or $0.02 when used with hs-decide-1-flash. Output tokens for these models are free, per the same page.
 
 ## Honest limits
