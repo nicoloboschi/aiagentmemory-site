@@ -79,7 +79,7 @@ Built-in memory stays on one machine and does not search past sessions. Add-ons 
 - **Where it leads.** On the BEAM benchmark at 10 million tokens, Hindsight scores 64.1 against 48.6 for Mem0's platform. Those figures come from [Mem0's own comparison page](https://mem0.ai/compare/mem0-vs-hindsight), so they are vendor-run. The server is MIT-licensed, and the full feature set runs on your own machine.
 - **The limits.** The default server is Hindsight Cloud. A local daemon needs an LLM key for fact extraction. If no key is set, the installer falls back to the Claude Code CLI, which needs no key. Each write calls an LLM, which costs more than a plain log. Recall returns more context than a simple store, so set token limits to keep prompts small.
 
-For a side-by-side of the three Claude Code memory options, see [Built-in memory vs claude-mem vs Hindsight](/articles/claude-code-memory/#built-in-memory-vs-claude-mem-vs-hindsight). For other memory servers that plug into Claude Code over MCP, see [AI memory MCP servers](/articles/ai-memory-mcp-server/).
+For a side-by-side of the three Claude Code memory options, see [Built-in memory vs claude-mem vs Hindsight](/articles/claude-code-memory/#built-in-memory-vs-claude-mem-vs-hindsight). For other memory servers that plug into Claude Code over MCP, see [AI memory MCP servers](/articles/ai-memory-mcp-server/). For the same steps with OpenAI's terminal agent, see [How to install Codex CLI](/articles/codex-cli-install/).
 
 Sources: [Claude Code setup docs](https://code.claude.com/docs/en/setup), read 2026-11-12. [Hindsight Coding Agents docs](https://hindsight.vectorize.io/sdks/integrations/coding-agents), read 2026-11-12. [Hindsight on GitHub](https://github.com/vectorize-io/hindsight).
 

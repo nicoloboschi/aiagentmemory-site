@@ -88,6 +88,7 @@ For a Codex-only setup with a small rule set, the built-in memories are enough. 
 
 - [Codex memory: AGENTS.md, memories and add-ons](/articles/codex-memory/) explains how the memory keys act at runtime.
 - [Claude Code settings](/articles/claude-code-settings/) is the same kind of reference for Claude Code.
+- [How to install Codex CLI](/articles/codex-cli-install/) covers the install commands for macOS, Windows and Linux, and sign-in.
 
 ## Sources
 

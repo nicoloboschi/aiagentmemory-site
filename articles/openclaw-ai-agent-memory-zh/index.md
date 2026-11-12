@@ -104,6 +104,8 @@ Mem0（[ClawHub](https://clawhub.ai/mem0/plugins/openclaw-mem0) 上的 `@mem0/op
 
 对于这种数月历史的情况，[Hindsight](https://github.com/vectorize-io/hindsight) 有最强的已公开数据：在长历史基准 BEAM 上，1M token 时它以 73.9 对 64.1 领先 Mem0，10M token 时以 64.1 对 48.6 领先，数据来自 [Mem0 自己的对比页](https://mem0.ai/compare/mem0-vs-hindsight)（由厂商自己运行）。它也像 dreaming 那样在后台工作：相关事实合并成有证据支持、会被不断完善而不是覆盖的 **observations**。它的插件设置向导（`openclaw plugins install @vectorize-io/hindsight-openclaw`）提供 Hindsight Cloud、你自己的服务器，或嵌入式本地守护进程；后者可以跑在 Ollama 上，让所有内容都留在本机。代价是每次写入都会产生更多 LLM 调用，每次召回返回的上下文也比 Mem0 多。另外，记忆会从你能读写的 Markdown 文件，转移到数据库里。
 
+**OpenClaw 插件的变化（Hindsight v1.2.0，2026 年 11 月 3 日）。** 插件现在给 OpenClaw 提供与 Hermes 插件相同的三个工具：`hindsight_retain`、`hindsight_recall` 和 `hindsight_reflect`，名称和参数一致（[#5965](https://github.com/vectorize-io/hindsight/pull/5965)）。`memoryMode` 设置可以选 `hybrid`（默认：自动召回加工具）、`context`（只自动召回）或 `tools`（只用工具）。新增了七个知识库工具，删除需要设置 `allowKnowledgeDelete: true`（[#6004](https://github.com/vectorize-io/hindsight/pull/6004)）。除非把 `skipOperationalSessions` 设为 `false`，否则 cron、心跳和子 agent 会话不进入记忆（[#5963](https://github.com/vectorize-io/hindsight/pull/5963)）。来源：[Hindsight v1.2.0 发布说明](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0)，2026-11-05 读取。同一版本的重试改动（保存失败后最多重发 5 次，且只保存在内存中）写在 Hermes 插件的说明里；OpenClaw 插件的重试行为不在这些说明中，依赖之前请先确认。
+
 ## OpenClaw 2026.10.10 的变化（2026 年 11 月）
 
 OpenClaw 2026.10.10 于 2026 年 11 月 3 日发布。它的[更新日志](https://github.com/openclaw/openclaw/blob/main/CHANGELOG/2026.10.10.md)中有一大段“Memory and search”。升级后有两处变化可能让记忆表现不同：搜索排序变了，新的对话文本需要更长时间才能被搜到。
