@@ -82,7 +82,7 @@
  &lt;/tr&gt;
  &lt;tr&gt;
  &lt;td&gt;&lt;strong&gt;外部提供方&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;同一时间只能用一个：Honcho、&lt;a href="https://aiagentmemory.org/articles/openviking-agent-memory/"&gt;OpenViking&lt;/a&gt;、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory、&lt;a href="https://aiagentmemory.org/articles/ai-agents-memory-storage-memori-gibsonai/"&gt;Memori&lt;/a&gt;&lt;/td&gt;
+ &lt;td&gt;同一时间只能用一个：Honcho、&lt;a href="https://aiagentmemory.org/articles/openviking-agent-memory/"&gt;OpenViking&lt;/a&gt;、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory、&lt;a href="https://aiagentmemory.org/articles/llm-memory-comparison/#honcho-memos-and-memori"&gt;Memori&lt;/a&gt;&lt;/td&gt;
  &lt;td&gt;内置、Honcho、LanceDB 引擎；Memory Wiki；第三方插件（Mem0、Hindsight）&lt;/td&gt;
  &lt;td&gt;它本身就是提供方：&lt;code&gt;hermes plugins install hindsight&lt;/code&gt; 或 &lt;code&gt;@vectorize-io/hindsight-openclaw&lt;/code&gt;&lt;/td&gt;
  &lt;/tr&gt;

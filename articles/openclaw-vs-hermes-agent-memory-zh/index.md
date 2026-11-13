@@ -30,7 +30,7 @@ Source: https://aiagentmemory.org/articles/openclaw-vs-hermes-agent-memory-zh/ �
 | **整理** | 记忆满了时 agent 必须先整理；后台复查 | dreaming 任务把笔记提升到 `MEMORY.md`；压缩前先 flush | 后台整理为观察和心智模型 |
 | **写入审批** | `memory.write_approval: true` 会暂存写入 | dreaming 的输出进入 `DREAMS.md` 等待审阅 | 未列出 |
 | **安全扫描** | 条目会扫描注入、外泄和不可见 Unicode | 不可信的候选内容不会被提升 | 未列出 |
-| **外部提供方** | 同一时间只能用一个：Honcho、[OpenViking](/articles/openviking-agent-memory/)、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory、[Memori](/articles/ai-agents-memory-storage-memori-gibsonai/) | 内置、Honcho、LanceDB 引擎；Memory Wiki；第三方插件（Mem0、Hindsight） | 它本身就是提供方：`hermes plugins install hindsight` 或 `@vectorize-io/hindsight-openclaw` |
+| **外部提供方** | 同一时间只能用一个：Honcho、[OpenViking](/articles/openviking-agent-memory/)、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory、[Memori](/articles/llm-memory-comparison/#honcho-memos-and-memori) | 内置、Honcho、LanceDB 引擎；Memory Wiki；第三方插件（Mem0、Hindsight） | 它本身就是提供方：`hermes plugins install hindsight` 或 `@vectorize-io/hindsight-openclaw` |
 
 ## Hermes 如何处理记忆
 

@@ -1,21 +1,22 @@
 # Claude Code Release Notes: Memory and Context Changes (2026)
 
-> Claude Code releases 2.1.311 to 2.1.322 (Oct 26 to Nov 10, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
+> Claude Code releases 2.1.311 to 2.1.323 (Oct 26 to Nov 12, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
 
-Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-13 · aiagentmemory.org
 
 
 ## What are the Claude Code release notes for memory?
 
 Claude Code's memory is made of files (CLAUDE.md, MEMORY.md, rules) plus compaction, which shortens a long
 conversation when it nears the context limit. This page tracks the release notes that change how those parts
-behave. It covers the 10 newest GitHub releases, read on 2026-11-11, and skips releases that touch no memory
+behave. It covers the 11 newest GitHub releases, read on 2026-11-13, and skips releases that touch no memory
 or context behavior.
 
 ## Memory-related changes by version
 
 | Version | Date | Change that matters for memory |
 |---|---|---|
+| 2.1.323 | 2026-11-12 | Fixed running `/compact` again, or after `/context`, summarizing away a message Claude had not answered yet. Fixed subagent transcripts and large tool results being saved apart from the session's transcript after entering a worktree. |
 | 2.1.322 | 2026-11-10 | Fast mode on Vertex. No memory change. |
 | 2.1.321 | 2026-11-09 | Fixed new messages not saved, and `claude -p` and SDK sessions hanging, when memory ran out while the transcript was read. `claude -p` on Linux now exits 1 (not 0) when an NFS export loses transcript lines. Fixed auto mode losing a background subagent's report when the conversation was compacted. |
 | 2.1.319 | 2026-11-06 | `/context` no longer sends its full visual grid to Claude on every later turn. Its table keeps the 10 largest rows per list. `/rename` now warns when the name cannot be saved to the transcript. |
@@ -83,7 +84,7 @@ Sources: [anthropics/claude-code releases](https://github.com/anthropics/claude-
 
 ### What changed in Claude Code memory recently?
 
-From v2.1.311 to v2.1.322 (October 26 to November 10, 2026), Claude Code fixed stale MEMORY.md and CLAUDE.md content after compaction, stopped overwriting large CLAUDE.md files after reading only part of them, added idle compaction in VS Code and Claude Desktop, and made /context shorter. The table below lists each change with its version.
+From v2.1.311 to v2.1.323 (October 26 to November 12, 2026), Claude Code fixed stale MEMORY.md and CLAUDE.md content after compaction, stopped overwriting large CLAUDE.md files after reading only part of them, added idle compaction in VS Code and Claude Desktop, and made /context shorter. The table below lists each change with its version.
 
 ### Where do I read the Claude Code release notes?
 

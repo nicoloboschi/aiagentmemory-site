@@ -2,7 +2,7 @@
 
 > How to install OpenAI Codex CLI on macOS, Linux and Windows with the standalone installer, npm or Homebrew, sign in with ChatGPT, update it, and add Hindsight memory. Commands from the official README, read 2026-11-12.
 
-Source: https://aiagentmemory.org/articles/codex-cli-install/ · Updated 2026-11-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/codex-cli-install/ · Updated 2026-11-13 · aiagentmemory.org
 
 
 **To install Codex CLI, run one command for your system.** On macOS or Linux, run `curl -fsSL https://chatgpt.com/codex/install.sh | sh`. On Windows, use the PowerShell line below. Then run `codex` in a project folder and choose **Sign in with ChatGPT**. Codex CLI is OpenAI's coding agent that runs in your terminal, on your own machine.
@@ -67,6 +67,7 @@ Hindsight is open source at [github.com/vectorize-io/hindsight](https://github.c
 - [How to install Gemini CLI](/articles/gemini-cli-install/): Google's terminal agent, with its GEMINI.md memory files.
 - [Codex memory](/articles/codex-memory/): AGENTS.md, memories and how to add Hindsight.
 - [Codex CLI config reference](/articles/codex-cli-config-reference/): the keys in `config.toml`.
+- [Codex skills](/articles/codex-skills/): where skill folders live, how to install one, and how to turn one off.
 
 
 ## FAQ

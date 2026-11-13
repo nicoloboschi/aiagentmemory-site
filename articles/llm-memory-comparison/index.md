@@ -2,7 +2,7 @@
 
 > LLM memory comparison table: Mem0, Zep/Graphiti, Letta, Cognee, LangMem, Supermemory, Hindsight, Honcho: license, storage, retrieval, hosting, benchmarks.
 
-Source: https://aiagentmemory.org/articles/llm-memory-comparison/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/llm-memory-comparison/ · Updated 2026-11-13 · aiagentmemory.org
 
 
 This **LLM memory comparison** puts eleven memory systems for LLM agents side by side: what license they use, how they store memories, how they retrieve them, whether you can self-host, and which benchmarks they publish. Every fact was checked against the project's GitHub README or docs on 8 October 2026. Where a number is self-reported, the table says so.
@@ -115,7 +115,11 @@ Its clearest data-backed lead is on long histories: 73.9 vs Mem0's 64.1 on BEAM 
 
 ### Honcho, MemOS and Memori
 
-**Honcho** (Plastic Labs) models users, agents and groups as peers and reasons about them in the background; see [Honcho LLM memory](/articles/honcho-llm-memory/). **MemOS** (MemTensor) frames memory as an operating system with composable memory cubes and plugins for OpenClaw and Hermes Agent. **Memori** (Memori Labs, formerly under GibsonAI) wraps your LLM client and stores structured state in your own database or its cloud.
+**Honcho** (Plastic Labs) models users, agents and groups as peers and reasons about them in the background; see [Honcho LLM memory](/articles/honcho-llm-memory/). **MemOS** (MemTensor) frames memory as an operating system with composable memory cubes and plugins for OpenClaw and Hermes Agent. **Memori** (Memori Labs, formerly under GibsonAI) wraps your LLM client and stores structured state in your own database or its cloud. Three things to know, from its GitHub README, paper and docs (checked 2026-10-25):
+
+- **Extraction still goes to Memori's servers by default.** In BYODB mode, the Python SDK sends conversations to Memori's hosted augmentation API and writes the results to your database. Your own database keeps the stored memory, not the extraction step. Hindsight runs extraction on your own server, with any of 25+ LLM providers, including local ones.
+- **The LoCoMo numbers are Memori Labs' own runs.** The README and results page say 87.0% at 721 tokens per query. The paper says 81.95% at 1,294 tokens. Mem0's own comparison page lists Mem0's platform at 92.5, against the 62.47 Memori measured for Mem0. Hindsight's vendor-reported LoCoMo score is 92.
+- **The API changed.** Code written for the old `memorisdk` package (`conscious_ingest=True`, `memori.enable()`) does not run on the current `memori` package (3.3.6, May 2026). The OpenClaw and Hermes integrations store memory in Memori Cloud only; running them on your own database is on the roadmap.
 
 ## Which is the best LLM memory?
 
