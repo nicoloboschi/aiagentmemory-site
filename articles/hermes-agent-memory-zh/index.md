@@ -2,7 +2,7 @@
 
 > Hermes Agent 用 MEMORY.md（2,200 字符）和 USER.md（1,375 字符）记住内容，每次会话开始时加载一次，并用 SQLite 搜索历史会话。说明它的 9 个外部记忆插件怎么选，以及 Hermes 为什么会忘事。
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory-zh/ · Updated 2026-11-10 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory-zh/ · Updated 2026-11-13 · aiagentmemory.org
 
 
 **Hermes Agent 的记忆由两个小文件加一份可搜索的历史组成。** 这两个文件都由 agent 自己管理：`MEMORY.md`（2,200 字符）存 agent 的笔记，`USER.md`（1,375 字符）存你的资料。两者在会话开始时加载进系统提示词。较早的对话存在 SQLite 里，需要时再搜索。还可以再加一个外部插件。
@@ -111,7 +111,7 @@ OpenViking 发布过一项针对 Hermes 自带记忆的测试。在其 2026 年 
 
 这些插件如何安装、更新并在每轮对话中接入，以及 v0.23.0 中插件目录里 79 项 Memory 分类，见 [Hermes Agent 插件](/articles/hermes-agent-plugins/)。
 
-每个插件的设置方式相同：
+每个插件的设置方式相同。先把 Hermes 更新到 v0.23.1。根据其发布说明，v0.23.0 及更早的版本读取的插件目录上限是 2 MiB，所以 `hermes plugins install` 可能会悄悄安装一个旧的固定版本，漏掉你上次更新后新增的插件。v0.23.1 把上限提高到 16 MiB（PR #151860）。
 
 ```bash
 hermes plugins install honcho   # or mem0, hindsight, supermemory, openviking

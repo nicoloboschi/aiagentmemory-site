@@ -2,7 +2,7 @@
 
 > Hermes Agent remembers with MEMORY.md (2,200 chars) and USER.md (1,375 chars), loaded once per session, plus SQLite session search. Which of its 9 memory providers to pick, by need, and why Hermes forgets.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-11 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-memory/ · Updated 2026-11-13 · aiagentmemory.org
 
 
 **Hermes Agent memory** is two small, agent-curated files plus a searchable history. `MEMORY.md` (2,200 characters) holds the agent's own notes and `USER.md` (1,375 characters) holds your profile. Both load into the system prompt at session start. Older conversations live in SQLite and are searched on demand. One optional external provider can add more.
@@ -111,7 +111,7 @@ OpenViking has published a test against Hermes's own built-in memory. In its May
 
 How these provider plugins install, update and hook into each turn, plus the 79 Memory-shelf entries in the catalog at v0.23.0, is covered in [Hermes Agent plugins](/articles/hermes-agent-plugins/).
 
-Setup is the same for each:
+Setup is the same for each. Update Hermes to v0.23.1 first. Per its release notes, v0.23.0 and older clients read a plugin catalog capped at 2 MiB, so `hermes plugins install` could quietly install an old pinned copy of a plugin added after your last update. v0.23.1 raises the cap to 16 MiB (PR #151860).
 
 ```bash
 hermes plugins install honcho   # or mem0, hindsight, supermemory, openviking
