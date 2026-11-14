@@ -97,7 +97,7 @@ The `memory` field gives a subagent a folder that survives across sessions. Pick
 
 When memory is on, Read, Write and Edit are turned on for the subagent, and its prompt gets the first 200 lines or 25 KB of its `MEMORY.md`. If auto memory is off in your settings, the field has no effect.
 
-This is a set of plain files that the subagent edits. It stores what the subagent writes down, and nothing else. You can ask it to check its memory before a task and to save what it learned after. For the main session's own memory, see [Claude Code memory](/articles/claude-code-memory/).
+This is a set of plain files that the subagent edits. It stores what the subagent writes down, and nothing else. You can ask it to check its memory before a task and to save what it learned after. For the main session's own memory, see [Claude Code memory](/articles/claude-code-memory/). For the Codex equivalent, see [Codex subagents](/articles/codex-subagents/).
 
 ## Where does Hindsight fit?
 

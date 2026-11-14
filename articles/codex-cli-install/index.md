@@ -69,6 +69,7 @@ Hindsight is open source at [github.com/vectorize-io/hindsight](https://github.c
 - [Codex CLI config reference](/articles/codex-cli-config-reference/): the keys in `config.toml`.
 - [Codex skills](/articles/codex-skills/): where skill folders live, how to install one, and how to turn one off.
 - [Codex MCP](/articles/codex-mcp/): how to add, check and remove MCP servers, and which ones give Codex memory.
+- [Codex subagents](/articles/codex-subagents/): how Codex runs helper agents in parallel, and how to write a custom one.
 
 
 ## FAQ

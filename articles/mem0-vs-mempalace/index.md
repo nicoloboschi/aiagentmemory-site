@@ -2,7 +2,7 @@
 
 > Mem0 vs MemPalace compared (Oct 2026): extracted facts vs verbatim local storage, LLM and API needs, coding agent hooks, benchmarks, and which one to choose.
 
-Source: https://aiagentmemory.org/articles/mem0-vs-mempalace/ · Updated 2026-10-30 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-vs-mempalace/ · Updated 2026-11-14 · aiagentmemory.org
 
 
 **Mem0 vs MemPalace** is a choice between keeping facts and keeping everything. **Mem0** sends each conversation to an LLM, pulls out short facts like "prefers Go," and returns the matching ones on search. **MemPalace** saves conversations and files word for word on your machine and finds them later with local search, with no LLM and no API key.
@@ -15,7 +15,7 @@ Both are open source and among the most-starred memory projects on GitHub. They 
 
 **[Mem0](https://github.com/mem0ai/mem0)** runs as a Python or TypeScript library (`mem0ai` 2.2.1 on PyPI), a self-hosted Docker server, or the hosted Mem0 Platform. It has about 67,000 GitHub stars. See [what Mem0 is](/articles/what-is-mem0-ai/).
 
-**[MemPalace](https://github.com/MemPalace/mempalace)** is a Python package and CLI (`mempalace` 3.10.0, Python 3.9+) launched in April 2026 by Milla Jovovich and Ben Sigman. It has about 59,500 stars. Our [MemPalace guide](/articles/mempalace-ai-memory-system/) covers its wings, rooms and drawers and the story behind it.
+**[MemPalace](https://github.com/MemPalace/mempalace)** is a Python package and CLI (`mempalace` 3.10.0, Python 3.9+) launched in April 2026 by Milla Jovovich and Ben Sigman. It has about 59,500 stars. The palace structure of wings, rooms and drawers is explained below.
 
 ## Mem0 vs MemPalace at a glance
 
@@ -89,6 +89,11 @@ Mem0 also targets coding agents, but through different means: installable agent 
 | Other | Not reported | ConvoMem 92.9% avg recall; MemBench 80.3% R@5 | PersonaMem 32K 86.6; LifeBench EN 71.5 |
 
 These two columns measure different things. **Recall@5** asks whether the right session is among the top five search results. **Answer accuracy** asks whether a model, given the retrieved memory, produced the correct answer as graded by an LLM judge. Retrieval recall is the easier bar. MemPalace's README says it "deliberately" does not include a side-by-side comparison against Mem0, Zep, Hindsight and others for this reason.
+
+Two more facts about MemPalace's numbers, both checked on 2026-11-14:
+
+- **The headline is not a 100% score.** The README says it does not headline 100%, because "the last 0.6% was reached by inspecting specific wrong answers." Its held-out figure, 98.4%, is the one it calls the honest generalisable number.
+- **The palace features scored lower.** A user's reproduction on an M2 Ultra Mac (GitHub issue #39, closed 2026-04-07) got the raw mode's 96.6% recall@5 again. Room-based retrieval scored 89.4% and AAAK mode 84.2% on the same data. The top number came from plain ChromaDB search over verbatim text, not from the palace structure.
 
 Mem0's numbers come from its [README](https://github.com/mem0ai/mem0) and measure its managed Platform; the README says open-source users should expect "directionally similar gains but not identical numbers." MemPalace's come from its [README](https://github.com/MemPalace/mempalace). Hindsight's come from its [benchmark site](https://benchmarks.hindsight.vectorize.io/), and Mem0's [Hindsight comparison](https://mem0.ai/compare/mem0-vs-hindsight) lists the same LongMemEval, LoCoMo and BEAM scores. All three are self-reported; Hindsight's README says research collaborators at Virginia Tech and The Washington Post reproduced its results. [LLM memory evaluation](/articles/llm-memory-evaluation/) explains how these benchmarks work and where they mislead.
 
