@@ -1,8 +1,8 @@
-# OpenViking: ByteDance's Context Database for Agent Memory
+# OpenViking (2026): What It Is, Setup and Memory
 
-> OpenViking explained (Oct 2026): the viking:// filesystem, L0/L1/L2 layers, session memory extraction, Hermes and Claude Code plugins, benchmarks and how it compares to Hindsight.
+> OpenViking is ByteDance's open-source context database: a viking:// filesystem for agent memory. Setup with Hermes, the L0/L1/L2 layers, benchmarks, and how it compares to Hindsight.
 
-Source: https://aiagentmemory.org/articles/openviking-agent-memory/ · Updated 2026-10-24 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openviking-agent-memory/ · Updated 2026-11-14 · aiagentmemory.org
 
 
 **OpenViking** is an open-source **context database for AI agents** from the Viking team at ByteDance's Volcengine. It keeps everything an agent knows (documents, long-term memories and skills) in one virtual filesystem under `viking://`, writes a short summary for every directory, and lets agents read context with file commands like `ls`, `tree`, `find` and `grep`. Memories come from sessions: when a chat is committed, OpenViking extracts them in the background as Markdown files you can open and edit.

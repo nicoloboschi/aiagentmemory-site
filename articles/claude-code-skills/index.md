@@ -54,7 +54,7 @@ Every field is optional, but `description` is the one that matters, because Clau
 | `disable-model-invocation` | `true` means only you can load it, with `/name`. Default `false`. |
 | `user-invocable` | `false` hides it from the `/` menu, so only Claude loads it. |
 | `allowed-tools` | Tools Claude can use without asking while the skill runs. |
-| `context` | `fork` runs the skill in a separate subagent. |
+| `context` | `fork` runs the skill in a separate subagent. For writing your own subagent files, see [Claude Code subagents](/articles/claude-code-subagents/). |
 | `paths` | Glob patterns that limit when Claude loads the skill. |
 
 ## What are the limits?

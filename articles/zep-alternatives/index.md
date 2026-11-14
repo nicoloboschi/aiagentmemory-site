@@ -17,7 +17,7 @@ Zep's homepage describes it as a "unified context layer for enterprise data" and
 
 Three changes drive most searches for alternatives:
 
-1. **Community Edition is gone.** In an April 2025 post, Zep said "we've decided to stop maintaining and releasing Zep Community Edition." The [getzep/zep README](https://github.com/getzep/zep) now says it is "not Zep's product" and holds examples, integrations and an unsupported `legacy/` folder. Old guides to [running Zep with Docker](/articles/zep-memory-docker/) describe that deprecated edition.
+1. **Community Edition is gone.** In an April 2025 post, Zep said "we've decided to stop maintaining and releasing Zep Community Edition." The [getzep/zep README](https://github.com/getzep/zep) now says it is "not Zep's product" and holds examples, integrations and an unsupported `legacy/` folder. Old guides to [running Zep with Docker](/articles/what-is-zep-memory/#can-you-self-host-zep) describe that deprecated edition.
 2. **Self-hosting means Enterprise.** Zep's [pricing page](https://www.getzep.com/pricing) lists "Bring Your Own Cloud" (deployment in your VPC) as Enterprise only.
 3. **Pricing is credit-based.** Free gives 10,000 credits a month. Flex costs $125/month for 50,000 credits; Flex Plus is $375/month for 200,000. Each data object you send costs 1 credit per 350 bytes. Retrieval, storage and users are unmetered, so cost tracks how much you ingest.
 

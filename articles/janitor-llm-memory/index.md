@@ -1,6 +1,6 @@
 # Janitor AI Memory (2026): JLLM's 9K Context, Chat Memory and Fixes
 
-> How Janitor AI memory works: JLLM's ~9K token context, permanent vs temporary tokens, the Chat Memory box, the August 2026 memory changes, and how to make bots remember.
+> Janitor AI memory is a fixed window of about 8K to 9K tokens on free JLLM, and the oldest messages drop first. Covers permanent vs temporary tokens, Chat Memory and the August 2026 changes.
 
 Source: https://aiagentmemory.org/articles/janitor-llm-memory/ · Updated 2026-11-11 · aiagentmemory.org
 

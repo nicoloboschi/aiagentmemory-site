@@ -2,7 +2,7 @@
 
 > What Zep memory is in 2026: the Zep Cloud temporal context graph, open-source Graphiti, how it stores and retrieves memory, outside test results, pricing, self-hosting, integrations, and the October-November 2026 changelog.
 
-Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-11-08 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-11-14 · aiagentmemory.org
 
 
 **Zep memory** is Zep Cloud, a managed service that stores what an agent learns from users and data in a **temporal context graph**, then returns a prompt-ready block of relevant facts. Its open-source core is **Graphiti**, a framework for knowledge graphs that track when facts change. The old self-hosted Zep Community Edition is deprecated.
@@ -137,8 +137,10 @@ Prices are as listed on getzep.com/pricing in October 2026. The page also mentio
 
 Not the current product, unless you're on Enterprise. Your options:
 
-- **Zep Community Edition** is deprecated. In April 2025 Zep [announced](https://www.getzep.com/blog/announcing-a-new-direction-for-zeps-open-source-strategy/) it would stop maintaining and releasing it. The code is still in the `legacy/` folder of [getzep/zep](https://github.com/getzep/zep), unsupported. Older Docker guides, including [running Zep with Docker](/articles/zep-memory-docker/), refer to this edition.
+- **Zep Community Edition** is deprecated. In April 2025 Zep [announced](https://www.getzep.com/blog/announcing-a-new-direction-for-zeps-open-source-strategy/) it would stop maintaining and releasing it. The code is still in the `legacy/` folder of [getzep/zep](https://github.com/getzep/zep), unsupported. Older Docker guides, including running Zep with Docker, refer to this edition.
 - **Graphiti** is the supported open-source path. Install `graphiti-core`, run Neo4j or FalkorDB (the repo has a Docker Compose setup), and supply an LLM key. Graphiti defaults to OpenAI and works best with models that support structured output.
+- **Docker Compose, from the Graphiti README (read 2026-11-14).** The repo ships Compose files for Neo4j, and a FalkorDB one started with `docker compose --profile falkordb up`. Its MCP server can run in Docker with Neo4j. The examples use default database credentials, so change them before you expose a port.
+- **Local models.** Graphiti can use local servers (Ollama, vLLM, llama.cpp, LM Studio) through their OpenAI-compatible endpoints. The README warns that Graphiti "works best with LLM services that support Structured Output", so a small local model may fail to produce valid entity and edge JSON. Test extraction before you commit.
 - **BYOC** on the Enterprise plan deploys Zep inside your own cloud.
 - **Another open-source memory server.** If you want a whole service rather than an engine, [Hindsight](https://github.com/vectorize-io/hindsight) (MIT) runs in one Docker container with embedded PostgreSQL, with graph and time-range recall, consolidation and `reflect` all in the open-source release. It doesn't keep Zep-style validity windows per fact; it refines consolidated observations instead.
 
