@@ -1,8 +1,8 @@
 # Claude Code Release Notes: Memory and Context Changes (2026)
 
-> Claude Code releases 2.1.311 to 2.1.323 (Oct 26 to Nov 12, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
+> Claude Code releases 2.1.311 to 2.1.325 (Oct 26 to Nov 13, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
 
-Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-13 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-14 · aiagentmemory.org
 
 
 ## What are the Claude Code release notes for memory?
@@ -16,6 +16,7 @@ or context behavior.
 
 | Version | Date | Change that matters for memory |
 |---|---|---|
+| 2.1.325 | 2026-11-13 | Fixed recent turns sometimes going missing from a resumed session after Claude Code stopped without a clean exit. Fixed long sessions on many third-party gateways and Foundry failing with a context length error every turn instead of compacting. `CLAUDE_CODE_MAX_CONTEXT_TOKENS` now also sets the window for model IDs that start with `claude-` but are not recognized. |
 | 2.1.323 | 2026-11-12 | Fixed running `/compact` again, or after `/context`, summarizing away a message Claude had not answered yet. Fixed subagent transcripts and large tool results being saved apart from the session's transcript after entering a worktree. |
 | 2.1.322 | 2026-11-10 | Fast mode on Vertex. No memory change. |
 | 2.1.321 | 2026-11-09 | Fixed new messages not saved, and `claude -p` and SDK sessions hanging, when memory ran out while the transcript was read. `claude -p` on Linux now exits 1 (not 0) when an NFS export loses transcript lines. Fixed auto mode losing a background subagent's report when the conversation was compacted. |
@@ -84,7 +85,7 @@ Sources: [anthropics/claude-code releases](https://github.com/anthropics/claude-
 
 ### What changed in Claude Code memory recently?
 
-From v2.1.311 to v2.1.323 (October 26 to November 12, 2026), Claude Code fixed stale MEMORY.md and CLAUDE.md content after compaction, stopped overwriting large CLAUDE.md files after reading only part of them, added idle compaction in VS Code and Claude Desktop, and made /context shorter. The table below lists each change with its version.
+From v2.1.311 to v2.1.325 (October 26 to November 13, 2026), Claude Code fixed stale MEMORY.md and CLAUDE.md content after compaction, stopped overwriting large CLAUDE.md files after reading only part of them, added idle compaction in VS Code and Claude Desktop, and made /context shorter. The table below lists each change with its version.
 
 ### Where do I read the Claude Code release notes?
 

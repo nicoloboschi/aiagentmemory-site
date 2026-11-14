@@ -107,7 +107,7 @@ An MCP server gives Claude memory only if it saves facts and returns them later.
 
   On the numbers, Hindsight reports 64.1 on BEAM 10M against Mem0's 48.6. Mem0's own comparison page gives both figures, so this is Mem0's data, not an independent test. Hindsight's limits matter too: it returns more context per retrieval than Mem0 by default, and each save calls an LLM. Set `max_tokens` lower if the context is too big.
 
-Claude only calls memory tools when it decides to. Put a line in CLAUDE.md such as "Search memory before you answer questions about past decisions", or it may never call them. For the full memory picture, see [Claude Code memory](/articles/claude-code-memory/) and [AI memory MCP servers](/articles/ai-memory-mcp-server/). To install Claude Code first, see [How to install Claude Code](/articles/install-claude-code/).
+Claude only calls memory tools when it decides to. Put a line in CLAUDE.md such as "Search memory before you answer questions about past decisions", or it may never call them. For the full memory picture, see [Claude Code memory](/articles/claude-code-memory/) and [AI memory MCP servers](/articles/ai-memory-mcp-server/). To install Claude Code first, see [How to install Claude Code](/articles/install-claude-code/). MCP servers can also arrive bundled in a plugin; see [Claude Code plugins](/articles/claude-code-plugins/).
 
 ## Sources
 

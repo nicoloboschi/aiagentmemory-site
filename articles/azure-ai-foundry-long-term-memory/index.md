@@ -1,6 +1,6 @@
 # Azure AI Foundry Memory (2026): Pricing, Quotas and Python Code
 
-> How long-term memory works in Azure AI Foundry Agent Service (Microsoft Foundry): memory stores, memory types, scope, TTL, quotas, regions, pricing and Python code.
+> Is Azure AI Foundry memory free? It is in public preview (Oct 2026), billed through the chat and embedding models it uses. Memory store limits, scopes, TTL, regions and Python code.
 
 Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-10-30 · aiagentmemory.org
 

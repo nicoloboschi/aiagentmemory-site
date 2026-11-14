@@ -1,8 +1,8 @@
-# Hermes Agent Guide: Install, Setup, Memory and Plugins
+# Hermes Agent Install Guide (2026): Setup, Memory, Plugins
 
-> How to install Hermes Agent, run its first session, pick a model, connect a messaging gateway, and how its built-in memory and the Hindsight plugin work. Sourced from the official docs.
+> Install Hermes Agent with one curl command on Linux, macOS or WSL2, run hermes setup, then set up its built-in memory and Hindsight plugin. Sourced from the official docs, checked 2026-11-10.
 
-Source: https://aiagentmemory.org/articles/hermes-agent/ · Updated 2026-11-10 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent/ · Updated 2026-11-14 · aiagentmemory.org
 
 
 **Hermes Agent** is an open-source AI agent from Nous Research that runs in your terminal and in chat apps such as Telegram, Discord and Slack. You can switch its model with one command, and it saves skills and notes from past work. Its built-in memory is two small text files plus a searchable log of past sessions. For a larger memory layer, you can add an external provider such as [Hindsight](https://github.com/vectorize-io/hindsight).

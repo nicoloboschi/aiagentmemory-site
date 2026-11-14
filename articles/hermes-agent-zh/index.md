@@ -1,8 +1,8 @@
-# Hermes Agent 指南：安装、设置、记忆与插件
+# Hermes Agent 安装指南（2026）：设置、记忆与插件
 
-> 如何安装 Hermes Agent、完成第一次会话、选择模型、连接消息网关，以及它的内置记忆和 Hindsight 插件如何工作。内容来自官方文档。
+> 用一条 curl 命令在 Linux、macOS 或 WSL2 上安装 Hermes Agent，运行 hermes setup，然后设置它的内置记忆和 Hindsight 插件。内容来自官方文档，2026-11-10 核对。
 
-Source: https://aiagentmemory.org/articles/hermes-agent-zh/ · Updated 2026-11-10 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-zh/ · Updated 2026-11-14 · aiagentmemory.org
 
 
 **Hermes Agent** 是 Nous Research 开发的开源 AI Agent。它在终端里运行，也能接入 Telegram、Discord、Slack 等聊天应用。你可以用一条命令切换模型，它还会把过去工作中的技能和笔记保存下来。它的内置记忆是两个很小的文本文件，加上一份可以搜索的历史会话记录。如果需要更大的记忆层，可以再接入外部提供商，比如 [Hindsight](https://github.com/vectorize-io/hindsight)。

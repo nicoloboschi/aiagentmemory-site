@@ -2,7 +2,7 @@
 
 > What AI agent memory is, the four memory types (working, episodic, semantic, procedural), how agents store and retrieve memories, and the main tools in 2026.
 
-Source: https://aiagentmemory.org/articles/ai-agent-memory-explained/ · Updated 2026-11-09 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-memory-explained/ · Updated 2026-11-14 · aiagentmemory.org
 
 
 **AI agent memory** is the part of an agent that saves information outside the language model and brings the right pieces back into the prompt later. The model itself forgets everything between calls. Memory is what lets an agent remember a user's preferences, recall what happened last week, and stop repeating the same mistakes.
@@ -71,6 +71,21 @@ These categories overlap in practice. One stored item can be both an episode and
 ## How agent memory systems store information
 
 Every memory system answers three questions on the write path: **what to keep, when to write it, and in what shape**.
+
+### Six families of memory design
+
+Most memory approaches fall into one of six families. Real systems often mix them.
+
+| Family | Where memory lives | How the model reads it | Example | Main limit |
+|---|---|---|---|---|
+| In-weights (parametric) | Model parameters | Implicitly, during generation | Pretraining, fine-tuning | Costly to update, can't cite or delete |
+| In-context | The prompt | Attention over tokens | Long-context models, chat history | Cost and accuracy degrade as context grows |
+| External retrieval | Vector / keyword index | Search, then insert into prompt | RAG, Mem0 | Recall quality depends on the query |
+| OS-style tiered | Main context plus external tiers | The LLM pages data in and out with tools | [MemGPT](https://arxiv.org/abs/2310.08560) / Letta | More LLM calls, model must manage itself |
+| Graph and temporal | Entities and relations with validity times | Graph search plus text search | Graphiti / Zep, Hindsight | Extraction cost and errors |
+| Self-organizing | Linked notes the LLM structures | Search plus link traversal | [A-MEM](https://arxiv.org/abs/2502.12110) | Young, few production deployments |
+
+Graph and temporal memory answers "what was true in March?", which flat vector stores can't. [Hindsight](https://github.com/vectorize-io/hindsight) combines graph links with vector, keyword and time search. Its BEAM 10M score of 64.1 against Mem0's 48.6 comes from [Mem0's own comparison page](https://mem0.ai/compare/mem0-vs-hindsight), so it is a vendor-run number.
 
 ### What to keep: raw logs vs extracted memories
 
