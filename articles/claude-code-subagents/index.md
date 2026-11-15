@@ -13,6 +13,8 @@ Use one when a side task would fill your main chat with output you will not need
 
 A subagent is not a skill. A [skill](/articles/claude-code-skills/) adds instructions to the main conversation. A [plugin](/articles/claude-code-plugins/) can ship subagents, along with skills and hooks, in one install.
 
+To run Claude Code's agent loop from your own Python or TypeScript code, use the [Claude Agent SDK](/articles/claude-agent-sdk/) instead.
+
 ## Which subagents come built in?
 
 Claude Code ships with a few subagents that Claude uses on its own. You do not have to create them.

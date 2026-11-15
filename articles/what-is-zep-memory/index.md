@@ -186,7 +186,7 @@ For comparison, [Hindsight](https://github.com/vectorize-io/hindsight) fixed a n
 
 **n8n.** n8n's built-in Zep memory node and Zep vector store nodes are deprecated from n8n 1.108.0. New workflows can call the Zep REST API with the HTTP Request node. See [n8n AI Agent memory options](/articles/best-memory-for-ai-agent-n8n/) for the supported nodes.
 
-**Dify.** Zep is one of the memory plugins listed on the Dify Marketplace, alongside Mem0, Cognee and others. The [Dify LLM memory guide](/articles/dify-llm-memory/) covers when a plugin beats Dify's own per-conversation memory.
+**Dify.** Zep is one of the memory plugins listed on the Dify Marketplace, alongside Mem0, Cognee and others. Dify's own memory is per conversation, so a plugin is the route to memory across chats.
 
 **MCP.** Zep offers a Context MCP Server so off-the-shelf clients can use the same memory, with sign-in through your identity provider. Graphiti has its own MCP server for self-hosted graphs.
 

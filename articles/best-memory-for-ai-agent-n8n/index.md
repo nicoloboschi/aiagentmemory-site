@@ -2,7 +2,7 @@
 
 > The memory options for the n8n AI Agent node: Simple Memory, session IDs, Postgres, Redis, MongoDB and new Databricks Lakebase chat memory, deprecated Zep, long-term memory, clearing.
 
-Source: https://aiagentmemory.org/articles/best-memory-for-ai-agent-n8n/ · Updated 2026-10-21 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/best-memory-for-ai-agent-n8n/ · Updated 2026-11-15 · aiagentmemory.org
 
 
 **The best memory for an n8n AI Agent** depends on where the workflow runs. Simple Memory (once called Window Buffer Memory) is fine for testing. For production, use Postgres Chat Memory or Redis Chat Memory, which survive restarts and queue mode. None of these remember facts across conversations, so long-term memory needs an external system.
@@ -83,7 +83,7 @@ With Define below, use a stable per-user value, for example `{{ $json.message.ch
 
 Sharing history between nodes takes care. The docs warn that several memory nodes of the same type use the same memory instance by default. In recent node versions, n8n's editor shows a different hint: with Connected Chat Trigger Node, the session is scoped to that one memory node, and to share it you switch to Define below and use the same key in each node. If two agents must read the same history, set the key explicitly in both.
 
-Langflow, the other common low-code builder, has the same trap in a different form: its default session ID is the flow ID, so every user of a flow shares one history until you pass a per-user ID. The [Langflow memory chatbot guide](/articles/memory-chatbot-langflow/) covers that and the gateway header Langflow 1.12 added for it. In Dify, memory follows the `conversation_id` your client sends back, and single-turn Workflow apps keep none; agent sessions in Dify 1.18 also can't survive a rollback to an older version ([Dify LLM memory](/articles/dify-llm-memory/#what-dify-1180-changed-for-agent-memory)).
+Langflow, the other common low-code builder, has the same trap in a different form: its default session ID is the flow ID, so every user of a flow shares one history until you pass a per-user ID. The [Langflow memory chatbot guide](/articles/memory-chatbot-langflow/) covers that and the gateway header Langflow 1.12 added for it. Dify works the same way in one respect: memory follows the `conversation_id` your client sends back. Its LLM node loads up to a window of past turns (at most 500), and Dify trims the oldest turns to fit the model's context ([Dify LLM node docs](https://docs.dify.ai/en/cloud/use-dify/nodes/llm); window and trim logic read in Dify's `TokenBufferMemory` code, 2026-11-03). Conversation variables hold structured state across the turns of one conversation. Single-turn Workflow apps keep no history. Dify 1.17.1 fixed a bug where Chatflow Agent V2 "forgot everything between turns" (PR #41871), and Dify 1.18.0 changed agent session snapshots so that runtimes older than 1.18.0 cannot read them (#43833, per the [Dify 1.18.0 release](https://github.com/langgenius/dify/releases/tag/1.18.0)).
 
 ## How to clear n8n AI Agent memory
 
