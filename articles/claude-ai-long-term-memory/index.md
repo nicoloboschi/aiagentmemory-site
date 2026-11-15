@@ -1,6 +1,6 @@
 # Claude AI Long-Term Memory: How It Works and Settings
 
-> Does Claude have long-term memory? How Claude's memory and chat search work, plans, how to turn memory on, import from ChatGPT, context window sizes, and the API.
+> Yes, Claude remembers in two ways: Memory keeps topics you can edit, and chat search looks up past chats. Plans, settings, ChatGPT import and the API.
 
 Source: https://aiagentmemory.org/articles/claude-ai-long-term-memory/ · Updated 2026-11-01 · aiagentmemory.org
 

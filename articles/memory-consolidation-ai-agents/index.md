@@ -59,7 +59,7 @@ Reflections can cite other reflections, so the store becomes a tree: raw observa
 
 ### Hierarchical summaries
 
-**MemoryBank** ([Zhong et al., 2023](https://arxiv.org/abs/2305.10250)) condenses each day's dialogue into a daily event summary, then merges those into a global summary of the user's history and personality. **RAPTOR** ([Sarthi et al., ICLR 2024](https://arxiv.org/abs/2401.18059)) does the same for documents: it clusters chunks, summarizes each cluster, and repeats, building a tree that can be searched at any level. More on tree and tier structures in [hierarchical memory for LLMs](/articles/llm-hierarchical-memory/).
+**MemoryBank** ([Zhong et al., 2023](https://arxiv.org/abs/2305.10250)) condenses each day's dialogue into a daily event summary, then merges those into a global summary of the user's history and personality. **RAPTOR** ([Sarthi et al., ICLR 2024](https://arxiv.org/abs/2401.18059)) does the same for documents: it clusters chunks, summarizes each cluster, and repeats, building a tree that can be searched at any level. More on tree and tier structures in [MemoryOS explained](/articles/memory-os-ai-agent/).
 
 ### Extract and reconcile
 

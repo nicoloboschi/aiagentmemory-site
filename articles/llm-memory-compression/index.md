@@ -138,7 +138,7 @@ The trade-offs are covered in [embedding models for RAG](/articles/vector-databa
 6. **Always keep the raw data.** Every method here is lossy. Compression should change what the model sees, not what you keep.
 7. **Measure.** Compare answers with and without compression on 20-50 real questions before you ship.
 
-Compression is one way to stretch a fixed window. Another is to split memory into tiers, covered in [hierarchical memory for LLMs](/articles/llm-hierarchical-memory/), and a broader list of fixes is in [context window limitations and solutions](/articles/context-window-limitations-solutions/).
+Compression is one way to stretch a fixed window. Another is to split memory into tiers, covered in [MemoryOS explained](/articles/memory-os-ai-agent/), and a broader list of fixes is in [context window limitations and solutions](/articles/context-window-limitations-solutions/).
 
 
 ## FAQ

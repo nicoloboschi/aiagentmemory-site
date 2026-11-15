@@ -2,7 +2,7 @@
 
 > MemoryOS (EMNLP 2025) explained: three memory tiers, heat-based updates, LoCoMo results and the GitHub repo, plus how MemGPT/Letta and MemOS use the OS idea.
 
-Source: https://aiagentmemory.org/articles/memory-os-ai-agent/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/memory-os-ai-agent/ · Updated 2026-11-15 · aiagentmemory.org
 
 
 **MemoryOS** is a memory system for AI agents that borrows ideas from how operating systems manage memory. It keeps conversation data in three tiers (short-term, mid-term and long-term persona memory) and moves it between them with fixed rules. The paper, "Memory OS of AI Agent," appeared at EMNLP 2025 and reports a 49.11% average F1 gain on LoCoMo.
@@ -13,7 +13,7 @@ This page explains the MemoryOS paper and its GitHub repo, then places it next t
 
 **A memory operating system for AI agents is a layer that manages what an LLM remembers the way an OS manages RAM and disk: it stores information in tiers, decides what to keep close and what to move out, and loads the right pieces into the limited context window for each call.** The name points to a design idea, not a single product.
 
-The idea started with [MemGPT](https://arxiv.org/abs/2310.08560) in 2023, which framed the context window as main memory and external storage as disk. Several systems now use the label. They share the tiered structure but differ in who decides what moves where: the LLM itself, fixed rules, or a scheduler. For the general pattern, see [hierarchical memory in LLMs](/articles/llm-hierarchical-memory/).
+The idea started with [MemGPT](https://arxiv.org/abs/2310.08560) in 2023, which framed the context window as main memory and external storage as disk. Several systems now use the label. They share the tiered structure but differ in who decides what moves where: the LLM itself, fixed rules, or a scheduler. For the general pattern, see [tiers versus summary trees](#tiers-versus-summary-trees) below.
 
 ## The Memory OS of AI Agent paper (EMNLP 2025)
 
@@ -114,6 +114,12 @@ print(memo.get_response(query="What do you remember about my job?"))
 ```
 
 Install from GitHub (the `memoryos-pypi` folder) to get the latest code. The `memoryos-pro` package on PyPI is at version 0.1.0, lacks the newer embedding options, and depends on `faiss-gpu`.
+
+## Tiers versus summary trees
+
+Tiers move data between levels. Another design stacks summaries on top of raw records, and RAPTOR is the best-known example. [RAPTOR (Sarthi et al., ICLR 2024)](https://arxiv.org/abs/2401.18059) clusters document chunks, summarizes each cluster with an LLM, and repeats until a tree forms. Its Querying section says "The collapsed tree approach consistently performs better": searching every level at once beat walking the tree from the top. The abstract reports that RAPTOR can improve the best QuALITY result by 20% in absolute accuracy.
+
+Walking down a tree can miss details. If the query goes to the wrong branch, the right chunk is never scored, so searching all levels together lowers that risk. For how summaries get written and merged over time, see [memory consolidation in AI agents](/articles/memory-consolidation-ai-agents/).
 
 ## MemoryOS vs MemGPT/Letta vs MemOS
 

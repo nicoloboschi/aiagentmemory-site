@@ -1,6 +1,6 @@
 # AI Agent Long-Term Memory: How It Works, How to Build It
 
-> How long-term memory works in AI agents, how to build it with tested Python (LangMem, Mem0, Pydantic AI), how to test recall by question type, and what LongMemEval found.
+> Long-term memory keeps an AI agent's facts across sessions. Tested Python with LangMem, Mem0 and Pydantic AI, and LongMemEval results.
 
 Source: https://aiagentmemory.org/articles/ai-agent-long-term-memory/ · Updated 2026-11-11 · aiagentmemory.org
 
