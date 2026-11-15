@@ -135,7 +135,7 @@ The toggle can turn memory off, but not back on, in background sessions or in a 
 - toggles auto memory on or off
 - opens the auto memory folder so you can read, edit or delete what Claude saved
 
-If you say "remember that the API tests need a local Redis," Claude saves it to auto memory. To put it in CLAUDE.md instead, say "add this to CLAUDE.md," or edit the file through `/memory`. To check what loaded at launch, use `/context`.
+If you say "remember that the API tests need a local Redis," Claude saves it to auto memory. To put it in CLAUDE.md instead, say "add this to CLAUDE.md," or edit the file through `/memory`. To check what loaded at launch, use `/context`. For the other commands that affect memory and context, such as `/compact` and `/clear`, see [Claude Code commands](/articles/claude-code-commands/).
 
 ## Add-on memory for Claude Code
 
