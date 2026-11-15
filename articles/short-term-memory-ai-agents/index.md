@@ -2,7 +2,7 @@
 
 > What short-term memory is in AI agents, what it holds, why it runs out, and how to trim, summarize or offload it, with a LangChain checkpointer example.
 
-Source: https://aiagentmemory.org/articles/short-term-memory-ai-agents/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/short-term-memory-ai-agents/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 **Short-term memory in AI agents** is what the agent keeps for the task in front of it: recent messages, tool results, the plan and retrieved facts. It lasts for one conversation or run. LLM calls are stateless, so the agent's code holds this state and rebuilds the prompt from it each step, within the context window.
@@ -89,7 +89,7 @@ A new `thread_id` starts a clean short-term memory. The same `thread_id` resumes
 
 ## Short-term memory in other designs
 
-- **MemGPT / Letta.** [MemGPT](https://arxiv.org/abs/2310.08560) (Packer et al., 2023) treats the context window like an operating system's main memory and pages information in and out of external storage. Letta keeps memory files under `system/` in the prompt every turn and lets the agent read other files on demand.
+- **MemGPT / Letta.** [MemGPT](https://arxiv.org/abs/2310.08560) (Packer et al., 2023) treats the context window like an operating system's main memory and pages information in and out of external storage. Letta keeps memory files under `system/` in the prompt every turn and lets the agent read other files on demand. For how it compares with LangChain's memory, see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/).
 - **Task lists as working memory.** Agents that keep an explicit to-do list in state, like Deep Agents' `write_todos` tool or Manus's `todo.md`, are using short-term memory to stay on track across many steps.
 - **Observation logs.** Mastra's Observational Memory replaces raw history with background-written observations as the thread grows.
 

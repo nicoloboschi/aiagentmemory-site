@@ -1,8 +1,8 @@
 # AI Agent Memory Explained (2026): Types, Storage and Tools
 
-> What AI agent memory is, the four memory types (working, episodic, semantic, procedural), how agents store and retrieve memories, and the main tools in 2026.
+> AI agent memory stores what an agent learns outside the model and brings it back into the prompt. Covers memory types and the main tools in 2026.
 
-Source: https://aiagentmemory.org/articles/ai-agent-memory-explained/ · Updated 2026-11-14 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-memory-explained/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 **AI agent memory** is the part of an agent that saves information outside the language model and brings the right pieces back into the prompt later. The model itself forgets everything between calls. Memory is what lets an agent remember a user's preferences, recall what happened last week, and stop repeating the same mistakes.

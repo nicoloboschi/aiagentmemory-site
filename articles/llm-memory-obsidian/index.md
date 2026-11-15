@@ -1,8 +1,8 @@
-# LLM Memory With Obsidian: Karpathy's LLM Wiki Pattern
+# LLM Memory With Obsidian (2026): Karpathy's LLM Wiki Pattern
 
-> How to use Obsidian as LLM memory, based on Andrej Karpathy's LLM Wiki gist: raw sources, an LLM-maintained wiki and a schema file, plus search and MCP tools.
+> Yes, Obsidian can be LLM memory: an agent keeps a Markdown wiki built from your sources, after Karpathy's LLM Wiki gist (April 2026).
 
-Source: https://aiagentmemory.org/articles/llm-memory-obsidian/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/llm-memory-obsidian/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 **Using Obsidian as LLM memory** means letting an AI agent write and maintain a folder of linked Markdown notes that you browse in Obsidian. The best-known version is **Andrej Karpathy's LLM Wiki**, published as a gist in April 2026. You drop sources into a folder, the agent compiles them into wiki pages, and both of you read the wiki instead of re-searching raw documents.

@@ -2,7 +2,7 @@
 
 > How AI coding agents remember projects: Claude Code CLAUDE.md and auto memory, Codex AGENTS.md and memories, Cursor rules, Copilot Memory, and external memory tools.
 
-Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-11-09 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 **AI coding agent memory** is how tools like Claude Code, Codex, Cursor and GitHub Copilot carry project knowledge from one session to the next. The main mechanism is a plain **instruction file** (CLAUDE.md, AGENTS.md or Cursor rules) loaded into every session. Some agents add **automatic memory** that saves lessons as they work. For more, teams add an external memory server. For Claude Code specifically, see [Claude Code memory](/articles/claude-code-memory/).
@@ -148,7 +148,7 @@ Of the extraction-based servers, Hindsight has the most coding-agent coverage. O
 
 The limit: it returns more context per retrieval than Mem0 by default, so set a lower `max_tokens` to keep each session's prompt small.
 
-Each adds a dependency and, for extraction-based tools, LLM calls per write. Start with instruction files; add a server when the same lesson keeps getting lost across people or machines. The options are compared on [AI memory MCP servers](/articles/ai-memory-mcp-server/).
+Each adds a dependency and, for extraction-based tools, LLM calls per write. Instruction files cost tokens too: Claude Code loads CLAUDE.md at the start of every session. Anthropic's cost page puts the enterprise average at about $13 per developer per active day (code.claude.com/docs/en/costs, read 2026-11-16); see [Claude Code cost](/articles/claude-code-cost/) for what each memory layer adds. Start with instruction files; add a server when the same lesson keeps getting lost across people or machines. The options are compared on [AI memory MCP servers](/articles/ai-memory-mcp-server/).
 
 ## Can a coding agent's memory be poisoned?
 

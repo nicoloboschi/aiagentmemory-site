@@ -2,7 +2,7 @@
 
 > How to build a chatbot with memory in LangGraph: a checkpointer for chat history, a store for long-term user memory, Postgres for production, and example repos.
 
-Source: https://aiagentmemory.org/articles/chatbot-with-memory-langgraph/ · Updated 2026-11-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/chatbot-with-memory-langgraph/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 A **chatbot with memory in LangGraph** uses two features. A **checkpointer** saves each conversation's messages under a `thread_id`, so the bot remembers earlier turns. A **store** saves facts under a user namespace, so the bot remembers the user in new conversations. You compile both into the graph with `builder.compile(checkpointer=..., store=...)`.
@@ -181,7 +181,7 @@ These are the maintained, first-party examples worth starting from, checked Octo
 | [langchain-ai/langchain-academy](https://github.com/langchain-ai/langchain-academy) | LangChain Academy course code; `module-5` has notebooks on the memory store, profile and collection schemas, and a memory agent | Maintained, MIT |
 | langchain-ai/memory-template | Older template that memory-agent was generated from | Archived |
 
-Many third-party "LangChain chatbot with memory" repos use `ConversationBufferMemory` and `ConversationChain`. Both are deprecated and now live in `langchain-classic`; treat those repos as reading material, not a base. For repos outside LangGraph, including self-hosted chat apps with built-in memory and standalone memory libraries, see [chatbot memory on GitHub](/articles/chatbot-memory-github/).
+Many third-party "LangChain chatbot with memory" repos use `ConversationBufferMemory` and `ConversationChain`. Both are deprecated and now live in `langchain-classic`; treat those repos as reading material, not a base. For repos outside LangGraph, including self-hosted chat apps with built-in memory and standalone memory libraries, see [best chatbot for memory](/articles/best-chatbot-for-memory/), which lists open-source options with their licenses.
 
 ## Is ConversationBufferMemory deprecated?
 

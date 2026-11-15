@@ -2,7 +2,7 @@
 
 > How Claude Code memory works: CLAUDE.md locations and load order, @imports, auto memory and how to turn it off, /memory, plus memory MCP servers, claude-mem and Hindsight.
 
-Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 **Claude Code memory** is two built-in systems. **CLAUDE.md files** hold instructions you write, and Claude Code loads them at the start of every session. **Auto memory** holds notes Claude writes for itself in `~/.claude/projects/<project>/memory/`. You manage both with `/memory`. For more than notes, add a memory MCP server or a plugin such as claude-mem or Hindsight.
@@ -32,6 +32,8 @@ New to Claude Code? Install it first with the steps in [How to install Claude Co
 ## CLAUDE.md files: locations and load order
 
 Skills are a separate thing. They hold task instructions, not facts, and load on demand. See [Claude Code skills: where they live, limits and memory](/articles/claude-code-skills/).
+
+Each CLAUDE.md file loads into context at the start of a session, so its tokens count toward every request. For the numbers and how to trim it, see [Claude Code cost: real spend and what memory adds](/articles/claude-code-cost/).
 
 Claude Code reads CLAUDE.md from four scopes. They load from the broadest to the most specific, so project instructions appear in context after user instructions:
 
