@@ -122,7 +122,7 @@ Since the model keeps nothing between calls, any LLM memory system that lasts ha
 
 All four end the same way: text placed in the context window, read through attention, held in the KV cache for one request. The design choices for that outside layer (stores, retrieval, consolidation) are covered in [AI agent memory explained](/articles/ai-agent-memory-explained/#six-families-of-memory-design), along with [what benchmarks say about each choice](/articles/rag-vs-agent-memory/#does-plain-rag-lose-to-memory-systems-on-benchmarks); how agents merge and prune what they've stored is in [memory consolidation](/articles/memory-consolidation-ai-agents/). For the user-facing side, including how ChatGPT and Claude do this, see [how AI memory works](/articles/how-ai-memory-works/).
 
-Research is pushing at the boundary. Some architectures add memory that updates at inference time, such as Google's Titans; see [Google Titans and human-like memory](/articles/google-titans-give-ai-human-like-memory/). Mainstream production models still work as described above.
+Research is pushing at the boundary. Some architectures add memory that updates at inference time, such as Google's Titans; see [LLM parametric memory](/articles/llm-parametric-memory/#latent-memory-inside-the-model-outside-the-weights). Mainstream production models still work as described above.
 
 
 ## FAQ

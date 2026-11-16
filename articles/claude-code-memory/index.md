@@ -13,6 +13,8 @@ Each Claude Code session starts with an empty context window, so anything Claude
 
 **Claude Code memory is the set of files that Claude Code loads into a new session so Claude does not start from zero: CLAUDE.md instruction files that you write and commit, and auto memory notes that Claude writes from your corrections. Both are plain Markdown. Claude reads them as context, not as rules it is forced to obey.**
 
+For the same question about Codex, with its defaults and folders side by side, see [Claude Code vs Codex](/articles/claude-code-vs-codex/).
+
 The docs compare the two like this:
 
 | | CLAUDE.md files | Auto memory |

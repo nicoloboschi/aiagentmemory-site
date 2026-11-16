@@ -182,7 +182,7 @@ For comparison, [Hindsight](https://github.com/vectorize-io/hindsight) fixed a n
 
 **LiveKit (voice).** `zep-livekit` 1.0.0 went out on PyPI on October 14, 2026. Its `ZepUserAgent` saves each turn and gets context back in a single `thread.add_messages(return_context=True)` call, so a voice agent pays one round trip per turn for memory. `ZepGraphAgent` reads from a shared knowledge graph instead. Zep ingests asynchronously, so something the caller just said may not be searchable on the very next turn. How this compares with other options is in [voice agent memory](/articles/voice-agent-memory/).
 
-**LangChain.** `langchain-community` still ships `ZepCloudChatMessageHistory`, but it calls the session-based `memory` API from Zep's v2 SDK. The v3 API organizes conversations as threads instead, so for new LangChain-family projects, Zep's own LangGraph package is the maintained route.
+**LangChain.** `langchain-community` still ships `ZepCloudChatMessageHistory`, but it calls the session-based `memory` API from Zep's v2 SDK. The v3 API organizes conversations as threads instead, so for new LangChain-family projects, Zep's own LangGraph package is the maintained route. For how LangChain's memory compares with Letta, see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/).
 
 **n8n.** n8n's built-in Zep memory node and Zep vector store nodes are deprecated from n8n 1.108.0. New workflows can call the Zep REST API with the HTTP Request node. See [n8n AI Agent memory options](/articles/best-memory-for-ai-agent-n8n/) for the supported nodes.
 

@@ -60,7 +60,9 @@ Between frozen weights and plain text there's a third option: memory kept as hid
 - **The KV cache.** The keys and values computed for the current context are a short-lived latent memory. The [context window](/articles/context-window-of-an-llm/) is its limit.
 - **MemoryLLM.** [MemoryLLM](https://arxiv.org/abs/2402.04624) (Wang et al., 2024) adds "a fixed-size memory pool within the latent space" of a transformer that the model updates with new text. The authors report no sign of performance degradation after nearly a million memory updates.
 - **Memory³.** [Memory³](https://arxiv.org/abs/2407.01178) (Yang et al., 2024) adds "explicit memory," which it describes as the third form of memory after model parameters and context key-values. A 2.4B model trained this way beat larger models and RAG baselines in the authors' tests.
-- **Test-time learning.** Architectures like Google's Titans update a neural memory module while the model runs; see [Google Titans and human-like memory](/articles/google-titans-give-ai-human-like-memory/).
+- **Test-time learning.** Google Research's Titans adds a neural long-term memory module. Its paper is titled "Titans: Learning to Memorize at Test Time" and its abstract says the design can "effectively scale to larger than 2M context window size" ([arXiv 2501.00663](https://arxiv.org/abs/2501.00663), Behrouz, Zhong and Mirrokni).
+
+The follow-up framework, MIRAS, describes memory modules like this by four choices: the memory architecture, the attentional bias objective, the retention gate, and the memory learning algorithm. Its abstract names three models built on it, Moneta, Yaad and Memora. The abstract does not say how the three differ ([arXiv 2504.13173](https://arxiv.org/abs/2504.13173), April 2025).
 
 These are research systems. None of them gives you per-user isolation, deletion or audit trails out of the box, which is why production agents still store memory as text or structured records.
 

@@ -120,7 +120,7 @@ The app's memory isn't available through the Gemini API, which is stateless: eac
 - **Agent Platform Memory Bank**, formerly [Vertex AI Agent Engine Memory Bank](/articles/vertex-ai-agent-engine-memory-bank/), a managed service that extracts and consolidates memories per user with Gemini.
 - **An open-source memory server** if you want to self-host or switch models later. [Hindsight](https://github.com/vectorize-io/hindsight) (MIT) has a Google ADK integration and works with 25+ LLM providers; it adds an LLM call on every write, so it's more than a simple chatbot needs.
 
-People searching "Google long-term memory AI" often mean Google Research's **Titans** architecture, which adds a learned memory module inside the model. That's research, not a product feature; the [Titans explainer](/articles/google-titans-give-ai-human-like-memory/) covers it.
+People searching "Google long-term memory AI" often mean Google Research's **Titans** architecture, which adds a learned memory module inside the model. That's research, not a product feature; the [parametric memory guide](/articles/llm-parametric-memory/) covers it.
 
 ## How Gemini's memory compares with other chatbots
 
