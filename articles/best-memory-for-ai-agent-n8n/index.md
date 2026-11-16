@@ -118,7 +118,7 @@ For Simple Memory, there's no table to clear. Use Chat Memory Manager, switch to
 
 ## Long-term memory for n8n agents
 
-Chat memory nodes replay recent messages. They don't remember that a user said "I'm vegetarian" three weeks and two sessions ago, unless that message still sits in the window. For that, you need [persistent memory across sessions](/articles/persistent-memory-ai/): a system that extracts facts, stores them, and retrieves the relevant ones by meaning.
+Chat memory nodes replay recent messages. They don't remember that a user said "I'm vegetarian" three weeks and two sessions ago, unless that message still sits in the window. For that, you need [persistent memory across sessions](/articles/ai-agent-long-term-memory/): a system that extracts facts, stores them, and retrieves the relevant ones by meaning.
 
 There are four practical routes in n8n:
 

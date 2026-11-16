@@ -111,7 +111,7 @@ More options are compared on [AI memory MCP servers](/articles/ai-memory-mcp-ser
 | **Best for** | Research, reading, personal knowledge | Large document sets | Chat and agent personalization |
 | **Weak spot** | Errors in pages propagate; ingest is slow | No synthesis across sources | Hard to audit by hand |
 
-The wiki pattern shines for one person or a small team building up understanding of a topic. It's a poor fit for remembering thousands of users' preferences, where a memory API is the right tool; see [RAG vs agent memory](/articles/rag-vs-agent-memory/) and [persistent memory in AI](/articles/persistent-memory-ai/).
+The wiki pattern shines for one person or a small team building up understanding of a topic. It's a poor fit for remembering thousands of users' preferences, where a memory API is the right tool; see [RAG vs agent memory](/articles/rag-vs-agent-memory/) and [persistent memory in AI](/articles/ai-agent-long-term-memory/).
 
 Anthropic tested the same pattern at scale in November 2026: a wiki that Claude built over 128 offline "dreaming" sessions on a 420M-token corpus took its answers from 13% to 48% of graded criteria on its own, and search plus wiki reached 61% against 53% for search alone, while on a single-document task the wiki gave no gain and grew larger than the sources. The numbers and the limits are in [Claude dreaming and Managed Agents memory](/articles/claude-dreaming-agent-memory/).
 

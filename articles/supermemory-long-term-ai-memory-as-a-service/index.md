@@ -19,7 +19,7 @@ Supermemory was started by **Dhravya Shah** and raised a seed round in October 2
 
 A memory-as-a-service API takes over the pieces teams otherwise build themselves: a vector database, an embedding pipeline, a chunking strategy, an extraction prompt, and rules for when facts change. Supermemory's README pitches exactly that: "No vector DB config. No embedding pipelines. No chunking strategies."
 
-The tradeoff is the usual one for managed infrastructure. You get speed and less to operate. You give up control over how extraction and ranking work, and your users' data lives with a vendor unless you take the local or Enterprise route. For the broader design space, see [persistent memory for AI](/articles/persistent-memory-ai/).
+The tradeoff is the usual one for managed infrastructure. You get speed and less to operate. You give up control over how extraction and ranking work, and your users' data lives with a vendor unless you take the local or Enterprise route. For the broader design space, see [persistent memory for AI](/articles/ai-agent-long-term-memory/).
 
 ## How Supermemory works
 

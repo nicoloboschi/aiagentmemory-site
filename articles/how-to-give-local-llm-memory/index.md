@@ -24,11 +24,13 @@ If you just want a local chat app that remembers you, these are the options we c
 | App | Built-in memory | How it works | Where it's stored |
 |---|---|---|---|
 | [Open WebUI](https://docs.openwebui.com/features/chat-conversations/memory) | Yes | You add memories in Settings > Personalization > Memory; with native function calling, the model manages them with tools like `add_memory` and `search_memories` | Your Open WebUI database, per user |
-| [AnythingLLM](https://docs.anythingllm.com/features/memories) | Yes, off by default | Workspace memories (20 max) and global memories (5 max); optional automatic extraction from idle chats | Your AnythingLLM instance |
+| [AnythingLLM](https://docs.anythingllm.com/features/memories) | Yes, off by default | Workspace memories (20 max) and global memories (5 max); optional automatic extraction from recent conversations | Your AnythingLLM instance |
 | Jan | Not yet | Homepage lists Memory as "Coming Soon"; assistants give fixed instructions only | n/a; can connect MCP servers |
 | LM Studio | No built-in feature found | Search across chats (0.3.27); MCP host since 0.3.17; community memory plugins on the LM Studio Hub | Depends on the plugin or MCP server |
 
 Two caveats from the docs themselves. Open WebUI warns that memory quality "depends heavily on the model" and that "only very small models struggle with appropriate memory selection." AnythingLLM's automatic extraction needs a chat model that supports tool calling. A 1-3B model may store junk or nothing.
+
+**AnythingLLM's memory, in detail.** Memories are off by default; turn on Enable Personalization to start. Workspaces can hold up to 20 memories each, and global memories are capped at 5. Automatic extraction runs every 3 hours by default: an Observer proposes up to 3 candidate facts per run, and a Reflector checks them against existing memories. Memories go into the system prompt under a `## Things I Remember About You` heading. The docs warn that "Memory content is sent to your LLM provider as part of the system prompt," and say not to store passwords or API keys. If privacy is why you run locally, pair AnythingLLM with a local model. Source: [AnythingLLM memories docs](https://docs.anythingllm.com/features/memories), read 2026-11-16.
 
 **MCP memory servers** work with any app that can host MCP, including Jan and LM Studio. The reference [Knowledge Graph Memory Server](https://github.com/modelcontextprotocol/servers/tree/main/src/memory) stores entities, relations and observations in a local JSONL file you can point anywhere with `MEMORY_FILE_PATH`. Since version 2.0 (October 2026) it needs Node.js 24 or later; [what changed in 2.0](/articles/ai-memory-mcp-server/#what-changed-in-server-memory-10-and-20-october-2026) has the upgrade notes. More options are in [AI memory MCP servers](/articles/ai-memory-mcp-server/).
 
