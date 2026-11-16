@@ -1,8 +1,8 @@
 # Best Open-Source AI Memory Systems (2026): Stars, Licenses
 
-> Open-source AI memory systems compared: GitHub repos, licenses, stars (Oct 2026), languages and what each is good at. Mem0, Hindsight, MemPalace, Graphiti, Cognee.
+> Hindsight is the most complete fully open AI memory server: MIT, graph and reflect included. Mem0, MemPalace, Graphiti and Cognee compared by license and stars.
 
-Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-11-11 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 The leading **open-source AI agent memory systems** on GitHub are Mem0, MemPalace, Hindsight, Graphiti, Cognee, Letta, LangMem, MemOS, Memori, Honcho, Basic Memory and Memobase. Most are Apache-2.0 or MIT, written in Python, and self-hostable with Docker. They differ in storage (vectors, graphs, files), in how much is truly open versus paid, and in what they're built for.

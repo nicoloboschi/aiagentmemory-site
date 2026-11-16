@@ -2,7 +2,7 @@
 
 > LangGraph, CrewAI, OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Letta, LlamaIndex and Pydantic AI compared on memory: sessions, long-term stores, plug-ins.
 
-Source: https://aiagentmemory.org/articles/ai-agent-framework-comparison/ · Updated 2026-11-11 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-framework-comparison/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 An **AI agent framework comparison** that matters in production usually comes down to state: how each framework keeps conversation history, what it offers for long-term memory, and how easily you can plug in an external memory system. In October 2026, **LangGraph** and **Letta** give the most memory control, **CrewAI** and **LlamaIndex** the most built-in automation, and **ADK**, **Microsoft Agent Framework** and the **OpenAI Agents SDK** lean on sessions plus cloud or plug-in memory.
@@ -95,7 +95,13 @@ result = await Runner.run(agent, "My name is Ana.", session=session)
 result = await Runner.run(agent, "What's my name?", session=session)
 ```
 
-Sessions don't extract facts across conversations. For **sandbox agents**, the SDK has a separate [`Memory` capability](https://openai.github.io/openai-agents-python/sandbox/memory/): after a sandbox session closes, a model distills runs into `memories/MEMORY.md` and a short `memory_summary.md` that's injected at the start of the next run. It needs the `Shell` capability to read and `Filesystem` for live updates. See [OpenAI Agents SDK memory](/articles/openai-agents-sdk-memory/) for patterns.
+Sessions don't extract facts across conversations. For **sandbox agents**, the SDK has a separate [`Memory` capability](https://openai.github.io/openai-agents-python/sandbox/memory/): after a sandbox session closes, a model distills runs into `memories/MEMORY.md` and a short `memory_summary.md` that's injected at the start of the next run. It needs the `Shell` capability to read and `Filesystem` for live updates.
+
+Long histories need a cap, or they cost tokens on every turn. Per the sessions docs (read 2026-11-16):
+
+- `SessionSettings(limit=N)`, passed in `RunConfig.session_settings`, loads only the last N items. The default loads all of them.
+- `RunConfig.session_input_callback` rewrites the history before each model call, for example to keep the last 10 items. The SDK still saves only the new turn's items.
+- `OpenAIResponsesCompactionSession` wraps another session and compacts the stored history with the Responses API. Don't wrap `OpenAIConversationsSession` with it.
 
 **Best for:** OpenAI-centric apps that want simple, swappable session storage.
 

@@ -2,7 +2,7 @@
 
 > Is Azure AI Foundry memory free? It is in public preview (Oct 2026), billed through the chat and embedding models it uses. Memory store limits, scopes, TTL, regions and Python code.
 
-Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-10-30 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-11-16 · aiagentmemory.org
 
 
 **Azure AI Foundry long-term memory** is a managed feature of Foundry Agent Service that lets an agent remember users across sessions. You create a **memory store**, attach the **memory search tool** to an agent, and the service extracts facts, preferences and summaries from conversations, merges duplicates, and retrieves the relevant ones in later chats. As of October 2026 it is in **public preview**.
@@ -182,7 +182,7 @@ See the deep dives on [Vertex AI Agent Engine Memory Bank](/articles/vertex-ai-a
 
 If you build with Microsoft Agent Framework rather than prompt agents, Foundry memory is one of its listed context provider integrations, next to Mem0, Redis, Neo4j and Cosmos DB. The [Microsoft Agent Framework memory](/articles/ai-agent-framework-comparison/) page covers that route. If you need memory outside Azure, or self-hosted, open-source systems such as Mem0, Graphiti, Cognee or [Hindsight](https://github.com/vectorize-io/hindsight) run anywhere; the [open-source memory systems comparison](/articles/open-source-memory-systems-compared/) lists them.
 
-Hindsight follows the same extract-and-consolidate design as Foundry memory, without the preview's network limit. It's MIT-licensed with the full server included and runs on PostgreSQL from Docker, pip or Helm, so you can deploy it inside your own virtual network. Like Foundry, it extracts and consolidates memories, but it also keeps the evidence behind each consolidated belief and offers `reflect` for answers that need reasoning. It works with 25+ LLM providers (Azure OpenAI through its LiteLLM gateway option) and has a Microsoft Agent Framework integration. On the long-history BEAM test it scores 73.9 at 1M tokens versus Mem0's 64.1, per [Mem0's own comparison](https://mem0.ai/compare/mem0-vs-hindsight). The cost: you run it yourself (or use usage-based Hindsight Cloud), and each write makes LLM calls, as Foundry's does. See [what Hindsight is](/articles/ai-memory-hindsight/).
+Hindsight follows the same extract-and-consolidate design as Foundry memory, without the preview's network limit. It's MIT-licensed with the full server included and runs on PostgreSQL from Docker, pip or Helm, so you can deploy it inside your own virtual network. Like Foundry, it extracts and consolidates memories, but it also keeps the evidence behind each consolidated belief and offers `reflect` for answers that need reasoning. It works with 25+ LLM providers, any OpenAI-compatible endpoint, and gateways such as LiteLLM (its README, read 2026-11-16), and its README lists a Microsoft Agent Framework integration. On the long-history BEAM test it scores 73.9 at 1M tokens versus Mem0's 64.1, per [Mem0's own comparison](https://mem0.ai/compare/mem0-vs-hindsight). The cost: you run it yourself (or use usage-based Hindsight Cloud), and each write makes LLM calls, as Foundry's does. See [what Hindsight is](/articles/ai-memory-hindsight/).
 
 
 ## FAQ
