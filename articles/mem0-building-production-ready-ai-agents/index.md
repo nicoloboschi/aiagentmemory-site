@@ -1,6 +1,6 @@
-# Mem0 Paper: Building Production-Ready AI Agents (2026)
+# Mem0 Paper (2026): Scalable Long-Term Memory and LoCoMo
 
-> The paper 'Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory' (arXiv 2504.19413) explained: extraction and update pipeline, the Mem0g graph variant, LoCoMo results, latency and tokens, the Zep dispute, and two outside tests (MemoryTax, Memorilla).
+> Mem0 paper (arXiv 2504.19413): Mem0 scored 66.88% and Mem0g 68.44% on LoCoMo, vs 72.90% for full context, with 91% lower p95 latency. Authors' numbers.
 
 Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-11-11 · aiagentmemory.org
 

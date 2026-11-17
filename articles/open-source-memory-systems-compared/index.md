@@ -1,6 +1,6 @@
 # Best Open-Source AI Memory Systems (2026): Stars, Licenses
 
-> Hindsight is the most complete fully open AI memory server: MIT, graph and reflect included. Mem0, MemPalace, Graphiti and Cognee compared by license and stars.
+> Open-source AI memory systems compared by license, GitHub stars and free self-hosting: Hindsight (MIT, full server), Mem0, MemPalace, Graphiti, Cognee.
 
 Source: https://aiagentmemory.org/articles/open-source-memory-systems-compared/ · Updated 2026-11-16 · aiagentmemory.org
 
