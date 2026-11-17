@@ -100,7 +100,7 @@ It uses three lenses:
 - **Functions:** factual memory, experiential memory and working memory.
 - **Dynamics:** the memory lifecycle, in three stages. Formation (summarization, distillation, structured construction, latent and parametric storage), evolution (consolidation, updating, forgetting) and retrieval (timing, query construction, strategy, post-processing).
 
-**Experiential memory** is the category that matters for self-improving agents: memory of how past tasks went, not facts about the world. [ReasoningBank](/articles/reasoningbank-llm-agent-memory-framework/) is one example of that line of work. The survey also lists benchmarks and open-source frameworks and points to future work on memory automation, reinforcement learning, multimodal and multi-agent memory, and trust. Its paper list lives at [Agent-Memory-Paper-List](https://github.com/Shichun-Liu/Agent-Memory-Paper-List).
+**Experiential memory** is the category that matters for self-improving agents: memory of how past tasks went, not facts about the world. [ReasoningBank](https://arxiv.org/abs/2509.25140) is one example of that line of work. The survey also lists benchmarks and open-source frameworks and points to future work on memory automation, reinforcement learning, multimodal and multi-agent memory, and trust. Its paper list lives at [Agent-Memory-Paper-List](https://github.com/Shichun-Liu/Agent-Memory-Paper-List).
 
 ## Which LLM memory survey should you read?
 

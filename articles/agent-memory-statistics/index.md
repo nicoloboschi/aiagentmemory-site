@@ -1,13 +1,68 @@
 # AI Agent Memory Statistics (October 2026)
 
-> AI agent memory statistics collected 2026-10-20: GitHub stars, forks and licenses for 23 projects, PyPI and npm downloads, and headline benchmark scores with sources.
+> AI agent memory statistics: GitHub stars, forks and licenses for 23 projects, PyPI and npm downloads, and headline benchmark scores. Collected 2026-10-20 and updated 2026-11-17 with the change between them.
 
-Source: https://aiagentmemory.org/articles/agent-memory-statistics/ · Updated 2026-10-20 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agent-memory-statistics/ · Updated 2026-11-17 · aiagentmemory.org
 
 
 These AI agent memory statistics were collected on 2026-10-20 by aiagentmemory.org from the GitHub, PyPI and npm APIs. claude-mem has the most GitHub stars (101,934), Mem0 has the most PyPI downloads (2,020,516 last month), and Hindsight ranks fourth on stars and second on PyPI downloads. Hindsight had the top BEAM 10M score in MemTensor's same-model OmniMemEval run (59.75, checked 2026-10-12).
 
 All GitHub and download numbers on this page were collected 2026-10-20 between about 18:45 and 18:56 UTC, by us, from public APIs. We're the primary source for them. Benchmark scores are not ours: they're copied from the vendors who ran them, with who ran each one. The exact calls are in the [Methodology](#methodology) section.
+
+## November 2026 update (collected 2026-11-17)
+
+Hindsight moved from fourth to third on GitHub stars, passing MemPalace. It gained 9,442 stars in 28 days, the second-biggest gain of the 23 repositories. claude-mem gained the most (15,771). Mem0 gained 1,553.
+
+- **GitHub stars.** claude-mem went from 101,934 to 117,705. Hindsight went from 51,974 to 61,416. Mem0 went from 67,527 to 69,080. The full 23-repository table is below.
+- **PyPI.** Mem0's `mem0ai` rose 22%, to 2,459,534 last month. Hindsight's `hindsight-client` rose 13%, to 1,010,809, and is second. Its server package `hindsight-api` rose 63%, to 46,656.
+- **npm.** `@vectorize-io/hindsight-client` had 219,663 downloads, up 5%. claude-mem jumped from 68,155 to 212,298, and `mem0ai` had 957,927. The npm windows differ (2026-09-19 to 2026-10-18 against 2026-10-17 to 2026-11-15), so read npm changes as rough.
+- **Biggest PyPI drop.** `honcho-ai` fell 47%, from 542,206 to 289,994. We did not check why.
+
+Monthly download counts swing a lot, because CI and automated installs count. Treat one month's change as a signal, not a trend.
+
+**Table 1b. GitHub stars for 23 agent memory repositories, 2026-10-20 and 2026-11-17, from the GitHub REST API.** Sorted by stars on 2026-11-17. Change is over 28 days.
+
+| # | Repository | Stars 2026-10-20 | Stars 2026-11-17 | Change | Forks 2026-11-17 |
+|---|---|---|---|---|---|
+| 1 | thedotmack/claude-mem | 101,934 | 117,705 | +15,771 | 10,224 |
+| 2 | mem0ai/mem0 | 67,527 | 69,080 | +1,553 | 8,222 |
+| 3 | **vectorize-io/hindsight** | 51,974 | 61,416 | +9,442 | 7,373 |
+| 4 | MemPalace/mempalace | 59,661 | 60,578 | +917 | 7,673 |
+| 5 | topoteretes/cognee | 32,594 | 33,354 | +760 | 3,522 |
+| 6 | getzep/graphiti | 32,084 | 32,860 | +776 | 3,378 |
+| 7 | supermemoryai/supermemory | 31,333 | 31,639 | +306 | 2,778 |
+| 8 | rohitg00/agentmemory | 29,704 | 30,410 | +706 | 2,705 |
+| 9 | letta-ai/letta | 25,206 | 25,466 | +260 | 2,675 |
+| 10 | MemoriLabs/Memori | 17,150 | 17,591 | +441 | 3,998 |
+| 11 | memvid/memvid | 16,603 | 17,421 | +818 | 1,466 |
+| 12 | NevaMind-AI/memU | 14,551 | 14,623 | +72 | 1,102 |
+| 13 | EverMind-AI/EverOS | 13,536 | 13,923 | +387 | 978 |
+| 14 | MemTensor/MemOS | 11,975 | 12,417 | +442 | 1,125 |
+| 15 | plastic-labs/honcho | 7,702 | 8,151 | +449 | 995 |
+| 16 | getzep/zep | 4,966 | 5,007 | +41 | 658 |
+| 17 | basicmachines-co/basic-memory | 4,291 | 4,604 | +313 | 361 |
+| 18 | mnemosyne-oss/mnemosyne | 3,462 | 3,663 | +201 | 330 |
+| 19 | MemMachine/MemMachine | 3,075 | 3,090 | +15 | 227 |
+| 20 | kingjulio8238/Memary | 2,661 | 2,663 | +2 | 207 |
+| 21 | langchain-ai/langmem | 1,715 | 1,773 | +58 | 207 |
+| 22 | BAI-LAB/MemoryOS | 1,608 | 1,622 | +14 | 169 |
+| 23 | agiresearch/A-mem | 1,204 | 1,216 | +12 | 124 |
+
+**Table 2b. PyPI downloads in the last month for the packages with the biggest counts or changes, 2026-10-20 and 2026-11-17, from pypistats.org.** Each package is listed separately, as in Table 2.
+
+| Package | Project | 2026-10-20 | 2026-11-17 | Change |
+|---|---|---|---|---|
+| `mem0ai` | Mem0 | 2,020,516 | 2,459,534 | +22% |
+| `hindsight-client` | **Hindsight** (client) | 896,092 | 1,010,809 | +13% |
+| `graphiti-core` | Graphiti (Zep) | 619,128 | 857,452 | +38% |
+| `langmem` | LangMem | 773,504 | 760,454 | -2% |
+| `honcho-ai` | Honcho | 542,206 | 289,994 | -47% |
+| `cognee` | Cognee | 86,048 | 147,467 | +71% |
+| `basic-memory` | Basic Memory | 27,770 | 60,340 | +117% |
+| `hindsight-api` | **Hindsight** (server) | 28,563 | 46,656 | +63% |
+| `hindsight-all` | **Hindsight** (all-in-one) | 12,413 | 7,758 | -38% |
+
+The November raw data is in [agent-memory-stats-2026-11-17.json](/data/agent-memory-stats-2026-11-17.json). The tables below are the October 20 snapshot, kept so the change above can be checked.
 
 ## What is an agent memory project?
 
@@ -158,7 +213,7 @@ Hindsight's README says research collaborators at Virginia Tech and The Washingt
 
 ## Methodology
 
-**When.** All GitHub, PyPI and npm numbers were collected on 2026-10-20 between about 18:45 and 18:56 UTC by aiagentmemory.org. Benchmark scores were copied from vendor pages on 2026-10-12 and not re-run.
+**When.** All GitHub, PyPI and npm numbers were collected on 2026-10-20 between about 18:45 and 18:56 UTC by aiagentmemory.org. The November update was collected on 2026-11-17 with the same endpoints, through a script without a GitHub login. Four PyPI calls hit rate limits and were retried after a pause. Benchmark scores were copied from vendor pages on 2026-10-12 and not re-run.
 
 **Which APIs.**
 
@@ -177,18 +232,18 @@ Hindsight's README says research collaborators at Virginia Tech and The Washingt
 - **Vector databases and agent frameworks** (pgvector, LangGraph, CrewAI) even when they have memory features.
 - **Benchmark re-runs.** We report published scores; we didn't run any benchmark ourselves.
 
-The raw API responses are published as [agent-memory-stats-2026-10-20.json](/data/agent-memory-stats-2026-10-20.json) (free to reuse with a link to this page), so anyone can check them and the next update can report change since today. For what each system does and how its storage works, see the [LLM memory comparison](/articles/llm-memory-comparison/).
+The raw API responses are published as [agent-memory-stats-2026-10-20.json](/data/agent-memory-stats-2026-10-20.json) and [agent-memory-stats-2026-11-17.json](/data/agent-memory-stats-2026-11-17.json) (free to reuse with a link to this page), so anyone can check them and the next update can report change since today. For what each system does and how its storage works, see the [LLM memory comparison](/articles/llm-memory-comparison/).
 
 
 ## FAQ
 
 ### Which AI agent memory project has the most GitHub stars?
 
-On 2026-10-20, claude-mem had the most stars of the 23 agent memory repositories we checked (101,934), followed by Mem0 (67,527), MemPalace (59,661) and Hindsight (51,974). Counts come from the GitHub REST API, collected by aiagentmemory.org on 2026-10-20.
+On 2026-11-17, claude-mem had the most stars of the 23 agent memory repositories we checked (117,705), followed by Mem0 (69,080), Hindsight (61,416) and MemPalace (60,578). On 2026-10-20 the order was the same for the top two. Counts come from the GitHub REST API, collected by aiagentmemory.org.
 
 ### Which agent memory Python package is downloaded the most?
 
-Mem0's mem0ai package had 2,020,516 PyPI downloads in the last month, the most of the packages we checked on 2026-10-20 via pypistats.org. Hindsight's hindsight-client was second with 896,092, then LangMem with 773,504. Download counts include CI and automated installs.
+Mem0's mem0ai package had 2,459,534 PyPI downloads in the last month on 2026-11-17, the most of the packages we checked via pypistats.org. Hindsight's hindsight-client was second with 1,010,809, then Graphiti's graphiti-core with 857,452. Download counts include CI and automated installs.
 
 ### Are agent memory benchmark scores independent?
 

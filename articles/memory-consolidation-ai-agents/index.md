@@ -1,8 +1,8 @@
-# Memory Consolidation in AI Agents: Methods and Results
+# Memory Consolidation in AI Agents (2026): Methods, Results
 
-> How LLM agents consolidate and forget memory: reflection, hierarchical summaries, fact merging, invalidation, sleep-time jobs, and October 2026 results (PreCoMem, REM).
+> Consolidation merges duplicate memories, fixes conflicts and writes summaries. REM (arXiv 2610.27377) resolved 27.6% of coding tasks vs 24.9%, at 17% lower cost.
 
-Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-11-17 · aiagentmemory.org
 
 
 **Memory consolidation in AI agents** is the step that turns raw records (messages, tool results, observations) into a smaller set of cleaner, longer-lived memories. It merges duplicates, resolves contradictions, and writes higher-level insights. Without it, an agent's memory store only grows, and retrieval gets noisier with every session.

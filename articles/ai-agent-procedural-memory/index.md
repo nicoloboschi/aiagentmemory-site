@@ -2,7 +2,7 @@
 
 > Procedural memory in AI agents and LLMs: weights, code, prompts and skill files, how Voyager, AWM, Memp and Claude's memory folder learn rules, and LangMem prompt optimization.
 
-Source: https://aiagentmemory.org/articles/ai-agent-procedural-memory/ · Updated 2026-11-07 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-procedural-memory/ · Updated 2026-11-17 · aiagentmemory.org
 
 
 **Procedural memory in AI agents** is the agent's knowledge of how to do things: the rules and skills that shape how it acts. For LLM agents it lives in three places: the model's weights, the agent's code and its prompts. Most current work on learning procedures edits the text parts, because rewriting text is cheaper and safer than retraining the model.
@@ -46,7 +46,7 @@ Three lines of work show agents building procedural memory from experience, with
 
 [Memp](https://arxiv.org/abs/2508.06433) (Fang et al., 2025) distills past trajectories into two forms: step-by-step instructions and higher-level, script-like abstractions. It studies build, retrieval and update strategies separately, including a regimen that "updates, corrects, and deprecates" entries. On TravelPlanner and ALFWorld, success rates rose as the repository improved. Procedural memory built with a stronger model also helped when moved to a weaker one.
 
-A related approach, [ReasoningBank](/articles/reasoningbank-llm-agent-memory-framework/), stores distilled reasoning strategies from both successful and failed runs, which sits between episodic and procedural memory.
+A related approach, ReasoningBank (Ouyang et al., Google, [arXiv 2509.25140](https://arxiv.org/abs/2509.25140), ICLR 2026), distills reasoning strategies from an agent's self-judged successful and failed runs, which sits between episodic and procedural memory. Its numbers all come from the WebArena-Shopping subset with Gemini-2.5-flash. Success was 46.5% with success-only traces and 49.7% once failures were included (its Section 5). Its MaTTS method, which spends extra compute per task, lifted success from 49.7 at k = 1 to 55.1 at k = 5 with parallel scaling (its Section 4.3). These are the authors' own results, not independent ones.
 
 ### Anthropic's learning loop: validated rules in a memory folder
 
