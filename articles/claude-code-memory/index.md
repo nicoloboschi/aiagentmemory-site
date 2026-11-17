@@ -213,7 +213,7 @@ OpenAI's Codex uses the same two-layer idea with different files:
 | Global file | `~/.claude/CLAUDE.md` | `~/.codex/AGENTS.md` (or `AGENTS.override.md`) |
 | Size limit | Under 200 lines advised; files over 4 MiB skipped | Stops at 32 KiB combined (`project_doc_max_bytes`) |
 | Automatic memory | Auto memory, **on** by default | Memories, **off** by default |
-| Stored in | `~/.claude/projects/<project>/memory/` | `~/.codex/memories/` |
+| Stored in | `~/.claude/projects/<project>/memory/` | `~/.codex/memories_v2/` (older setups: `memories/`) |
 | When it writes | During the session | In the background, after a chat has been idle |
 | Per-chat control | `/memory` toggle | `/memories` |
 

@@ -25,7 +25,7 @@ Instructions belong in version control. Learnings are often machine-local and ge
 | Agent | Instruction files | Automatic memory | Default | Limits (per docs) |
 |---|---|---|---|---|
 | **Claude Code** | `CLAUDE.md`, `CLAUDE.local.md`, `.claude/rules/`, or `AGENTS.md` | Auto memory in `~/.claude/projects/<project>/memory/` | On (local sessions) | First 200 lines or 25 KB of `MEMORY.md` loaded |
-| **Codex** | `AGENTS.md`, `AGENTS.override.md`, fallback names | Memories in `~/.codex/memories/` | Off | 32 KiB of combined AGENTS.md |
+| **Codex** | `AGENTS.md`, `AGENTS.override.md`, fallback names | Memories in `~/.codex/memories_v2/` (older setups: `memories/`) | Off | 32 KiB of combined AGENTS.md |
 | **Cursor** | `.cursor/rules/*.mdc`, `AGENTS.md`, user and team rules | Memories removed in 2.1.x | n/a | Rule modes control loading |
 | **GitHub Copilot** | `AGENTS.md` and repo instructions | Copilot Memory (repo facts and user preferences), GA since 28 Oct 2026, in the Copilot app, CLI, VS Code, cloud agent, code review, autofix, Mobile, Slack and Teams | On for paid individual plans; admin policy for orgs; VS Code setting off by default | Expires 90 days after creation or last upvote (admins: 7 to 180 days for repo facts) |
 | **Cline** | `.clinerules/*.md`, global custom instructions | Memory Bank: six markdown files the agent maintains in `memory-bank/` | Off until you add the instructions | All files re-read at the start of every task |
@@ -44,7 +44,7 @@ The docs stress one limit: CLAUDE.md is context, "not enforced configuration." T
 
 Codex builds an instruction chain from [AGENTS.md files](https://agents.md/). It reads one global file from `~/.codex` (`AGENTS.override.md` if present, else `AGENTS.md`), then walks from the repo root down to the current directory, taking at most one file per directory. Files concatenate root-first, so closer files win. Combined size stops at `project_doc_max_bytes`, 32 KiB by default. You can add other file names with `project_doc_fallback_filenames` in `~/.codex/config.toml`.
 
-Codex **memories** are separate and off by default. Turn them on in settings or with `memories = true` under `[features]`. Codex then turns eligible past chats into files under `~/.codex/memories/` in the background, after a chat has been idle, skipping short sessions and redacting secrets. `/memories` controls whether the current chat uses or produces memories. OpenAI's docs say to "keep required team guidance in `AGENTS.md`," treating memories as a recall layer, not the source of rules that must always apply. Config keys and add-ons are in [Codex memory](/articles/codex-memory/).
+Codex **memories** are separate and off by default. Turn them on in settings or with `memories = true` under `[features]`. Codex then turns eligible past chats into files under `~/.codex/memories_v2/` (older setups: `memories/`) in the background, after a chat has been idle, skipping short sessions and redacting secrets. `/memories` controls whether the current chat uses or produces memories. OpenAI's docs say to "keep required team guidance in `AGENTS.md`," treating memories as a recall layer, not the source of rules that must always apply. Config keys and add-ons are in [Codex memory](/articles/codex-memory/).
 
 ### Cursor: rules
 

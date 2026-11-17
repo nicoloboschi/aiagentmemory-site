@@ -23,7 +23,7 @@ The table below is from each project's own docs or README, read on 8 November 20
 |---|---|---|---|---|
 | [AGENTS.md](https://agents.md/) | One Markdown file, no required fields | File path; the closest file to the edited code wins | Never, unless a person edits it | A person |
 | Claude Code auto memory | Markdown notes under `~/.claude/projects/<project>/memory/`, indexed by `MEMORY.md` | Project directory | Never automatic | The model |
-| Codex memories | Files under `~/.codex/memories/`, "generated state" | Project | Never automatic | The model, after a chat goes idle |
+| Codex memories | Files under `~/.codex/memories_v2/` (older setups: `memories/`), "generated state" | Project | Never automatic | The model, after a chat goes idle |
 | [Anthropic memory tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool) | A file under `/memories`, operated with `view`, `create`, `str_replace`, `insert`, `delete` | A path the model picks; your handler maps it to real storage | Never, unless the model deletes it | The model |
 | [GitHub Copilot Memory](https://docs.github.com/en/copilot/concepts/prompting-and-context/copilot-memory) | A repository-level fact or a user-level preference, with citations | One repository, or one user per billing entity | Expires 90 days after the last upvote by default (7 to 180 configurable for repo facts); retrieval does not reset it | Copilot, from its own work |
 | Letta memory blocks | A block with `label`, `description`, `value` and a character `limit`, always in context | Block label; one block can be attached to several agents | Never; the agent rewrites it | The agent (or your code) |

@@ -117,7 +117,7 @@ Turning dreaming off stops future runs but does not undo its edits, close its pu
 |---|---|---|---|---|
 | **GitHub Copilot** | Copilot Memory: repository facts + user preferences, citation-checked and voted | On for Pro, Pro+ and Max; admin policy for orgs; VS Code off until enabled | Server-side, shared per repository | 90 days without an upvote (7 to 180 for repository facts) |
 | **Claude Code** | Auto memory in `~/.claude/projects/<project>/memory/` | On for local sessions | Machine-local | None; you prune it |
-| **Codex** | Memories in `~/.codex/memories/` | Off | Machine-local | Unused 30 days: dropped from consolidation |
+| **Codex** | Memories in `~/.codex/memories_v2/` (older setups: `memories/`) | Off | Machine-local | Unused 30 days: dropped from consolidation |
 | **Cursor** | Removed in 2.1.x, export to Rules | n/a | n/a | n/a |
 
 Copilot is the only one of the four whose automatic memory is **shared across a team by default**, **validated against the code** and, with dreaming on, curated by a scheduled job. Its limits are different ones: the editor needs an opt-in setting, user preferences follow your billing entity rather than you, and the notes are short facts, not a searchable history of how a feature was built. Details per tool are in [Claude Code memory](/articles/claude-code-memory/) and [Codex memory](/articles/codex-memory/).

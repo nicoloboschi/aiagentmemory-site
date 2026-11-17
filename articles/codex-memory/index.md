@@ -5,7 +5,7 @@
 Source: https://aiagentmemory.org/articles/codex-memory/ · Updated 2026-11-09 · aiagentmemory.org
 
 
-**Codex memory** is two built-in layers. **AGENTS.md files** hold instructions you write, and Codex loads them at the start of every run. **Codex memories**, off by default, turn useful context from past chats into local files under `~/.codex/memories/`. For memory that is searchable, shared across agents or kept on a server, add a hook-based plugin such as Hindsight.
+**Codex memory** is two built-in layers. **AGENTS.md files** hold instructions you write, and Codex loads them at the start of every run. **Codex memories**, off by default, turn useful context from past chats into local files under `~/.codex/memories_v2/` (older setups: `memories/`). For memory that is searchable, shared across agents or kept on a server, add a hook-based plugin such as Hindsight.
 
 [Codex](https://github.com/openai/codex) is OpenAI's coding agent for the terminal, IDE and ChatGPT desktop app. Each session starts with an empty context window, so anything Codex should know must come back in from a file or a tool. Facts below come from OpenAI's [Codex memories docs](https://learn.chatgpt.com/docs/customization/memories) and [AGENTS.md guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md), checked 13 October 2026, and from the Codex source and release notes up to 0.167.0 (6 November 2026). For Claude Code, Cursor and Copilot, see [AI coding agent memory](/articles/ai-coding-agent-memory/). For the two tools side by side (instruction files, defaults, skill folders), see [Claude Code vs Codex](/articles/claude-code-vs-codex/).
 
@@ -18,7 +18,7 @@ OpenAI draws the line plainly: "Keep required team guidance in `AGENTS.md` or ch
 | | AGENTS.md | Codex memories |
 |---|---|---|
 | Who writes it | You | Codex, in the background |
-| Where | `~/.codex/AGENTS.md` plus files in your repo | `~/.codex/memories/` |
+| Where | `~/.codex/AGENTS.md` plus files in your repo | `~/.codex/memories_v2/` (older setups: `memories/`) |
 | Default | Always read if present | Off |
 | Edit by hand? | Yes, it's the point | No: OpenAI calls it "generated state" |
 | Shared with the team | Yes, via git | No, local to one machine |
@@ -49,7 +49,7 @@ Codex memories are off by default. Turn them on in either place:
 memories = true
 ```
 
-Once on, Codex turns eligible past chats into files under `~/.codex/memories/`: summaries, durable entries, recent inputs and supporting evidence. Generation runs **in the background**, not at the end of each chat. Codex waits until a chat has been idle long enough, skips active or short-lived sessions, and skips a pass when your remaining rate limit is below a threshold. Secrets are redacted from generated fields, though the docs still say "Don't store secrets in memories."
+Once on, Codex turns eligible past chats into files under `~/.codex/memories_v2/` (older setups: `memories/`): summaries, durable entries, recent inputs and supporting evidence. Generation runs **in the background**, not at the end of each chat. Codex waits until a chat has been idle long enough, skips active or short-lived sessions, and skips a pass when your remaining rate limit is below a threshold. Secrets are redacted from generated fields, though the docs still say "Don't store secrets in memories."
 
 The `/memories` command (desktop app and CLI) sets, for the current chat only, whether it can use existing memories and whether it can feed new ones. To wipe everything, use **Delete Codex memories** in Settings.
 
@@ -133,7 +133,7 @@ Codex CLI supports hooks and MCP servers, so external memory plugs in without ch
 | | Codex memories | Hindsight | agentmemory |
 |---|---|---|---|
 | How it captures | Background pass over idle chats | Hooks: recall before each prompt, retain at stop | Hooks record each session |
-| Where data lives | `~/.codex/memories/` | Hindsight Cloud, your own server or a local daemon | Local files, or Redis |
+| Where data lives | `~/.codex/memories_v2/` (older setups: `memories/`) | Hindsight Cloud, your own server or a local daemon | Local files, or Redis |
 | Shared with other agents | No | Yes: one bank per repo, shared by Claude Code, Codex, Cursor CLI and others | Claude Code, Cursor, Gemini CLI and others |
 | Search | Not exposed | Semantic + keyword + graph + time-range, reranked | BM25 + vector + graph, fused |
 | License | Part of Codex | MIT | Apache 2.0 |
@@ -172,7 +172,7 @@ Start with AGENTS.md. Turn on memories if you want Codex to pick up your habits.
 
 ### Does OpenAI Codex have memory?
 
-Yes, in two layers. AGENTS.md files hold instructions you write, and Codex loads them at the start of every run. Codex memories, off by default, turn useful context from past chats into local files under ~/.codex/memories/ that Codex can bring into later sessions.
+Yes, in two layers. AGENTS.md files hold instructions you write, and Codex loads them at the start of every run. Codex memories, off by default, turn useful context from past chats into local files under ~/.codex/memories_v2/ (older setups: memories/) that Codex can bring into later sessions.
 
 ### How do I turn on Codex memories?
 

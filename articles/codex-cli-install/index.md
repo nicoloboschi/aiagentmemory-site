@@ -47,7 +47,7 @@ Run `codex --version` in a terminal. It prints the installed version. If the com
 
 ## Memory: built in and add-ons
 
-Codex has two built-in memory layers. **AGENTS.md** files hold rules you write, and Codex loads them at the start of every run. **Codex memories** are off by default. When you turn them on, Codex turns useful context from past chats into local files under `~/.codex/memories/`. The full rules, limits and config keys are in [Codex memory: AGENTS.md, memories and add-ons](/articles/codex-memory/).
+Codex has two built-in memory layers. **AGENTS.md** files hold rules you write, and Codex loads them at the start of every run. **Codex memories** are off by default. When you turn them on, Codex turns useful context from past chats into local files under `~/.codex/memories_v2/` (older setups: `memories/`). The full rules, limits and config keys are in [Codex memory: AGENTS.md, memories and add-ons](/articles/codex-memory/).
 
 Built-in memory stays on one machine. For searchable memory that several agents share, add a hook-based plugin.
 

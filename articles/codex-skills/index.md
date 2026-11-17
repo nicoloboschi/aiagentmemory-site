@@ -86,7 +86,7 @@ Use one selector per entry: a full path to one `SKILL.md`, or a name that matche
 
 No. A skill holds steps that you wrote or installed. Codex reads the same file each time, and the docs do not describe Codex writing new skills from past work. The `skill-creator` only runs when you ask it to.
 
-Codex's own memory is a separate feature. [Codex memory: AGENTS.md, memories and add-ons](/articles/codex-memory/) covers AGENTS.md rules and the optional memories under `~/.codex/memories/`.
+Codex's own memory is a separate feature. [Codex memory: AGENTS.md, memories and add-ons](/articles/codex-memory/) covers AGENTS.md rules and the optional memories under `~/.codex/memories_v2/` (older setups: `memories/`).
 
 For memory that lasts across sessions, Hindsight's Coding Agents package can add it to Codex CLI. It captures each session automatically and recalls it for the same repository. This is a different tool from skills. Its setup and limits are in [how to install Codex CLI](/articles/codex-cli-install/#memory-built-in-and-add-ons). Two limits matter here: the package needs a Hindsight server (cloud, your own, or a local daemon) to be running, and every recall adds tokens to the prompt. Skills cost nothing to keep, but they only hold what you wrote.
 
