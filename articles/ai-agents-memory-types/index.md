@@ -77,7 +77,47 @@ The third view is about scope and lifetime. LangGraph uses it as its main split:
 - **Short-term memory** is thread-scoped. It "tracks the ongoing conversation by maintaining message history within a session," and LangGraph saves it as agent state through a checkpointer.
 - **Long-term memory** is shared across threads. It is "saved within custom namespaces," so the same memories can be recalled in any conversation for that user or app.
 
-Scope is a deployment question, not a content question. A user's dietary preference is semantic memory either way; it becomes long-term once you save it outside the thread. The side-by-side comparison is in [short-term and long-term memory in agentic AI](/articles/short-term-and-long-term-memory-agentic-ai/).
+Scope is a deployment question, not a content question. A user's dietary preference is semantic memory either way; it becomes long-term once you save it outside the thread.
+
+### Short-term vs long-term memory side by side
+
+| | Short-term memory | Long-term memory |
+|---|---|---|
+| Scope | One thread, session or task run | Across threads; per user, agent, team or app |
+| Lifetime | Until the thread ends or is deleted | Until explicitly updated, expired or deleted |
+| Where it lives | Agent state, rendered into the prompt | External store: vectors, graph, tables, files |
+| Size limit | The model's context window | Storage; only a small slice is retrieved per call |
+| What goes in | Everything in the current exchange | Extracted facts, events, lessons, rules |
+| Write cost | Free (append to state) | An LLM extraction call per write, in most systems |
+| Read cost | Every token is resent each call | One search per turn, fixed token budget |
+| CoALA name | Working memory | Episodic, semantic, procedural memory |
+| LangGraph primitive | Checkpointer + `thread_id` | Store + namespace |
+| Typical failure | Overflow, lost-in-the-middle, rising cost | Missed recall, stale facts, leaks between users |
+
+Short-term memory is **lossless but small**: the model sees exactly what was said. Long-term memory is **large but lossy**: something decides what to keep, and retrieval decides what comes back. Most memory bugs live in that gap. Short-term memory alone is covered in [short-term memory in AI agents](/articles/short-term-memory-ai-agents/) and long-term memory in [AI agent long-term memory](/articles/ai-agent-long-term-memory/).
+
+### What belongs in which memory
+
+| Information | Short-term | Long-term | Why |
+|---|---|---|---|
+| The last few messages | Yes | No | Needed verbatim now; little value later |
+| A large tool output (web page, log) | Reference only | No | Offload to a file; keep the path |
+| The current plan or to-do list | Yes | Sometimes | Save it only if the task spans sessions |
+| "I'm vegetarian" | Yes | Yes | Durable preference |
+| "I'm on a train right now" | Yes | No, or with expiry | Temporary state |
+| What was decided in this meeting | Yes | Yes, as an episode | Users will ask "what did we decide?" |
+| A lesson from a failed attempt | Yes | Yes | Prevents repeating the mistake |
+| A change to the agent's own rules | No | Yes, with review | Procedural memory; affects every future task |
+
+A quick test: if the user would be annoyed to repeat it next week, promote it. If it would be wrong or creepy to bring up next week, don't.
+
+### Common mistakes
+
+- **Treating a long context as long-term memory.** A bigger window still resets per session and costs more per call.
+- **Promoting everything.** Saving every message as a memory recreates the long-context problem inside your database, with worse ordering.
+- **Never consolidating.** Without updates, both "lives in NYC" and "moved to SF" stay in the store forever.
+- **Weak scoping.** Short-term memory is isolated by thread; long-term memory is only as isolated as your namespaces. Use a user or tenant ID in every key and test deletion.
+- **No time on long-term items.** Store timestamps on everything you promote, so the agent can tell old facts from new ones.
 
 ## How frameworks name their memory types
 

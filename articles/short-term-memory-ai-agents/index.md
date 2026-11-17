@@ -95,7 +95,7 @@ A new `thread_id` starts a clean short-term memory. The same `thread_id` resumes
 
 ## When short-term memory isn't enough
 
-Short-term memory ends with the thread. If a user comes back tomorrow, nothing carries over unless you save it somewhere else. That's the job of long-term memory: extract what matters from the session, store it per user, and retrieve it in the next one. Memory servers such as Mem0, Zep and [Hindsight](https://github.com/vectorize-io/hindsight) do that step for you. Hindsight's recall also respects a token budget (`max_tokens`), so what it adds back into short-term memory stays bounded; it returns more context than Mem0 by default, so set that budget to match your window. The side-by-side comparison, including how information moves between the two, is in [short-term and long-term memory in agentic AI](/articles/short-term-and-long-term-memory-agentic-ai/).
+Short-term memory ends with the thread. If a user comes back tomorrow, nothing carries over unless you save it somewhere else. That's the job of long-term memory: extract what matters from the session, store it per user, and retrieve it in the next one. Memory servers such as Mem0, Zep and [Hindsight](https://github.com/vectorize-io/hindsight) do that step for you. Hindsight's recall also respects a token budget (`max_tokens`), so what it adds back into short-term memory stays bounded; it returns more context than Mem0 by default, so set that budget to match your window. The side-by-side comparison, including how information moves between the two, is in [short-term and long-term memory in agentic AI](/articles/ai-agents-memory-types/).
 
 
 ## FAQ

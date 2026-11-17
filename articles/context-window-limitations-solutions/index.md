@@ -1,4 +1,4 @@
-# Context Window Limitations (2026): Lost in the Middle, Fixes
+# Context Window Limitations and Solutions (2026): Lost in the Middle, Fixes
 
 > Why LLMs get worse as the window fills (lost in the middle, RULER, NoLiMa). One Oct 2026 test on GPT-6 Luna: full context 92%, Mem0 80%. Fixes compared.
 

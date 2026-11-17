@@ -67,7 +67,7 @@ Also check what your agent framework already gives you. LangGraph has short-term
 
 ### Agents that manage their own memory
 
-**Letta** (formerly MemGPT) is a full agent harness, not a plug-in library. Agents rewrite their own memory, skills and prompts, and memory lives in MemFS, a git-backed filesystem. Background "dreaming" reviews recent conversations to update memory. Choose it if you want the agent runtime and memory as one product. If you only want to add memory to an existing agent, a memory layer is a smaller change. Letta's current code is in `letta-ai/letta-code`; the older Letta V1 API server is archived. See [Letta AI guide](/articles/letta-ai-guide/) and [Mem0 vs Letta](/articles/mem0-vs-letta/).
+**Letta** (formerly MemGPT) is a full agent harness, not a plug-in library. Agents rewrite their own memory, skills and prompts, and memory lives in MemFS, a git-backed filesystem. Background "dreaming" reviews recent conversations to update memory. Choose it if you want the agent runtime and memory as one product. If you only want to add memory to an existing agent, a memory layer is a smaller change. Letta's current code is in `letta-ai/letta-code`; the older Letta V1 API server is archived. See [Letta AI guide](/articles/letta-ai-guide/), [Mem0 vs Letta](/articles/mem0-vs-letta/) and [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/).
 
 ### Knowledge from documents, code and tickets
 

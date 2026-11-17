@@ -21,7 +21,7 @@ The two kinds of memory answer different questions:
 | "What do you know about me?" | Long-term (cross-thread) | Store, keyed by namespace and key |
 | "Go back to step 3" | Thread history | `get_state_history()` on a checkpointed graph |
 
-If you're new to the distinction, the guide to [short-term vs long-term memory in agentic AI](/articles/short-term-and-long-term-memory-agentic-ai/) explains it framework-free.
+If you're new to the distinction, the guide to [short-term vs long-term memory in agentic AI](/articles/ai-agents-memory-types/) explains it framework-free.
 
 ## Step 1: chat history with a checkpointer
 

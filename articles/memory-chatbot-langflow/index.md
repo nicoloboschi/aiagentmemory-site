@@ -21,7 +21,7 @@ Langflow gives you three levels of memory:
 | Message History component | Last N messages, filterable, Langflow or external storage | One session, or any session you name | Earlier releases |
 | Memory base | Most relevant past messages by vector similarity | Current session by default, or all sessions | 1.10 (June 2026) |
 
-The first two are short-term memory: a rolling window of recent messages. The third is closer to long-term memory. Our page on [short-term vs long-term memory in agentic AI](/articles/short-term-and-long-term-memory-agentic-ai/) explains the difference.
+The first two are short-term memory: a rolling window of recent messages. The third is closer to long-term memory. Our page on [short-term vs long-term memory in agentic AI](/articles/ai-agents-memory-types/) explains the difference.
 
 ## Option 1: the Agent component's built-in memory
 

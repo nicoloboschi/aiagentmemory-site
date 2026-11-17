@@ -1,4 +1,4 @@
-# Azure AI Foundry Memory (2026): Pricing, Quotas and Python Code
+# Azure AI Foundry Memory (2026): Is It Free, Pricing, Quotas and Python
 
 > Is Azure AI Foundry memory free? It is in public preview (Oct 2026), billed through the chat and embedding models it uses. Memory store limits, scopes, TTL, regions and Python code.
 
