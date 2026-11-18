@@ -161,7 +161,7 @@ Several agent memory servers accept a local model as their LLM, so you can self-
 
 - **[Hindsight](https://github.com/vectorize-io/hindsight)** lists `ollama`, `lmstudio` and `llamacpp` as fully local LLM providers. It runs under Docker, pip or embedded in Python, and can use an embedded Postgres (`pg0`), so you don't need a database server. Clients are Python, TypeScript and Go, and its MCP server works with MCP hosts like LM Studio and Jan. It's MIT-licensed with every feature in the open-source release: graph and time-aware search, consolidation of facts into observations, and `reflect`. The local catch: each write and each consolidation pass calls your LLM, so a small model on a laptop does a lot more work than with a plain SQLite store. It also returns more text per lookup than Mem0 by default (about 4x, by Mem0's own measurements), which matters with Ollama's 4k default window: set `max_tokens` on recall lower.
 - **Mem0's self-hosted server** wraps the library above in a FastAPI service with Postgres and pgvector.
-- **Letta** and **Cognee** can also be self-hosted; check each project's docs for current local-model support before you commit.
+- **Letta** (see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/)) and **Cognee** can also be self-hosted; check each project's docs for current local-model support before you commit.
 
 ## Licenses and cost of local memory tools
 

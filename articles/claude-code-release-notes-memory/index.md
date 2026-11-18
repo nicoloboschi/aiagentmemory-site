@@ -1,8 +1,8 @@
 # Claude Code Release Notes: Memory and Context Changes (2026)
 
-> Claude Code releases 2.1.311 to 2.1.326 (Oct 26 to Nov 16, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
+> Claude Code releases 2.1.311 to 2.1.327 (Oct 26 to Nov 17, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
 
-Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-17 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-18 · aiagentmemory.org
 
 
 ## What are the Claude Code release notes for memory?
@@ -10,12 +10,13 @@ Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · 
 Claude Code's memory is made of files (CLAUDE.md, MEMORY.md, rules) plus compaction, which shortens a long
 conversation when it nears the context limit. This page tracks the release notes that change how those parts
 behave. It covers the 11 newest GitHub releases, read on 2026-11-13, and skips releases that touch no memory
-or context behavior. Read again on 2026-11-17 for v2.1.326.
+or context behavior. Read again on 2026-11-18 for v2.1.327.
 
 ## Memory-related changes by version
 
 | Version | Date | Change that matters for memory |
 |---|---|---|
+| 2.1.327 | 2026-11-17 | Fixed a compaction right after a reply cut at the output token limit losing that reply's tool call and its result. Fixed Edit refusing "File has not been read yet" after a compaction, for unchanged files outside the project that Claude had read in full. Fixed in-process agent teammates on another model compacting at the lead's context limit; they now use their own limit and model. Improved the reminder after compaction about a finished subagent: if its output file can't be read, Claude is told to ask it with `SendMessage`. Fixed `claudeMdExcludes` patterns on Windows not matching a path whose drive letter has the other case. |
 | 2.1.326 | 2026-11-16 | Fixed compaction on Bedrock, Vertex and Foundry, and with telemetry turned off, sometimes replying to a message instead of summarizing, or leaving Claude's last reply out of the summary. Changed automatic compaction in plan mode to use the model that answers you (such as Opus with `opusplan`), so it can cost more. Fixed `/memory` opening a read-only file with no warning that changes may not save. Fixed saved memories not listed in the VS Code Memory dialog when the memory folder held symlink loops. |
 | 2.1.325 | 2026-11-13 | Fixed recent turns sometimes going missing from a resumed session after Claude Code stopped without a clean exit. Fixed long sessions on many third-party gateways and Foundry failing with a context length error every turn instead of compacting. `CLAUDE_CODE_MAX_CONTEXT_TOKENS` now also sets the window for model IDs that start with `claude-` but are not recognized. |
 | 2.1.323 | 2026-11-12 | Fixed running `/compact` again, or after `/context`, summarizing away a message Claude had not answered yet. Fixed subagent transcripts and large tool results being saved apart from the session's transcript after entering a worktree. |
@@ -86,7 +87,7 @@ Sources: [anthropics/claude-code releases](https://github.com/anthropics/claude-
 
 ### What changed in Claude Code memory recently?
 
-From v2.1.311 to v2.1.326 (October 26 to November 16, 2026), Claude Code fixed stale MEMORY.md and CLAUDE.md content after compaction, stopped overwriting large CLAUDE.md files after reading only part of them, added idle compaction in VS Code and Claude Desktop, and made /context shorter. The table below lists each change with its version.
+From v2.1.311 to v2.1.327 (October 26 to November 17, 2026), Claude Code fixed stale MEMORY.md and CLAUDE.md content after compaction, stopped overwriting large CLAUDE.md files after reading only part of them, added idle compaction in VS Code and Claude Desktop, and made /context shorter. The table below lists each change with its version.
 
 ### Where do I read the Claude Code release notes?
 

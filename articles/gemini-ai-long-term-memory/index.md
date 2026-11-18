@@ -1,4 +1,4 @@
-# Gemini AI Long-Term Memory (2026): Past Chats and Deletion
+# Does Gemini Have Long-Term Memory? (2026): Past Chats and Deletion
 
 > Gemini long-term memory: past chats, and a Memory summary you can view, edit and delete on web and mobile (not in the UK, EEA, Switzerland or Nigeria). Also how to delete it.
 

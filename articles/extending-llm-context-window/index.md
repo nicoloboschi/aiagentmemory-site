@@ -99,6 +99,16 @@ RoPE scaling makes long positions legal. Training on long text is what makes the
 
 **LongLoRA** is the cheap option. It fine-tunes with LoRA plus "shifted sparse attention" during training, while keeping normal dense attention at inference. The authors extended Llama2 7B from 4K to 100K tokens and Llama2 70B to 32K "on a single 8x A100 machine" ([arXiv 2309.12307](https://arxiv.org/abs/2309.12307)). They also found LoRA alone isn't enough: the embedding and normalization layers must be trainable too.
 
+## Methods that claim "infinite" context
+
+No LLM has an infinite context window. These methods let a model read a long input with fixed memory, so they compress or drop old tokens.
+
+- **StreamingLLM** keeps the first few tokens (its "attention sinks") plus a rolling window of recent ones. It reports "stable and efficient language modeling with up to 4 million tokens and more," and up to a 22.2x speedup over sliding-window recomputation ([arXiv 2309.17453](https://arxiv.org/abs/2309.17453)). Its FAQ says "The context window remains unchanged," and that the model "will only recognize the latest tokens." It can keep generating over a long stream, but it cannot recall the middle.
+- **Recurrent Memory Transformer (RMT)**: a 2023 paper reports storing information "for sequences of up to an unprecedented two million tokens" while "maintaining high retrieval accuracy" ([arXiv 2304.11062](https://arxiv.org/abs/2304.11062)). That shows memory can be carried far. It does not show a chat model reasoning over 2M tokens.
+- **Infini-attention** (a 2024 paper) adds a compressive memory to attention. A Hugging Face reproduction found it "not convincing enough" and "not reliable enough," and said its performance "gets worse as we increase the number of times we compress the memory." It recommended Ring Attention, YaRN and RoPE scaling instead ([Hugging Face blog](https://huggingface.co/blog/infini-attention), August 2024).
+
+For a chatbot that never forgets, the usual answer is external storage plus retrieval, not a bigger window. See [AI agent long-term memory](/articles/ai-agent-long-term-memory/).
+
 ## Making long context affordable: attention and KV cache
 
 Extending positions doesn't help if you can't fit the computation in memory. These techniques don't change what the model understands; they change what it costs.

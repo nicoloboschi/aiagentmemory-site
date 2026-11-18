@@ -34,6 +34,8 @@ claude --model qwen3.5
 
 `ANTHROPIC_AUTH_TOKEN` is the bearer token. `ANTHROPIC_API_KEY` is set empty so Claude Code does not send a real Anthropic key. Settings in Claude's own config files can override these shell variables. If Claude Code connects to the wrong place, check the settings files, then run `/status` inside Claude Code.
 
+Another way to send Claude Code to other models is a local router. See [Claude Code Router](/articles/claude-code-router/) for what it does and what Anthropic's docs say about it.
+
 ## Local or cloud: which to pick
 
 | | Local model (`localhost:11434`) | Cloud model (Ollama's cloud) |

@@ -1,4 +1,4 @@
-# Memory Consolidation in AI Agents (2026): Methods, Results
+# Memory Consolidation in AI Agents (2026): Methods, Python Loop, Results
 
 > Consolidation merges duplicate memories, fixes conflicts and writes summaries. REM (arXiv 2610.27377) resolved 27.6% of coding tasks vs 24.9%, at 17% lower cost.
 
