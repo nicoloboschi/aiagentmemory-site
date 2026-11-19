@@ -30,7 +30,7 @@ For the manual route, each archive holds one file with the platform in its name,
 ## Steps after install
 
 1. **Open a project folder.** Run `cd` into a repository, then run `codex`. Codex reads the folder it starts in.
-2. **Sign in.** On first run, pick **Sign in with ChatGPT**. The docs say that Codex is included in the Plus, Pro, Business, Edu and Enterprise plans. An API key also works, but it needs [additional setup](https://developers.openai.com/codex/auth#sign-in-with-an-api-key).
+2. **Sign in.** On first run, pick **Sign in with ChatGPT**. The docs say that Codex is included in the Plus, Pro, Business, Edu and Enterprise plans. An API key also works, and the [Codex API key setup](/articles/codex-api-key/) page covers the login command and billing.
 3. **Give it a first task.** Ask it to explain the project, make one small change, or find a bug. Create a Git commit before a big task so you can go back.
 4. **Learn the commands.** `codex exec` runs one task without the chat screen. It is the option for scripts and CI. The Codex docs at [developers.openai.com/codex](https://developers.openai.com/codex) list the rest.
 
