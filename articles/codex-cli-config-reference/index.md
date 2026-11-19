@@ -34,7 +34,7 @@ These are the keys from OpenAI's reference that people change most. Defaults are
 |---|---|---|
 | `model` | model name, e.g. `gpt-6.1-sol` | The model for the session. The reference gives an example, not a default. |
 | `review_model` | model name | Model for `/review`. Defaults to the session model. |
-| `model_provider` | id from `model_providers` | Default `openai`. Built-in ids `openai`, `ollama` and `lmstudio` cannot be overridden. |
+| `model_provider` | id from `model_providers` | Default `openai`. Built-in ids `openai`, `ollama` and `lmstudio` cannot be overridden. For running Codex on local models through Ollama, see [Codex with Ollama](/articles/codex-ollama/). |
 | `model_context_window` | number | Context tokens for the active model. |
 | `approval_policy` | `on-request`, `never`, or a `granular` table | When Codex stops to ask before running a command. `untrusted` is unsupported; `on-failure` is deprecated. |
 | `sandbox_mode` | `read-only`, `workspace-write`, `danger-full-access` | What commands may touch on disk and network. |

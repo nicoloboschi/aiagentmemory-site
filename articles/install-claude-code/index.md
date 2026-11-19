@@ -50,7 +50,7 @@ A working install prints a version number such as `2.1.211 (Claude Code)`. If yo
 
 ## How do you log in and start?
 
-Run `claude` in your project folder. Claude Code opens a browser login the first time. If you have set the `ANTHROPIC_API_KEY` environment variable and approve that key when asked, it skips the login.
+Run `claude` in your project folder. Claude Code opens a browser login the first time. If you have set the `ANTHROPIC_API_KEY` environment variable and approve that key when asked, it skips the login. For how the key is billed and which login wins when several are set, see [Claude Code API key setup](/articles/claude-code-api-key/).
 
 ## How do you update Claude Code?
 

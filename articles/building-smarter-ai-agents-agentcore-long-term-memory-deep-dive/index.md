@@ -2,7 +2,7 @@
 
 > How Amazon Bedrock AgentCore Memory works: events, short-term vs long-term memory, the four built-in strategies, direct ingestion, record TTL, harness managed memory, record streaming, metadata filters, Python code and pricing (November 2026).
 
-Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-11-08 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-11-19 · aiagentmemory.org
 
 
 **AgentCore long-term memory** is the part of Amazon Bedrock AgentCore Memory that turns raw conversation events into durable records an agent can search later. You write turns as **events** (short-term memory). Configured **memory strategies** then extract facts, preferences, summaries or episodes from those events and store them as **memory records** in namespaces, where any later session can retrieve them.
@@ -104,12 +104,13 @@ aws bedrock-agentcore-control create-memory \
 
 A TTL deletes records by age, not by whether they're still true or used. For memory that should fade by relevance instead, see [AI memory decay](/articles/ai-memory-decay/).
 
-## What's new in AgentCore Memory (October and November 2026)
+## What's new in AgentCore Memory (August to November 2026)
 
-Five additions landed in the developer guide after the TTL release. None changed the pricing table below; all were read in the docs on 8 November 2026.
+Six additions landed after the TTL release. None changed the pricing table below. The five from October and November were read in the docs on 8 November 2026; the access-control row was read in AWS's announcement on 19 November 2026.
 
 | Addition | What it does | Where it's documented |
 |---|---|---|
+| **Fine-grained access control** (28 August 2026) | Isolates each user and tenant. Enforced by AgentCore Gateway with OAuth (JWT) sign-in and Cedar policies, so no custom authorization code. Policies can limit a caller to its own actor's data, and to namespaces taken from its token claims. AWS's announcement names no regions and no price | [AWS announcement](https://aws.amazon.com/about-aws/whats-new/2026/08/agentcorememory-fine-grained-access-control) |
 | **Harness managed memory** | New harnesses get an AgentCore Memory resource by default, with automatic retrieval before each turn | [Harness: Memory](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/harness-memory.html) (page dated 28 October 2026) |
 | **Memory record streaming** | Pushes `MemoryRecordCreated` / `Updated` / `Deleted` events to a Kinesis Data Stream in your account | [Memory record streaming](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory-record-streaming.html) |
 | **Metadata filtering** | Up to 10 indexed keys per memory, up to 5 `AND` filters per retrieval; the LLM can fill keys from the conversation | [Structured metadata](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/long-term-memory-metadata.html) |
