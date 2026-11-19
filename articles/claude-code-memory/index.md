@@ -35,7 +35,7 @@ New to Claude Code? Install it first with the steps in [How to install Claude Co
 
 Skills are a separate thing. They hold task instructions, not facts, and load on demand. See [Claude Code skills: where they live, limits and memory](/articles/claude-code-skills/).
 
-Each CLAUDE.md file loads into context at the start of a session, so its tokens count toward every request. For the numbers and how to trim it, see [Claude Code cost: real spend and what memory adds](/articles/claude-code-cost/).
+Each CLAUDE.md file loads into context at the start of a session, so its tokens count toward every request. For the numbers and how to trim it, see [Claude Code cost: real spend and what memory adds](/articles/claude-code-cost/). Anthropic's own advice on keeping that file short, and on when to use a hook instead, is in [Claude Code best practices](/articles/claude-code-best-practices/).
 
 Claude Code reads CLAUDE.md from four scopes. They load from the broadest to the most specific, so project instructions appear in context after user instructions:
 
