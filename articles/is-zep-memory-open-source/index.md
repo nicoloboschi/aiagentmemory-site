@@ -1,0 +1,227 @@
+# What Is Zep Memory? Zep Cloud, Graphiti and Pricing
+
+> What Zep memory is in 2026: the Zep Cloud temporal context graph, open-source Graphiti, how it stores and retrieves memory, outside test results, pricing, self-hosting, integrations, and the October-November 2026 changelog.
+
+Source: https://aiagentmemory.org/articles/what-is-zep-memory/ · Updated 2026-11-14 · aiagentmemory.org
+
+
+**Zep memory** is Zep Cloud, a managed service that stores what an agent learns from users and data in a **temporal context graph**, then returns a prompt-ready block of relevant facts. Its open-source core is **Graphiti**, a framework for knowledge graphs that track when facts change. The old self-hosted Zep Community Edition is deprecated.
+
+This page covers what Zep is now, how Zep memory stores and retrieves data, the Zep paper, pricing, self-hosting, and integrations. Sources are Zep's [docs](https://help.getzep.com/concepts), the [Graphiti repo](https://github.com/getzep/graphiti) and the [Zep pricing page](https://www.getzep.com/pricing).
+
+## What is Zep memory?
+
+**Zep is a context and memory platform for AI agents that turns conversations and business data into a temporal knowledge graph, called a Context Graph, and retrieves relevant facts for each model call.** Each fact carries a validity window, so Zep can tell what's true now from what used to be true. Zep runs as a managed cloud service with Python, TypeScript and Go SDKs.
+
+Zep's docs now describe the product as "the unified context layer for enterprise data." Agent memory is one of three use cases, next to enterprise context graphs and customer or account context. The memory part is what most developers mean by "Zep memory": per-user graphs built from chat messages and app events.
+
+### Zep vs Graphiti
+
+The two names cause confusion, so here's the split as the Graphiti README describes it:
+
+| | Zep | Graphiti |
+|---|---|---|
+| What it is | Managed context graph service | Open-source temporal knowledge graph framework |
+| License | Commercial | Apache 2.0 |
+| Graph database | Zep's own engine, no third-party graph DB needed | Bring your own: Neo4j, FalkorDB, Amazon Neptune (Kuzu deprecated) |
+| Users and threads | Built in | Build your own |
+| Deployment | Fully managed, or in your cloud (Enterprise) | Self-hosted only |
+| Tooling | Dashboard, graph view, API logs, SDKs | MCP server and REST service in the repo |
+
+Pick Zep if you want the hosted system with users, threads and retrieval done. Pick Graphiti if you want the graph engine and are fine running the rest yourself.
+
+## How Zep stores memory
+
+Zep's data model has a few parts:
+
+- **Users.** One Zep user per application user. Each user gets a **user graph**.
+- **Threads.** Conversations of a user. By default, every message added to any of the user's threads is ingested into that user's graph.
+- **Episodes.** Any single piece of data sent to Zep: a chat message, a JSON payload or a block of text. Episodes are the raw source that facts trace back to.
+- **Entities and facts.** Zep extracts entities (nodes) and facts (edges) from episodes. A fact is a relation between two entities, like "Jane prefers window seats."
+- **Fact invalidation.** When new data contradicts an old fact, Zep stores the time the old fact became invalid on its edge, instead of deleting it. Since 26 October 2026 a new fact that says an earlier fact *ended* also invalidates it, even without a later start date (details [below](#what-changed-in-zep-cloud-late-october-and-november-2026)).
+
+Graphiti works the same way at its core. Its README calls these **bi-temporal** graphs: facts have validity windows, entities have summaries that evolve, and everything links back to episodes. Ingestion is incremental, so new data joins the graph without recomputing it. That's what separates Zep from a plain vector store, which stores chunks with no notion of when a fact stopped being true. For background on why time matters, see [temporal reasoning in AI memory](/articles/temporal-reasoning-ai-memory/).
+
+## How Zep retrieves memory
+
+Zep has two retrieval paths:
+
+1. **`thread.get_user_context()`** returns the **Context Block**, a prompt-ready string Zep assembles from the user's graph. It can include a user summary, facts, entities, episodes and thread summaries. Zep uses the four most recent messages of the thread to decide what's relevant.
+2. **`graph.search()`** is the low-level path. You send a query and pick a scope (edges, nodes, episodes and others) and a reranker such as RRF, MMR or cross-encoder.
+
+**Context templates** sit between the two: you define the block's format once (for example, a user summary plus the top 10 facts) and Zep fills it in.
+
+This Python example uses the current `zep-cloud` SDK (v3) to add a message and fetch context:
+
+```python
+import os
+import uuid
+from datetime import datetime, timezone
+
+from zep_cloud.client import Zep
+from zep_cloud.types import Message
+
+client = Zep(api_key=os.environ["ZEP_API_KEY"])
+
+client.user.add(user_id="user-42", first_name="Jane", last_name="Smith")
+thread_id = uuid.uuid4().hex
+client.thread.create(thread_id=thread_id, user_id="user-42")
+
+client.thread.add_messages(
+    thread_id,
+    messages=[
+        Message(
+            role="user",
+            name="Jane Smith",
+            content="I'm moving to Lisbon next month, so update my delivery address.",
+            created_at=datetime.now(timezone.utc).isoformat(),
+        )
+    ],
+)
+
+# Prompt-ready context assembled from the user's graph
+context = client.thread.get_user_context(thread_id=thread_id)
+print(context.context)
+
+# Low-level search over facts (edges)
+results = client.graph.search(user_id="user-42", query="where does Jane live?", scope="edges")
+for edge in results.edges or []:
+    print(edge.fact, edge.valid_at, edge.invalid_at)
+```
+
+Ingestion runs in the background, so a fact may take a moment to show up in search after you add the message. Zep's docs say to treat the Context Block as untrusted model input.
+
+## The Zep paper
+
+Zep's architecture is described in [Zep: A Temporal Knowledge Graph Architecture for Agent Memory](https://arxiv.org/abs/2501.13956) (Rasmussen et al., January 2025). The paper presents Graphiti as the engine behind Zep and reports:
+
+- **94.8% on Deep Memory Retrieval (DMR)**, against 93.4% for MemGPT.
+- **Up to 18.5% higher accuracy on LongMemEval** than baseline implementations.
+- **About 90% lower response latency** than those baselines.
+
+These are the authors' own numbers. Benchmark setups differ across vendors, so read memory benchmark claims with care.
+
+### How Zep's open-source engine did in an outside test
+
+[MemoryTax](https://arxiv.org/abs/2610.29823) (Zedong Peng, Shanghai Jiao Tong University, October 2026) is not run by Zep or any memory vendor. It ran **Graphiti OSS 0.30.2** on Kuzu (a backend Graphiti now marks deprecated) with default extraction and hybrid edge search (top 20 edges) on one LoCoMo conversation: 419 turns, 152 questions. The same model built the graph and answered.
+
+| Model | Full context | Mem0 OSS 2.1.0 | Zep (Graphiti) | Zep graph build cost |
+|---|---|---|---|---|
+| GPT-4o-mini | 74% | 78% | 43% | $0.09 |
+| GPT-6 Luna | 92% | 80% | 51% | $0.10 |
+| Claude Opus 5.5 | 95% | 95% | 87% | $6.22 |
+
+Part of the gap is the test setup: 64 questions need a photo caption, which the memory methods were not given. On the other 88 questions, Zep with Claude Opus 5.5 scored 94%, against 99% for full context and Mem0 (paper's Table 4).
+
+Two findings matter for Zep users:
+
+- **The model that builds the graph sets the ceiling.** Answering from the graph GPT-4o-mini built, Claude Opus 5.5 scored only 45%; from the graph Opus built, even GPT-4o-mini scored 66%. A stronger reader doesn't recover facts a weaker extractor left out. With GPT-6 Luna the graph held 128 facts, against 195 with Opus. So pick Graphiti's extraction model with care: the docs' advice to use a model with structured output is a floor, not a guarantee.
+- **The graph is cheap to build with a small model, not with a frontier one.** Zep's build cost far less than Mem0's ($0.09 vs $0.56 with GPT-4o-mini, $6.22 vs $25.88 with Opus), but with GPT-4o-mini it also answered far fewer questions.
+
+Limits, as the author states them: one conversation, one run per setup, a lenient GPT-4o-mini judge, defaults only, and a history that fits in every model's context window. Zep Cloud was not tested, only the open-source engine. Hindsight was not in this study either.
+
+## Zep pricing and the free tier
+
+Zep Cloud bills in **credits**. Per the pricing page, an episode up to 350 bytes costs 1 credit, plus 1 credit per extra 350 bytes. Retrieval, storage, users and threads don't use credits.
+
+| Plan | Price | Credits per month | Notable limits |
+|---|---|---|---|
+| **Free** | $0 | 10,000 | 2 projects, variable rate limits, no rollover |
+| **Flex** | $125/month | 50,000 | 5 projects, 600 requests/min, $25 per extra 10,000 credits |
+| **Flex Plus** | $375/month | 200,000 | 10 projects, 1,000 requests/min, $75 per extra 40,000 credits |
+| **Enterprise** | Custom | Custom | SLA, BYOK, BYOC (deploy in your VPC) |
+
+Prices are as listed on getzep.com/pricing in October 2026. The page also mentions an annual option that saves 17%. Some features, such as Observations, are only on Flex Plus and Enterprise.
+
+## Can you self-host Zep?
+
+Not the current product, unless you're on Enterprise. Your options:
+
+- **Zep Community Edition** is deprecated. In April 2025 Zep [announced](https://www.getzep.com/blog/announcing-a-new-direction-for-zeps-open-source-strategy/) it would stop maintaining and releasing it. The code is still in the `legacy/` folder of [getzep/zep](https://github.com/getzep/zep), unsupported. Older Docker guides, including running Zep with Docker, refer to this edition.
+- **Graphiti** is the supported open-source path. Install `graphiti-core`, run Neo4j or FalkorDB (the repo has a Docker Compose setup), and supply an LLM key. Graphiti defaults to OpenAI and works best with models that support structured output.
+- **Docker Compose, from the Graphiti README (read 2026-11-14).** The repo ships Compose files for Neo4j, and a FalkorDB one started with `docker compose --profile falkordb up`. Its MCP server can run in Docker with Neo4j. The examples use default database credentials, so change them before you expose a port.
+- **Local models.** Graphiti can use local servers (Ollama, vLLM, llama.cpp, LM Studio) through their OpenAI-compatible endpoints. The README warns that Graphiti "works best with LLM services that support Structured Output", so a small local model may fail to produce valid entity and edge JSON. Test extraction before you commit.
+- **BYOC** on the Enterprise plan deploys Zep inside your own cloud.
+- **Another open-source memory server.** If you want a whole service rather than an engine, [Hindsight](https://github.com/vectorize-io/hindsight) (MIT) runs in one Docker container with embedded PostgreSQL, with graph and time-range recall, consolidation and `reflect` all in the open-source release. It doesn't keep Zep-style validity windows per fact; it refines consolidated observations instead.
+
+### What changed in Graphiti 0.31 (October 2026)
+
+If you self-host Graphiti, the October releases change three things you will notice: the default model, who can reach the servers, and what deleting an episode does. From the [v0.31.0](https://github.com/getzep/graphiti/releases/tag/v0.31.0) and [v0.31.2](https://github.com/getzep/graphiti/releases/tag/v0.31.2) release notes and the linked pull requests:
+
+| Release | Change | What you need to do |
+|---|---|---|
+| 0.31.0 (Oct 14) | Default OpenAI model is now `gpt-6-luna` with prompt caching off; the default reranker moves from `gpt-4.1-nano` to `gpt-4.1-mini` ([#1999](https://github.com/getzep/graphiti/pull/1999)). The PR says OpenAI shuts down `gpt-4.1-nano` on October 23, 2026, after which old defaults fail on search reranking and small-model calls. | Upgrade if you rely on defaults; set models explicitly if you want the old cost profile. |
+| 0.31.0 | MCP server moves to MCP SDK 2.x ([#1921](https://github.com/getzep/graphiti/pull/1921)), and MCP tools now read and write the graph of the requested `group_id` ([#1926](https://github.com/getzep/graphiti/pull/1926)). Before, on FalkorDB, `add_memory` wrote to the group's graph while `get_episodes` searched the default one, so users saw empty results and failed deletes. | If FalkorDB MCP results looked empty, re-test after upgrading. |
+| 0.31.2 (Oct 20) | MCP and REST servers listen on `127.0.0.1` by default, and the Compose files publish the server and database ports on localhost only ([#2032](https://github.com/getzep/graphiti/pull/2032)). | Clients on another machine lose access until you set the host or change the port mapping. `docker run -p 8000:8000` with the published images is unchanged. |
+| 0.31.2 | `remove_episode` no longer deletes a fact that a later episode restated, and it rebuilds the summaries of entities the removed episode mentioned ([#2025](https://github.com/getzep/graphiti/pull/2025)). | Deletes now cost LLM calls: one per 10 remaining episodes of each touched entity. |
+
+The security note matters most. The repo now states ([#2029](https://github.com/getzep/graphiti/pull/2029)) that the MCP and REST servers are reference implementations with **no authentication or authorization**: any caller can read, change or delete all graph data. Graphiti also gives the same trust to every episode in a `group_id`, so untrusted content can change facts in that group; filtering what you ingest is your job. Put your own auth in front before you expose either server. Zep Cloud's Context MCP Server, by contrast, signs in through your identity provider. For the wider risk, see [memory injection attacks](/articles/ai-memory-injection/).
+
+## What changed in Zep Cloud (late October and November 2026)
+
+Zep publishes a dated [changelog](https://help.getzep.com/changelog) for the cloud service. The entries from 26 October to 4 November 2026 (read on 8 November) fall into three groups: one change to how memory itself behaves, several features gated to paid plans, and two breaking SDK changes.
+
+| Date | Change | Why it matters |
+|---|---|---|
+| 26 Oct | **A fact that ends an earlier fact now invalidates it.** The earlier fact's `invalid_at` becomes the new fact's end date, or the episode's reference time if the new fact has no date. Before, the old fact stayed valid unless the new one had a later start date. | "I no longer work at Acme" now closes "works at Acme" instead of leaving both facts current. If you built workarounds for that, remove them. |
+| 26 Oct | Episode and batch **webhooks** are sent only on plans that include webhooks. | Check your plan before relying on webhooks for sync jobs. |
+| 26 Oct | Node search from `bfs_origin_node_uuids` reaches entities through observation nodes; before, observation nodes used up the traversal's node limit and searches could return no entities. | Graph-walk retrieval returns more entities with no change on your side. |
+| 27 Oct | `user.update` (v4) now updates the user node's name and attributes in the graph. Node and edge responses list only true source episodes, not Zep's internal ones. | Fewer stale user nodes; cleaner provenance. |
+| 28 Oct | **Content policies need the Enterprise plan**, turned on per account on request; otherwise the API returns HTTP 403 `content_policy_not_entitled` and existing protected graphs ingest new episodes without evaluation. | Content filtering of memory is an Enterprise feature now. |
+| 29 Oct | **SCIM provisioning** (beta, Enterprise) maps identity-provider groups to Zep roles. The `connector` key is **reserved** in episode and message metadata; writes with it return 400. | Rename any `connector` metadata key you set yourself. |
+| 1 Nov | `user.get_by_email` (v4); `filters.document_id` on `graph.episode.list`. **Breaking:** `graph.episode.list_for_document` is removed from the v4 SDKs (4.0.0 and 4.0.1 still work against the API). | Update code that lists a document's episodes. |
+| 3 Nov | **v4 SDKs 4.1.0** ship those methods plus `graph.list_metadata_keys` (a key stays listed after nothing uses it). Episodes processed without a content policy report `content_policy.status: not_evaluated` instead of `pending`. | Pin 4.1.0 if you need the new methods. |
+
+Two of these change what "memory" means in Zep. The invalidation fix makes the validity windows that Zep sells more trustworthy: a fact's end is now recorded when a later statement ends it, not only when a contradicting fact starts. And the Enterprise gate on content policies means the free, Flex and Flex Plus plans store whatever the model extracts, with no server-side filter on prohibited content.
+
+For comparison, [Hindsight](https://github.com/vectorize-io/hindsight) fixed a neighbouring "which fact wins" bug in the same month: its consolidation no longer lets an older fact overwrite a newer same-day amendment ([PR #5966](https://github.com/vectorize-io/hindsight/pull/5966), merged 22 October, in v1.2.0). The two systems handle the problem differently. Zep keeps both facts and marks the old one's end date; Hindsight refines a consolidated observation and keeps the evidence behind it. Hindsight has no per-fact validity window. The Zep changelog describes Zep Cloud only; it doesn't say whether self-hosted Graphiti's invalidation behaves the same way.
+
+## Zep integrations: LangChain, LangGraph, n8n, MCP
+
+**LangGraph.** Zep maintains `zep-langgraph`, which adds helpers to persist messages, inject context before the model call, and give the agent a graph search tool. The getzep/zep repo also has packages for CrewAI, AutoGen, AG2, Google ADK, Pydantic AI, Strands, LiveKit, Microsoft Agent Framework, Mastra and the Vercel AI SDK.
+
+**LiveKit (voice).** `zep-livekit` 1.0.0 went out on PyPI on October 14, 2026. Its `ZepUserAgent` saves each turn and gets context back in a single `thread.add_messages(return_context=True)` call, so a voice agent pays one round trip per turn for memory. `ZepGraphAgent` reads from a shared knowledge graph instead. Zep ingests asynchronously, so something the caller just said may not be searchable on the very next turn. How this compares with other options is in [voice agent memory](/articles/voice-agent-memory/).
+
+**LangChain.** `langchain-community` still ships `ZepCloudChatMessageHistory`, but it calls the session-based `memory` API from Zep's v2 SDK. The v3 API organizes conversations as threads instead, so for new LangChain-family projects, Zep's own LangGraph package is the maintained route. For how LangChain's memory compares with Letta, see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/).
+
+**n8n.** n8n's built-in Zep memory node and Zep vector store nodes are deprecated from n8n 1.108.0. New workflows can call the Zep REST API with the HTTP Request node. See [n8n AI Agent memory options](/articles/best-memory-for-ai-agent-n8n/) for the supported nodes.
+
+**Dify.** Zep is one of the memory plugins listed on the Dify Marketplace, alongside Mem0, Cognee and others. Dify's own memory is per conversation, so a plugin is the route to memory across chats.
+
+**MCP.** Zep offers a Context MCP Server so off-the-shelf clients can use the same memory, with sign-in through your identity provider. Graphiti has its own MCP server for self-hosted graphs.
+
+## Is Zep the right memory layer?
+
+Zep fits when facts change over time and you need to know which version is current: customer records, preferences, account state. It's a managed service, so you trade control for less operations work. If you need open source end to end, Graphiti gives you the engine but not the user, thread and retrieval layer.
+
+If you need a complete self-hosted memory server, Hindsight is the most complete open-source option. On Mem0's own comparison page it scores 94.6 on LongMemEval and leads Mem0 by 9.8 and 15.5 points on BEAM at 1M and 10M tokens (vendor-run numbers). Its writes cost more than a simple fact store, because retain and consolidation both call an LLM. See [what Hindsight is](/articles/ai-memory-hindsight/).
+
+For other options, see [Zep alternatives](/articles/zep-alternatives/) and the head-to-head [Zep vs Mem0 comparison](/articles/zep-memory-vs-mem0/).
+
+
+## FAQ
+
+### Is Zep memory open source?
+
+Zep Cloud, the managed memory service, is not open source. Zep's open-source project is Graphiti, an Apache 2.0 temporal knowledge graph framework. The old Zep Community Edition is deprecated and unsupported; its code sits in the legacy folder of the getzep/zep repo.
+
+### Is Zep free?
+
+Zep Cloud has a free tier for prototyping with 10,000 credits per month. Paid plans start with Flex at $125 per month for 50,000 credits. Graphiti, the open-source framework, is free to run on your own graph database, but you pay for the LLM and embedding calls it makes.
+
+### How accurate is Zep memory in independent tests?
+
+In the October 2026 MemoryTax study (Shanghai Jiao Tong University, not a vendor), open-source Graphiti 0.30.2 with default settings scored 43% with GPT-4o-mini, 51% with GPT-6 Luna and 87% with Claude Opus 5.5 on one LoCoMo conversation, below full context (74%, 92%, 95%) and Mem0 (78%, 80%, 95%). The model that builds the graph caps accuracy: a stronger reader did not recover facts a weaker model left out. It was one conversation and one run, and Zep Cloud was not tested.
+
+### Is the Graphiti MCP server safe to expose on a network?
+
+Not on its own. Since October 2026 the Graphiti repo states that its MCP and REST servers are reference implementations with no authentication or authorization, so any caller can read, change or delete all graph data. Graphiti 0.31.2 makes both listen on localhost by default. Put your own authentication in front before exposing them.
+
+### What changed in Zep Cloud in late 2026?
+
+Per Zep's changelog, from 26 October 2026 a fact stating that an earlier fact ended now invalidates that fact (its invalid_at becomes the new fact's end date). Webhooks are limited to plans that include them, content policies and SCIM provisioning (beta) require the Enterprise plan, the connector metadata key is reserved, and the v4 SDKs 4.1.0 (3 November) add user.get_by_email, a document_id filter on graph.episode.list and graph.list_metadata_keys while removing graph.episode.list_for_document.
+
+### Does Zep work with n8n and LangGraph?
+
+Zep maintains a zep-langgraph package for LangGraph. In n8n, the built-in Zep memory node is deprecated from n8n 1.108.0, so new n8n workflows reach Zep through its REST API with the HTTP Request node.
+
