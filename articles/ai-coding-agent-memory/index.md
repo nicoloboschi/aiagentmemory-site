@@ -5,7 +5,7 @@
 Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-11-20 · aiagentmemory.org
 
 
-**AI coding agent memory** is how tools like Claude Code, Codex, Cursor and GitHub Copilot carry project knowledge from one session to the next. The main mechanism is a plain **instruction file** (CLAUDE.md, AGENTS.md or Cursor rules) loaded into every session. Some agents add **automatic memory** that saves lessons as they work. For more, teams add an external memory server. For Claude Code specifically, see [Claude Code memory](/articles/claude-code-memory/).
+**AI coding agent memory** is how tools like Claude Code, Codex, Cursor and GitHub Copilot carry project knowledge from one session to the next. The main mechanism is a plain **instruction file** (CLAUDE.md, AGENTS.md or Cursor rules) loaded into every session. Some agents add **automatic memory** that saves lessons as they work. For more, teams add an external memory server. For Claude Code specifically, see [Claude Code memory](/articles/claude-code-memory/). For how popular each agent is (GitHub stars, npm and PyPI downloads), see [AI coding agent statistics](/articles/ai-coding-agent-statistics/).
 
 Every session starts with an empty context window, so anything the agent should know about your build, conventions or past mistakes has to be written down somewhere and loaded back. This page compares how the major coding agents do it, from their official docs, checked October 2026.
 

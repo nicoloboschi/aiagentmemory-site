@@ -1,8 +1,8 @@
 # Does Gemini Have Long-Term Memory? (2026): Past Chats and Deletion
 
-> Gemini long-term memory: past chats, and a Memory summary you can view, edit and delete on web and mobile (not in the UK, EEA, Switzerland or Nigeria). Also how to delete it.
+> Yes, if Memory is on: Gemini uses past chats for 18+ users with a personal Google Account and Keep Activity on. How to turn it off, delete chats, or see its Memory summary.
 
-Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-11-17 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/gemini-ai-long-term-memory/ · Updated 2026-11-20 · aiagentmemory.org
 
 
 **Gemini AI long-term memory** is the setting in the Gemini app that lets it use details from your **past chats** to personalize answers, plus the option to ask it to **remember specific facts**. It needs you to be 18 or older, signed in with a personal Google Account, with **Keep Activity** on. You switch it in Gemini's personalization settings and erase it by deleting chats.
