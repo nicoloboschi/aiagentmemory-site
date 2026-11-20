@@ -2,7 +2,7 @@
 
 > How AI coding agents remember projects: Claude Code CLAUDE.md and auto memory, Codex AGENTS.md and memories, Cursor rules, Copilot Memory, and external memory tools.
 
-Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-11-16 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-coding-agent-memory/ · Updated 2026-11-20 · aiagentmemory.org
 
 
 **AI coding agent memory** is how tools like Claude Code, Codex, Cursor and GitHub Copilot carry project knowledge from one session to the next. The main mechanism is a plain **instruction file** (CLAUDE.md, AGENTS.md or Cursor rules) loaded into every session. Some agents add **automatic memory** that saves lessons as they work. For more, teams add an external memory server. For Claude Code specifically, see [Claude Code memory](/articles/claude-code-memory/).
@@ -29,6 +29,9 @@ Instructions belong in version control. Learnings are often machine-local and ge
 | **Cursor** | `.cursor/rules/*.mdc`, `AGENTS.md`, user and team rules | Memories removed in 2.1.x | n/a | Rule modes control loading |
 | **GitHub Copilot** | `AGENTS.md` and repo instructions | Copilot Memory (repo facts and user preferences), GA since 28 Oct 2026, in the Copilot app, CLI, VS Code, cloud agent, code review, autofix, Mobile, Slack and Teams | On for paid individual plans; admin policy for orgs; VS Code setting off by default | Expires 90 days after creation or last upvote (admins: 7 to 180 days for repo facts) |
 | **Cline** | `.clinerules/*.md`, global custom instructions | Memory Bank: six markdown files the agent maintains in `memory-bank/` | Off until you add the instructions | All files re-read at the start of every task |
+
+Claude Code and Cursor differ in who writes the memory: Claude Code adds notes the agent writes itself, while Cursor's documented memory is the rules you write. The full
+side-by-side is in [Claude Code vs Cursor](/articles/claude-code-vs-cursor/).
 
 ### Claude Code: CLAUDE.md and auto memory
 

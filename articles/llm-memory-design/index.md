@@ -1,8 +1,8 @@
 # AI Agent Memory Explained (2026): Types, Storage and Tools
 
-> AI agent memory is a store outside the model that brings the right facts back into the prompt. The model forgets between calls. Four types, storage and 2026 tools.
+> Agents forget between calls by default. Agent memory is a store outside the model that brings facts back into the prompt: four types, storage and 2026 tools.
 
-Source: https://aiagentmemory.org/articles/ai-agent-memory-explained/ · Updated 2026-11-17 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-memory-explained/ · Updated 2026-11-20 · aiagentmemory.org
 
 
 **AI agent memory** is the part of an agent that saves information outside the language model and brings the right pieces back into the prompt later. The model itself forgets everything between calls. Memory is what lets an agent remember a user's preferences, recall what happened last week, and stop repeating the same mistakes.

@@ -2,7 +2,7 @@
 
 > How Claude Code memory works: CLAUDE.md locations and load order, @imports, auto memory and how to turn it off, /memory, plus memory MCP servers, claude-mem and Hindsight.
 
-Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-16 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-memory/ · Updated 2026-11-20 · aiagentmemory.org
 
 
 **Claude Code memory** is two built-in systems. **CLAUDE.md files** hold instructions you write, and Claude Code loads them at the start of every session. **Auto memory** holds notes Claude writes for itself in `~/.claude/projects/<project>/memory/`. You manage both with `/memory`. For more than notes, add a memory MCP server or a plugin such as claude-mem or Hindsight.
@@ -13,7 +13,7 @@ Each Claude Code session starts with an empty context window, so anything Claude
 
 **Claude Code memory is the set of files that Claude Code loads into a new session so Claude does not start from zero: CLAUDE.md instruction files that you write and commit, and auto memory notes that Claude writes from your corrections. Both are plain Markdown. Claude reads them as context, not as rules it is forced to obey.**
 
-For the same question about Codex, with its defaults and folders side by side, see [Claude Code vs Codex](/articles/claude-code-vs-codex/).
+For the same question about Codex, with its defaults and folders side by side, see [Claude Code vs Codex](/articles/claude-code-vs-codex/). For Cursor's rule files next to these, see [Claude Code vs Cursor](/articles/claude-code-vs-cursor/).
 
 The docs compare the two like this:
 

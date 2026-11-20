@@ -2,7 +2,7 @@
 
 > How to install Claude Code on macOS, Windows, WSL and Linux with the native installer, Homebrew, WinGet or npm, check the install, log in, update, and uninstall. Commands from the official setup docs, read 2026-11-12.
 
-Source: https://aiagentmemory.org/articles/install-claude-code/ · Updated 2026-11-16 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/install-claude-code/ · Updated 2026-11-20 · aiagentmemory.org
 
 
 ## What is Claude Code?
@@ -71,7 +71,7 @@ Use the matching command for Homebrew, WinGet, npm or your Linux package manager
 
 ## Where does memory fit after the install?
 
-Claude Code's own memory needs no install. Put build commands and rules in CLAUDE.md, and Claude Code also keeps short auto-memory notes. Both are described in [Claude Code memory](/articles/claude-code-memory/), and the hook events that save memory are in [Claude Code hooks](/articles/claude-code-hooks-memory/).
+Claude Code's own memory needs no install. Put build commands and rules in CLAUDE.md, and Claude Code also keeps short auto-memory notes. Both are described in [Claude Code memory](/articles/claude-code-memory/), and the hook events that save memory are in [Claude Code hooks](/articles/claude-code-hooks-memory/). For what to put in CLAUDE.md and what to enforce with checks, read [Claude Code best practices](/articles/claude-code-best-practices/).
 
 Built-in memory stays on one machine and does not search past sessions. Add-ons fill that gap. Hindsight, the open-source memory server from Vectorize, is one of them:
 

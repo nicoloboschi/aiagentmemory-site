@@ -2,12 +2,12 @@
 
 > Cursor rules are .mdc files in .cursor/rules, plus User, Team and AGENTS.md rules. The four apply modes, the 500-line guide and Hindsight's Cursor CLI.
 
-Source: https://aiagentmemory.org/articles/cursor-rules/ · Updated 2026-11-15 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/cursor-rules/ · Updated 2026-11-20 · aiagentmemory.org
 
 
 **Cursor rules** are instruction files that Cursor adds to the agent's context. You write them once, and Cursor reads them in later chats. Project rules are `.mdc` files in `.cursor/rules`, which Cursor's docs say is version-controlled and scoped to the codebase. Cursor also reads `AGENTS.md` files, and it has User and Team rules for wider scopes.
 
-This page covers the rule types, how each one is applied, and where Hindsight fits for Cursor users. Facts come from Cursor's rules docs (read 2026-11-15) and Hindsight's coding agents page (read 2026-11-12 and 2026-11-15).
+This page covers the rule types, how each one is applied, and where Hindsight fits for Cursor users. For a side-by-side with Claude Code's files, see [Claude Code vs Cursor](/articles/claude-code-vs-cursor/). Facts come from Cursor's rules docs (read 2026-11-15) and Hindsight's coding agents page (read 2026-11-12 and 2026-11-15).
 
 ## What are Cursor rules?
 
