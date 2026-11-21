@@ -1,8 +1,8 @@
 # Claude Code Release Notes: Memory and Context Changes (2026)
 
-> Claude Code releases 2.1.311 to 2.1.329 (Oct 26 to Nov 19, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
+> Claude Code releases 2.1.311 to 2.1.330 (Oct 26 to Nov 20, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
 
-Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-19 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-21 · aiagentmemory.org
 
 
 ## What are the Claude Code release notes for memory?
@@ -10,12 +10,13 @@ Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · 
 Claude Code's memory is made of files (CLAUDE.md, MEMORY.md, rules) plus compaction, which shortens a long
 conversation when it nears the context limit. This page tracks the release notes that change how those parts
 behave. It covers the 11 newest GitHub releases, read on 2026-11-13, and skips releases that touch no memory
-or context behavior. Read again on 2026-11-19 for v2.1.329.
+or context behavior. Read again on 2026-11-21 for v2.1.330.
 
 ## Memory-related changes by version
 
 | Version | Date | Change that matters for memory |
 |---|---|---|
+| 2.1.330 | 2026-11-20 | Fixed link reference definitions being dropped from CLAUDE.md and memory files that contain an HTML comment. Fixed Claude Code freezing for up to several minutes right after compacting a very long conversation. Fixed `/context` undercounting system tools in Code Mode before Claude's first reply. Fixed Code Mode not restoring a file that a script had read after Esc and `/compact`. |
 | 2.1.329 | 2026-11-19 | Fixed `/code-review` stopping at a permission prompt, on most models, to look for a `~/.claude/CLAUDE.md` that doesn't exist. Fixed sessions started from a pre-warmed process ignoring the `autoCompactWindow` setting in the project's `.claude/settings.json`. Fixed `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` staying in effect in a running session after it is removed from settings.json. |
 | 2.1.328 | 2026-11-19 | Fixed automatic compaction reusing the session's earlier system prompt instead of rebuilding it the way `/compact` does. Fixed a resumed cloud session sometimes losing its compaction summary or recent messages when a message was saved late. Changed `/code-review` on most models to report only bugs and CLAUDE.md violations; run `/simplify` for reuse, simplification and efficiency cleanups. |
 | 2.1.327 | 2026-11-17 | Fixed a compaction right after a reply cut at the output token limit losing that reply's tool call and its result. Fixed Edit refusing "File has not been read yet" after a compaction, for unchanged files outside the project that Claude had read in full. Fixed in-process agent teammates on another model compacting at the lead's context limit; they now use their own limit and model. Improved the reminder after compaction about a finished subagent: if its output file can't be read, Claude is told to ask it with `SendMessage`. Fixed `claudeMdExcludes` patterns on Windows not matching a path whose drive letter has the other case. |
@@ -89,7 +90,7 @@ Sources: [anthropics/claude-code releases](https://github.com/anthropics/claude-
 
 ### What changed in Claude Code memory recently?
 
-From v2.1.311 to v2.1.329 (October 26 to November 19, 2026), Claude Code fixed stale MEMORY.md and CLAUDE.md content after compaction, stopped overwriting large CLAUDE.md files after reading only part of them, added idle compaction in VS Code and Claude Desktop, and made /context shorter. The table below lists each change with its version.
+From v2.1.311 to v2.1.330 (October 26 to November 20, 2026), Claude Code fixed stale MEMORY.md and CLAUDE.md content after compaction, stopped overwriting large CLAUDE.md files after reading only part of them, added idle compaction in VS Code and Claude Desktop, and made /context shorter. The table below lists each change with its version.
 
 ### Where do I read the Claude Code release notes?
 

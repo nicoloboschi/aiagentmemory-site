@@ -103,6 +103,8 @@ Prices from each vendor's pricing page on 8 October 2026. They change often.
 
 All of these except Zep's platform also have a free self-hosted route (Graphiti covers Zep's open-source side; Supermemory's local binary is free but not open source). Hindsight's self-hosted version includes every memory feature its cloud has, while Mem0 keeps graph memory, temporal reasoning and Dream consolidation on its hosted Platform. Since 26 October 2026 Mem0's free plan also needs your own LLM key after 30 days, and graph memory and Dream are only on custom plans; [what is Mem0](/articles/what-is-mem0-ai/) has the new limits and what a key costs per 1,000 adds.
 
+Microsoft's managed option is Azure AI Foundry memory. See [Azure AI Foundry Memory](/articles/azure-ai-foundry-long-term-memory/) for its limits and pricing.
+
 ## How to test a memory framework before you commit
 
 Benchmark tables in READMEs are mostly self-reported and run with different models and judges, so they won't tell you which system works best on your data. A one-day test will:

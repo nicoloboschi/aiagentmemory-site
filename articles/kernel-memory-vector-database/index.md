@@ -9,6 +9,8 @@ Source: https://aiagentmemory.org/articles/vector-database-for-llm-memory/ · Up
 
 This page explains how vector memory works, what agent memory needs that plain RAG doesn't, and how the main options compare as of October 2026.
 
+For GitHub stars and monthly downloads of these databases, see [vector database statistics](/articles/vector-database-statistics/).
+
 ## What is a vector database for LLM memory?
 
 **A vector database for LLM memory is a store that keeps text as numerical embeddings alongside metadata (user, time, type) and answers nearest-neighbor queries fast. An agent uses it to save what it learns and, on each turn, retrieve the few memories most similar to the current request.**

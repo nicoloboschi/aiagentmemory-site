@@ -1,6 +1,6 @@
 # Agent Workflow Memory (2026): Paper Results, Limits and Code
 
-> Agent Workflow Memory (AWM) lets LLM agents reuse routines from past runs: 35.5% vs 23.5% on WebArena with GPT-4. How it works, limits, and code to build it.
+> Agent workflow memory is an LLM agent reusing routines from its past runs. The AWM paper reports 35.5% vs 23.5% on WebArena with GPT-4 (authors' numbers), plus how it works, limits and code.
 
 Source: https://aiagentmemory.org/articles/agent-workflow-memory/ · Updated 2026-11-12 · aiagentmemory.org
 

@@ -1,6 +1,6 @@
 # Honcho Memory (2026): What It Is, Pricing and Self-Hosting
 
-> What Honcho memory is: Plastic Labs' AGPL memory service that models each user as a peer. $2 per 1M tokens, 90.4% LongMemEval (self-reported), self-hosting, and 3.5.0 source citations.
+> Honcho memory is Plastic Labs' AGPL memory service that models each user as a peer. $2 per 1M tokens, 90.4% LongMemEval (self-reported), self-hosting, and 3.5.0 source citations.
 
 Source: https://aiagentmemory.org/articles/honcho-llm-memory/ · Updated 2026-11-12 · aiagentmemory.org
 
