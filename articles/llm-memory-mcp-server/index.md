@@ -15,6 +15,8 @@ This page explains how memory over MCP works, walks through the official server,
 
 MCP tools are "model-controlled," per the [spec](https://modelcontextprotocol.io/specification/2026-07-28/server/tools): the model discovers and calls them based on the conversation. That's the key behavior difference from memory that an app injects automatically. With MCP, memory works only if the model chooses to save and search, which is why most memory servers ship a suggested system prompt. The two patterns are compared in [how AI memory works](/articles/how-ai-memory-works/).
 
+For GitHub stars and monthly downloads of MCP servers and SDKs, see [MCP server statistics](/articles/mcp-server-statistics/).
+
 ## The official MCP memory server
 
 The reference implementation is [`@modelcontextprotocol/server-memory`](https://github.com/modelcontextprotocol/servers/tree/main/src/memory) in the `modelcontextprotocol/servers` repo. It models memory as a **knowledge graph**:
