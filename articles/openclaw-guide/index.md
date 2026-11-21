@@ -30,7 +30,7 @@ The installer supports macOS, Linux, WSL2 and Windows. It sets up a supported No
 4. **Finish onboarding:** the installer starts it. After a package install, run `openclaw onboard --install-daemon`. Onboarding checks model access, creates the workspace and sets up the Gateway.
 5. **Check and open the UI:** run `openclaw gateway status`, then `openclaw dashboard`. Send a message in the Control UI to confirm the assistant answers.
 
-For Docker, Nix and other paths, see the [installation guide](https://docs.openclaw.ai/install).
+For Docker, Nix and other paths, see the [installation guide](https://docs.openclaw.ai/install). For the Docker steps, read [OpenClaw Docker setup](/articles/openclaw-docker/).
 
 ## How do you connect a chat app?
 

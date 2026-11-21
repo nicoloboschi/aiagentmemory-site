@@ -35,19 +35,19 @@ Collected 2026-11-21 14:01 UTC. Sorted by stars. "Last push" is the last commit 
 
 ## Memory projects that ship an MCP server: GitHub and package statistics
 
-Collected 2026-11-21 14:01 UTC, same method. Each package column says which package its count is for. mem0 and Graphiti are memory libraries: their counts include every use of the library, not only its MCP server. Hindsight's PyPI count is for `hindsight-api`, its server package. Its npm package is a client library, so it is left out.
+Collected 2026-11-21 20:28 UTC, same method. Each package column says which package its count is for. Every project is counted with its client library, the package an app installs to use it: mem0 (`mem0ai`), Hindsight (`hindsight-client` on PyPI, `@vectorize-io/hindsight-client` on npm), Graphiti (`graphiti-core`) and Basic Memory (`basic-memory`). mem0, Graphiti and Hindsight are memory libraries: their counts include every use of the library, not only its MCP server.
 
 | # | Project | Repository | Stars | Forks | Created | Last push | License | PyPI/month | npm/month |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | mem0 (`mem0ai`) | mem0ai/mem0 | 69,300 | 8,246 | 2023-06-20 | 2026-11-18 | Apache-2.0 | 2,514,292 | 1,074,430 |
-| 2 | Hindsight (`hindsight-api`) | vectorize-io/hindsight | 62,363 | 7,394 | 2025-10-30 | 2026-11-21 | MIT | 49,865 | - |
-| 3 | Graphiti (`graphiti-core`) | getzep/graphiti | 32,976 | 3,402 | 2024-08-08 | 2026-11-20 | Apache-2.0 | 911,364 | - |
-| 4 | Basic Memory (`basic-memory`) | basicmachines-co/basic-memory | 4,653 | 369 | 2024-12-02 | 2026-11-20 | AGPL-3.0 | 63,384 | - |
+| 1 | mem0 (`mem0ai`) | mem0ai/mem0 | 69,311 | 8,245 | 2023-06-20 | 2026-11-18 | Apache-2.0 | 2,514,292 | 1,074,430 |
+| 2 | Hindsight (`hindsight-client`, `@vectorize-io/hindsight-client`) | vectorize-io/hindsight | 62,443 | 7,396 | 2025-10-30 | 2026-11-21 | MIT | 1,060,474 | 263,052 |
+| 3 | Graphiti (`graphiti-core`) | getzep/graphiti | 32,984 | 3,402 | 2024-08-08 | 2026-11-20 | Apache-2.0 | 911,364 | - |
+| 4 | Basic Memory (`basic-memory`) | basicmachines-co/basic-memory | 4,659 | 369 | 2024-12-02 | 2026-11-20 | AGPL-3.0 | 63,384 | - |
 
 ## What the numbers show
 
-- **Stars:** the official reference servers repository leads the server table, then Context7 and Chrome DevTools MCP. Among the memory projects, mem0 has the most stars (69,300), then Hindsight (62,363). Stars show interest, not quality.
-- **Memory packages:** mem0 has the most downloads of the memory projects: 2,514,292 on PyPI and 1,074,430 on npm. Graphiti has 911,364 on PyPI. Basic Memory has 63,384 on PyPI. Hindsight's server package has 49,865 on PyPI.
+- **Stars:** the official reference servers repository leads the server table, then Context7 and Chrome DevTools MCP. Among the memory projects, mem0 has the most stars (69,311), then Hindsight (62,443). Stars show interest, not quality.
+- **Memory packages:** mem0 has the most downloads of the memory projects: 2,514,292 on PyPI and 1,074,430 on npm. Hindsight is second on PyPI with 1,060,474 and has 263,052 on npm. Graphiti has 911,364 on PyPI. Basic Memory has 63,384 on PyPI.
 - **Browser and dev tools:** Playwright MCP had 44,347,699 npm downloads, the most of any server package in the first table apart from the SDKs.
 - **Quiet repositories:** Notion MCP's last commit is 2026-10-29, the oldest in the first table.
 
@@ -86,7 +86,7 @@ Limits to know:
 - `@modelcontextprotocol/server-memory` and `@modelcontextprotocol/sdk`, `@playwright/mcp`, `@upstash/context7-mcp`, `chrome-devtools-mcp`, `@supabase/mcp-server-supabase` and `@notionhq/notion-mcp-server` point to the repositories in the first table.
 - `mem0ai` on npm points to `mem0ai/mem0`. `mem0ai` on PyPI has the summary "Long-term memory for AI Agents". We did not open its README.
 - `mcp`, `basic-memory` and `graphiti-core` on PyPI link to the repositories in the tables.
-- `hindsight-api` on PyPI has no repository link. Its name is the install line in the Hindsight README (`pip install hindsight-api`), checked 2026-11-21.
+- `hindsight-client` on PyPI (summary: "Python client for Hindsight") and `@vectorize-io/hindsight-client` on npm (repository: `vectorize-io/hindsight`, directory `hindsight-clients/typescript`) are the Hindsight client packages, checked 2026-11-21. The server package `hindsight-api` (PyPI, 49,865 downloads last month) is not counted, because the other projects are counted by their client library.
 - GitHub MCP Server has no npm or PyPI package in this list, so its download cells are dashes.
 
 **Not counted.** Stars gained in the last 30 days. Downloads from other tools that depend on a package, which are most of the SDK numbers.
@@ -102,7 +102,7 @@ No single ranking exists. The list here is chosen by hand, so treat it as a star
 
 ### Which MCP memory server is the most popular?
 
-Among the memory projects, mem0 had the most downloads: 2,514,292 on PyPI and 1,074,430 on npm in the last month. Graphiti had 911,364 on PyPI. Those packages are memory libraries, so their counts include users who never run an MCP server. Hindsight's PyPI count is for its server package (hindsight-api): 49,865 in the last month. The official memory server package (@modelcontextprotocol/server-memory) had 1,349,428 npm downloads.
+Among the memory projects, mem0 had the most downloads: 2,514,292 on PyPI and 1,074,430 on npm in the last month. Graphiti had 911,364 on PyPI. Those packages are memory libraries, so their counts include users who never run an MCP server. Hindsight is second on PyPI: its client library (hindsight-client) had 1,060,474 downloads in the last month, and its npm client had 263,052. The official memory server package (@modelcontextprotocol/server-memory) had 1,349,428 npm downloads.
 
 ### Does Hindsight have an MCP server?
 
