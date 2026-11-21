@@ -1,8 +1,8 @@
 # Types of AI Agent Memory: Working, Episodic, Semantic
 
-> The types of AI agent memory: working, episodic, semantic and procedural (CoALA), parametric vs external memory, and how LangGraph, Letta and Mastra name them.
+> AI agent memory comes in four types: working, episodic, semantic and procedural (the CoALA split). The page also covers parametric vs external memory and how LangGraph, Letta and Mastra name them.
 
-Source: https://aiagentmemory.org/articles/ai-agents-memory-types/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agents-memory-types/ · Updated 2026-11-21 · aiagentmemory.org
 
 
 The **types of AI agent memory** are usually split four ways: **working memory** for the current step, and three long-term stores, **episodic** (what happened), **semantic** (what is true) and **procedural** (how to act). The split comes from cognitive science. The CoALA paper mapped it onto LLM agents in 2023, and LangGraph, LangMem and most memory tools now use it.

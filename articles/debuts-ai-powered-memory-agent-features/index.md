@@ -2,7 +2,7 @@
 
 > LangGraph, CrewAI, OpenAI Agents SDK, Microsoft Agent Framework, Google ADK, Letta, LlamaIndex and Pydantic AI compared on memory: sessions, long-term stores, plug-ins.
 
-Source: https://aiagentmemory.org/articles/ai-agent-framework-comparison/ · Updated 2026-11-16 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-agent-framework-comparison/ · Updated 2026-11-21 · aiagentmemory.org
 
 
 An **AI agent framework comparison** that matters in production usually comes down to state: how each framework keeps conversation history, what it offers for long-term memory, and how easily you can plug in an external memory system. In October 2026, **LangGraph** and **Letta** give the most memory control, **CrewAI** and **LlamaIndex** the most built-in automation, and **ADK**, **Microsoft Agent Framework** and the **OpenAI Agents SDK** lean on sessions plus cloud or plug-in memory.
@@ -18,6 +18,8 @@ Every framework below handles short-term memory. They differ on three questions:
 1. **Persistence:** does session history survive a restart, and on which databases?
 2. **Long-term memory:** is there a built-in API for facts across sessions, and does it extract them for you?
 3. **Extensibility:** can you plug in Mem0, Zep, a cloud memory service or your own store?
+
+For GitHub stars and monthly downloads of 15 framework repositories, see [AI agent framework statistics](/articles/ai-agent-framework-statistics/).
 
 ## Agent framework memory comparison table
 

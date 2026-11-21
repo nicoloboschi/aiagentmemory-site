@@ -1,49 +1,59 @@
 # MCP Server Statistics (November 2026)
 
-> GitHub stars, forks and monthly npm and PyPI downloads for 12 MCP projects: the official memory server and SDKs, Context7, Playwright MCP, mem0 and Graphiti. Collected 2026-11-21.
+> GitHub stars, forks and monthly npm and PyPI downloads for 9 MCP servers and SDKs, plus 4 memory projects that ship an MCP server (mem0, Hindsight, Graphiti, Basic Memory). Collected 2026-11-21.
 
 Source: https://aiagentmemory.org/articles/mcp-server-statistics/ · Updated 2026-11-21 · aiagentmemory.org
 
 
-On 2026-11-21, the MCP reference servers repository had the most GitHub stars of the 12 projects we checked: 92,135. The MCP TypeScript SDK had the most npm downloads: 386,037,353 in the last month. The MCP Python SDK had the most PyPI downloads: 331,376,908. The SDK numbers are high because many other tools depend on them, so they count installs, not people running a server.
+On 2026-11-21, the MCP reference servers repository had the most GitHub stars of the 9 servers and SDKs we checked: 92,140. The MCP TypeScript SDK had the most npm downloads of that group: 385,658,740 in the last month. The MCP Python SDK had the most PyPI downloads: 330,822,908. The SDK numbers are high because many other tools depend on them, so they count installs, not people running a server.
 
-These numbers were pulled by aiagentmemory.org on 2026-11-21 from the GitHub, PyPI and npm APIs. The table is the script's output, pasted without edits. The exact calls are in the [Methodology](#methodology) section. For how these servers store memory, read [AI memory MCP servers](/articles/ai-memory-mcp-server/).
+We also checked 4 memory projects that ship an MCP server. They are in a second table, because a memory library and an MCP server are different kinds of project, and their download counts measure different things.
+
+These numbers were pulled by aiagentmemory.org on 2026-11-21 from the GitHub, PyPI and npm APIs. The tables are the script's output, pasted without edits. The exact calls are in the [Methodology](#methodology) section. For how these servers store memory, read [AI memory MCP servers](/articles/ai-memory-mcp-server/).
 
 ## What is an MCP server?
 
 An MCP server is a small program that gives an AI agent new tools, such as a browser, a database or a notes store. MCP stands for Model Context Protocol. The agent connects to the server and decides when to call its tools. A memory MCP server gives the agent tools to save and search facts between sessions.
 
-## MCP GitHub and package statistics
+## MCP servers and SDKs: GitHub and package statistics
 
-Collected 2026-11-21 01:08 UTC. Sorted by stars. "Last push" is the last commit date on the default branch.
+Collected 2026-11-21 14:01 UTC. Sorted by stars. "Last push" is the last commit date on the default branch. The SDK rows are libraries that servers are built with, not servers.
 
 | # | Project | Repository | Stars | Forks | Created | Last push | License | PyPI/month | npm/month |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | MCP reference servers (memory server) | modelcontextprotocol/servers | 92,135 | 11,977 | 2024-11-19 | 2026-11-19 | NOASSERTION | - | 1,350,592 |
-| 2 | mem0 | mem0ai/mem0 | 69,285 | 8,245 | 2023-06-20 | 2026-11-18 | Apache-2.0 | 2,544,949 | 1,086,259 |
-| 3 | Context7 | upstash/context7 | 65,193 | 3,260 | 2025-03-26 | 2026-11-20 | MIT | - | 4,162,144 |
-| 4 | Chrome DevTools MCP | ChromeDevTools/chrome-devtools-mcp | 58,542 | 4,884 | 2025-09-11 | 2026-11-20 | Apache-2.0 | - | 10,395,181 |
-| 5 | Playwright MCP | microsoft/playwright-mcp | 39,941 | 3,470 | 2025-03-21 | 2026-11-18 | Apache-2.0 | - | 44,123,582 |
-| 6 | GitHub MCP Server | github/github-mcp-server | 34,625 | 5,380 | 2025-03-04 | 2026-11-20 | MIT | - | - |
-| 7 | Graphiti | getzep/graphiti | 32,966 | 3,401 | 2024-08-08 | 2026-11-20 | Apache-2.0 | 912,297 | - |
-| 8 | MCP Python SDK | modelcontextprotocol/python-sdk | 24,916 | 4,153 | 2024-09-24 | 2026-11-17 | MIT | 331,376,908 | - |
-| 9 | MCP TypeScript SDK | modelcontextprotocol/typescript-sdk | 13,792 | 2,419 | 2024-09-24 | 2026-11-19 | NOASSERTION | - | 386,037,353 |
-| 10 | Notion MCP | makenotion/notion-mcp-server | 4,719 | 653 | 2025-03-10 | 2026-10-29 | MIT | - | 1,318,454 |
-| 11 | Basic Memory | basicmachines-co/basic-memory | 4,647 | 368 | 2024-12-02 | 2026-11-20 | AGPL-3.0 | 62,910 | - |
-| 12 | Supabase MCP | supabase/mcp | 3,021 | 439 | 2024-12-20 | 2026-11-20 | Apache-2.0 | - | 869,027 |
+| 1 | MCP reference servers repo (npm: server-memory only) | modelcontextprotocol/servers | 92,140 | 11,972 | 2024-11-19 | 2026-11-19 | NOASSERTION | - | 1,349,428 |
+| 2 | Context7 | upstash/context7 | 65,221 | 3,261 | 2025-03-26 | 2026-11-20 | MIT | - | 4,139,645 |
+| 3 | Chrome DevTools MCP | ChromeDevTools/chrome-devtools-mcp | 58,626 | 4,896 | 2025-09-11 | 2026-11-21 | Apache-2.0 | - | 10,347,349 |
+| 4 | Playwright MCP | microsoft/playwright-mcp | 39,965 | 3,473 | 2025-03-21 | 2026-11-18 | Apache-2.0 | - | 44,347,699 |
+| 5 | GitHub MCP Server | github/github-mcp-server | 34,641 | 5,386 | 2025-03-04 | 2026-11-21 | MIT | - | - |
+| 6 | MCP Python SDK (SDK) | modelcontextprotocol/python-sdk | 24,920 | 4,155 | 2024-09-24 | 2026-11-17 | MIT | 330,822,908 | - |
+| 7 | MCP TypeScript SDK (SDK) | modelcontextprotocol/typescript-sdk | 13,796 | 2,418 | 2024-09-24 | 2026-11-19 | NOASSERTION | - | 385,658,740 |
+| 8 | Notion MCP | makenotion/notion-mcp-server | 4,721 | 653 | 2025-03-10 | 2026-10-29 | MIT | - | 1,321,125 |
+| 9 | Supabase MCP | supabase/mcp | 3,022 | 439 | 2024-12-20 | 2026-11-21 | Apache-2.0 | - | 898,580 |
 
-"NOASSERTION" means GitHub did not detect a license. The reference servers repository holds many packages, each with its own license, so check the package you install.
+"NOASSERTION" means GitHub did not detect a license. The reference servers repository holds many packages, each with its own license, so check the package you install. Its npm number is the `server-memory` package only, not the whole repository.
+
+## Memory projects that ship an MCP server: GitHub and package statistics
+
+Collected 2026-11-21 14:01 UTC, same method. Each package column says which package its count is for. mem0 and Graphiti are memory libraries: their counts include every use of the library, not only its MCP server. Hindsight's PyPI count is for `hindsight-api`, its server package. Its npm package is a client library, so it is left out.
+
+| # | Project | Repository | Stars | Forks | Created | Last push | License | PyPI/month | npm/month |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | mem0 (`mem0ai`) | mem0ai/mem0 | 69,300 | 8,246 | 2023-06-20 | 2026-11-18 | Apache-2.0 | 2,514,292 | 1,074,430 |
+| 2 | Hindsight (`hindsight-api`) | vectorize-io/hindsight | 62,363 | 7,394 | 2025-10-30 | 2026-11-21 | MIT | 49,865 | - |
+| 3 | Graphiti (`graphiti-core`) | getzep/graphiti | 32,976 | 3,402 | 2024-08-08 | 2026-11-20 | Apache-2.0 | 911,364 | - |
+| 4 | Basic Memory (`basic-memory`) | basicmachines-co/basic-memory | 4,653 | 369 | 2024-12-02 | 2026-11-20 | AGPL-3.0 | 63,384 | - |
 
 ## What the numbers show
 
-- **Stars:** the official reference servers repository leads, then mem0 and Context7. Stars show interest, not quality.
-- **Memory packages:** mem0 has the most memory downloads: 2,544,949 on PyPI and 1,086,259 on npm. Graphiti has 912,297 on PyPI. Basic Memory has 62,910 on PyPI, the smallest of the memory projects here.
-- **Browser and dev tools:** Playwright MCP had 44,123,582 npm downloads, the most of any server package in the table apart from the SDKs.
-- **Quiet repositories:** Notion MCP's last commit is 2026-10-29, the oldest in the table.
+- **Stars:** the official reference servers repository leads the server table, then Context7 and Chrome DevTools MCP. Among the memory projects, mem0 has the most stars (69,300), then Hindsight (62,363). Stars show interest, not quality.
+- **Memory packages:** mem0 has the most downloads of the memory projects: 2,514,292 on PyPI and 1,074,430 on npm. Graphiti has 911,364 on PyPI. Basic Memory has 63,384 on PyPI. Hindsight's server package has 49,865 on PyPI.
+- **Browser and dev tools:** Playwright MCP had 44,347,699 npm downloads, the most of any server package in the first table apart from the SDKs.
+- **Quiet repositories:** Notion MCP's last commit is 2026-10-29, the oldest in the first table.
 
 ## Where Hindsight fits
 
-Hindsight (https://github.com/vectorize-io/hindsight) is not in the table, because it is a memory server and this table lists the projects we chose. Its MCP tools are `retain`, `recall` and `reflect`. The Claude Agent SDK integration gives them to the agent as in-process tools (page read 2026-11-15). The Grok Bot integration connects to a hosted MCP endpoint with OAuth (page read 2026-10-24). The server is MIT-licensed and can be self-hosted. For Grok Bot, a self-hosted Hindsight needs a public HTTPS MCP endpoint with OAuth 2.1.
+Hindsight (https://github.com/vectorize-io/hindsight) is a memory project with an MCP server. Its MCP tools are `retain`, `recall` and `reflect`. The Claude Agent SDK integration gives them to the agent as in-process tools (page read 2026-11-15). The Grok Bot integration connects to a hosted MCP endpoint with OAuth (page read 2026-10-24). The server is MIT-licensed and can be self-hosted. For Grok Bot, a self-hosted Hindsight needs a public HTTPS MCP endpoint with OAuth 2.1.
 
 Limits to know:
 
@@ -53,15 +63,15 @@ Limits to know:
 
 ## Frequently asked questions
 
-**What are the best MCP servers?** No single ranking exists. By GitHub stars on 2026-11-21, the reference servers repository had 92,135, mem0 had 69,285 and Context7 had 65,193. The list here is chosen by hand, so treat it as a starting point.
+**What are the best MCP servers?** No single ranking exists. The list here is chosen by hand, so treat it as a starting point. On 2026-11-21 the reference servers repository had 92,140 stars, Context7 had 65,221 and Chrome DevTools MCP had 58,626.
 
-**Which MCP memory server is the most popular?** Among the memory servers here, mem0 had 2,544,949 PyPI and 1,086,259 npm downloads in the last month. The official memory server package had 1,350,592 npm downloads. Graphiti had 912,297 PyPI downloads.
+**Which MCP memory server is the most popular?** Among the memory projects, mem0 had 2,514,292 PyPI and 1,074,430 npm downloads in the last month. Graphiti had 911,364 PyPI downloads. The official memory server package had 1,349,428 npm downloads.
 
 **Does Hindsight have an MCP server?** Yes. It exposes retain, recall and reflect as MCP tools, with the limits above.
 
 ## Methodology
 
-**When.** Collected on 2026-11-21 at 01:08 UTC by aiagentmemory.org. The table is the output of `repo_stats.py`, a script in the site's repository that calls the APIs below and prints a Markdown table. No number was typed by hand.
+**When.** Collected on 2026-11-21 at 14:01 UTC by aiagentmemory.org. Both tables are the output of `repo_stats.py`, a script in the site's repository that calls the APIs below and prints a Markdown table. No number was typed by hand.
 
 **Which APIs.**
 
@@ -69,31 +79,32 @@ Limits to know:
 2. **PyPI:** `GET https://pypistats.org/api/packages/{package}/recent`, the last-month total.
 3. **npm:** `GET https://api.npmjs.org/downloads/point/last-month/{package}`, the last-month total.
 
-**Which projects.** Chosen by hand: the official MCP reference servers and SDKs, and vendor servers that are widely known, plus the memory projects. This is not a ranking of MCP usage, and no source ranks MCP servers by use.
+**Which projects.** Chosen by hand: the official MCP reference servers and SDKs, vendor servers that are widely known, and the memory projects that ship an MCP server. This is not a ranking of MCP usage, and no source ranks MCP servers by use.
 
 **Package names.** Each npm and PyPI name was checked against its registry entry, which names the source repository:
 
-- `@modelcontextprotocol/server-memory` and `@modelcontextprotocol/sdk`, `@playwright/mcp`, `@upstash/context7-mcp`, `chrome-devtools-mcp`, `@supabase/mcp-server-supabase` and `@notionhq/notion-mcp-server` point to the repositories in the table.
+- `@modelcontextprotocol/server-memory` and `@modelcontextprotocol/sdk`, `@playwright/mcp`, `@upstash/context7-mcp`, `chrome-devtools-mcp`, `@supabase/mcp-server-supabase` and `@notionhq/notion-mcp-server` point to the repositories in the first table.
 - `mem0ai` on npm points to `mem0ai/mem0`. `mem0ai` on PyPI has the summary "Long-term memory for AI Agents". We did not open its README.
-- `mcp`, `basic-memory` and `graphiti-core` on PyPI link to the repositories in the table.
+- `mcp`, `basic-memory` and `graphiti-core` on PyPI link to the repositories in the tables.
+- `hindsight-api` on PyPI has no repository link. Its name is the install line in the Hindsight README (`pip install hindsight-api`), checked 2026-11-21.
 - GitHub MCP Server has no npm or PyPI package in this list, so its download cells are dashes.
 
 **Not counted.** Stars gained in the last 30 days. Downloads from other tools that depend on a package, which are most of the SDK numbers.
 
-**Next refresh.** 2026-12-01, with the same script and table. The change since today will be added as a dated section.
+**Next refresh.** 2026-12-01, with the same script and tables. The change since today will be added as a dated section.
 
 
 ## FAQ
 
 ### What are the best MCP servers?
 
-No single ranking exists. By GitHub stars on 2026-11-21, the MCP reference servers repository had 92,135, mem0 had 69,285 and Context7 had 65,193. The list here is chosen by hand, so treat it as a starting point, not a verdict. Each project's own docs say what it does.
+No single ranking exists. The list here is chosen by hand, so treat it as a starting point, not a verdict. On 2026-11-21 the MCP reference servers repository had 92,140 GitHub stars (the whole repo, many servers), Context7 had 65,221 and Chrome DevTools MCP had 58,626. Each project's own docs say what it does.
 
 ### Which MCP memory server is the most popular?
 
-Of the memory servers on this list, the official memory server package (@modelcontextprotocol/server-memory) had 1,350,592 npm downloads in the last month, and mem0 had 2,544,949 PyPI and 1,086,259 npm downloads. Graphiti had 912,297 PyPI downloads. Downloads count installs, not active servers.
+Among the memory projects, mem0 had the most downloads: 2,514,292 on PyPI and 1,074,430 on npm in the last month. Graphiti had 911,364 on PyPI. Those packages are memory libraries, so their counts include users who never run an MCP server. Hindsight's PyPI count is for its server package (hindsight-api): 49,865 in the last month. The official memory server package (@modelcontextprotocol/server-memory) had 1,349,428 npm downloads.
 
 ### Does Hindsight have an MCP server?
 
-Yes. Hindsight exposes retain, recall and reflect as MCP tools. Its Claude Agent SDK integration makes them in-process tools, and its Grok Bot integration uses a hosted MCP endpoint with OAuth. Hindsight is not in the table above, which lists only the projects we chose.
+Yes. Hindsight exposes retain, recall and reflect as MCP tools. Its Claude Agent SDK integration makes them in-process tools, and its Grok Bot integration uses a hosted MCP endpoint with OAuth. Its numbers are in the second table above, with the limits below.
 

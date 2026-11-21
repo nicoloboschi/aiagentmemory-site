@@ -2,14 +2,14 @@
 
 > AI agent memory statistics: GitHub stars, forks and licenses for 23 projects, PyPI and npm downloads, and headline benchmark scores. Collected 2026-10-20 and updated 2026-11-17 with the change between them.
 
-Source: https://aiagentmemory.org/articles/agent-memory-statistics/ · Updated 2026-11-17 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agent-memory-statistics/ · Updated 2026-11-21 · aiagentmemory.org
 
 
 These AI agent memory statistics were collected on 2026-10-20 by aiagentmemory.org from the GitHub, PyPI and npm APIs. claude-mem has the most GitHub stars (101,934), Mem0 has the most PyPI downloads (2,020,516 last month), and Hindsight ranks fourth on stars and second on PyPI downloads. Hindsight had the top BEAM 10M score in MemTensor's same-model OmniMemEval run (59.75, checked 2026-10-12).
 
 All GitHub and download numbers on this page were collected 2026-10-20 between about 18:45 and 18:56 UTC, by us, from public APIs. We're the primary source for them. Benchmark scores are not ours: they're copied from the vendors who ran them, with who ran each one. The exact calls are in the [Methodology](#methodology) section. For the coding agents themselves (Claude Code, Codex CLI, OpenClaw and others), see [AI coding agent statistics](/articles/ai-coding-agent-statistics/).
 
-For the same kind of numbers on other tools, see [MCP server statistics](/articles/mcp-server-statistics/) (MCP servers and SDKs) [AI coding agent statistics](/articles/ai-coding-agent-statistics/) and [vector database statistics](/articles/vector-database-statistics/).
+For the same kind of numbers on other tools, see [MCP server statistics](/articles/mcp-server-statistics/) (MCP servers and SDKs) [AI coding agent statistics](/articles/ai-coding-agent-statistics/) [vector database statistics](/articles/vector-database-statistics/) and [AI agent framework statistics](/articles/ai-agent-framework-statistics/).
 
 ## November 2026 update (collected 2026-11-17)
 
