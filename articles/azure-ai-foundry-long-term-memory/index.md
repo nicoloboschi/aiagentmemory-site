@@ -2,7 +2,7 @@
 
 > Is Azure AI Foundry memory free? It is in public preview (Oct 2026), billed through the chat and embedding models it uses. Memory store limits, scopes, TTL, regions and Python code.
 
-Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-11-16 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-11-22 · aiagentmemory.org
 
 
 **Azure AI Foundry long-term memory** is a managed feature of Foundry Agent Service that lets an agent remember users across sessions. You create a **memory store**, attach the **memory search tool** to an agent, and the service extracts facts, preferences and summaries from conversations, merges duplicates, and retrieves the relevant ones in later chats. As of October 2026 it is in **public preview**.
@@ -121,7 +121,7 @@ When a user says "remember that my seat is aisle" or "forget my seat," the memor
 
 ## SDK support by language
 
-The 21 October 2026 how-to adds a table of which operations it shows for each SDK. A dash means the guide has no example for that language yet; Microsoft says it "doesn't indicate whether the SDK supports the operation."
+The how-to (last updated 6 October 2026) adds a table of which operations it shows for each SDK. A dash means the guide has no example for that language yet; Microsoft says it "doesn't indicate whether the SDK supports the operation."
 
 | Operation | Python | C# | JavaScript | Java | REST |
 |---|---|---|---|---|---|
@@ -201,5 +201,5 @@ Per Microsoft Learn, a memory store holds up to 100 scopes, each scope up to 10,
 
 ### Which languages can use Foundry Agent Service memory?
 
-Microsoft's how-to (updated 21 October 2026) shows memory with the Python, C#, JavaScript and Java SDKs and the REST API. All five can create stores, attach memory to a prompt agent, and update and search memories; the guide has no C# example yet for remember-or-forget commands or single-item operations.
+Microsoft's how-to (last updated 6 October 2026) shows memory with the Python, C#, JavaScript and Java SDKs and the REST API. All five can create stores, attach memory to a prompt agent, and update and search memories; the guide has no C# example yet for remember-or-forget commands or single-item operations.
 
