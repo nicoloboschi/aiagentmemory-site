@@ -2,12 +2,12 @@
 
 > How knowledge graph memory works for AI agents: extraction, entity resolution, temporal edges, Graphiti, Neo4j, Cognee and GraphRAG, versus vector memory.
 
-Source: https://aiagentmemory.org/articles/ai-memory-knowledge-graph/ · Updated 2026-10-12 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-memory-knowledge-graph/ · Updated 2026-11-22 · aiagentmemory.org
 
 
 **A knowledge graph memory** stores what an AI agent learns as **entities** (a user, a company, a product) connected by **relationships** ("works at", "prefers", "reported bug in"). An LLM extracts those entities and relationships from conversations and documents, and the agent later retrieves facts by searching the graph and following its links. The graph makes connections and changes explicit, which flat vector memory can't do.
 
-This page explains how graph memory is built, how retrieval works, the main tools (Graphiti, Neo4j Agent Memory, Cognee, Hindsight, GraphRAG), and when a graph beats a vector store.
+This page explains how graph memory is built, how retrieval works, the main tools (Graphiti, Neo4j Agent Memory, Cognee, Hindsight, GraphRAG), and when a graph beats a vector store. For the GitHub stars and client downloads of the graph databases these tools run on (Neo4j, FalkorDB, Kuzu and others), see [graph database statistics](/articles/graph-database-statistics/).
 
 ## What is an AI memory knowledge graph?
 
