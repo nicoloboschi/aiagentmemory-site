@@ -9,7 +9,7 @@ These AI agent memory statistics were collected on 2026-10-20 by aiagentmemory.o
 
 All GitHub and download numbers on this page were collected 2026-10-20 between about 18:45 and 18:56 UTC, by us, from public APIs. We're the primary source for them. Benchmark scores are not ours: they're copied from the vendors who ran them, with who ran each one. The exact calls are in the [Methodology](#methodology) section. For the coding agents themselves (Claude Code, Codex CLI, OpenClaw and others), see [AI coding agent statistics](/articles/ai-coding-agent-statistics/).
 
-For the same kind of numbers on other tools, see [MCP server statistics](/articles/mcp-server-statistics/) (MCP servers and SDKs), [AI coding agent statistics](/articles/ai-coding-agent-statistics/), [vector database statistics](/articles/vector-database-statistics/), [AI agent framework statistics](/articles/ai-agent-framework-statistics/), [local LLM statistics](/articles/local-llm-statistics/) and [graph database statistics](/articles/graph-database-statistics/).
+For the same kind of numbers on other tools, see [MCP server statistics](/articles/mcp-server-statistics/) (MCP servers and SDKs), [AI coding agent statistics](/articles/ai-coding-agent-statistics/), [vector database statistics](/articles/vector-database-statistics/), [AI agent framework statistics](/articles/ai-agent-framework-statistics/), [local LLM statistics](/articles/local-llm-statistics/), [graph database statistics](/articles/graph-database-statistics/) and [memory library statistics](/articles/memory-library-statistics/) (the memory projects' own packages).
 
 ## November 2026 update (collected 2026-11-17)
 
