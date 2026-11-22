@@ -41,6 +41,8 @@ codex --profile ollama-launch
 
 Codex's own config options are in [the Codex CLI config reference](/articles/codex-cli-config-reference/). Install steps are in [the Codex CLI install guide](/articles/codex-cli-install/).
 
+Ollama is the most-starred and most-downloaded local runner we checked: see [local LLM statistics](/articles/local-llm-statistics/) for the numbers and the other runners.
+
 ## Local or cloud: which to pick
 
 | | Local model (Ollama on your machine) | Cloud model (`-cloud` suffix) |

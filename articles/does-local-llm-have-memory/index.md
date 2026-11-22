@@ -163,6 +163,8 @@ Several agent memory servers accept a local model as their LLM, so you can self-
 - **Mem0's self-hosted server** wraps the library above in a FastAPI service with Postgres and pgvector.
 - **Letta** (see [Letta vs LangChain memory](/articles/letta-vs-langchain-memory/)) and **Cognee** can also be self-hosted; check each project's docs for current local-model support before you commit.
 
+For the download and star counts of the local runners themselves (Ollama, llama.cpp, vLLM, LM Studio and six more), see [local LLM statistics](/articles/local-llm-statistics/).
+
 ## Licenses and cost of local memory tools
 
 Run locally, none of these tools has a free tier or a usage cap: you pay only for your hardware. Licenses as GitHub reports them (October 2026):

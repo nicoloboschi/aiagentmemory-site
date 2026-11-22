@@ -36,6 +36,8 @@ claude --model qwen3.5
 
 Another way to send Claude Code to other models is a local router. See [Claude Code Router](/articles/claude-code-router/) for what it does and what Anthropic's docs say about it.
 
+Ollama is the most-starred and most-downloaded local runner we checked: see [local LLM statistics](/articles/local-llm-statistics/) for the numbers and the other runners.
+
 ## Local or cloud: which to pick
 
 | | Local model (`localhost:11434`) | Cloud model (Ollama's cloud) |

@@ -2,7 +2,7 @@
 
 > Memory consolidation in AI agents merges duplicate memories, fixes conflicts and writes summaries, usually in the background. REM (arXiv 2610.27377) resolved 27.6% of coding tasks vs 24.9%, at 17% lower cost.
 
-Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-11-21 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-11-22 · aiagentmemory.org
 
 
 **Memory consolidation in AI agents** is the step that turns raw records (messages, tool results, observations) into a smaller set of cleaner, longer-lived memories. It merges duplicates, resolves contradictions, and writes higher-level insights. Without it, an agent's memory store only grows, and retrieval gets noisier with every session.
@@ -95,6 +95,8 @@ Four arXiv papers from October 2026 test consolidation directly. The numbers bel
 | [Curation and Consolidation](https://arxiv.org/abs/2610.39790) (Gupta et al., 2026-10-29) | Episodic plus structured relational memories | Hybrid store with a consolidation step built to stay efficient | 90.2% on LoCoMo, 85.5% on LongMemEval-S; the two memory types help each other |
 | [REM](https://arxiv.org/abs/2610.27377) (Chen et al., 2026-10-19) | Coding-agent runs | Each finished trajectory becomes a phase-structured document about 100x smaller; the detailed record is shown once, then evicted | 27.6% vs 24.9% resolved on SWE-ContextBench Lite at 17% lower cost; the same experience as a plain summary or raw trajectory did not help |
 | [Driving-agent memory audit](https://arxiv.org/abs/2610.27714) (Jia and Li, 2026-10-20) | Past driving episodes into a "consolidated rulebook" | Compared with retrieval memories and token-matched filler text | The rulebook's lead vanished on fresh warmup pools and once caution was priced in; one 15-token caution instruction matched the best merge |
+
+REM's abstract also reports a retrieval result: its authors say it finds the related past trajectory more often than the state-of-the-art memory systems they tested (68.7% vs 55.6% match@1). That is their own number, on one benchmark, and the end-task gain above is much smaller.
 
 Two lessons line up with the rest of this page. First, PreCoMem's PROFILE stage is a waiting room: a single odd message shouldn't overwrite a stable fact, which is the same worry behind invalidating instead of deleting. Second, REM and the driving audit show that the *form* of a consolidated memory matters more than how well you retrieve it, and that a gain only counts if it survives a fair baseline. Test your consolidation step against "no memory" and against a short fixed instruction before you trust it.
 
