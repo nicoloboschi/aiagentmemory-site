@@ -2,7 +2,7 @@
 
 > How to install OpenClaw, finish onboarding, open the Control UI and connect a chat app, plus where its memory lives and how the Hindsight plugin works. Sourced from the OpenClaw README and docs.
 
-Source: https://aiagentmemory.org/articles/openclaw-guide/ · Updated 2026-11-09 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-guide/ · Updated 2026-11-23 · aiagentmemory.org
 
 
 **OpenClaw** is an open-source AI assistant that runs on your own computer and talks to you through chat apps such as Telegram, Discord, Slack and WhatsApp. One process, the Gateway, runs the sessions, tools and chat connections. Its memory is plain Markdown files in the agent workspace. For months of history, you can add an external memory plugin such as [Hindsight](https://github.com/vectorize-io/hindsight).
@@ -78,6 +78,8 @@ Memory in these files is guidance for the model, not a hard rule. OpenClaw's doc
 - The OpenClaw plugin's delete tools only work with `allowKnowledgeDelete: true`.
 
 To add skills (install from ClawHub, write a SKILL.md, check before you install), see [OpenClaw skills](/articles/openclaw-skills/). For how OpenClaw and Hermes compare on memory, see [OpenClaw vs Hermes Agent memory](/articles/openclaw-vs-hermes-agent-memory/). For the Hermes side, see [Hermes Agent guide](/articles/hermes-agent/).
+
+For OpenClaw's stars and npm downloads next to eight other open-source personal agents, see [open-source personal AI agent statistics](/articles/personal-ai-agent-statistics/).
 
 ## What to check first
 

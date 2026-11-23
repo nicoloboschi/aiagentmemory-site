@@ -2,7 +2,7 @@
 
 > Install Hermes Agent with one curl command on Linux, macOS or WSL2, run hermes setup, then set up its built-in memory and Hindsight plugin. Sourced from the official docs, checked 2026-11-10.
 
-Source: https://aiagentmemory.org/articles/hermes-agent/ · Updated 2026-11-14 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent/ · Updated 2026-11-23 · aiagentmemory.org
 
 
 **Hermes Agent** is an open-source AI agent from Nous Research that runs in your terminal and in chat apps such as Telegram, Discord and Slack. You can switch its model with one command, and it saves skills and notes from past work. Its built-in memory is two small text files plus a searchable log of past sessions. For a larger memory layer, you can add an external provider such as [Hindsight](https://github.com/vectorize-io/hindsight).
@@ -83,6 +83,8 @@ For a full comparison of how Hermes and OpenClaw handle memory, see [OpenClaw vs
 Skills are reusable instructions that Hermes can write after a complex task and improve during later use. Skills follow the open [agentskills.io](https://agentskills.io) standard. You can browse them with `/skills` and run one with `/<skill-name>`. See [Hermes Agent skills](/articles/hermes-agent-skills/).
 
 Hermes also connects to MCP servers, which add tools from outside the agent. The MCP setup is in the official docs under MCP Integration. Cron jobs are set up the same way: they run a task on a schedule and send the result to a chat platform.
+
+For Hermes Agent's stars next to eight other open-source personal agents, see [open-source personal AI agent statistics](/articles/personal-ai-agent-statistics/).
 
 ## What to check first
 
