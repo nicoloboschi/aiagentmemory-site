@@ -1,8 +1,8 @@
-# Mem0 Paper (2026): Scalable Long-Term Memory and LoCoMo
+# Mem0 Paper (2026): Production-Ready AI Agents with Scalable Long-Term Memory
 
 > Mem0 paper (arXiv 2504.19413): Mem0 scored 66.88% and Mem0g 68.44% on LoCoMo, vs 72.90% for full context, with 91% lower p95 latency. Authors' numbers.
 
-Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-11-11 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/mem0-building-production-ready-ai-agents/ · Updated 2026-11-23 · aiagentmemory.org
 
 
 **"Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory"** is the 2025 paper from the Mem0 team that describes how Mem0 extracts, updates and retrieves memories from conversations. It introduces two systems, Mem0 and a graph-based variant called **Mem0g**, and reports that both beat other memory systems on the LoCoMo benchmark while using far fewer tokens than full-context prompting.
