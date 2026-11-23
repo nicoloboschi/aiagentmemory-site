@@ -126,6 +126,8 @@ It's the strongest pick when:
 
 The limits: it returns about 4x more context per retrieval than Mem0 by Mem0's measurement, so set `max_tokens` lower if prompt size matters. It doesn't store Zep-style validity windows on each fact. And its README says it "may be overkill" for simple n8n-style flows. More in [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
 
+For GitHub stars and package downloads of Zep, Mem0 and seven other memory libraries, collected on the same day, see [Memory Library Statistics](/articles/memory-library-statistics/).
+
 ## Zep, Mem0 or Hindsight: how to choose
 
 | If you need... | Pick |

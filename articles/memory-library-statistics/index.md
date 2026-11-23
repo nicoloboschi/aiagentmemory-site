@@ -31,7 +31,7 @@ The packages counted are: `mem0ai` (PyPI and npm), `graphiti-core` (PyPI), `cogn
 
 - **Mem0 leads on stars and on downloads.** It has the most stars (69,354) and the most PyPI and npm downloads of the 9 projects.
 - **Hindsight is second on stars and on PyPI downloads.** Its repository was created on 2025-10-30, so 62,706 stars came in about 13 months. Its PyPI client had 1,020,642 downloads last month, about 43 percent of Mem0's count.
-- **Supermemory's and Zep's npm counts are high.** Supermemory's `supermemory` npm package had 850,698 downloads, second to Mem0's npm package. Zep's `@getzep/zep-cloud` had 759,050, third, while its repository has 5,013 stars. Supermemory's server source is not public, so you cannot self-host it from the repository.
+- **Supermemory's and Zep's npm counts are high.** Supermemory's `supermemory` npm package had 850,698 downloads, second to Mem0's npm package. Zep's `@getzep/zep-cloud` had 759,050, third, while its repository has 5,013 stars. Supermemory's server source is not in its public repository; you can self-host it with a free, closed-source local binary or Docker image.
 - **Letta's last push was 2026-10-18.** It is still listed as active on this table, but it has not pushed for about five weeks as of this collection.
 - **Download counts are not like for like.** Mem0's `mem0ai` and Cognee's `cognee` are full libraries. Hindsight, Letta, Honcho and Zep count client or SDK packages. Compare the trend within a row more than the numbers across rows.
 

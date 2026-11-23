@@ -2,7 +2,7 @@
 
 > Is Azure AI Foundry memory free? It is in public preview (Oct 2026), billed through the chat and embedding models it uses. Memory store limits, scopes, TTL, regions and Python code.
 
-Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-11-22 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/azure-ai-foundry-long-term-memory/ · Updated 2026-11-23 · aiagentmemory.org
 
 
 **Azure AI Foundry long-term memory** is a managed feature of Foundry Agent Service that lets an agent remember users across sessions. You create a **memory store**, attach the **memory search tool** to an agent, and the service extracts facts, preferences and summaries from conversations, merges duplicates, and retrieves the relevant ones in later chats. As of October 2026 it is in **public preview**.
@@ -150,7 +150,7 @@ From the how-to's troubleshooting table:
 
 ## Limits, regions and pricing
 
-**Quotas (Learn, October 2026):**
+**Quotas ([Microsoft Learn, agent memory](https://learn.microsoft.com/azure/ai-foundry/agents/concepts/agent-memory), October 2026):**
 
 - 100 scopes per memory store
 - 10,000 memories per scope

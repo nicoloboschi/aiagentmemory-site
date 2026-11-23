@@ -196,7 +196,7 @@ Zep fits when facts change over time and you need to know which version is curre
 
 If you need a complete self-hosted memory server, Hindsight is the most complete open-source option. On Mem0's own comparison page it scores 94.6 on LongMemEval and leads Mem0 by 9.8 and 15.5 points on BEAM at 1M and 10M tokens (vendor-run numbers). Its writes cost more than a simple fact store, because retain and consolidation both call an LLM. See [what Hindsight is](/articles/ai-memory-hindsight/).
 
-For other options, see [Zep alternatives](/articles/zep-alternatives/) and the head-to-head [Zep vs Mem0 comparison](/articles/zep-memory-vs-mem0/).
+For other options, see [Zep alternatives](/articles/zep-alternatives/) and the head-to-head [Zep vs Mem0 comparison](/articles/zep-memory-vs-mem0/). For Zep's GitHub stars and package downloads next to eight other memory libraries, see [Memory Library Statistics](/articles/memory-library-statistics/) (collected 2026-11-23).
 
 
 ## FAQ

@@ -2,7 +2,7 @@
 
 > What agent memory products cost as of 11 November 2026: free tiers, paid plans, usage prices and which ones you can self-host. Read from each vendor's pricing page.
 
-Source: https://aiagentmemory.org/articles/ai-memory-pricing-compared/ · Updated 2026-11-11 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/ai-memory-pricing-compared/ · Updated 2026-11-23 · aiagentmemory.org
 
 
 ## Which memory products cost what?
@@ -18,7 +18,7 @@ Prices and limits as shown on each vendor's pricing page, read on 11 November 20
 | Hindsight (Vectorize) | Self-hosting is free. Cloud gives new accounts free credits to start. | None. Pay as you go. | Retain $10.00 per 1M tokens. Recall $0.75 per 1M tokens. Reflect $0.05 per call. Storage $0.25 per 1M tokens per month, first 30 days free. | Yes, free. MIT license, full server. |
 | Mem0 | Free: 10,000 adds and 1,000 retrievals a month for the first 30 days, model calls included. With your own LLM key: 50,000 adds and 10,000 retrievals a month. | Custom, priced by Mem0. Includes graph memory, user profiles, Dream consolidation, SSO and an SLA. | Usage past the free limits, with a monthly cap you set. | Only as on-prem deployment, on the Custom plan. |
 | Zep | Free: $0, 10,000 credits a month, 2 projects. | Flex: $125 a month, 50,000 credits, 5 projects. Flex Plus: $375 a month, 200,000 credits, 10 projects. Enterprise: custom. | Overage $25 per 10,000 credits on Flex. $75 per 40,000 credits on Flex Plus. | Flex is cloud only. Enterprise can run inside your own VPC. |
-| Supermemory | Free: $0, $5 of credits, 1M memory tokens, 1M queries. | Pro: $19 a month, $20 credits. Max: $100 a month, $130 credits. Scale: $399 a month, $600 credits. Enterprise: custom. | Credits are the meter. The page lists no per-unit price. | Scale has a self-hosted option. Enterprise has air-gapped or dedicated managed instances. |
+| Supermemory | Free: $0, $5 of credits, 1M memory tokens, 1M queries. | Pro: $19 a month, $20 credits. Max: $100 a month, $130 credits. Scale: $399 a month, $600 credits. Enterprise: custom. | Credits are the meter. The page lists no per-unit price. | Free self-hosted binary up to 10,000 documents; running in your own cloud is on Scale. Enterprise has air-gapped or dedicated managed instances. |
 
 Units differ. A Mem0 add, a Zep credit and a Supermemory credit are not the same thing, so the table does not give a cost per call. Compare the free tier, then the plan that matches your volume.
 
@@ -26,7 +26,7 @@ Mem0's page shows a date of 10 November 2026. Our fact sheet notes that since 26
 
 ## Where Hindsight is strongest on cost
 
-- **Self-hosting with the full feature set.** The open-source Hindsight server is MIT licensed, with no usage limits and no telemetry, according to its [pricing page](https://vectorize.io/pricing). Its graph, temporal recall, consolidation, reflect and mental models are in that free version. Mem0 keeps graph memory and Dream on its paid Custom plan. Zep's self-hosting is Enterprise only. Supermemory's is on its $399 Scale plan.
+- **Self-hosting with the full feature set.** The open-source Hindsight server is MIT licensed, with no usage limits and no telemetry, according to its [pricing page](https://vectorize.io/pricing). Its graph, temporal recall, consolidation, reflect and mental models are in that free version. Mem0 keeps graph memory and Dream on its paid Custom plan. Zep's self-hosting is Enterprise only. Supermemory's free self-hosted binary covers up to 10,000 stored documents. Running it in your own cloud is on its $399 Scale plan, and air-gapped deployment is Enterprise only ([pricing page](https://supermemory.ai/pricing), [local vs enterprise docs](https://supermemory.ai/docs/self-hosting/local-vs-enterprise)).
 - **Pay per token, start free.** New Cloud accounts get free credits to start, and stored memories are free for their first 30 days. There is no monthly seat fee.
 - **Model calls are cheap.** Hindsight Models are billed per million input tokens: hs-embed-1 at $0.005, hs-decide-1-flash at $0.02, and hs-rerank-1 at $0.015, or $0.02 when used with hs-decide-1-flash. Output tokens for these models are free, per the same page.
 
@@ -53,7 +53,7 @@ Each product has a free tier. The lowest paid plans are Supermemory Pro at $19 a
 
 ### Which agent memory tool can I self-host for free?
 
-Hindsight. Its open-source server is MIT licensed and includes its graph, temporal recall, consolidation, reflect and mental models. Mem0 keeps graph memory on its Custom plan, Zep runs in your own cloud only on Enterprise, and Supermemory's self-hosted option is on its $399 Scale plan.
+Hindsight. Its open-source server is MIT licensed and includes its graph, temporal recall, consolidation, reflect and mental models. Mem0 keeps graph memory on its Custom plan, Zep runs in your own cloud only on Enterprise, and Supermemory has a free self-hosted binary up to 10,000 stored documents, with running in your own cloud on its $399 Scale plan.
 
 ### Can I compare these memory products by cost per call?
 
