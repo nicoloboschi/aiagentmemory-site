@@ -2,7 +2,7 @@
 
 > 如何安装 OpenClaw、完成入门引导、打开控制界面并连接聊天应用，以及它的记忆存在哪里、Hindsight 插件如何工作。内容来自 OpenClaw README 和官方文档。
 
-Source: https://aiagentmemory.org/articles/openclaw-guide-zh/ · Updated 2026-11-10 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-guide-zh/ · Updated 2026-11-24 · aiagentmemory.org
 
 
 **OpenClaw** 是一个开源 AI 助手，运行在你自己的电脑上，通过 Telegram、Discord、Slack、WhatsApp 等聊天应用和你交流。一个叫 Gateway 的进程负责运行会话、工具和聊天连接。它的记忆是 agent 工作区里的纯 Markdown 文件。如果需要几个月的历史记录，可以再接入 [Hindsight](https://github.com/vectorize-io/hindsight) 这样的外部记忆插件。
@@ -78,6 +78,8 @@ OpenClaw 的文档也说明，这些文件里的记忆只是给模型的参考�
 - OpenClaw 插件的删除工具只有在 `allowKnowledgeDelete: true` 时才能使用。
 
 关于如何添加 skill（从 ClawHub 安装、编写 SKILL.md、安装前检查），请看 [OpenClaw Skills](/articles/openclaw-skills-zh/)。关于 OpenClaw 和 Hermes 在记忆方面的比较，请看 [OpenClaw 与 Hermes Agent 记忆对比](/articles/openclaw-vs-hermes-agent-memory/)（英文）。Hermes 这一侧，请看 [Hermes Agent 指南](/articles/hermes-agent-zh/)。
+
+如需对比 OpenClaw 与其他开源个人 AI agent 的 GitHub 星标和 npm 下载量，请看[开源个人 AI agent 统计](/articles/personal-ai-agent-statistics/)（英文）。
 
 ## 先检查什么
 

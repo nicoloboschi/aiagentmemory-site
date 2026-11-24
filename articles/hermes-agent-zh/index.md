@@ -2,7 +2,7 @@
 
 > 用一条 curl 命令在 Linux、macOS 或 WSL2 上安装 Hermes Agent，运行 hermes setup，然后设置它的内置记忆和 Hindsight 插件。内容来自官方文档，2026-11-10 核对。
 
-Source: https://aiagentmemory.org/articles/hermes-agent-zh/ · Updated 2026-11-14 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-zh/ · Updated 2026-11-24 · aiagentmemory.org
 
 
 **Hermes Agent** 是 Nous Research 开发的开源 AI Agent。它在终端里运行，也能接入 Telegram、Discord、Slack 等聊天应用。你可以用一条命令切换模型，它还会把过去工作中的技能和笔记保存下来。它的内置记忆是两个很小的文本文件，加上一份可以搜索的历史会话记录。如果需要更大的记忆层，可以再接入外部提供商，比如 [Hindsight](https://github.com/vectorize-io/hindsight)。
@@ -83,6 +83,8 @@ Hindsight 是一个独立的记忆系统。Hermes 有对应的插件，这个插
 技能是可复用的说明。Hermes 可以在完成复杂任务后写出技能，并在之后的使用中不断改进。技能遵循开放的 [agentskills.io](https://agentskills.io) 标准。你可以用 `/skills` 浏览技能，用 `/<技能名>` 运行某个技能。见 [Hermes Agent 技能](/articles/hermes-agent-skills/)。
 
 Hermes 也能连接 MCP 服务器，把外部工具加进 Agent。MCP 的设置方法见官方文档的 MCP Integration 部分。定时任务的设置方式类似：它们按计划运行任务，并把结果发到聊天平台。
+
+如需对比 Hermes Agent 与其他开源个人 AI agent 的 GitHub 星标，请看[开源个人 AI agent 统计](/articles/personal-ai-agent-statistics/)（英文）。
 
 ## 先检查这几件事
 

@@ -2,7 +2,7 @@
 
 > How OpenClaw memory works: MEMORY.md and daily notes, hybrid memory_search, embedding models, dreaming, and 8 memory plugins compared (OpenViking, Hindsight).
 
-Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 2026-11-05 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory/ · Updated 2026-11-24 · aiagentmemory.org
 
 
 **OpenClaw memory** is a folder of Markdown files the agent writes and reads. `MEMORY.md` holds durable facts and decisions, `USER.md` holds your preferences, and dated daily notes hold running context. The first two load at session start. Everything is indexed in SQLite, and the agent finds older notes with `memory_search`, a hybrid of vector and keyword search.
@@ -137,6 +137,20 @@ The next stable release, [2026.11.1](https://github.com/openclaw/openclaw/releas
 | Very long transcripts are read in pages instead of all at once (earlier failures at 8 MiB, worker out-of-memory on "Resume in new session") | Big sessions resume and load instead of crashing | [#188450](https://github.com/openclaw/openclaw/pull/188450), [#182091](https://github.com/openclaw/openclaw/pull/182091), [#190690](https://github.com/openclaw/openclaw/pull/190690) |
 
 None of these change ranking or what gets saved, so there is nothing to re-test after upgrading. The search changes in 2026.10.10 above still apply.
+
+### OpenClaw 2026.10.33 (18 November 2026) and 2026.11.7 (23 November 2026)
+
+Two newer releases have memory lines in their notes. We read the memory lines of both release pages on 2026-11-24. The full notes are at the links.
+
+| Release | Memory change | Source |
+|---|---|---|
+| 2026.10.33 | Memory providers now run on one provider-neutral memory runtime, and each provider can run its own flush before compaction | [release notes](https://github.com/openclaw/openclaw/releases/tag/v2026.10.33) (#162175, #162176, #162177) |
+| 2026.10.33 | First-run setup can offer an optional memory-embedding setup, including an embedding-only local setup | [release notes](https://github.com/openclaw/openclaw/releases/tag/v2026.10.33) (#169628, #163693, #170153) |
+| 2026.10.33 | Trimming, indexing, memory export and Doctor repair work in bounded pieces, to avoid running out of memory on long histories | [release notes](https://github.com/openclaw/openclaw/releases/tag/v2026.10.33) (#194066, #196158, #195459, #196480) |
+| 2026.11.7 | Indexing recovers after an embedding timeout, and a configured local Ollama hostname is supported | [release notes](https://github.com/openclaw/openclaw/releases/tag/v2026.11.7) (#191556, #191479) |
+| 2026.11.7 | Interrupted Knowledge writes recover without repeating repair work | [release notes](https://github.com/openclaw/openclaw/releases/tag/v2026.11.7) (#193116, #198146) |
+
+If you point OpenClaw at a local Ollama server, check the 2026.11.7 hostname line after upgrading.
 
 ## Useful commands and fixes
 

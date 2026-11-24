@@ -2,7 +2,7 @@
 
 > OpenClaw 记忆如何工作：MEMORY.md 与每日笔记、混合 memory_search、嵌入模型、dreaming，以及 8 个记忆插件的对比（OpenViking、Hindsight）。
 
-Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory-zh/ · Updated 2026-11-10 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-ai-agent-memory-zh/ · Updated 2026-11-24 · aiagentmemory.org
 
 
 **OpenClaw 的记忆是一组文件。** agent 写下它要记住的内容，再读回来。`MEMORY.md` 存持久的事实和决定，`USER.md` 存你的偏好，按日期命名的每日笔记存正在进行的上下文。前两个文件在会话开始时加载。所有内容都会被存入 SQLite 建立索引，agent 通过 `memory_search`（向量搜索和关键词搜索的混合）找回更早的笔记。
@@ -137,6 +137,20 @@ OpenClaw 2026.10.10 于 2026 年 11 月 3 日发布。它的[更新日志](https
 | 很长的记录改为分页读取，不再一次性全部读取（之前在 8 MiB 时失败，“在新会话中恢复”时工作进程内存耗尽） | 大会话可以恢复和加载，不再崩溃 | [#188450](https://github.com/openclaw/openclaw/pull/188450)、[#182091](https://github.com/openclaw/openclaw/pull/182091)、[#190690](https://github.com/openclaw/openclaw/pull/190690) |
 
 这些都不改变排序或保存的内容，所以升级后不需要重新测试。上面 2026.10.10 的搜索变化仍然适用。
+
+### OpenClaw 2026.10.33（2026 年 11 月 18 日）和 2026.11.7（2026 年 11 月 23 日）
+
+下面两个较新的版本，更新说明里有记忆相关的内容。我们在 2026-11-24 读过两个发布页的记忆相关条目。完整说明见链接。
+
+| 版本 | 记忆相关的变化 | 来源 |
+|---|---|---|
+| 2026.10.33 | 记忆提供方现在共用一个与提供方无关的记忆运行时，每个提供方可以在压缩前自己做一次刷新 | [发布说明](https://github.com/openclaw/openclaw/releases/tag/v2026.10.33)（#162175、#162176、#162177） |
+| 2026.10.33 | 首次设置时可以选择设置记忆嵌入，包括只用本地嵌入的设置 | [发布说明](https://github.com/openclaw/openclaw/releases/tag/v2026.10.33)（#169628、#163693、#170153） |
+| 2026.10.33 | 裁剪、索引、记忆导出和 Doctor 修复改为分批进行，避免长历史耗尽内存 | [发布说明](https://github.com/openclaw/openclaw/releases/tag/v2026.10.33)（#194066、#196158、#195459、#196480） |
+| 2026.11.7 | 嵌入超时后，索引可以恢复；支持配置的本地 Ollama 主机名 | [发布说明](https://github.com/openclaw/openclaw/releases/tag/v2026.11.7)（#191556、#191479） |
+| 2026.11.7 | 中断的 Knowledge 写入可以恢复，不会重复修复工作 | [发布说明](https://github.com/openclaw/openclaw/releases/tag/v2026.11.7)（#193116、#198146） |
+
+如果你把 OpenClaw 指向本地的 Ollama 服务，升级后请检查 2026.11.7 的主机名那一条。
 
 ## 常用命令和修复方法
 
