@@ -34,7 +34,7 @@ Useful commands after install: `hermes tools` (turn tools on and off), `hermes c
 
 ## Where does Hermes keep its state?
 
-Everything lives under `~/.hermes`. That includes the config file (`config.yaml`), API keys, skills, memory files and the session database. A session started in the desktop app can be resumed in the terminal, because both read the same folder.
+Everything lives under `~/.hermes`. That includes the config file (`config.yaml`), API keys, skills, memory files and the session database. A session started in the desktop app can be resumed in the terminal, because both read the same folder. For what each `config.yaml` key does, see the [Hermes Agent config.yaml reference](/articles/hermes-agent-config-reference/).
 
 Hermes can also import from other agents. During `hermes setup` it looks for `~/.openclaw`, `~/.claude`, `~/.codex` and `~/.cursor`. It can copy settings, memories and skills, and it shows a preview first. For OpenClaw, it can also copy API keys, but only when you ask.
 
