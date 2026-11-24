@@ -4,6 +4,21 @@
 
 Each article answers one question about memory for AI agents and LLMs. Start with the guides, then follow the topic you need.
 
+## Data pages (updated 2026-11-24)
+
+Numbers we collected on a stated date, with the source for each:
+
+- [AI Agent Memory Statistics (November 2026)](/articles/agent-memory-statistics/)
+- [Memory Library Statistics (November 2026)](/articles/memory-library-statistics/)
+- [AI Coding Agent Statistics (November 2026)](/articles/ai-coding-agent-statistics/)
+- [MCP Server Statistics (November 2026)](/articles/mcp-server-statistics/)
+- [Vector Database Statistics (November 2026)](/articles/vector-database-statistics/)
+- [AI Agent Framework Statistics (November 2026)](/articles/ai-agent-framework-statistics/)
+- [Local LLM Statistics (November 2026)](/articles/local-llm-statistics/)
+- [Graph Database Statistics (November 2026)](/articles/graph-database-statistics/)
+- [Open-Source Personal AI Agent Statistics (November 2026)](/articles/personal-ai-agent-statistics/)
+- [Agent Memory Leaderboard: Benchmarks and Scores](/articles/agent-memory-leaderboard/)
+
 ## Which agent memory system should I use?
 
 **Short answer:** for agents with long histories, or if you want every feature open source and self-hosted, start with [Hindsight](https://github.com/vectorize-io/hindsight). If the lowest token cost per lookup or a compliance certificate matters most, look at Mem0. For one project's notes, plain files or a simple vector store are often enough.
@@ -69,6 +84,7 @@ All benchmark numbers on this site are vendor-reported, and each page says who r
 - [claude-mem: How It Works, Install, Cost and Limits](https://aiagentmemory.org/articles/claude-mem/): What claude-mem is, how its hooks and local worker store and search your coding sessions, how to install it on Claude Code and other agents, what it costs, and when to pick something else.
 - [Cline Memory Bank: Files, Setup, Cost and Limits](https://aiagentmemory.org/articles/cline-memory-bank/): What the Cline Memory Bank is, the six markdown files and their hierarchy, how to set it up with .clinerules, what it costs in context tokens, and when to use a real memory server.
 - [CodeGraph: Code Knowledge Graph for Claude Code and Codex](https://aiagentmemory.org/articles/codegraph-memory/): What CodeGraph (colbymchenry/codegraph) does for Claude Code, Codex and Cursor: a local code graph over MCP, its benchmark numbers, limits, and when to add Hindsight.
+- [Codex AGENTS.md: Locations, Merge Order and 32 KiB Limit](https://aiagentmemory.org/articles/codex-agents-md/): Where Codex CLI reads AGENTS.md, which file wins when several match, the 32 KiB default cap and how to raise it. From the OpenAI Codex AGENTS.md guide, read 2026-11-24.
 - [Codex API Key Setup (2026): Login Command, Billing and Limits](https://aiagentmemory.org/articles/codex-api-key/): How to sign Codex CLI in with an OpenAI API key: the codex login --with-api-key command, where the key is stored, API billing vs ChatGPT plans, and what the key cannot do. OpenAI Codex auth docs read 2026-11-19.
 - [Codex CLI Config Reference: config.toml Keys and Defaults (2026)](https://aiagentmemory.org/articles/codex-cli-config-reference/): Where Codex CLI reads config.toml, which file wins, and the main keys people change: model, approval_policy, sandbox_mode, web_search, memories and MCP. Taken from OpenAI's config reference, November 2026.
 - [Codex MCP: Add, Configure and Check Servers (2026)](https://aiagentmemory.org/articles/codex-mcp/): How to add an MCP server to Codex CLI with codex mcp add or config.toml, the timeout and tool-filter settings, how to check servers with /mcp, and which MCP servers give Codex memory. From the official Codex MCP docs, read 2026-11-13.

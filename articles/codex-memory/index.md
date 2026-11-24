@@ -33,7 +33,7 @@ Codex rebuilds its instruction chain on every run:
 3. **Merge.** Files join root-first, separated by blank lines. Files closer to your working directory come later, so they win on conflicts.
 4. **Cap.** Empty files are skipped, and Codex stops adding files once the total reaches `project_doc_max_bytes`, 32 KiB by default.
 
-To use another file name, set `project_doc_fallback_filenames = ["TEAM_GUIDE.md", ".agents.md"]` in `~/.codex/config.toml` and restart. To see what loaded, the guide suggests asking Codex directly: `codex --ask-for-approval never "Summarize the current instructions."`
+To use another file name, set `project_doc_fallback_filenames = ["TEAM_GUIDE.md", ".agents.md"]` in `~/.codex/config.toml` and restart. To see what loaded, the guide suggests asking Codex directly: `codex --ask-for-approval never "Summarize the current instructions."` For a step-by-step guide to writing the file, see [Codex AGENTS.md](/articles/codex-agents-md/).
 
 AGENTS.md is an open format that Cursor, Copilot's coding agent, Gemini CLI and others read too, so one file can serve several agents. Claude Code reads it when there is no CLAUDE.md; details in [Claude Code memory](/articles/claude-code-memory/).
 
