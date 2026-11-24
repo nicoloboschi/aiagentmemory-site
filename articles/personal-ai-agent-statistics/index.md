@@ -55,7 +55,7 @@ Limits to know:
 - Hindsight's benchmark numbers are vendor-reported. Its README says research collaborators reproduced some results, but that is not an independent audit.
 - Hindsight's default local embedding and reranker models are English-only. For other languages, its docs recommend `BAAI/bge-m3` and `BAAI/bge-reranker-v2-m3`.
 - In Hermes's plugin, a memory that failed to save while the server was down is kept only in memory. If the process crashes before it is sent, that memory is lost (Hindsight v1.2.0 release notes).
-- Hindsight's facts sheet has no plugin for the other seven agents in this table. Do not assume one exists for them.
+- We found no Hindsight plugin for the other seven agents in this table. Check Hindsight's docs before assuming one exists.
 
 ## Frequently asked questions
 
@@ -65,7 +65,7 @@ Limits to know:
 
 **Does Hermes Agent have an npm package?** No official one that we found. Its README installs it with a curl script.
 
-**Does Hindsight work with OpenClaw and Hermes Agent?** Yes. Hindsight has a plugin for each one. Its facts sheet lists no plugin for the other agents on this page.
+**Does Hindsight work with OpenClaw and Hermes Agent?** Yes. Hindsight has a plugin for each one. We found no Hindsight plugin for the other agents on this page.
 
 ## Methodology
 
@@ -105,5 +105,5 @@ We did not find an official Hermes Agent package on npm. Its README installs it 
 
 ### Does Hindsight work with OpenClaw and Hermes Agent?
 
-Yes. Hindsight has a plugin for each one, sourced from Hindsight's docs and release notes read in October and November 2026. Hindsight's facts sheet lists no plugin for the other agents on this page, so do not assume one exists for them.
+Yes. Hindsight has a plugin for each one, according to Hindsight's docs and release notes (read October and November 2026). We found no Hindsight plugin for the other agents on this page, so check Hindsight's docs before assuming one exists.
 
