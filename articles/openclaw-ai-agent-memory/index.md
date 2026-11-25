@@ -68,6 +68,19 @@ Set `none` for keyword-only search, or `auto` to let OpenClaw pick and fall back
 
 How to pick: stay on the default if you already use OpenAI. Use **local** or **Ollama** if notes must never leave the machine. Use **Gemini** if you want images and audio indexed. Changing provider or model means rebuilding the index with `openclaw memory index --force`, because vectors from different models aren't comparable. Background on choosing models is in [embedding models for RAG](/articles/vector-database-for-llm-memory/#embedding-models-for-agent-memory).
 
+## Memory settings and their defaults
+
+The memory keys live under the top-level `memory` block in `openclaw.json`. The memory reference lists these defaults (read 2026-11-25):
+
+| Key | Default | What it does |
+|---|---|---|
+| `memory.search.enabled` | `true` | Turns memory search on or off |
+| `memory.search.provider` | `"openai"` when not set | The embedding provider from the table above |
+| `memory.search.fallback` | `"none"` | Provider to try if the main one fails |
+| `memory.search.rememberAcrossConversations` | on for personal installs | Lets the agent use its other private chats. Off when DM isolation is configured. Groups and channels are never used as sources |
+
+For every key, including the agent-level ones, see the [OpenClaw config file reference](/articles/openclaw-config-reference/).
+
 ## Flush, dreaming and compaction
 
 Two background processes keep memory current:

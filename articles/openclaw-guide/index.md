@@ -42,7 +42,7 @@ Tools run on the host machine for the main session unless you turn on sandboxing
 
 ## What does OpenClaw send over the network?
 
-Your prompts go to the model provider and chat platforms you configure. By default, OpenClaw also checks for a new version once a day. Anonymous usage statistics are opt-in. Setting `update.checkOnStart: false` turns off both the daily check and the statistics. The README links to a page that lists exactly what is sent.
+Your prompts go to the model provider and chat platforms you configure. By default, OpenClaw also checks for a new version once a day. Anonymous usage statistics are opt-in. Setting `update.checkOnStart: false` turns off both the daily check and the statistics. The README links to a page that lists exactly what is sent. The main settings and their defaults are in the [OpenClaw config file reference](/articles/openclaw-config-reference/).
 
 ## How does OpenClaw memory work?
 

@@ -1,0 +1,129 @@
+# OpenClaw Config File: Main Keys and Defaults (2026)
+
+> The main sections of OpenClaw's openclaw.json, with the documented default and a one-line meaning for the keys people change most. Checked against OpenClaw's configuration docs on 2026-11-25.
+
+Source: https://aiagentmemory.org/articles/openclaw-config-reference/ · Updated 2026-11-25 · aiagentmemory.org
+
+
+OpenClaw reads its settings from `~/.openclaw/openclaw.json`. The file is JSON5, and every field is optional. Leave a field out and OpenClaw uses its built-in default.
+
+This page lists the top-level sections and the keys people change most. Defaults come from OpenClaw's configuration docs, read on 2026-11-25. The docs spread the full key list over about 20 subpages, so this page is not the full list. The reference page of the docs says the same: it points to the subpage for each area.
+
+## How to change the file
+
+OpenClaw has three ways to edit the file, and the docs recommend the first two for most people:
+
+- `openclaw onboard` runs the setup wizard. `openclaw configure` edits a few chosen settings.
+- `openclaw config get agents.defaults.workspace` reads one key. `openclaw config set agents.defaults.userTimezone "Europe/Vienna"` writes one key and keeps the rest of the file. `openclaw config unset <path>` removes one key.
+- Edit the file by hand. The Gateway watches the file and applies most changes right away (hot reload).
+
+The Control UI at `http://127.0.0.1:18789` also has a Config tab. It builds a form from the live schema, with a raw JSON editor as an escape hatch. To check what a key accepts, run `openclaw config schema`.
+
+## Top-level sections
+
+| Section | What it controls | Docs page |
+|---|---|---|
+| `agents` | Agent defaults, per-agent overrides, multi-agent routing, sessions, messages and Talk | Configuration: agents |
+| `channels` | Access rules and pairing for each chat app (Discord, Telegram, WhatsApp and others) | Configuration: channels |
+| `tools` | Which tools are on, tool policy and custom model providers | Configuration: tools |
+| `models` | Model routing and the model catalog (`models.catalogRefresh` turns catalog downloads on or off) | Configuration: runtime basics |
+| `gateway` | Port, bind address, auth, roles, Control UI, TLS and reload | Configuration: gateway |
+| `memory` | Memory search and its embedding provider | Memory configuration reference |
+| `plugins` | Plugin entries and their own settings | Configuration: MCP, skills and plugins |
+| `skills` | Skill limits, such as the size cap on the skills prompt | Configuration: MCP, skills and plugins |
+| `hooks` | Outside HTTP calls that start or feed agent runs | Configuration: hooks |
+| `cron` | Scheduled automations, their delivery and failure alerts | Configuration: automations |
+| `session` | Session lifecycle, reset rules and retention | Configuration: agents |
+| `messages` | How replies are delivered, queued and read aloud | Configuration: agents |
+| `talk` | Voice (Talk) mode settings | Configuration: agents |
+| `update` | Version checks and automatic updates | Configuration: runtime basics |
+| `acp` | The ACP runtime that dispatches agent sessions | Configuration: runtime basics |
+| `secrets` and `env` | Secret providers, secret references and inline environment variables | Configuration: environment and secrets |
+| `logging`, `diagnostics`, `audit`, `telemetry` | What gets logged, traced or exported | Configuration: audit, logging and telemetry |
+| `database` and `storage` | SQLite (default) or PostgreSQL, and named storage locations | Database engines |
+
+## Agent defaults
+
+These keys sit under `agents.defaults`. Each one can be overridden for a single agent under `agents.entries.<id>`.
+
+| Key | Default | What it does |
+|---|---|---|
+| `workspace` | `~/.openclaw/workspace` (or the `OPENCLAW_WORKSPACE_DIR` value) | The folder the agent works in and where its bootstrap files live |
+| `contextInjection` | `"always"` | When workspace bootstrap files are put into the prompt |
+| `bootstrapMaxChars` | `20000` | Characters per bootstrap file before it is cut short |
+| `bootstrapTotalMaxChars` | `60000` | Characters for all bootstrap files together |
+| `imageMaxDimensionPx` | `1200` | Largest side, in pixels, of an inbound image |
+| `imageQuality` | `"auto"` | Image resize level. In auto mode, many images in one turn are compressed more |
+| `userTimezone` | not set | The timezone the agent uses for dates (example in the docs: `America/Chicago`) |
+| `model` | not set | The main model, with a `primary` and a list of `fallbacks`. The docs example uses `anthropic/claude-opus-4-6` |
+| `utilityModel` | not set | A cheaper model for short internal jobs, such as session titles and transcript summaries |
+| `timeoutSeconds` | 48 hours per attempt | How long one model attempt may run. Each fallback gets a fresh budget. `0` means no limit |
+
+## Gateway, update and ACP
+
+| Key | Default | What it does |
+|---|---|---|
+| `gateway.mode` | `"local"` | `local` runs the Gateway on this machine. `remote` connects to another one |
+| `gateway.port` | `18789` | Port for the WebSocket and HTTP server |
+| `gateway.bind` | `loopback` on a regular host | Which addresses accept connections. Non-loopback binds require Gateway auth |
+| `gateway.auth.mode` | token (required by default) | `none`, `token`, `password` or `trusted-proxy`. The onboarding wizard makes a token |
+| `gateway.tls.enabled` | `false` | Turns on HTTPS and WSS at the Gateway listener |
+| `update.checkOnStart` | `true` | Checks for a new version at start and at most once every 24 hours. Set `false` to turn the check off |
+| `update.auto.enabled` | `false` | Background auto-update for stable, beta and dev installs. Needs `checkOnStart` on |
+| `acp.enabled` | `true` | Global switch for ACP agent sessions |
+| `acp.dispatch.enabled` | `true` | Separate switch: `false` keeps ACP commands but blocks running them |
+
+Anonymous feature statistics are sent only when `telemetry.enabled` is `true`. The runtime docs say that setting `update.checkOnStart` to `false`, or setting `OPENCLAW_NO_AUTO_UPDATE=1`, stops all automatic update requests and feature statistics.
+
+## Memory keys
+
+The memory settings live under the top-level `memory` block. Search defaults are in `memory.search`. Per-agent overrides are in `agents.entries.<id>.memory.search`.
+
+| Key | Default | What it does |
+|---|---|---|
+| `memory.search.enabled` | `true` | Turns memory search on or off |
+| `memory.search.provider` | `"openai"` | The embedding adapter, such as `openai`, `ollama`, `local`, `gemini` or `bedrock`. Set it to use another provider |
+| `memory.search.model` | the provider's default | The embedding model name |
+| `memory.search.fallback` | `"none"` | Adapter to use if the main one fails |
+| `memory.search.rememberAcrossConversations` | on for personal installs; off when DM isolation is set | Lets the agent use context from its other private chats. Groups and channels are never used as sources |
+
+The memory reference also says that this setting needs a memory provider that supports protected transcript recall. The built-in provider does. Other providers may not.
+
+## Memory plugin: Hindsight
+
+OpenClaw can use Hindsight as a memory plugin, `@vectorize-io/hindsight-openclaw`. Its v1.2.0 release, dated 3 November 2026, added the same three tools as the Hermes plugin: `hindsight_retain`, `hindsight_recall` and `hindsight_reflect`. Its settings are:
+
+- `memoryMode` picks `hybrid` (the default: automatic recall plus the tools), `context` (automatic recall only) or `tools` (tools only).
+- Deleting from the knowledge base needs `allowKnowledgeDelete: true`.
+- Cron, heartbeat and sub-agent sessions stay out of memory unless you set `skipOperationalSessions: false`.
+
+The plugin can run a local embedded daemon, so you do not need a server to try it. This page does not list the plugin's own keys. Read its package README for them.
+
+**The win.** On the BEAM benchmark at 10 million tokens, Hindsight scores 64.1 and Mem0 scores 48.6. At 1 million tokens the scores are 73.9 and 64.1. Both figures come from [Mem0's comparison page](https://mem0.ai/compare/mem0-vs-hindsight). Mem0 ran that comparison, so it is a vendor-run result.
+
+**The limit.** Saving costs more than with plain notes. Retain and consolidation both call an LLM, so every saved turn can add model cost. For a short history, the daily notes and `MEMORY.md` that OpenClaw already keeps may be enough. Hindsight's advantage shows up on long histories.
+
+For how the built-in memory works, see [OpenClaw memory: how it works and which plugins](/articles/openclaw-ai-agent-memory/).
+
+## Sources
+
+- OpenClaw configuration docs: [configuration](https://docs.openclaw.ai/gateway/configuration), [configuration reference](https://docs.openclaw.ai/gateway/configuration-reference), [agents](https://docs.openclaw.ai/gateway/config-agents), [workspace and bootstrap](https://docs.openclaw.ai/gateway/config-agents/workspace-and-bootstrap), [models](https://docs.openclaw.ai/gateway/config-agents/models), [runtime basics](https://docs.openclaw.ai/gateway/config-runtime) and [gateway](https://docs.openclaw.ai/gateway/config-gateway). All read 2026-11-25.
+- Memory reference: [docs.openclaw.ai/reference/memory-config](https://docs.openclaw.ai/reference/memory-config), read 2026-11-25.
+- Hindsight plugin: [Hindsight v1.2.0 release notes](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0), read 2026-11-05.
+- BEAM figures: [Mem0 vs Hindsight](https://mem0.ai/compare/mem0-vs-hindsight), vendor-run.
+
+
+## FAQ
+
+### Where is the OpenClaw config file?
+
+It is ~/.openclaw/openclaw.json, in JSON5 (comments and trailing commas are allowed). If the file is missing, OpenClaw uses safe defaults. Run `openclaw config file` to see the active path.
+
+### What is the default OpenClaw Gateway port and bind?
+
+The Gateway listens on port 18789. The docs give loopback as the default bind on a regular host, so it accepts only local connections. Binding to a non-loopback address requires Gateway auth.
+
+### Which OpenClaw memory setting controls cross-conversation recall?
+
+memory.search.rememberAcrossConversations. The docs say it is on by default for personal installs and off when DM isolation is configured. Set it per agent under agents.entries.<id>.memory.search.
+
