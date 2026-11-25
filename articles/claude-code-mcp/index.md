@@ -59,6 +59,8 @@ Removing a remote server deletes the OAuth tokens that Claude Code stored for it
 
 ## How do you write .mcp.json by hand?
 
+For the file location of the other clients (Claude Desktop, Codex, Cursor, VS Code, Hermes, OpenClaw), see [MCP server config file locations](/articles/mcp-config-file-locations/).
+
 Project servers live in `.mcp.json`. A remote server looks like this:
 
 ```json
