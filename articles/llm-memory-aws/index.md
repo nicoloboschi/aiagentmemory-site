@@ -2,7 +2,7 @@
 
 > How Amazon Bedrock AgentCore Memory works: events, short-term vs long-term memory, the four built-in strategies, direct ingestion, record TTL, harness managed memory, record streaming, metadata filters, Python code and pricing (November 2026).
 
-Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-11-19 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/building-smarter-ai-agents-agentcore-long-term-memory-deep-dive/ · Updated 2026-11-26 · aiagentmemory.org
 
 
 **AgentCore long-term memory** is the part of Amazon Bedrock AgentCore Memory that turns raw conversation events into durable records an agent can search later. You write turns as **events** (short-term memory). Configured **memory strategies** then extract facts, preferences, summaries or episodes from those events and store them as **memory records** in namespaces, where any later session can retrieve them.
@@ -185,11 +185,11 @@ for record in records:
 
 Extraction is asynchronous, so records show up some time after the events. For Strands agents, the SDK ships an `AgentCoreMemorySessionManager` that loads history and retrieves records per namespace automatically.
 
-## AgentCore Memory pricing (checked November 2026)
+## AgentCore Memory pricing (checked 26 November 2026)
 
 | Item | Price |
 |---|---|
-| Short-term ingestion | $1.00 per GB (from 6 Oct 2026; was $0.25 per 1,000 events) |
+| Short-term ingestion | $1.00 per GB ingested |
 | Short-term storage | $0.10 per GB-month over each event's TTL |
 | Short-term retrieval | $0.20 per GB retrieved |
 | Long-term storage, built-in strategies | $0.75 per 1,000 records per month |
@@ -231,7 +231,7 @@ Short-term memory is the raw events (conversation turns) you write with CreateEv
 
 ### How much does AgentCore Memory cost?
 
-As of October 2026, long-term storage is $0.75 per 1,000 records per month with built-in strategies or $0.25 with override or self-managed strategies, and retrieval is $0.50 per 1,000 calls. Short-term memory moved on 6 October 2026 from $0.25 per 1,000 events to $1.00 per GB ingested, $0.10 per GB-month stored and $0.20 per GB retrieved.
+On AWS's AgentCore pricing page (read 26 November 2026, no effective date shown), short-term memory is $1.00 per GB ingested, $0.10 per GB-month stored and $0.20 per GB retrieved. Long-term storage is $0.75 per 1,000 records per month with built-in strategies or $0.25 with override or self-managed strategies, and retrieval is $0.50 per 1,000 retrievals.
 
 ### Can I write to AgentCore long-term memory without creating events?
 
