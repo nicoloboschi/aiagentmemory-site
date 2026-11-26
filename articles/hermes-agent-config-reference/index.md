@@ -1,8 +1,8 @@
 # Hermes Agent config.yaml Reference: Main Sections and Keys (2026)
 
-> The main sections and keys of Hermes Agent's config.yaml, with the example value and a one-line meaning for each. Covers model, memory, compression, terminal, agent and delegation. Checked against the Hermes docs and its example config on 2026-11-24.
+> The main sections and keys of Hermes Agent's config.yaml, with the example value and a one-line meaning for each. Covers model, memory, compression, terminal, agent and delegation. Checked against the Hermes docs and its example config on 2026-11-26.
 
-Source: https://aiagentmemory.org/articles/hermes-agent-config-reference/ · Updated 2026-11-24 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/hermes-agent-config-reference/ · Updated 2026-11-26 · aiagentmemory.org
 
 
 Hermes Agent keeps its settings in `~/.hermes/config.yaml`. Secrets (API keys, bot tokens) go in `~/.hermes/.env`. The config file wins for every non-secret setting when both are set.
@@ -93,6 +93,48 @@ Example values are from `cli-config.yaml.example` in the Hermes repo. Where that
 | `updates.backup_keep` | `5` | Number of pre-update backup zips kept |
 | `max_concurrent_sessions` | `null` | No cap on active sessions. `null`, `0` or omitting it means unlimited |
 | `group_sessions_per_user` | `true` | Each person in a group chat gets their own session |
+
+## More keys, one level down
+
+These are second-level keys from the same example file, read on 2026-11-26. Values are the example's. Where the example comments the line out, the value is marked "(commented)": the file shows it as a sample, not an active setting. "Unset" means the example leaves the key out.
+
+| Key | Example value | What it does |
+|---|---|---|
+| `database.journal_size_limit` | `67108864` (commented) | Caps the SQLite WAL file size, in bytes (64 MB). Unset uses SQLite's default |
+| `database.wal_autocheckpoint` | `1000` (commented) | Pages written before SQLite folds the WAL file back in. Unset uses SQLite's default |
+| `plugins.clone_timeout_seconds` | `300` | Time limit for each Git clone, fetch or checkout when a plugin installs |
+| `model.context_length` | unset | Total context window, input and output together. Leave unset so Hermes detects it; set it only when detection is wrong |
+| `model.ollama_num_ctx` | unset | Ollama only: the context size sent on each request. Set it to pin VRAM use |
+| `terminal.container_cpu` | `1` | CPU cores for the Docker sandbox |
+| `terminal.container_memory` | `5120` | Sandbox memory in MB (5 GB) |
+| `terminal.container_disk` | `51200` | Sandbox disk in MB (50 GB) |
+| `terminal.container_persistent` | `true` | Keeps the sandbox filesystem between sessions. `false` makes it temporary |
+| `browser.inactivity_timeout` | `120` | Seconds without activity before a browser session closes |
+| `tool_loop_guardrails.warnings_enabled` | `true` | Warns the agent when it keeps repeating a failing tool call |
+| `tool_loop_guardrails.hard_stop_enabled` | `false` | Stops the run on repeated tool calls. Off in the example |
+| `compression.target_ratio` | `0.20` | Share of the threshold kept as the most recent messages |
+| `compression.max_attempts` | `3` | Compression retries before a turn fails with "max compression attempts reached" |
+| `compression.idle_compact_after_seconds` | `0` | When above 0, compacts old history after a session resumes following this many idle seconds. `0` is off |
+| `streaming.edit_interval` | `0.3` (commented) | Seconds between message edits while a reply streams to a chat platform |
+| `skills.creation_nudge_interval` | `15` | Reminds the model to save a skill every N tool-calling steps. `0` turns it off |
+| `agent.gateway_timeout` | `1800` (commented) | Inactivity limit for gateway runs, in seconds. `0` means no limit |
+| `agent.api_max_retries` | `3` (commented) | Retries for API errors (dropped connections, timeouts, 5xx) before the failure is shown |
+| `agent.verify_on_stop` | `false` (commented) | After code edits without a fresh check, nudges the agent to verify before it finishes. `true` turns this on everywhere |
+| `agent.service_tier` | `""` | Fast mode on providers that offer it, such as OpenAI Priority Processing. Empty means normal speed, and fast mode costs more |
+| `code_execution.timeout` | `300` | Seconds a script may run before it is stopped |
+| `code_execution.max_tool_calls` | `50` | Tool calls a single script may make |
+| `delegation.max_concurrent_children` | `10` (commented) | Sub-agents that may run in parallel in one batch |
+| `delegation.max_spawn_depth` | `1` (commented) | How many levels of sub-agents may start sub-agents. Allowed range 1 to 3 |
+| `stt.provider` | `"local"` (commented) | Speech-to-text engine. Auto-detected if omitted |
+| `display.show_reasoning` | `true` (commented) | Shows the model's thinking above each response |
+| `display.bell_on_complete` | `false` | Terminal bell when the agent finishes. Works over SSH |
+| `display.timestamps` | `false` (commented) | Adds `[HH:MM]` to user and assistant messages |
+| `auth.codex_login_flow` | `device_code` | How `hermes auth add openai-codex` signs in: a code to enter (default) or a browser |
+| `auth.adopt_external_logins` | `true` | Reuses Codex CLI and Claude Code logins when Hermes has none of its own |
+| `updates.pre_update_backup` | `quick` (commented) | Backup before `hermes update`: `quick` (default), `full` (also a zip of the whole Hermes home folder) or `off` |
+| `updates.non_interactive_local_changes` | `"stash"` | For updates run without a terminal: `stash` saves local source edits and restores them; `discard` drops them |
+
+This table covers the keys people change most, not every key in the file. Nested keys below these (for example each `stt.<provider>` block) are not listed.
 
 ## The memory section and Hindsight
 

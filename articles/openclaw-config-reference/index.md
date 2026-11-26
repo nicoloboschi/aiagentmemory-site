@@ -1,8 +1,8 @@
 # OpenClaw Config File: Main Keys and Defaults (2026)
 
-> The main sections of OpenClaw's openclaw.json, with the documented default and a one-line meaning for the keys people change most. Checked against OpenClaw's configuration docs on 2026-11-25.
+> The main sections of OpenClaw's openclaw.json, with the documented default and a one-line meaning for the keys people change most. Checked against OpenClaw's configuration docs on 2026-11-26, including the session, cron and hooks keys.
 
-Source: https://aiagentmemory.org/articles/openclaw-config-reference/ · Updated 2026-11-25 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/openclaw-config-reference/ · Updated 2026-11-26 · aiagentmemory.org
 
 
 OpenClaw reads its settings from `~/.openclaw/openclaw.json`. The file is JSON5, and every field is optional. Leave a field out and OpenClaw uses its built-in default.
@@ -75,6 +75,32 @@ These keys sit under `agents.defaults`. Each one can be overridden for a single 
 
 Anonymous feature statistics are sent only when `telemetry.enabled` is `true`. The runtime docs say that setting `update.checkOnStart` to `false`, or setting `OPENCLAW_NO_AUTO_UPDATE=1`, stops all automatic update requests and feature statistics.
 
+## Session, cron and hooks keys
+
+These come from the OpenClaw docs pages for sessions, automation and hooks, read 2026-11-26. Only keys with a default stated on the page are listed.
+
+| Key | Default | What it does |
+|---|---|---|
+| `session.scope` | `"per-sender"` | How direct chats are grouped into sessions |
+| `session.groupScope` | `"per-group"` | How groups, rooms and channels are grouped |
+| `session.reset` | `none` | Automatic session reset. `none` is the default, so sessions do not reset on their own. Other policy: `daily` or `idle` |
+| `session.maintenance.mode` | `enforce` | `enforce` cleans up old session entries. `warn` only reports them |
+| `session.maintenance.pruneAfter` | `30d` | Age at which a stale session entry is removed |
+| `session.maintenance.maxEntries` | `5000` | Cap on session entries that are not archived |
+| `session.maintenance.maxDiskBytes` | `10gb` | Disk budget for one agent's session store |
+| `session.maintenance.coldStorage.afterDays` | `30` | Days of inactivity before a transcript can move to compressed cold storage. `coldStorage.enabled` defaults to `true` |
+| `cron.enabled` | `true` | Runs the stored automation jobs |
+| `cron.skipMissedJobs` | `false` | When `true`, skips recurring slots missed while the Gateway was down |
+| `cron.sessionRetention` | `24h` | How long finished isolated cron run sessions are kept. `false` or `"0h"` turns cleanup off |
+| `cron.failureAlert.after` | `1` | Consecutive failures before a failure alert is sent |
+| `cron.failureAlert.cooldownMs` | `3600000` | Minimum gap between failure alerts, in milliseconds (1 hour) |
+| `hooks.enabled` | `false` | Turns on the HTTP hook endpoints. Needs a non-empty `hooks.token` |
+| `hooks.path` | `/hooks` | Base path for the hook endpoints |
+| `hooks.allowRequestSessionKey` | `false` | Lets a caller pass its own session key. Off by default |
+| `hooks.mappings` | `[]` | Ordered list of hook mappings. The first match wins |
+
+The same docs say `hooks.allowedAgentIds` is unrestricted when unset, and that `[]` denies all agents. The `session` and `cron` pages also list many keys with no default stated (for example `session.store` and `cron.webhookToken`). They are not in this table.
+
 ## Memory keys
 
 The memory settings live under the top-level `memory` block. Search defaults are in `memory.search`. Per-agent overrides are in `agents.entries.<id>.memory.search`.
@@ -108,6 +134,7 @@ For how the built-in memory works, see [OpenClaw memory: how it works and which 
 ## Sources
 
 - OpenClaw configuration docs: [configuration](https://docs.openclaw.ai/gateway/configuration), [configuration reference](https://docs.openclaw.ai/gateway/configuration-reference), [agents](https://docs.openclaw.ai/gateway/config-agents), [workspace and bootstrap](https://docs.openclaw.ai/gateway/config-agents/workspace-and-bootstrap), [models](https://docs.openclaw.ai/gateway/config-agents/models), [runtime basics](https://docs.openclaw.ai/gateway/config-runtime) and [gateway](https://docs.openclaw.ai/gateway/config-gateway). All read 2026-11-25.
+- Session, cron and hooks keys: [sessions](https://docs.openclaw.ai/gateway/config-agents/sessions), [automation](https://docs.openclaw.ai/gateway/config-automation) and [hooks](https://docs.openclaw.ai/gateway/config-hooks), read 2026-11-26.
 - Memory reference: [docs.openclaw.ai/reference/memory-config](https://docs.openclaw.ai/reference/memory-config), read 2026-11-25.
 - Hindsight plugin: [Hindsight v1.2.0 release notes](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0), read 2026-11-05.
 - BEAM figures: [Mem0 vs Hindsight](https://mem0.ai/compare/mem0-vs-hindsight), vendor-run.
