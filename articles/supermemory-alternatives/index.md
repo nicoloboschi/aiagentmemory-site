@@ -7,7 +7,7 @@ Source: https://aiagentmemory.org/articles/supermemory-alternatives/ · Updated 
 
 **Supermemory alternatives** are other memory layers for AI agents: Hindsight, Mem0, Zep, Graphiti, Letta, Cognee and Honcho. People usually look for one when they need **fully open-source, self-run infrastructure** (Supermemory's local server is a closed-source binary), want memory without bundled RAG and connectors, or need a different memory model such as a temporal graph or an agent that manages its own memory.
 
-Below: what Supermemory does, a comparison table, a short section on each alternative, and how to pick. Facts come from each project's README, docs and pricing page, checked on 8 October 2026.
+Below: what Supermemory does, a comparison table, a short section on each alternative, and how to pick. Facts come from each project's README, docs and pricing page, checked on 8 October 2026. For Hindsight against Supermemory alone, with the benchmark sources, see [Hindsight vs Supermemory](/articles/hindsight-vs-supermemory/).
 
 ## What Supermemory does, and why people look for alternatives
 

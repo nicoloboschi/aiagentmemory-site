@@ -2,12 +2,12 @@
 
 > Agent memory leaderboard guide: where to find LongMemEval, LoCoMo and BEAM results, who runs each leaderboard, a score table with sources, and why scores differ.
 
-Source: https://aiagentmemory.org/articles/agent-memory-leaderboard/ · Updated 2026-10-30 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/agent-memory-leaderboard/ · Updated 2026-11-26 · aiagentmemory.org
 
 
 There is no official **agent memory leaderboard**. The benchmark authors (LongMemEval, LoCoMo, BEAM) publish datasets, not rankings. The leaderboards you can find are run by memory vendors: **agentmemorybenchmark.ai** by Vectorize, the company that makes Hindsight; **OmniMemEval** by MemTensor, the company that makes MemOS; and score pages from Mem0, Zep, Honcho and past.dev.
 
-So every ranking has an owner, and every score depends on the answer model, judge and token budget that owner chose. This page lists where the leaderboards are, what each benchmark measures, the published scores with who reported each one, and how to read them. Everything was checked on the source pages on 12 October 2026. For GitHub stars and PyPI and npm download counts for 23 memory projects, see [AI agent memory statistics](/articles/agent-memory-statistics/).
+So every ranking has an owner, and every score depends on the answer model, judge and token budget that owner chose. This page lists where the leaderboards are, what each benchmark measures, the published scores with who reported each one, and how to read them. Everything was checked on the source pages on 12 October 2026, except DolphinBench, which was read from its paper on 26 November 2026. For GitHub stars and PyPI and npm download counts for 23 memory projects, see [AI agent memory statistics](/articles/agent-memory-statistics/).
 
 ## What is an agent memory leaderboard?
 
@@ -26,6 +26,7 @@ The difference matters. A **same-harness leaderboard** runs every system with th
 | [Honcho evals](https://honcho.dev/evals/) | Plastic Labs, maker of Honcho | Honcho's own runs, Claude Haiku 4.5 as the main model | LongMemEval S, LoCoMo, BEAM |
 | [past.dev BEAM leaderboard](https://past.dev/benchmarks/beam) | past.dev | Collected vendor results plus its own run (GPT-5.6 Luna answers and judges) | BEAM, all four tiers |
 | [Hindsight benchmarks](https://benchmarks.hindsight.vectorize.io/) | Vectorize | Hindsight's scores only; raw run files hosted on AMB | 8 datasets |
+| [DolphinBench](https://dolphinbench.ai) (arXiv 2609.24971) | Mem0's team | Own runs, 600 agent tasks, each run with and without the history; accuracy, cost and latency | Three simulated personas, Hermes and Claude Code harnesses |
 
 Some facts about these leaderboards that change how you read them:
 
@@ -103,6 +104,28 @@ What this table shows:
 - **Scores drop a lot under someone else's harness.** Mem0 reports 94.4 on LongMemEval; here Mem0 cloud scores 56.0. Zep reports 94.7 on LoCoMo; here it scores 63.8. Hindsight reports 92 on LoCoMo; here it scores 82.0. Only MemOS matches its own README, because its README numbers come from this harness.
 - **Hindsight is highest on BEAM 10M** (59.75) and within a point of the top at 100K, under a competitor's settings. That matches the pattern in the vendor numbers: its lead shows on the longest histories.
 - **Hindsight is middle of the pack on LongMemEval here** (72.20). Most of the drop is one category: 14.3% on single-session-assistant questions (things the assistant said). It was run self-hosted, not on Hindsight Cloud.
+
+## Same-harness results with cost and latency: DolphinBench
+
+DolphinBench (arXiv [2609.24971](https://arxiv.org/abs/2609.24971), September 2026, [dolphinbench.ai](https://dolphinbench.ai)) is a benchmark from Mem0's team, and Mem0 leads its main table. It tests whether an agent can finish a task that needs remembered facts: 600 tasks over three simulated personas, each run with and without the history. It is the only leaderboard on this page that reports **accuracy, total cost and median latency together**. The authors require every result to report all three.
+
+Table 2 of the paper, Hermes harness with GPT-5.6-Luna as the agent model (all five systems the paper ran with this setup):
+
+| Memory system | Accuracy (%) | Total cost ($) | Median latency (s) |
+|---|---|---|---|
+| Built-in memory (no external system) | 65.67 | 61.48 | 44.35 |
+| Mem0 | **70.67** | 96.21 | **37.69** |
+| Honcho | 68.50 | 142.85 | 44.66 |
+| Hindsight | 69.50 | **84.65** | 55.31 |
+| Supermemory | 59.17 | 345.64 | 52.68 |
+
+Total cost is ingestion, testing and memory processing together. Latency includes tool use. Read the table this way:
+
+- **Mem0 is first on accuracy and speed** in this setup.
+- **Hindsight is second on accuracy**, 1.17 points behind Mem0 and one point ahead of Honcho. It costs the least of the four memory systems here ($84.65, against $96.21 for Mem0 and $142.85 for Honcho).
+- **Hindsight is the slowest of the five** at 55.31 seconds median. That is the trade-off to weigh against its lower cost.
+
+The paper also runs Hermes with MiniMax M3 and Claude Code with Claude Sonnet 5. With MiniMax, Mem0 scores 47.83%, Honcho 47.33%, Hindsight 41.00% and Supermemory 20.00%. With Claude Code, Honcho scores 35.83%, Mem0 32.33% and the built-in memory 26.33%; Hindsight was not run in the Claude Code setup. The paper's Table 2 does not describe each system's settings, so the numbers do not show what budget each system got.
 
 ## Why leaderboard numbers aren't directly comparable
 

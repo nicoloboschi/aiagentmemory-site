@@ -7,7 +7,7 @@ Source: https://aiagentmemory.org/articles/mem0-vs-hindsight/ · Updated 2026-10
 
 **Mem0 vs Hindsight** is a choice between two memory layers that sit beside your agent, not inside it. Hindsight does more work per memory: it links entities and time, merges facts into observations in the background, and can reason over them with `reflect`. Mem0 keeps memory lean: one LLM pass extracts facts, and search returns a small set of them cheaply.
 
-The data splits along that line. On Mem0's own comparison page, Hindsight leads by 9.8 points on BEAM 1M and 15.5 points on BEAM 10M, the long-history tests, and ships graph, temporal recall and consolidation in its MIT release, where Mem0 keeps them on its paid Platform. Mem0 returns about 4x fewer tokens per retrieval and lists SOC 2 and HIPAA for its Platform. This page compares them on memory model, retrieval, what's free versus paid, benchmarks and cost, using each project's README, docs and pricing pages, checked on 12 October 2026.
+The data splits along that line. On Mem0's own comparison page, Hindsight leads by 9.8 points on BEAM 1M and 15.5 points on BEAM 10M, the long-history tests, and ships graph, temporal recall and consolidation in its MIT release, where Mem0 keeps them on its paid Platform. Mem0 returns about 4x fewer tokens per retrieval and lists SOC 2 and HIPAA for its Platform. This page compares them on memory model, retrieval, what's free versus paid, benchmarks and cost, using each project's README, docs and pricing pages, checked on 12 October 2026. For Supermemory, the third option most teams compare, see [Hindsight vs Supermemory](/articles/hindsight-vs-supermemory/).
 
 ## What are Mem0 and Hindsight?
 
