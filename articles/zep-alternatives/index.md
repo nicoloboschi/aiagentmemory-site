@@ -51,6 +51,8 @@ The tradeoff is scope. Graphiti's own README compares it to Zep: with Graphiti y
 
 ## Hindsight
 
+For Hindsight against Zep alone, with the benchmark sources and prices, see [Zep vs Hindsight](/articles/zep-vs-hindsight/).
+
 **[Hindsight](https://github.com/vectorize-io/hindsight)** is an MIT-licensed memory server, and the most complete open-source answer if you want a whole memory service rather than an engine. `retain` extracts facts, entities, relationships and time data with an LLM. `recall` runs semantic, BM25, graph and time-range searches in parallel and merges them with rank fusion and reranking, so a query like "what happened in June?" works. `reflect` reasons over the stored memories.
 
 It also consolidates facts into **observations**, beliefs that keep their supporting evidence and get refined rather than overwritten when new facts arrive. That's a different answer to the problem Zep solves with fact invalidation. Storage is PostgreSQL with pgvector, so there's no separate graph database to run. It deploys with Docker, pip, Helm or embedded in Python, works with 25+ LLM providers including local ones like Ollama, and ships an MCP server plus plugins for Claude Code, Codex, Cursor and Copilot.

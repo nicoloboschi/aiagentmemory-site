@@ -62,6 +62,8 @@ Only two of these publish scores on the long-history benchmarks, both from [Mem0
 
 ## Each alternative in short
 
+For Hindsight against Letta alone, with the benchmark sources and licenses, see [Letta vs Hindsight](/articles/letta-vs-hindsight/).
+
 ### Hindsight
 
 **Hindsight** is an open-source memory server (MIT) and the closest match to what Letta does with memory, without taking over your agent loop. It has three operations: **retain** stores content and extracts facts, entities and time data; **recall** runs semantic, BM25 keyword, graph and temporal search in parallel and merges the results; **reflect** answers a question by reasoning over a memory bank. Like Letta's dreaming, it consolidates in the background: related facts merge into **observations** that keep their evidence, and **mental models** hold standing answers that stay current.
