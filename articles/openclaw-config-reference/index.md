@@ -1,6 +1,6 @@
 # OpenClaw Config File: Main Keys and Defaults (2026)
 
-> The main sections of OpenClaw's openclaw.json, with the documented default and a one-line meaning for the keys people change most. Checked against OpenClaw's configuration docs on 2026-11-26, including the session, cron and hooks keys.
+> The main sections of OpenClaw's openclaw.json, with the documented default and a one-line meaning for the keys people change most. Checked against OpenClaw's configuration docs on 2026-11-26, including the session, cron, hooks, logging, messages and talk keys.
 
 Source: https://aiagentmemory.org/articles/openclaw-config-reference/ · Updated 2026-11-26 · aiagentmemory.org
 
@@ -101,6 +101,33 @@ These come from the OpenClaw docs pages for sessions, automation and hooks, read
 
 The same docs say `hooks.allowedAgentIds` is unrestricted when unset, and that `[]` denies all agents. The `session` and `cron` pages also list many keys with no default stated (for example `session.store` and `cron.webhookToken`). They are not in this table.
 
+## Logging, messages and talk keys
+
+From OpenClaw's observability, messages-and-talk docs, read 2026-11-26. Only keys with a default or example stated on the page are listed.
+
+| Key | Default or example | What it does |
+|---|---|---|
+| `logging.level` | `"info"` | Log level written to the log file |
+| `logging.file` | unset: a dated file in the state folder's `logs/` | A fixed log path. Dated default files are deleted after 24 hours |
+| `logging.consoleLevel` | `"info"` | Log level shown in the console. Becomes `debug` when you run with `--verbose` |
+| `logging.consoleStyle` | `"pretty"` | Console format: `pretty` or `json`. The old `compact` value is retired |
+| `logging.maxFileBytes` | `104857600` (100 MB) | Size at which the log file rotates. Up to five numbered archives are kept |
+| `logging.redactPatterns` | default list | Regexes that mask secrets in console output and log tails. Setting it replaces the default string list |
+| `messages.responsePrefix` | `"🦞"` (example) | Text put in front of replies. `"auto"` is the other option |
+| `messages.ackReaction` | `"👀"` | Emoji added to a message to show it was received. `""` turns it off |
+| `messages.ackReactionScope` | `"group-mentions"` | Where the acknowledgment reaction appears. Other values: `group-all`, `direct`, `all`, `off` |
+| `messages.queue.mode` | `"steer"` | What happens to a new message while a run is active. `steer` adds it to the run. `followup` runs it after the run ends. `collect` and `interrupt` are also listed |
+| `messages.queue.cap` | `20` | Queued messages allowed before the drop rule applies |
+| `messages.queue.drop` | `"summarize"` | Which queued messages go when the cap is reached. `old` drops the oldest, `new` rejects the newest |
+| `messages.queue.allowCollaborativeSteering` | `true` | Lets other people's messages steer the active run. `false` makes them wait for their own turn |
+| `messages.inbound.debounceMs` | unset | Groups quick text messages from one sender into one turn. Telegram waits 300 ms when unset. `0` turns it off |
+| `messages.tts.auto` | `"off"` | Automatic spoken replies: `off`, `always`, `inbound` or `tagged` |
+| `talk.silenceTimeoutMs` | unset: 700 ms on macOS and Android, 900 ms on iOS | Pause after the user stops speaking before Talk sends the transcript |
+| `talk.speechLocale` | unset: device language | Speech recognition language, as a BCP 47 id such as `en-US` |
+| `talk.realtime.consultRouting` | `"provider-direct"` | `provider-direct` keeps the provider's own reply. `force-agent-consult` sends the request through OpenClaw |
+
+The docs list `messages.queue.byChannel` too (the example sends WhatsApp and Telegram to `followup`). The `talk.realtime` vadThreshold, silenceDurationMs and prefixPaddingMs keys are documented, but their defaults are "the provider's default", so they are not in the table.
+
 ## Memory keys
 
 The memory settings live under the top-level `memory` block. Search defaults are in `memory.search`. Per-agent overrides are in `agents.entries.<id>.memory.search`.
@@ -134,6 +161,7 @@ For how the built-in memory works, see [OpenClaw memory: how it works and which 
 ## Sources
 
 - OpenClaw configuration docs: [configuration](https://docs.openclaw.ai/gateway/configuration), [configuration reference](https://docs.openclaw.ai/gateway/configuration-reference), [agents](https://docs.openclaw.ai/gateway/config-agents), [workspace and bootstrap](https://docs.openclaw.ai/gateway/config-agents/workspace-and-bootstrap), [models](https://docs.openclaw.ai/gateway/config-agents/models), [runtime basics](https://docs.openclaw.ai/gateway/config-runtime) and [gateway](https://docs.openclaw.ai/gateway/config-gateway). All read 2026-11-25.
+- Logging, messages and talk keys: [observability](https://docs.openclaw.ai/gateway/config-observability) and [messages and talk](https://docs.openclaw.ai/gateway/config-agents/messages-and-talk), read 2026-11-26.
 - Session, cron and hooks keys: [sessions](https://docs.openclaw.ai/gateway/config-agents/sessions), [automation](https://docs.openclaw.ai/gateway/config-automation) and [hooks](https://docs.openclaw.ai/gateway/config-hooks), read 2026-11-26.
 - Memory reference: [docs.openclaw.ai/reference/memory-config](https://docs.openclaw.ai/reference/memory-config), read 2026-11-25.
 - Hindsight plugin: [Hindsight v1.2.0 release notes](https://github.com/vectorize-io/hindsight/releases/tag/v1.2.0), read 2026-11-05.

@@ -134,7 +134,36 @@ These are second-level keys from the same example file, read on 2026-11-26. Valu
 | `updates.pre_update_backup` | `quick` (commented) | Backup before `hermes update`: `quick` (default), `full` (also a zip of the whole Hermes home folder) or `off` |
 | `updates.non_interactive_local_changes` | `"stash"` | For updates run without a terminal: `stash` saves local source edits and restores them; `discard` drops them |
 
-This table covers the keys people change most, not every key in the file. Nested keys below these (for example each `stt.<provider>` block) are not listed.
+## Nested blocks
+
+These are the blocks with their own keys. Same source and date as above. "(commented)" means the example comments the line out.
+
+| Key | Example value | What it does |
+|---|---|---|
+| `compression.model_thresholds` | unset (commented) | Per-model compression trigger. Keys match part of the model name; the longest match wins. The example shows `"gpt-5": 0.30` as a sample |
+| `compression.threshold_tokens` | `200000` (commented) | Absolute token cap for compression. Compression fires at the lower of this and the ratio threshold. Null or unset means off |
+| `skills.external_dirs` | unset (commented) | Extra folders of skills, read-only. New skills are still written to `~/.hermes/skills/`. Local skills win on name clashes |
+| `hosted_rooms.discussion.max_rounds` | `3` | Rounds of discussion in a hosted room |
+| `hosted_rooms.discussion.max_messages` | `10` | Total visible bot replies in a room, across all members |
+| `platform_toolsets` | `cli: [hermes-cli]`, `telegram: [hermes-telegram]` and so on | Which toolset each platform gets: CLI, Telegram, Discord, WhatsApp, Slack, Signal and QQ Bot |
+| `agent.personalities` | `{}` (commented sample) | Named personas. Each has a `system_prompt`, `tone` and `style`. Empty in the example |
+| `stt.enabled` | `true` | Turns speech-to-text on |
+| `stt.language` | `"en"` | Language hint for speech-to-text. A provider's own language setting wins |
+| `stt.local.model` | `"base"` | Whisper model for local speech-to-text: `tiny`, `base`, `small`, `medium`, `large-v3` or `turbo` |
+| `stt.local.vad` | `true` (commented) | Silero filter that keeps silence away from Whisper |
+| `stt.openai.model` | `"whisper-1"` | OpenAI transcription model. Other options in the file include `gpt-4o-transcribe` |
+| `stt.openai.timeout` | `60` | Request timeout in seconds |
+| `stt.openai.max_retries` | `1` | Retries on transport errors. `0` turns them off |
+| `stt.providers` | unset (commented) | Your own speech command. The example runs `custom-asr` with `{input_path}` and `{output_path}` filled in |
+| `delegation.backend` | `"default"` (commented) | How sub-agent tasks are routed. `default` uses the keys in this section |
+| `delegation.model` | unset (commented) | Model for sub-agents. Empty means the parent's model. The file advises a cheaper model here, since sub-agents use most tokens |
+| `delegation.provider` | unset (commented) | Provider for sub-agents. Supported in the file: `openrouter`, `nous`, `zai`, `kimi-coding` and `minimax` |
+| `delegation.fallback_providers` | unset (commented) | Fallback chain for sub-agents. `[]` turns fallback off |
+| `delegation.orchestrator_enabled` | `true` (commented) | `false` makes every sub-agent a leaf that cannot start more |
+| `delegation.subagent_auto_approve` | `false` (commented) | When a sub-agent hits an approval prompt: `false` denies it, `true` approves it once. Set `true` only for cron or batch jobs |
+| `delegation.inherit_mcp_toolsets` | `true` (commented) | Sub-agents keep the parent's MCP tools when their toolsets are narrowed. `false` makes the match strict |
+
+These tables cover the keys people change most, not every key in the file. Still not listed: the `display` skin and banner keys, the `telemetry` keys, the `delegation.backends`, `delegation.profiles` and `model.providers` blocks, and the other `stt` providers (Groq, Mistral, xAI, DeepInfra).
 
 ## The memory section and Hindsight
 
