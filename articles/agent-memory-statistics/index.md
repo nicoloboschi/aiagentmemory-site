@@ -204,6 +204,7 @@ These scores are not data we collected. Each one was published by the party name
 | MemOS | 89.2 | 88.8 | not listed | 56.8 | MemTensor (maker of MemOS) |
 | Supermemory | 85.2 | not listed | not listed | not listed | Supermemory |
 | past.dev | not listed | not listed | **90.65** | **85.03** | past.dev |
+| Cognee (self-reported; 0-1 scale) | not listed | not listed | not listed | 0.67 (exploratory); 0.79 on BEAM 100K | Cognee, own report |
 
 Three facts that change how to read the table:
 

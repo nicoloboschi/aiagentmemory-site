@@ -60,10 +60,11 @@ These are the scores each vendor publishes for itself, with the source and the m
 | MemOS | 89.2 | 88.8 | not listed | 56.8 | MemTensor (README, via OmniMemEval) | GPT-4.1-mini answers, GPT-4o-mini judge |
 | Supermemory | 85.2 | not listed | not listed | not listed | Supermemory ([report](https://supermemory.ai/research/longmembench)) | Gemini 3 Pro answers, GPT-4o judge; 84.6 with GPT-5 |
 | past.dev | not listed | not listed | **90.65** | **85.03** | past.dev ([BEAM page](https://past.dev/benchmarks/beam)) | GPT-5.6 Luna answers and judges |
+| Cognee (self-reported, 0-1 scale shown as 0-100) | not listed | not listed | not listed | 67 (exploratory); 79 on BEAM 100K | Cognee ([BEAM report](https://github.com/topoteretes/cognee/blob/main/cognee/eval_framework/beam/REPORT.md)) | gpt-5 answers and judge; gpt-5-mini ingestion at 10M |
 
 Every row is vendor-run. Hindsight's README adds that research collaborators at Virginia Tech and The Washington Post reproduced its results; that is a reproduction by collaborators, not an independent audit. Hindsight's site also reports PersonaMem 32K at 86.6 and LifeBench EN at 71.5. BEAM scores above are nugget scores shown out of 100.
 
-Two things stand out. On LongMemEval and LoCoMo, the top four systems are within about five points of each other, which is less than the effect of changing the answer model. On BEAM 10M, the gap is larger: Hindsight reports 64.1 against 48.6 for Mem0 and 40.9 for Honcho, and Mem0's [comparison page](https://mem0.ai/compare/mem0-vs-hindsight) shows the same Hindsight and Mem0 figures. past.dev reports far higher BEAM scores than anyone else, from a run where one model both answers and judges; no other source has reproduced them.
+Two things stand out. On LongMemEval and LoCoMo, the top four systems are within about five points of each other, which is less than the effect of changing the answer model. On BEAM 10M, the gap is larger: Hindsight reports 64.1 against 48.6 for Mem0 and 40.9 for Honcho, and Mem0's [comparison page](https://mem0.ai/compare/mem0-vs-hindsight) shows the same Hindsight and Mem0 figures. past.dev reports far higher BEAM scores than the other vendors, from a run where one model both answers and judges; no other source has reproduced them. Cognee's own report gives 0.79 on BEAM 100K and 0.67 on an exploratory 10M run. Both are above Hindsight's 75 and 64.1 on paper, but Cognee's 10M run chose its settings on the same questions it scored, and the report says the two scales are not a controlled comparison.
 
 ### LongMemEval by question type
 

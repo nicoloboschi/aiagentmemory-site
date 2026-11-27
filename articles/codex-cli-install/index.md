@@ -34,7 +34,7 @@ For the manual route, each archive holds one file with the platform in its name,
 3. **Give it a first task.** Ask it to explain the project, make one small change, or find a bug. Create a Git commit before a big task so you can go back.
 4. **Learn the commands.** `codex exec` runs one task without the chat screen. It is the option for scripts and CI. The Codex docs at [developers.openai.com/codex](https://developers.openai.com/codex) list the rest.
 
-Codex CLI reads its settings from `~/.codex/config.toml`. The [Codex CLI config reference](/articles/codex-cli-config-reference/) lists the keys, with their defaults.
+Codex CLI reads its settings from `~/.codex/config.toml`. The [Codex CLI config reference](/articles/codex-cli-config-reference/) lists the keys, with their defaults. To add plugins from inside the CLI with `/plugins`, see [Codex plugins](/articles/codex-plugins/).
 
 ## Update and uninstall
 

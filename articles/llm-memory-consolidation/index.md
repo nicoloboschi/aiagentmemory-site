@@ -2,7 +2,7 @@
 
 > Memory consolidation in AI agents merges duplicate memories, fixes conflicts and writes summaries, usually in the background. REM (arXiv 2610.27377) resolved 27.6% of coding tasks vs 24.9%, at 17% lower cost.
 
-Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-11-22 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/memory-consolidation-ai-agents/ · Updated 2026-11-27 · aiagentmemory.org
 
 
 **Memory consolidation in AI agents** is the step that turns raw records (messages, tool results, observations) into a smaller set of cleaner, longer-lived memories. It merges duplicates, resolves contradictions, and writes higher-level insights. Without it, an agent's memory store only grows, and retrieval gets noisier with every session.
@@ -186,6 +186,8 @@ Consolidation is a lossy, LLM-driven rewrite of your data. These are the failure
 **Hallucinated insights.** A reflection can state something no record supports. Keeping citations (as Generative Agents and Hindsight's observations do) lets you check and drop unsupported ones.
 
 **Destructive updates.** An UPDATE or DELETE based on a misread message removes correct data for good. That risk is one reason Graphiti invalidates instead of deleting, and why Mem0 v3 switched to ADD-only. If your system overwrites, keep the raw source.
+
+**Wrong order.** When an amendment and the rule it amends are stated on the same day, a consolidation step can let the older rule overwrite the newer one. Hindsight hit this with one model: the model misread the two timestamps, which arrived in different formats. Its fix, pull request #5966 (fixes #5938, merged 22 October 2026), stops an older fact from overwriting a newer same-day amendment (github.com/vectorize-io/hindsight/pull/5966). The fix is in Hindsight's own repo, and we found no independent test of it. Check the order of your timestamps before you trust a merge.
 
 **Compounding drift.** Summaries of summaries lose detail at each level. Reflections built on reflections can move far from what was actually said. Keep raw episodes as the ground truth and rebuild derived layers when needed.
 

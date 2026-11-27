@@ -7,6 +7,8 @@ Source: https://aiagentmemory.org/articles/zep-vs-hindsight/ · Updated 2026-11-
 
 **Short answer:** pick **Hindsight** if you want the whole memory server open source and running on your own machine or cloud, or if your histories are long and you want the published BEAM lead. Pick **Zep** if you want a managed context platform with connectors to business apps, and you are happy to pay for it.
 
+For the open-source framework alone, without Zep's managed service, see [Graphiti vs Hindsight](/articles/graphiti-vs-hindsight/).
+
 The two projects differ more than their feature lists suggest. Zep sells a managed service with a graph under it. Hindsight is a memory server you run or use as a hosted API. Hindsight facts come from its README, its benchmarks site and its pricing page. Zep facts come from its research and pricing pages, its memory benchmark page and the Graphiti and Zep repositories, all read on 26 November 2026.
 
 ## Quick comparison
