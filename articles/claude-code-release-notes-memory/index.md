@@ -1,8 +1,8 @@
 # Claude Code Release Notes: Memory and Context Changes (2026)
 
-> Claude Code releases 2.1.311 to 2.1.331 (Oct 26 to Nov 23, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
+> Claude Code releases 2.1.311 to 2.1.332 (Oct 26 to Nov 25, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
 
-Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-24 · aiagentmemory.org
+Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · Updated 2026-11-27 · aiagentmemory.org
 
 
 ## What are the Claude Code release notes for memory?
@@ -10,12 +10,13 @@ Source: https://aiagentmemory.org/articles/claude-code-release-notes-memory/ · 
 Claude Code's memory is made of files (CLAUDE.md, MEMORY.md, rules) plus compaction, which shortens a long
 conversation when it nears the context limit. This page tracks the release notes that change how those parts
 behave. It covers the 11 newest GitHub releases, read on 2026-11-13, and skips releases that touch no memory
-or context behavior. Read again on 2026-11-24 for v2.1.331.
+or context behavior. Read again on 2026-11-27 for v2.1.332.
 
 ## Memory-related changes by version
 
 | Version | Date | Change that matters for memory |
 |---|---|---|
+| 2.1.332 | 2026-11-25 | Fixed CLAUDE.md and rules files being sent to the model a second time, in most cases, after a session moves into a worktree under `.claude/worktrees` or is resumed there. Fixed compaction failing when a summary ran past the output limit: after three cut-off replies, the last try asks for a shorter summary. Fixed turns ending in "Prompt is too long" after repeated auto-compaction failures. |
 | 2.1.331 | 2026-11-23 | Fixed `/compact` and auto-compact sometimes losing part of the summary when it quoted certain XML tags. Fixed Stop hooks that read the transcript missing the last reply in Claude Desktop; SubagentStop hooks now wait for it too. |
 | 2.1.330 | 2026-11-20 | Fixed link reference definitions being dropped from CLAUDE.md and memory files that contain an HTML comment. Fixed Claude Code freezing for up to several minutes right after compacting a very long conversation. Fixed `/context` undercounting system tools in Code Mode before Claude's first reply. Fixed Code Mode not restoring a file that a script had read after Esc and `/compact`. |
 | 2.1.329 | 2026-11-19 | Fixed `/code-review` stopping at a permission prompt, on most models, to look for a `~/.claude/CLAUDE.md` that doesn't exist. Fixed sessions started from a pre-warmed process ignoring the `autoCompactWindow` setting in the project's `.claude/settings.json`. Fixed `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` staying in effect in a running session after it is removed from settings.json. |

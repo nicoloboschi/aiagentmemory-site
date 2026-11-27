@@ -4,12 +4,13 @@
 
 Each article answers one question about memory for AI agents and LLMs. Start with the guides, then follow the topic you need.
 
-## Data pages (updated 2026-11-24)
+## Data pages (updated 2026-11-27)
 
 Numbers we collected on a stated date, with the source for each:
 
 - [AI Agent Memory Statistics (November 2026)](/articles/agent-memory-statistics/)
 - [Memory Library Statistics (November 2026)](/articles/memory-library-statistics/)
+- [Coding Agent Memory Statistics (November 2026)](/articles/coding-agent-memory-statistics/)
 - [AI Coding Agent Statistics (November 2026)](/articles/ai-coding-agent-statistics/)
 - [MCP Server Statistics (November 2026)](/articles/mcp-server-statistics/)
 - [Vector Database Statistics (November 2026)](/articles/vector-database-statistics/)
@@ -73,7 +74,7 @@ All benchmark numbers on this site are vendor-reported, and each page says who r
 - [Claude Code MCP: Add, Scope and Remove Servers (2026)](https://aiagentmemory.org/articles/claude-code-mcp/): How to add an MCP server to Claude Code with claude mcp add, pick a scope (local, project or user), check status with /mcp, and keep secrets out of .mcp.json. Commands from the official Claude Code MCP docs, read 2026-11-12. Includes a memory section.
 - [Claude Code Memory: CLAUDE.md, Auto Memory and Plugins](https://aiagentmemory.org/articles/claude-code-memory/): How Claude Code memory works: CLAUDE.md locations and load order, @imports, auto memory and how to turn it off, /memory, plus memory MCP servers, claude-mem and Hindsight.
 - [Claude Code Plugins: Install, Scope and Remove (2026)](https://aiagentmemory.org/articles/claude-code-plugins/): How to install a Claude Code plugin with /plugin install or claude plugin install, pick a scope (user, project or local), and check its context cost. Commands from the official plugin docs, read 2026-11-14. Includes a memory section.
-- [Claude Code Release Notes: Memory and Context Changes (2026)](https://aiagentmemory.org/articles/claude-code-release-notes-memory/): Claude Code releases 2.1.311 to 2.1.331 (Oct 26 to Nov 23, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
+- [Claude Code Release Notes: Memory and Context Changes (2026)](https://aiagentmemory.org/articles/claude-code-release-notes-memory/): Claude Code releases 2.1.311 to 2.1.332 (Oct 26 to Nov 25, 2026) and the changes to CLAUDE.md, MEMORY.md, compaction, transcripts and /context. Updated with each release.
 - [Claude Code Router (2026): Setup, Providers and Memory](https://aiagentmemory.org/articles/claude-code-router/): What Claude Code Router does, how to start it on port 3456 and point Claude Code at it, and what Anthropic says about routing to non-Claude models. Sources read 2026-11-17.
 - [Claude Code Settings: Files, Precedence and Key Reference (2026)](https://aiagentmemory.org/articles/claude-code-settings/): Where Claude Code settings live (user, shared project, project local, managed), which file wins, the main settings.json keys and their env variables, and how auto memory and Hindsight are switched on.
 - [Claude Code Skills: How They Work, Where They Live and Memory](https://aiagentmemory.org/articles/claude-code-skills/): How Claude Code skills work: SKILL.md location (personal, project, plugin), frontmatter fields and limits, how they load, and how skills differ from CLAUDE.md and memory. Sourced from the Claude Code docs.
