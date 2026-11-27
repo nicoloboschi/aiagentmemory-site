@@ -18,6 +18,7 @@ Numbers we collected on a stated date, with the source for each:
 - [Local LLM Statistics (November 2026)](/articles/local-llm-statistics/)
 - [Graph Database Statistics (November 2026)](/articles/graph-database-statistics/)
 - [Open-Source Personal AI Agent Statistics (November 2026)](/articles/personal-ai-agent-statistics/)
+- [AI Agent Workflow Builder Statistics (November 2026)](/articles/agent-workflow-builder-statistics/)
 - [Agent Memory Leaderboard: Benchmarks and Scores](/articles/agent-memory-leaderboard/)
 
 ## Which agent memory system should I use?
@@ -49,6 +50,7 @@ All benchmark numbers on this site are vendor-reported, and each page says who r
 - [AI Agent Long-Term Memory: How It Works, How to Build It](https://aiagentmemory.org/articles/ai-agent-long-term-memory/): Long-term memory keeps an AI agent's facts across sessions. Tested Python with LangMem, Mem0 and Pydantic AI, and LongMemEval results.
 - [AI Agent Memory Statistics (November 2026)](https://aiagentmemory.org/articles/agent-memory-statistics/): AI agent memory statistics: GitHub stars, forks and licenses for 23 projects, PyPI and npm downloads, and headline benchmark scores. Collected 2026-10-20 and updated 2026-11-17 with the change between them.
 - [AI Agent Planning Memory: Keeping and Reusing Plans](https://aiagentmemory.org/articles/ai-agent-planning-memory/): How AI agents remember plans: to-do lists in working memory, plans stored as episodes, and plan reuse through workflow memory and plan caching, with code.
+- [AI Agent Workflow Builder Statistics (November 2026)](https://aiagentmemory.org/articles/agent-workflow-builder-statistics/): GitHub stars, forks, creation dates and last-month PyPI and npm downloads for 8 visual AI agent workflow builders: n8n, Langflow, Dify, Flowise, Sim, Activepieces, Windmill and Botpress. Collected 2026-11-27.
 - [AI Coding Agent Memory: CLAUDE.md, AGENTS.md and More](https://aiagentmemory.org/articles/ai-coding-agent-memory/): How AI coding agents remember projects: Claude Code CLAUDE.md and auto memory, Codex AGENTS.md and memories, Cursor rules, Copilot Memory, and external memory tools.
 - [AI Coding Agent Pricing: Claude Code, Codex, GitHub Copilot Plans and Prices (November 2026)](https://aiagentmemory.org/articles/ai-coding-agent-pricing/): Plan prices and usage limits for Claude Code, OpenAI Codex and GitHub Copilot, read from each vendor's pricing page on 2026-11-25. Cursor and Windsurf are left out because their pages did not give a clean price list.
 - [AI Coding Agent Statistics (November 2026)](https://aiagentmemory.org/articles/ai-coding-agent-statistics/): GitHub stars, forks, licenses and monthly npm and PyPI downloads for 12 AI coding agents, including Claude Code, Codex CLI and OpenClaw. Collected 2026-11-20.

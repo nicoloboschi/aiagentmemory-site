@@ -147,7 +147,7 @@ Other memory servers with MCP endpoints include Supermemory (hosted at `https://
 - **Assistant that serves the same users for months, or should reason over what it knows:** Hindsight's community node, with Recall before the agent and Retain after. Skip it for one-off automations.
 - **Workflows on Zep or Motorhead nodes:** plan a migration; both are deprecated.
 
-For the wider picture of memory types and tools beyond n8n, see [AI agent memory explained](/articles/ai-agent-memory-explained/).
+For the wider picture of memory types and tools beyond n8n, see [AI agent memory explained](/articles/ai-agent-memory-explained/). For how n8n's GitHub stars and npm downloads compare with other workflow builders, see [AI agent workflow builder statistics](/articles/agent-workflow-builder-statistics/).
 
 
 ## FAQ
