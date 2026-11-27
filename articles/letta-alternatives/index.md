@@ -102,7 +102,7 @@ It runs on Postgres with pgvector (or an embedded Postgres) via Docker, pip or H
 Start from what you're replacing:
 
 - **You want Letta's model, without Letta running your agent:** Hindsight (background consolidation, mental models and `reflect` in a memory server), or LangMem (agent-managed memory tools inside LangGraph).
-- **Your agents run for months and histories get long:** Hindsight, which reports the highest BEAM 1M score we found (73.9, vendor-run).
+- **Your agents run for months and histories get long:** Hindsight, which reports 73.9 on BEAM 1M and 64.1 on BEAM 10M (vendor-run).
 - **You want memory for Claude Code, Codex or Cursor without switching harness:** Hindsight's plugins.
 - **You want simple user memory with minimal setup, or the smallest prompt per retrieval:** Mem0 or Supermemory.
 - **Facts change and history matters:** Zep (managed) or Graphiti (self-hosted).

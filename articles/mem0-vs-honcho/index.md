@@ -131,7 +131,7 @@ For a side-by-side of Honcho and Hindsight, including the DolphinBench run where
 
 Hindsight sits closer to Honcho than to Mem0 in design: it does background reasoning over what it stores. It's the strongest of the three when:
 
-- **Histories are long.** It reports the highest BEAM 1M score we found (73.9), and 64.1 at 10M against 48.6 for Mem0 and 40.9 for Honcho (vendor-run). Cognee self-reports higher BEAM scores at 100K (0.79) and at an exploratory 10M (0.67), run differently.
+- **Histories are long.** It reports 73.9 on BEAM 1M and 64.1 at 10M, against 64.1 and 48.6 for Mem0 and 40.9 for Honcho (vendor-run). Other runs score higher: past.dev's own BEAM run, and Cognee's self-reported 0.79 at 100K and exploratory 0.67 at 10M, run differently.
 - **You want a reasoned answer under a permissive license.** `reflect` answers questions like "what does this user want?" by reasoning over the bank, much like Honcho's chat, but under MIT instead of AGPL-3.0.
 - **You want standing answers about a user.** **Mental models** are answers you define, kept up to date in the background and read without a retrieval or LLM call. **Observations** merge facts into evidence-backed beliefs, refined as new facts arrive.
 - **You want everything open.** Graph links, temporal recall, consolidation and `reflect` all ship in the open-source server; Mem0 keeps graph and temporal features on its paid Platform.

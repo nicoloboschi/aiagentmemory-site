@@ -137,7 +137,7 @@ Treat the config value as a hint and the model card as the authority. Qwen3-8B's
 - **128K to 1M tokens** (whole codebases, long contracts, long agent runs): any current Claude, GPT-6, Gemini 3.x, DeepSeek V4 or Grok 4.3 model. Check the long-context price tier.
 - **Over 1M tokens:** only Llama 4 Scout advertises it, and you host it yourself. Usually it's cheaper and more accurate to retrieve the relevant parts instead; see [techniques for extending an LLM's context window](/articles/extending-llm-context-window/).
 - **Running locally:** the limit is your GPU memory, not the model card.
-- **Agents whose history keeps growing:** no window holds months of sessions. An external memory layer such as [Hindsight](https://github.com/vectorize-io/hindsight) (MIT) or Mem0 stores facts outside the model and sends back only the relevant ones; Hindsight reports the highest BEAM 1M score we found (73.9, vendor-reported). Cognee self-reports higher BEAM scores at 100K and an exploratory 10M, run differently. See [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
+- **Agents whose history keeps growing:** no window holds months of sessions. An external memory layer such as [Hindsight](https://github.com/vectorize-io/hindsight) (MIT) or Mem0 stores facts outside the model and sends back only the relevant ones; Hindsight reports 73.9 on BEAM 1M (vendor-reported). Other runs report higher BEAM scores, Cognee and past.dev among them, each in its own setup. See [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
 
 
 ## FAQ
