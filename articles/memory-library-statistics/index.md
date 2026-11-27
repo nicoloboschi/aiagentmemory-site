@@ -7,7 +7,7 @@ Source: https://aiagentmemory.org/articles/memory-library-statistics/ · Updated
 
 On 2026-11-23, Mem0 had the most GitHub stars of the 9 agent memory projects we checked (69,354). Hindsight was second (62,706). Mem0's `mem0ai` package also had the most downloads, 2,394,777 on PyPI and 1,045,328 on npm last month. These memory library statistics were collected by aiagentmemory.org from the GitHub REST API, pypistats.org and the npm registry on 2026-11-23 at 04:43 UTC. We did not run any of these projects ourselves.
 
-For the same kind of numbers on other tools, see [agent memory statistics](/articles/agent-memory-statistics/), [graph database statistics](/articles/graph-database-statistics/) and [local LLM statistics](/articles/local-llm-statistics/). For a side-by-side reading of two of these projects, see [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
+For the same kind of numbers on other tools, see [agent memory statistics](/articles/agent-memory-statistics/), [graph database statistics](/articles/graph-database-statistics/) and [local LLM statistics](/articles/local-llm-statistics/). For the memory tools built for coding agents, see [coding agent memory statistics](/articles/coding-agent-memory-statistics/). For a side-by-side reading of two of these projects, see [Mem0 vs Hindsight](/articles/mem0-vs-hindsight/).
 
 ## Memory library GitHub and download statistics
 
