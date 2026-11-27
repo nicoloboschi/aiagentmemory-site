@@ -113,6 +113,8 @@ Without an LLM key this returns matching source text; with `LLM_API_KEY` set, Co
 
 Hindsight sits between the two. Like Mem0, it's built around conversation memory scoped to a user or agent (a memory bank). Like Cognee, its open-source release keeps the graph: recall runs semantic, keyword, graph and time-range searches in parallel and fuses them.
 
+For a side-by-side of Cognee and Hindsight, with their BEAM scores and who ran them, see [Cognee vs Hindsight](/articles/cognee-vs-hindsight/).
+
 It's the stronger pick when:
 
 - **Histories are long.** On Mem0's own page it leads Mem0 Platform by 9.8 points at 1M tokens and 15.5 at 10M on BEAM.

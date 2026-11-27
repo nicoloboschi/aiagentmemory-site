@@ -127,6 +127,8 @@ Two things to watch. Honcho ships with auth off, so a stack reachable from a net
 
 ## Where Hindsight fits
 
+For a side-by-side of Honcho and Hindsight, including the DolphinBench run where they are both tested, see [Honcho vs Hindsight](/articles/honcho-vs-hindsight/).
+
 Hindsight sits closer to Honcho than to Mem0 in design: it does background reasoning over what it stores. It's the strongest of the three when:
 
 - **Histories are long.** It posts the top BEAM scores here at every size it reports, with the widest gap at 10M tokens (64.1 vs 48.6 for Mem0 and 40.9 for Honcho).
