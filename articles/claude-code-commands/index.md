@@ -51,7 +51,7 @@ The official commands page lists 121 rows (read 2026-11-15). This page covers th
 
 ## What happens to memory on /compact and /clear?
 
-The context window docs say what survives a compaction (read 2026-11-15). The system prompt still applies. Project-root `CLAUDE.md` and auto memory are read from disk again. Skill descriptions are rebuilt from your current skills. The plan from plan mode is read back in.
+The context window docs say what survives a compaction (read 2026-11-15). The system prompt still applies. Project-root `CLAUDE.md` and auto memory are read from disk again. Skill descriptions are rebuilt from your current skills. The plan from plan mode is read back in. To turn plan mode on and off, see [Claude Code plan mode](/articles/claude-code-plan-mode/).
 
 The chat summary replaces the old messages. So a detail that you said only in chat stays only as far as the summary keeps it. Write lasting facts into `CLAUDE.md` or auto memory, not into the chat. The commands page says `/clear` keeps project memory. It does not say how much of a cleared chat a later session can see, so test that yourself.
 

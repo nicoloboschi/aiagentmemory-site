@@ -94,12 +94,12 @@ From the authors of [MemGPT](https://arxiv.org/abs/2310.08560). Letta Code agent
 
 ### LangMem
 
-Memory tools an agent calls during a conversation, plus a background manager that extracts and consolidates memories, on top of LangGraph's store. Least effort if you already run LangGraph. See [LangChain memory with LangGraph](/articles/chatbot-with-memory-langgraph/).
+Memory tools an agent calls during a conversation, plus a background manager that extracts and consolidates memories, on top of LangGraph's store. Least effort if you already run LangGraph. See [LangChain memory with LangGraph](/articles/chatbot-with-memory-langgraph/). For a head-to-head with Hindsight, see [LangMem vs Hindsight](/articles/langmem-vs-hindsight/).
 
 ### Smaller and specialized projects
 
 - **Honcho**: peer-centric memory with background reasoning, on Postgres + pgvector. Since 3.5.0 (30 October 2026) its conclusions cite the messages they came from. See [Honcho LLM memory](/articles/honcho-llm-memory/#honcho-350-conclusions-cite-their-messages), and [Mem0 vs Honcho](/articles/mem0-vs-honcho/) for what each one runs when self-hosted (Honcho ships with auth off).
-- **MemOS**: memory cubes, async ingestion, local SQLite plugins for OpenClaw and Hermes Agent.
+- **MemOS**: memory cubes, async ingestion, local SQLite plugins for OpenClaw and Hermes Agent. See [MemOS vs Hindsight](/articles/memos-vs-hindsight/).
 - **TencentDB Agent Memory**: a proxy between coding agents (Claude Code, Codex, OpenClaw) and their LLM that turns sessions, documents and code into shared chat memory, skills, a wiki and a code graph, with a Memory Hub panel for team access. Version 2.0.3 (26 October 2026) added default session bindings and Word/Excel/PowerPoint/PDF wiki imports, and fixed a proxy that could not recover from a Redis outage. See [TencentDB Agent Memory](/articles/tencentdb-agent-memory/).
 - **Memori**: stores agent state in your own database ("BYODB"); its older home was GibsonAI. See [Memori's storage, extraction and benchmark caveats](/articles/llm-memory-comparison/#honcho-memos-and-memori).
 - **Basic Memory**: plain markdown files plus a local SQLite index, exposed over MCP.
